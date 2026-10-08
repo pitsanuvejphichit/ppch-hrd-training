@@ -7,7 +7,7 @@
  * 2. ชั้นสอง: ส่งต่อไปยัง Google Sheet ของหลักสูตรแบบ Background Sync เบื้องหลัง
  */
 
-const SupabaseService = (() => {
+var SupabaseService = (() => {
   const DEFAULT_SUPABASE_URL = 'https://swtptcqicdjomksufkpy.supabase.co';
   const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3dHB0Y3FpY2Rqb21rc3Vma3B5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MzcwNzgsImV4cCI6MjEwNzAxMzA3OH0.LORHI1hXO9MhKb5qs23ZMJaqM9mU6G90ZtRNQgn5nIw';
 
@@ -195,6 +195,36 @@ const SupabaseService = (() => {
    * ย้ายข้อมูลหลักสูตรที่เก่ากว่า 2 ปีเข้าคลังประวัติ (ลบออกจาก Supabase เพื่อคืนพื้นที่)
    * ข้อมูลจริงยังคงอยู่ใน Google Sheet 100%
    */
+  async function archiveOldRegistrations(olderThanYears = 2) {
+    const sb = getClient();
+    if (!sb) return null;
+
+    try {
+      const cutoffDate = new Date();
+      cutoffDate.setFullYear(cutoffDate.getFullYear() - olderThanYears);
+
+      const { data, error } = await sb
+        .from('registrations')
+        .delete()
+        .lt('created_at', cutoffDate.toISOString())
+        .select('id');
+
+      if (error) {
+        console.error('[SupabaseService] Archive error:', error);
+        throw error;
+      }
+
+      return {
+        success: true,
+        archivedCount: (data || []).length,
+        cutoffDate: cutoffDate.toISOString()
+      };
+    } catch (err) {
+      console.warn('[SupabaseService] archiveOldRegistrations failed:', err);
+      return null;
+    }
+  }
+
   /**
    * แปลงข้อมูลหลักสูตรจาก Database (snake_case) เป็น Object ในระบบ (camelCase)
    */

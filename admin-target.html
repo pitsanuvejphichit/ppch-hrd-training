@@ -1574,9 +1574,9 @@
 
       // 1. Primary Save: Supabase PostgreSQL (0.08s instant response!)
       let supabaseOk = false;
-      if (typeof SupabaseService !== 'undefined') {
+      if (typeof window.SupabaseService !== 'undefined' && window.SupabaseService) {
         try {
-          supabaseOk = await SupabaseService.updateCourseTarget(currentCourse.id, targetAudiencePayload);
+          supabaseOk = await window.SupabaseService.updateCourseTarget(currentCourse.id, targetAudiencePayload);
         } catch (err) {
           console.warn('[Target Admin] Supabase update notice:', err);
         }
@@ -1619,130 +1619,134 @@
 
     // Main Init
     document.addEventListener('DOMContentLoaded', async function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      currentCourseId = (urlParams.get('course') || '').trim();
-
-      if (!currentCourseId) {
-        hideLoader();
-        await HrdModal.warning('ไม่พบรหัสหลักสูตรที่ต้องการตั้งค่ากลุ่มเป้าหมายค่ะ กรุณาเลือกจากหน้ารายการหลักสูตรนะคะ', 'ไม่พบรหัสหลักสูตร');
-        window.location.href = 'admin.html';
-        return;
-      }
-
-      // 1. Instant Cache Lookup (0ms)
-      allCoursesList = [];
       try {
-        const cachedStr = localStorage.getItem('hrd_all_courses') || localStorage.getItem('hrd_courses_list');
-        if (cachedStr) {
-          const parsed = JSON.parse(cachedStr);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            allCoursesList = parsed;
-            currentCourse = allCoursesList.find(c => c && String(c.id).toLowerCase() === currentCourseId.toLowerCase());
-          }
-        }
-        if (!currentCourse) {
-          const cachedSingle = localStorage.getItem('hrd_course_' + currentCourseId);
-          if (cachedSingle) currentCourse = JSON.parse(cachedSingle);
-        }
-      } catch(e) {}
+        const urlParams = new URLSearchParams(window.location.search);
+        currentCourseId = (urlParams.get('course') || '').trim();
 
-      // 2. High-Speed Supabase Lookup (Primary DB, 0.08s)
-      if (typeof SupabaseService !== 'undefined') {
-        try {
-          const sbCourse = await SupabaseService.getCourseById(currentCourseId);
-          if (sbCourse) {
-            currentCourse = sbCourse;
-            localStorage.setItem('hrd_course_' + currentCourseId, JSON.stringify(currentCourse));
-          }
-        } catch(e) {
-          console.warn('[Target Admin] Supabase load error:', e);
+        if (!currentCourseId) {
+          hideLoader();
+          await HrdModal.warning('ไม่พบรหัสหลักสูตรที่ต้องการตั้งค่ากลุ่มเป้าหมายค่ะ กรุณาเลือกจากหน้ารายการหลักสูตรนะคะ', 'ไม่พบรหัสหลักสูตร');
+          window.location.href = 'admin.html';
+          return;
         }
-      }
 
-      // 3. Fallback to courses.json if offline
-      if (!currentCourse) {
+        // 1. Instant Cache Lookup (0ms)
+        allCoursesList = [];
         try {
-          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json()).catch(() => null);
-          if (Array.isArray(resStatic) && resStatic.length > 0) {
-            allCoursesList = resStatic;
-            try { localStorage.setItem('hrd_all_courses', JSON.stringify(resStatic)); } catch(e) {}
-            currentCourse = allCoursesList.find(c => c && String(c.id).toLowerCase() === currentCourseId.toLowerCase());
+          const cachedStr = localStorage.getItem('hrd_all_courses') || localStorage.getItem('hrd_courses_list');
+          if (cachedStr) {
+            const parsed = JSON.parse(cachedStr);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              allCoursesList = parsed;
+              currentCourse = allCoursesList.find(c => c && String(c.id).toLowerCase() === currentCourseId.toLowerCase());
+            }
+          }
+          if (!currentCourse) {
+            const cachedSingle = localStorage.getItem('hrd_course_' + currentCourseId);
+            if (cachedSingle) currentCourse = JSON.parse(cachedSingle);
           }
         } catch(e) {}
-      }
 
-      if (!currentCourse) {
-        hideLoader();
-        await HrdModal.error(`ไม่พบหลักสูตรที่มีรหัส "${currentCourseId}" ในระบบค่ะ กรุณาตรวจสอบอีกครั้งนะคะ`, 'ไม่พบหลักสูตร');
-        window.location.href = 'admin.html';
-        return;
-      }
-
-      // 2. Populate Course Overview Card
-      document.getElementById('badgeCourseId').textContent = currentCourse.id;
-      document.getElementById('courseTitleHeading').textContent = currentCourse.title || 'ไม่มีชื่อหลักสูตร';
-      const navCourse = document.getElementById('navCourseName');
-      if (navCourse) navCourse.textContent = currentCourse.title || currentCourse.id;
-      document.getElementById('badgeCourseType').textContent = currentCourse.type || 'หลักสูตรอบรม';
-      document.getElementById('courseDateDisplay').textContent = '📅 ' + (currentCourse.date || '-');
-      document.getElementById('courseTimeDisplay').textContent = currentCourse.time ? ('⏰ ' + currentCourse.time) : '';
-      document.getElementById('courseSpeakerDisplay').textContent = '🎤 ' + (currentCourse.speaker || 'HRD');
-      
-      const batchCount = (currentCourse.batches && Array.isArray(currentCourse.batches)) ? currentCourse.batches.length : 1;
-      document.getElementById('courseBatchesDisplay').textContent = `🔢 ${batchCount} รุ่นการอบรม`;
-
-      const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-      const regUrl = baseUrl + '/?course=' + encodeURIComponent(currentCourse.id);
-      document.getElementById('btnCourseRegLink').href = regUrl;
-
-      const btnNavEdit = document.getElementById('btnNavEditCourse');
-      if (btnNavEdit && currentCourseId) {
-        btnNavEdit.href = 'admin-create.html?edit=' + encodeURIComponent(currentCourseId);
-      }
-
-      // 3. Load Employees & Index
-      await loadEmployeeDatabase();
-
-      // 4. Pre-fill State from currentCourse.targetAudience
-      const curTarget = currentCourse.targetAudience;
-      if (curTarget && curTarget.type === 'specific') {
-        targetAudienceState.scope = 'specific';
-        document.getElementById('targetScopeSpecific').checked = true;
-
-        if (Array.isArray(curTarget.departments)) {
-          curTarget.departments.forEach(d => targetAudienceState.selectedDepartments.add(String(d).trim()));
-        }
-        if (Array.isArray(curTarget.positions)) {
-          curTarget.positions.forEach(p => targetAudienceState.selectedPositions.add(String(p).trim()));
-        }
-        if (Array.isArray(curTarget.employeeIds)) {
-          curTarget.employeeIds.forEach(id => {
-            const emp = empByIdMap.get(id);
-            const empDept = emp ? (emp.department || '').trim() : '';
-            const empPos = emp ? (emp.position || '').trim() : '';
-            const coveredByDept = emp && targetAudienceState.selectedDepartments.has(empDept);
-            const coveredByPos = emp && targetAudienceState.selectedPositions.has(empPos);
-            if (!coveredByDept && !coveredByPos) {
-              targetAudienceState.selectedEmployeeIds.add(id);
+        // 2. High-Speed Supabase Lookup (Primary DB, 0.08s)
+        if (typeof window.SupabaseService !== 'undefined' && window.SupabaseService) {
+          try {
+            const sbCourse = await window.SupabaseService.getCourseById(currentCourseId);
+            if (sbCourse) {
+              currentCourse = sbCourse;
+              localStorage.setItem('hrd_course_' + currentCourseId, JSON.stringify(currentCourse));
             }
-          });
+          } catch(e) {
+            console.warn('[Target Admin] Supabase load error:', e);
+          }
         }
 
-        document.getElementById('badgeCurrentTarget').textContent = '🎯 ' + (curTarget.summary || 'กำหนดเฉพาะกลุ่ม');
-        handleTargetScopeChange('specific');
-      } else {
-        targetAudienceState.scope = 'all';
-        document.getElementById('targetScopeAll').checked = true;
-        document.getElementById('badgeCurrentTarget').textContent = '🎯 ทุกแผนก/ตำแหน่ง';
-        handleTargetScopeChange('all');
+        // 3. Fallback to courses.json if offline
+        if (!currentCourse) {
+          try {
+            const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json()).catch(() => null);
+            if (Array.isArray(resStatic) && resStatic.length > 0) {
+              allCoursesList = resStatic;
+              try { localStorage.setItem('hrd_all_courses', JSON.stringify(resStatic)); } catch(e) {}
+              currentCourse = allCoursesList.find(c => c && String(c.id).toLowerCase() === currentCourseId.toLowerCase());
+            }
+          } catch(e) {}
+        }
+
+        if (!currentCourse) {
+          hideLoader();
+          await HrdModal.error(`ไม่พบหลักสูตรที่มีรหัส "${currentCourseId}" ในระบบค่ะ กรุณาตรวจสอบอีกครั้งนะคะ`, 'ไม่พบหลักสูตร');
+          window.location.href = 'admin.html';
+          return;
+        }
+
+        // 2. Populate Course Overview Card
+        document.getElementById('badgeCourseId').textContent = currentCourse.id;
+        document.getElementById('courseTitleHeading').textContent = currentCourse.title || 'ไม่มีชื่อหลักสูตร';
+        const navCourse = document.getElementById('navCourseName');
+        if (navCourse) navCourse.textContent = currentCourse.title || currentCourse.id;
+        document.getElementById('badgeCourseType').textContent = currentCourse.type || 'หลักสูตรอบรม';
+        document.getElementById('courseDateDisplay').textContent = '📅 ' + (currentCourse.date || '-');
+        document.getElementById('courseTimeDisplay').textContent = currentCourse.time ? ('⏰ ' + currentCourse.time) : '';
+        document.getElementById('courseSpeakerDisplay').textContent = '🎤 ' + (currentCourse.speaker || 'HRD');
+        
+        const batchCount = (currentCourse.batches && Array.isArray(currentCourse.batches)) ? currentCourse.batches.length : 1;
+        document.getElementById('courseBatchesDisplay').textContent = `🔢 ${batchCount} รุ่นการอบรม`;
+
+        const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        const regUrl = baseUrl + '/?course=' + encodeURIComponent(currentCourse.id);
+        document.getElementById('btnCourseRegLink').href = regUrl;
+
+        const btnNavEdit = document.getElementById('btnNavEditCourse');
+        if (btnNavEdit && currentCourseId) {
+          btnNavEdit.href = 'admin-create.html?edit=' + encodeURIComponent(currentCourseId);
+        }
+
+        // 3. Load Employees & Index
+        await loadEmployeeDatabase();
+
+        // 4. Pre-fill State from currentCourse.targetAudience
+        const curTarget = currentCourse.targetAudience;
+        if (curTarget && curTarget.type === 'specific') {
+          targetAudienceState.scope = 'specific';
+          document.getElementById('targetScopeSpecific').checked = true;
+
+          if (Array.isArray(curTarget.departments)) {
+            curTarget.departments.forEach(d => targetAudienceState.selectedDepartments.add(String(d).trim()));
+          }
+          if (Array.isArray(curTarget.positions)) {
+            curTarget.positions.forEach(p => targetAudienceState.selectedPositions.add(String(p).trim()));
+          }
+          if (Array.isArray(curTarget.employeeIds)) {
+            curTarget.employeeIds.forEach(id => {
+              const emp = empByIdMap.get(id);
+              const empDept = emp ? (emp.department || '').trim() : '';
+              const empPos = emp ? (emp.position || '').trim() : '';
+              const coveredByDept = emp && targetAudienceState.selectedDepartments.has(empDept);
+              const coveredByPos = emp && targetAudienceState.selectedPositions.has(empPos);
+              if (!coveredByDept && !coveredByPos) {
+                targetAudienceState.selectedEmployeeIds.add(id);
+              }
+            });
+          }
+
+          document.getElementById('badgeCurrentTarget').textContent = '🎯 ' + (curTarget.summary || 'กำหนดเฉพาะกลุ่ม');
+          handleTargetScopeChange('specific');
+        } else {
+          targetAudienceState.scope = 'all';
+          document.getElementById('targetScopeAll').checked = true;
+          document.getElementById('badgeCurrentTarget').textContent = '🎯 ทุกแผนก/ตำแหน่ง';
+          handleTargetScopeChange('all');
+        }
+
+        // 5. Render lists & UI
+        renderDepartmentList();
+        renderPositionList();
+        updateTargetAudienceUI();
+      } catch (err) {
+        console.error('[Target Admin Init Error]', err);
+      } finally {
+        hideLoader();
       }
-
-      // 5. Render lists & UI
-      renderDepartmentList();
-      renderPositionList();
-      updateTargetAudienceUI();
-
-      hideLoader();
     });
 
 
