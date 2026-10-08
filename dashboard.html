@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>แดชบอร์ดสรุปข้อมูลหลักสูตร | โรงพยาบาลพิษณุเวช พิจิตร</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt, Sarabun, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Scripts & Chart.js -->
+  <script src="modal.js"></script>
+  <script src="demo_data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="html2canvas.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Prompt', 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* ==========================================================================
+       A4 PORTRAIT POSTER STYLES & LUXURY BACKGROUND
+       ========================================================================== */
+    .a4-poster-canvas {
+      width: 1000px;
+      min-height: 1414px;
+      position: relative;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(0, 101, 101, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 0% 100%, rgba(29, 60, 90, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.03) 0%, transparent 60%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 35%, #f0fdfa 75%, #ffffff 100%);
+      box-sizing: border-box;
+      padding: 34px 40px;
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.06);
+    }
+    
+    /* Double Certificate Border Frame */
+    .a4-poster-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 2px solid #0369a1;
+      border-radius: 20px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .a4-poster-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(217, 119, 6, 0.45); /* Gold hairline inner border */
+      border-radius: 16px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Corner Gold Bracket Ornaments */
+    .corner-ornament {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .corner-tl { top: 20px; left: 20px; border-top: 3px solid #d97706; border-left: 3px solid #d97706; border-top-left-radius: 6px; }
+    .corner-tr { top: 20px; right: 20px; border-top: 3px solid #d97706; border-right: 3px solid #d97706; border-top-right-radius: 6px; }
+    .corner-bl { bottom: 20px; left: 20px; border-bottom: 3px solid #d97706; border-left: 3px solid #d97706; border-bottom-left-radius: 6px; }
+    .corner-br { bottom: 20px; right: 20px; border-bottom: 3px solid #d97706; border-right: 3px solid #d97706; border-bottom-right-radius: 6px; }
+
+    .a4-watermark-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.6);
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Prevent Thai font clipping in html2canvas */
+    #summaryPosterCard p,
+    #summaryPosterCard strong,
+    #summaryPosterCard span,
+    #summaryPosterCard h2,
+    #summaryPosterCard h3 {
+      overflow: visible;
+      line-height: 1.45;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    /* CSS Medical Cross Loader (Phitsanuvej Style) */
+    .css-logo-loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 40px;
+      transform: scale(1.6);
+      transform-origin: center;
+    }
+    .logo-petal {
+      position: absolute;
+      animation: loadingPulse 1.6s ease-in-out infinite;
+    }
+    .logo-petal.outer {
+      background: #1e5387;
+      border-radius: 6px;
+    }
+    .logo-petal.inner {
+      background: #5faee3;
+      border-radius: 5px;
+    }
+    .logo-petal.outer.top { top: 0px; left: 30px; width: 20px; height: 24px; animation-delay: 0s; }
+    .logo-petal.inner.top-right { top: 14px; right: 14px; width: 20px; height: 20px; animation-delay: 0.2s; }
+    .logo-petal.outer.right { top: 30px; right: 0px; width: 24px; height: 20px; animation-delay: 0.4s; }
+    .logo-petal.inner.bottom-right { bottom: 14px; right: 14px; width: 20px; height: 20px; animation-delay: 0.6s; }
+    .logo-petal.outer.bottom { bottom: 0px; left: 30px; width: 20px; height: 24px; animation-delay: 0.8s; }
+    .logo-petal.inner.bottom-left { bottom: 14px; left: 14px; width: 20px; height: 20px; animation-delay: 1.0s; }
+    .logo-petal.outer.left { top: 30px; left: 0px; width: 24px; height: 20px; animation-delay: 1.2s; }
+    .logo-petal.inner.top-left { top: 14px; left: 14px; width: 20px; height: 20px; animation-delay: 1.4s; }
+    @keyframes loadingPulse {
+      0%, 100% { transform: scale(1); opacity: 0.55; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+    @keyframes loaderPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased selection:bg-[#0284c7] selection:text-white">
+
+  <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) ตามมาตรฐาน รพ.พิษณุเวช -->
+  <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
+    <div class="loader-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.06); min-width: 300px; transform: scale(0.95); animation: loaderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      
+      <!-- ตัวหมุนแอนิเมชันกากบาทแพทย์ -->
+      <div class="css-logo-loader">
+        <div class="logo-petal outer top"></div>
+        <div class="logo-petal inner top-right"></div>
+        <div class="logo-petal outer right"></div>
+        <div class="logo-petal inner bottom-right"></div>
+        <div class="logo-petal outer bottom"></div>
+        <div class="logo-petal inner bottom-left"></div>
+        <div class="logo-petal outer left"></div>
+        <div class="logo-petal inner top-left"></div>
+      </div>
+      
+      <!-- ข้อความประกอบการรอข้อมูล -->
+      <div style="margin-top: 24px; text-align: center;">
+        <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #1e5387; margin-bottom: 6px; letter-spacing: 0.5px;">
+          กำลังประมวลผลข้อมูลแดชบอร์ด...
+        </div>
+        <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
+          โรงพยาบาลพิษณุเวช พิจิตร
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP APP BAR (WIDESCREEN WORKSTATION) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs w-full">
+    <div class="w-full px-6 lg:px-12 py-3 flex items-center justify-between">
+      
+      <!-- Left: Back Button & System Title -->
+      <div class="flex items-center space-x-3.5">
+        <a href="admin.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="กลับหน้ารายการหลักสูตร">
+          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span class="hidden sm:inline">กลับหน้ารายการหลักสูตร</span>
+        </a>
+
+        <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+
+        <div class="flex items-center space-x-3">
+          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-9 sm:h-10 w-auto object-contain">
+          <div class="border-l border-slate-200 pl-3 hidden md:block">
+            <h1 class="text-sm sm:text-base font-bold text-[#0369a1] leading-tight">แดชบอร์ดสรุปข้อมูลการฝึกอบรม</h1>
+            <p class="text-[11px] text-slate-400 font-light">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • โรงพยาบาลพิษณุเวช พิจิตร</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Action Tools -->
+      <div class="flex items-center space-x-2 text-xs">
+        <button onclick="downloadDashboardAsImage()" id="btnDownloadPoster" class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0369a1] to-[#0a2540] hover:from-[#0a2540] hover:to-[#003830] text-white font-bold transition-all flex items-center gap-2 cursor-pointer shadow-sm active:scale-95" title="ดาวน์โหลดภาพสรุปผลการอบรมความละเอียดสูง">
+          <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span class="hidden sm:inline">ดาวน์โหลดภาพสรุปผล (PNG)</span>
+          <span class="sm:hidden">ดาวน์โหลดภาพ</span>
+        </button>
+        <button onclick="openEditTargetModal()" class="px-3.5 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200/80 font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="ปรับยอดกลุ่มเป้าหมาย ณ วันสรุปผล">
+          <span>🎯</span>
+          <span class="hidden md:inline">ปรับยอดเป้าหมาย ณ วันสรุป</span>
+        </button>
+        <button onclick="refreshDashboard()" id="btnRefresh" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="รีเฟรชข้อมูลล่าสุด">
+          <span id="refreshIcon">🔄</span>
+          <span class="hidden sm:inline">รีเฟรชข้อมูล</span>
+        </button>
+        <a id="btnSheet" href="#" target="_blank" class="hidden px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-all items-center gap-1.5 cursor-pointer shadow-xs active:scale-95" title="เปิด Google Sheet ประจำวิชา (เฉพาะผู้ดูแลระบบ)">
+          <span>📊</span>
+          <span class="hidden sm:inline">เปิด Google Sheet</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (FULL WIDTH WORKSTATION) -->
+  <main class="flex-1 w-full px-4 sm:px-6 lg:px-12 py-6 space-y-8">
+
+    <!-- FLOATING ACTION BUTTON (DOWNLOAD IMAGE) -->
+    <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2" data-html2canvas-ignore>
+      <button onclick="downloadDashboardAsImage()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-[#0369a1] via-[#0a2540] to-[#1d3c5a] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#0a2540]/30 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border border-white/20 cursor-pointer">
+        <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+        <span>บันทึกภาพสรุปการอบรม (PNG)</span>
+      </button>
+    </div>
+
+    <!-- COURSE SELECTOR DROPDOWN (เมื่อเปิดเข้ามาโดยไม่ได้ระบุ ?course=) -->
+    <div id="courseSelectNotice" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs space-y-2" data-html2canvas-ignore>
+      <div class="font-bold text-amber-800 flex items-center gap-1.5">
+        <span>⚠️</span>
+        <span>กรุณาเลือกหลักสูตรที่ต้องการดูแดชบอร์ด:</span>
+      </div>
+      <select id="courseDropdownSelect" onchange="onSelectCourseFromDropdown(this.value)" class="w-full bg-white border border-amber-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#2e5e8b]">
+        <option value="">-- กรุณาเลือกหลักสูตร --</option>
+      </select>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TRAINING SUMMARY REPORT A4 POSTER (DOWNLOADABLE AS A4 PORTRAIT IMAGE)     -->
+    <!-- ========================================================================= -->
+    <div class="w-full flex flex-col items-center py-2 space-y-4">
+      
+      <!-- A4 Poster Notice Banner (Screen Only) -->
+      <div class="w-full max-w-[1000px] flex items-center justify-between bg-gradient-to-r from-sky-50 via-blue-50 to-cyan-50 border border-sky-200/90 rounded-2xl p-4 text-xs text-slate-900 shadow-2xs gap-3 flex-wrap" data-html2canvas-ignore>
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-[#0369a1] text-white flex items-center justify-center font-bold text-base shadow-xs shrink-0">📄</span>
+          <div>
+            <span class="font-bold text-sm text-[#0369a1] block">โปสเตอร์สรุปผลการจัดฝึกอบรม (ขนาดพิมพ์ A4 แนวตั้งมาตรฐาน)</span>
+            <span class="text-slate-600 font-normal">จัดสัดส่วนพอดี 1:1.414 พร้อมลวดลายทางการและกรอบทอง เหมาะสำหรับพิมพ์รายงานหรือส่งต่อผู้บริหาร</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="downloadDashboardAsImage()" class="px-4 py-2 rounded-xl bg-[#0369a1] hover:bg-[#0a2540] text-white font-bold text-xs shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
+            <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>ดาวน์โหลดภาพโปสเตอร์ A4 (PNG)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DESK SHEET WRAPPER (RESPONSIVE SCROLL CONTAINER) -->
+      <div class="w-full flex justify-center overflow-x-auto py-2">
+        
+        <!-- THE A4 POSTER CARD (1000px × 1414px) -->
+        <div id="summaryPosterCard" class="a4-poster-canvas w-[1000px] min-h-[1414px] max-w-[1000px] rounded-2xl relative flex flex-col justify-between shrink-0 overflow-hidden">
+          
+          <!-- 4 CORNER GOLD ORNAMENTS -->
+          <div class="corner-ornament corner-tl"></div>
+          <div class="corner-ornament corner-tr"></div>
+          <div class="corner-ornament corner-bl"></div>
+          <div class="corner-ornament corner-br"></div>
+
+          <!-- WATERMARK HOSPITAL CROSS BACKGROUND (3.5% OPACITY) -->
+          <div class="a4-watermark-bg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.6); opacity: 0.035; pointer-events: none; z-index: 0;">
+            <svg width="400" height="400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="36" y="8" width="28" height="84" rx="8" fill="#0369a1" />
+              <rect x="8" y="36" width="84" height="28" rx="8" fill="#0369a1" />
+            </svg>
+          </div>
+
+          <!-- TOP CONTENT CONTAINER (FLEX-COL GAP-3.5) -->
+          <div class="relative z-10 space-y-3.5">
+            
+            <!-- 1. POSTER TOP BRANDING HEADER -->
+            <div class="flex items-center justify-between pb-3 border-b-2 border-[#0369a1]/20">
+              <div class="flex items-center space-x-3.5">
+                <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-12 w-auto object-contain">
+                <div class="border-l-2 border-[#0369a1]/40 pl-3">
+                  <h2 class="text-lg font-black text-[#0369a1] tracking-tight leading-tight">โรงพยาบาลพิษณุเวช พิจิตร</h2>
+                  <p class="text-[11px] text-slate-500 font-semibold tracking-wide uppercase">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • PHITSANUVEJ PHICHIT HOSPITAL</p>
+                </div>
+              </div>
+              <div class="flex flex-col items-end">
+                <div class="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[11px] font-black tracking-wide shadow-2xs flex items-center gap-1.5 uppercase">
+                  <span>★</span>
+                  <span>รายงานสรุปผลการฝึกอบรมบุคลากร</span>
+                  <span>★</span>
+                </div>
+                <span class="text-[10px] text-slate-400 font-medium tracking-wider mt-1">OFFICIAL TRAINING INFOGRAPHIC SUMMARY</span>
+              </div>
+            </div>
+
+            <!-- 2. HERO COURSE BANNER -->
+            <div id="courseHeroCard" class="w-full rounded-2xl bg-gradient-to-r from-[#0a2540] via-[#0369a1] to-[#1d3c5a] p-4 text-white shadow-md relative overflow-hidden">
+              <div class="relative z-10 space-y-2">
+                <div class="flex items-center space-x-2 text-[11px] font-semibold flex-wrap gap-y-1">
+                  <span class="text-[10px] font-bold px-2.5 py-0.5 bg-amber-400 text-slate-950 rounded-lg shadow-2xs inline-flex items-center gap-1.5">
+                    <svg class="w-3 h-3 text-slate-950 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+                    สรุปผลการฝึกอบรม
+                  </span>
+                  <span id="dispCourseId" class="text-[10px] font-mono text-cyan-100/90 bg-black/30 px-2 py-0.5 rounded-lg border border-white/10">
+                    -
+                  </span>
+                  <span id="dispCourseCategory" class="text-[10px] text-cyan-200 bg-white/15 px-2 py-0.5 rounded-lg border border-white/10">
+                    Mandatory Course
+                  </span>
+                  <span id="dispCoursePlanType" class="text-[10px] text-cyan-100 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+                    ในแผน
+                  </span>
+                </div>
+
+                <h2 id="dispCourseTitle" class="text-xl sm:text-2xl font-black tracking-tight text-white leading-snug">
+                  -
+                </h2>
+
+                <div class="grid grid-cols-4 gap-2 text-xs text-cyan-100/95 pt-2.5 border-t border-white/15">
+                  <div class="flex items-center space-x-2 bg-white/10 px-2.5 py-2 rounded-xl border border-white/10 overflow-visible">
+                    <span class="text-amber-300 text-sm shrink-0">🎤</span>
+                    <div class="min-w-0 overflow-visible"><span class="text-cyan-200/90 block text-[9px] uppercase leading-tight font-medium">วิทยากร</span><strong id="dispCourseSpeaker" class="font-medium text-white block text-[11px] leading-relaxed overflow-visible break-words">-</strong></div>
+                  </div>
+                  <div class="flex items-center space-x-2 bg-white/10 px-2.5 py-2 rounded-xl border border-white/10 overflow-visible">
+                    <span class="text-amber-300 text-sm shrink-0">📅</span>
+                    <div class="min-w-0 overflow-visible"><span class="text-cyan-200/90 block text-[9px] uppercase leading-tight font-medium">วันที่จัดอบรม</span><strong id="dispCourseDate" class="font-medium text-white block text-[11px] leading-relaxed overflow-visible break-words">-</strong></div>
+                  </div>
+                  <div class="flex items-center space-x-2 bg-white/10 px-2.5 py-2 rounded-xl border border-white/10 overflow-visible">
+                    <span class="text-amber-300 text-sm shrink-0">⏰</span>
+                    <div class="min-w-0 overflow-visible"><span class="text-cyan-200/90 block text-[9px] uppercase leading-tight font-medium">เวลาจัดอบรม</span><strong id="dispCourseTime" class="font-medium text-white block text-[11px] leading-relaxed overflow-visible break-words">-</strong></div>
+                  </div>
+                  <div class="flex items-center space-x-2 bg-white/10 px-2.5 py-2 rounded-xl border border-white/10 overflow-visible">
+                    <span class="text-amber-300 text-sm shrink-0">👥</span>
+                    <div class="min-w-0 overflow-visible"><span class="text-cyan-200/90 block text-[9px] uppercase leading-tight font-medium">จำนวนรุ่น</span><strong id="dispCourseBatches" class="font-medium text-white block text-[11px] leading-relaxed overflow-visible break-words">-</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. 4 EXECUTIVE KPI CARDS (NO TEXT CLIPPING / GENEROUS LINE-HEIGHT) -->
+            <div class="grid grid-cols-4 gap-3">
+              
+              <!-- Card 1: Target Audience -->
+              <div class="relative group bg-white/95 backdrop-blur-md p-3.5 pb-4 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between items-center text-center space-y-1.5 hover:border-sky-300 transition-all min-h-[148px] overflow-visible">
+                <button type="button" onclick="openEditTargetModal()" class="absolute top-2 right-2 text-[10px] text-[#0369a1] bg-sky-50 hover:bg-[#0369a1] hover:text-white px-2 py-0.5 rounded-lg border border-sky-200/90 font-bold transition-all shadow-2xs cursor-pointer" data-html2canvas-ignore title="ปรับปรุงยอดกลุ่มเป้าหมาย ณ วันสรุปผล">
+                  ✏️ ปรับยอด
+                </button>
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1 leading-snug">
+                  <span>🎯</span> กลุ่มเป้าหมายทั้งหมด
+                </span>
+                <div class="flex items-baseline justify-center space-x-1 my-0.5 leading-none">
+                  <span id="kpiTargetCount" class="text-2xl font-black text-slate-900 font-mono">0</span>
+                  <span class="text-xs text-slate-500">ท่าน</span>
+                </div>
+                <span id="kpiTargetBadge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-blue-50 text-[#2e5e8b] border border-blue-200 font-bold leading-normal">ทุกคน</span>
+                <p id="kpiTargetDesc" class="text-[10px] text-slate-500 font-normal leading-relaxed max-w-full overflow-visible whitespace-normal">เปิดรับบุคลากรทุกแผนก</p>
+              </div>
+
+              <!-- Card 2: Pre-booked Enrollment -->
+              <div class="bg-white/95 backdrop-blur-md p-3.5 pb-4 rounded-2xl border border-indigo-100 shadow-2xs flex flex-col justify-between items-center text-center space-y-1.5 min-h-[148px] overflow-visible">
+                <span class="text-xs font-bold text-indigo-900 flex items-center gap-1 leading-snug">
+                  <span>📅</span> ลงทะเบียนล่วงหน้า
+                </span>
+                <div class="flex items-baseline justify-center space-x-1 my-0.5 leading-none">
+                  <span id="kpiEnrollCount" class="text-2xl font-black text-indigo-700 font-mono">0</span>
+                  <span class="text-xs text-slate-500">ท่าน</span>
+                </div>
+                <span id="kpiEnrollPct" class="text-[10px] px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold leading-normal">0% ของเป้าหมาย</span>
+                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div id="kpiEnrollBar" class="bg-indigo-500 h-1.5 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+                <p id="kpiQuotaDesc" class="text-[10px] text-slate-500 font-normal leading-relaxed max-w-full overflow-visible whitespace-normal">โควตารวม 40 ที่นั่ง</p>
+              </div>
+
+              <!-- Card 3: Actual Attendees -->
+              <div class="bg-white/95 backdrop-blur-md p-3.5 pb-4 rounded-2xl border border-emerald-200 shadow-2xs flex flex-col justify-between items-center text-center space-y-1.5 bg-gradient-to-b from-emerald-50/30 to-white min-h-[148px] overflow-visible">
+                <span class="text-xs font-bold text-emerald-800 flex items-center gap-1 leading-snug">
+                  <span>✅</span> เข้าอบรมจริง
+                </span>
+                <div class="flex items-baseline justify-center space-x-1 my-0.5 leading-none">
+                  <span id="kpiActualCount" class="text-2xl font-black text-emerald-700 font-mono">0</span>
+                  <span class="text-xs text-emerald-800 font-medium">ท่าน</span>
+                </div>
+                <span id="kpiActualPct" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold leading-normal">Show-up 0%</span>
+                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div id="kpiActualBar" class="bg-emerald-500 h-1.5 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+                <p id="kpiActualDesc" class="text-[10px] text-slate-600 font-normal leading-relaxed max-w-full overflow-visible whitespace-normal">เข้าอบรมจริง 0 ท่าน (0% ของเป้าหมาย)</p>
+              </div>
+
+              <!-- Card 4: Satisfaction Score -->
+              <div class="bg-white/95 backdrop-blur-md p-3.5 pb-4 rounded-2xl border border-amber-200 shadow-2xs flex flex-col justify-between items-center text-center space-y-1.5 bg-gradient-to-b from-amber-50/20 to-white min-h-[148px] overflow-visible">
+                <span class="text-xs font-bold text-amber-900 flex items-center gap-1 leading-snug">
+                  <span>⭐</span> คะแนนความพึงพอใจ
+                </span>
+                <div class="flex items-baseline justify-center space-x-1 my-0.5 leading-none">
+                  <span id="kpiOverallScore" class="text-2xl font-black text-amber-600 font-mono">0.00</span>
+                  <span class="text-xs text-slate-400">/ 5.00</span>
+                </div>
+                <span id="kpiScoreBadge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold leading-normal">รอผลประเมิน</span>
+                <div id="kpiStarDisplay" class="text-xs text-amber-400 tracking-wider">★★★★★</div>
+                <p class="text-[10px] text-slate-500 font-normal leading-relaxed max-w-full overflow-visible whitespace-normal">แบบประเมินมาตรฐาน 15 ข้อ</p>
+                <!-- Hidden anchors for JS bindings -->
+                <span id="kpiEvalCount" class="hidden">0</span>
+                <span id="kpiEvalRate" class="hidden">0%</span>
+              </div>
+
+            </div>
+
+            <!-- Hidden anchors for JS bindings (not rendered on poster) -->
+            <div class="hidden" data-html2canvas-ignore>
+              <span id="compShowUpBadge">0%</span>
+              <span id="compTargetCount">0</span>
+              <span id="compEnrollCount">0</span>
+              <span id="compEnrollTargetPct">0%</span>
+              <div id="compEnrollBar"></div>
+              <span id="compActualCount">0</span>
+              <span id="compActualEnrollPct">0%</span>
+              <div id="compActualBar"></div>
+              <span id="compTargetSummary"></span>
+              <span id="compWalkinDetail"></span>
+              <span id="compEnrollTargetPctBadge"></span>
+              <span id="compActualBadge"></span>
+              <span id="compActualTargetPct"></span>
+              <div id="dashDeptList"></div>
+              <div id="dashBatchList"></div>
+            </div>
+
+            <!-- 4. 9 TRAINING ACTIVITY PHOTOS (3x3 GALLERY GRID) -->
+            <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/90 p-3.5 space-y-2.5 shadow-2xs">
+              <div class="flex items-center justify-between pb-1.5 border-b border-slate-100 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">📸</span>
+                  <h3 class="text-xs font-bold text-slate-900">
+                    ภาพบรรยากาศกิจกรรมการฝึกอบรม (Training Photo Gallery - 9 ภาพ)
+                  </h3>
+                  <span id="driveSyncStatusBadge" class="hidden px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    ✓ ซิงค์กับ Google Drive แล้ว
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap" data-html2canvas-ignore>
+                  <!-- Gallery Aspect Ratio Selector -->
+                  <div class="flex items-center gap-1 bg-slate-100/90 p-0.5 rounded-xl border border-slate-200 text-[10px]">
+                    <span class="text-slate-400 font-medium px-1.5 hidden sm:inline">สัดส่วน:</span>
+                    <button type="button" onclick="setGalleryAspectRatio('4/3')" id="btnRatio_4_3" class="px-2 py-0.5 rounded-lg font-bold bg-white text-[#0369a1] shadow-2xs transition-all cursor-pointer">4:3</button>
+                    <button type="button" onclick="setGalleryAspectRatio('1/1')" id="btnRatio_1_1" class="px-2 py-0.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all cursor-pointer">1:1</button>
+                    <button type="button" onclick="setGalleryAspectRatio('16/9')" id="btnRatio_16_9" class="px-2 py-0.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all cursor-pointer">16:9</button>
+                    <button type="button" onclick="setGalleryAspectRatio('3/4')" id="btnRatio_3_4" class="px-2 py-0.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all cursor-pointer">3:4</button>
+                  </div>
+
+                  <label class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-[#0369a1] font-semibold text-[11px] flex items-center gap-1 cursor-pointer transition-all active:scale-95">
+                    <span>📁 อัปโหลด 9 ภาพ</span>
+                    <input type="file" multiple accept="image/*" class="hidden" onchange="handleBatchPhotosUpload(this.files)">
+                  </label>
+                  <button type="button" onclick="uploadPhotosToGoogleDrive()" id="btnSaveToDrive" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] flex items-center gap-1 shadow-2xs transition-all active:scale-95 cursor-pointer" title="บันทึกภาพกิจกรรมลงในโฟลเดอร์ Google Drive ของหลักสูตรนี้">
+                    <span>☁️</span>
+                    <span id="btnSaveToDriveText">บันทึกลง Drive</span>
+                  </button>
+                  <a id="btnOpenDriveFolder" href="#" target="_blank" class="hidden px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-semibold items-center gap-1 shadow-2xs transition-all" title="เปิดโฟลเดอร์ภาพใน Google Drive">
+                    <span>📂 โฟลเดอร์ Drive</span>
+                  </a>
+                  <button type="button" onclick="clearAllPhotos()" class="px-2.5 py-1 rounded-lg bg-white hover:bg-rose-50 hover:text-rose-600 border border-slate-200 text-slate-500 text-[11px] font-medium transition-all cursor-pointer">
+                    ล้างภาพ
+                  </button>
+                </div>
+              </div>
+
+              <!-- 9-Photo Grid (3 Columns × 3 Rows) -->
+              <div id="photoGalleryGrid" class="grid grid-cols-3 gap-2.5"></div>
+            </div>
+
+          </div>
+
+          <!-- 6. POSTER BOTTOM SIGN-OFF CERTIFICATION (FOOTER) -->
+          <div class="relative z-10 pt-3 border-t-2 border-[#0369a1]/20 flex items-center justify-between text-xs text-slate-500 mt-2">
+            <div class="flex items-center space-x-2.5">
+              <img src="logo.png" alt="โลโก้" class="h-8 w-auto object-contain opacity-80">
+              <div>
+                <p class="font-bold text-slate-800 text-[11px]">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • โรงพยาบาลพิษณุเวช พิจิตร</p>
+                <p class="text-[10px] text-slate-400">ระบบบันทึกและประเมินผลการฝึกอบรมบุคลากรทางการแพทย์ดิจิทัล</p>
+              </div>
+            </div>
+            <div class="text-right space-y-0.5">
+              <div class="text-[10px] text-slate-500">วันที่ออกรายงาน: <strong id="dispReportDate" class="text-slate-800 font-mono">-</strong></div>
+              <div class="text-[10px] text-emerald-700 font-bold flex items-center gap-1 justify-end">
+                <span>✓</span> ผ่านการรับรองข้อมูลผลการฝึกอบรมทางการเรียบร้อยแล้ว
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- END #summaryPosterCard -->
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- DETAILED EVALUATION DRAWER (HIDDEN BY DEFAULT AS REQUESTED)               -->
+    <!-- ========================================================================= -->
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden" data-html2canvas-ignore>
+      
+      <!-- Drawer Header Bar with Toggle Button -->
+      <div class="p-5 sm:p-6 bg-slate-50/70 border-b border-slate-200/80 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <span>⭐</span>
+            <span>ผลการประเมินความพึงพอใจ 15 ข้อคำถาม & ข้อเสนอแนะปลายเปิด</span>
+          </h3>
+          <p class="text-xs text-slate-400 font-light mt-0.5">
+            ข้อมูลการประเมินเชิงลึก 5 มิติ (ซ่อนไว้ไม่แสดงในหน้าแรกตามที่กำหนด คลิกเพื่อเปิดดูรายละเอียดได้ค่ะ)
+          </p>
+        </div>
+        
+        <button type="button" onclick="toggleDetailedEvaluation()" id="btnToggleEvalDetail" class="px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs sm:text-sm border border-slate-200 shadow-2xs flex items-center gap-2 transition-all cursor-pointer">
+          <span id="evalToggleText">คลิกเพื่อดูรายละเอียด 15 ข้อ</span>
+          <span id="evalToggleIcon">▼</span>
+        </button>
+      </div>
+
+      <!-- Detailed Content (Hidden by default) -->
+      <div id="detailedEvaluationContainer" class="hidden">
+        
+        <!-- Tab Navigation (Ratings vs Feedback) -->
+        <div class="border-b border-slate-200/80 bg-white p-3 sm:p-4">
+          <div class="flex items-center space-x-2 overflow-x-auto pb-1 sm:pb-0">
+            <button type="button" id="tabBtnRatings" onclick="switchDashboardTab('ratings')" class="py-2.5 px-4 rounded-2xl bg-[#0369a1] text-white shadow-xs font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 shrink-0">
+              <span>⭐</span>
+              <span>คะแนนประเมิน 15 ข้อ (5 ด้าน)</span>
+            </button>
+            <button type="button" id="tabBtnFeedback" onclick="switchDashboardTab('feedback')" class="py-2.5 px-4 rounded-2xl text-slate-600 hover:text-slate-900 font-medium text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 shrink-0 border border-transparent">
+              <span>💬</span>
+              <span>เสียงสะท้อน & ข้อเสนอแนะ (4 ด้าน)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 1: RATINGS BREAKDOWN (15 QUESTIONS / 5 DIMENSIONS) -->
+        <div id="tabContentRatings" class="p-6 lg:p-8 space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 flex-wrap gap-2">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>📊</span>
+                <span>ผลการประเมินความพึงพอใจ 15 ข้อคำถาม (เกณฑ์คะแนน 1 - 5 ดาว)</span>
+              </h3>
+              <p class="text-xs text-slate-400 font-light mt-0.5">แบ่งตาม 5 มิติหลัก ครอบคลุมผู้สอน สื่อ เอกสาร สถานที่ และการบริการ</p>
+            </div>
+            <span id="ratingsSampleCountBadge" class="text-xs px-3 py-1 rounded-xl bg-slate-100 text-slate-600 font-medium">
+              คำนวณจาก 0 ผู้ประเมิน
+            </span>
+          </div>
+
+          <!-- Section 1 -->
+          <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200/70 flex-wrap gap-2">
+              <h4 class="text-sm font-bold text-[#1d3c5a] flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#2e5e8b]"></span>
+                <span>1. ด้านความรู้ความเข้าใจและการประยุกต์ใช้</span>
+              </h4>
+              <span id="sec1AvgBadge" class="text-xs font-bold text-[#2e5e8b] bg-white border border-[#2e5e8b]/20 px-3 py-1 rounded-xl shadow-2xs">0.00 / 5.00</span>
+            </div>
+            <div class="space-y-3 pt-1">
+              <div id="bar_q1_1_box"></div>
+              <div id="bar_q1_2_box"></div>
+              <div id="bar_q1_3_box"></div>
+            </div>
+          </div>
+
+          <!-- Section 2 -->
+          <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200/70 flex-wrap gap-2">
+              <h4 class="text-sm font-bold text-[#1d3c5a] flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#2e5e8b]"></span>
+                <span>2. ด้านความเหมาะสมของวิทยากรผู้สอน</span>
+              </h4>
+              <span id="sec2AvgBadge" class="text-xs font-bold text-[#2e5e8b] bg-white border border-[#2e5e8b]/20 px-3 py-1 rounded-xl shadow-2xs">0.00 / 5.00</span>
+            </div>
+            <div class="space-y-3">
+              <div id="bar_q2_1_box"></div>
+              <div id="bar_q2_2_box"></div>
+              <div id="bar_q2_3_box"></div>
+              <div id="bar_q2_4_box"></div>
+              <div id="bar_q2_5_box"></div>
+              <div id="bar_q2_6_box"></div>
+            </div>
+          </div>
+
+          <!-- Section 3 -->
+          <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200/70 flex-wrap gap-2">
+              <h4 class="text-sm font-bold text-[#1d3c5a] flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#2e5e8b]"></span>
+                <span>3. ด้านเอกสารและอุปกรณ์ประกอบการสอน</span>
+              </h4>
+              <span id="sec3AvgBadge" class="text-xs font-bold text-[#2e5e8b] bg-white border border-[#2e5e8b]/20 px-3 py-1 rounded-xl shadow-2xs">0.00 / 5.00</span>
+            </div>
+            <div class="space-y-3">
+              <div id="bar_q3_1_box"></div>
+              <div id="bar_q3_2_box"></div>
+              <div id="bar_q3_3_box"></div>
+            </div>
+          </div>
+
+          <!-- Section 4 & 5 Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Section 4 -->
+            <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-200/70">
+                <h4 class="text-sm font-bold text-[#1d3c5a] flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-[#2e5e8b]"></span>
+                  <span>4. ด้านการบริการและสถานที่จัดอบรม</span>
+                </h4>
+                <span id="sec4AvgBadge" class="text-xs font-bold text-[#2e5e8b] bg-white border border-[#2e5e8b]/20 px-2.5 py-0.5 rounded-xl shadow-2xs">0.00 / 5.00</span>
+              </div>
+              <div class="space-y-3">
+                <div id="bar_q4_1_box"></div>
+              </div>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-200/70">
+                <h4 class="text-sm font-bold text-[#1d3c5a] flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-[#2e5e8b]"></span>
+                  <span>5. ด้านความพร้อมของผู้จัดอบรม</span>
+                </h4>
+                <span id="sec5AvgBadge" class="text-xs font-bold text-[#2e5e8b] bg-white border border-[#2e5e8b]/20 px-2.5 py-0.5 rounded-xl shadow-2xs">0.00 / 5.00</span>
+              </div>
+              <div class="space-y-3">
+                <div id="bar_q5_1_box"></div>
+                <div id="bar_q5_2_box"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: QUALITATIVE FEEDBACK (4 OPEN-ENDED QUESTIONS) -->
+        <div id="tabContentFeedback" class="hidden p-6 lg:p-8 space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>💬</span>
+                <span>รวบรวมข้อเสนอแนะและเสียงสะท้อน (4 หัวข้อคำถามปลายเปิด)</span>
+              </h3>
+              <p class="text-xs text-slate-400 font-light mt-0.5">ทุกความคิดเห็นถูกเก็บรักษาแบบไม่ระบุตัวตน เพื่อนำไปพัฒนาการอบรมครั้งต่อไป</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- 6.1 ความประทับใจ -->
+            <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-3">
+              <h4 class="text-xs sm:text-sm font-bold text-emerald-800 flex items-center justify-between pb-2 border-b border-emerald-100">
+                <span class="flex items-center gap-2"><span>❤️</span> 6.1 ความรู้ ความเข้าใจ หรือสิ่งที่ประทับใจมากที่สุด</span>
+                <span id="fbCount_6_1" class="text-[10px] px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-bold">0</span>
+              </h4>
+              <div id="fbList_6_1" class="space-y-2.5 max-h-72 overflow-y-auto custom-scroll pr-1"></div>
+            </div>
+
+            <!-- 6.2 ยังไม่เข้าใจ/ต้องการเพิ่ม -->
+            <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-3">
+              <h4 class="text-xs sm:text-sm font-bold text-amber-800 flex items-center justify-between pb-2 border-b border-amber-100">
+                <span class="flex items-center gap-2"><span>❓</span> 6.2 หัวข้อที่ยังไม่เข้าใจ หรือต้องการให้เพิ่มเติม</span>
+                <span id="fbCount_6_2" class="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full font-bold">0</span>
+              </h4>
+              <div id="fbList_6_2" class="space-y-2.5 max-h-72 overflow-y-auto custom-scroll pr-1"></div>
+            </div>
+
+            <!-- 6.3 หลักสูตรที่ต้องการในอนาคต -->
+            <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-3">
+              <h4 class="text-xs sm:text-sm font-bold text-[#2e5e8b] flex items-center justify-between pb-2 border-b border-blue-100">
+                <span class="flex items-center gap-2"><span>💡</span> 6.3 หลักสูตรที่ต้องการให้จัดอบรมเพิ่มเติม</span>
+                <span id="fbCount_6_3" class="text-[10px] px-2 py-0.5 bg-blue-100 text-[#2e5e8b] rounded-full font-bold">0</span>
+              </h4>
+              <div id="fbList_6_3" class="space-y-2.5 max-h-72 overflow-y-auto custom-scroll pr-1"></div>
+            </div>
+
+            <!-- 6.4 ข้อเสนอแนะอื่นๆ -->
+            <div class="bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 space-y-3">
+              <h4 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center justify-between pb-2 border-b border-slate-200">
+                <span class="flex items-center gap-2"><span>📝</span> 6.4 ข้อเสนอแนะอื่นๆ ถึงผู้จัดและวิทยากร</span>
+                <span id="fbCount_6_4" class="text-[10px] px-2 py-0.5 bg-slate-200 text-slate-800 rounded-full font-bold">0</span>
+              </h4>
+              <div id="fbList_6_4" class="space-y-2.5 max-h-72 overflow-y-auto custom-scroll pr-1"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL: ADJUST TARGET AUDIENCE HEADCOUNT ON SUMMARY DATE                   -->
+    <!-- ========================================================================= -->
+    <div id="editTargetModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] hidden items-center justify-center p-4 transition-all duration-200 ease-out font-sans" data-html2canvas-ignore>
+      <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-100 transform transition-all duration-200 ease-out text-left relative max-h-[92vh] overflow-y-auto space-y-5">
+        
+        <!-- Close Button -->
+        <button type="button" onclick="closeEditTargetModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center text-sm transition-all cursor-pointer">✕</button>
+
+        <!-- Modal Header -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200/80 text-[#0369a1] flex items-center justify-center text-2xl shadow-inner shrink-0">
+            🎯
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">ปรับปรุงยอดกลุ่มเป้าหมาย ณ วันสรุปผล</h3>
+            <p class="text-xs text-slate-500 font-light mt-0.5">ใช้ในกรณีที่จำนวนบุคลากรมีการเปลี่ยนแปลงระหว่างวันสร้างวิชาและวันสรุปผล</p>
+          </div>
+        </div>
+
+        <!-- Current Info Box -->
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2 text-xs">
+          <div class="flex justify-between items-center text-slate-600">
+            <span>หลักสูตร:</span>
+            <strong id="modalCourseTitle" class="text-slate-900 font-semibold truncate max-w-[260px]">-</strong>
+          </div>
+          <div class="flex justify-between items-center text-slate-600">
+            <span>ยอดกลุ่มเป้าหมายเดิมที่บันทึกไว้:</span>
+            <span class="font-mono font-bold text-slate-800 text-sm"><span id="modalCurrentTargetCount">0</span> ท่าน</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-600">
+            <span>จำนวนพนักงานปัจจุบันในระบบฐานข้อมูล:</span>
+            <span class="font-mono font-bold text-sky-700 text-sm"><span id="modalSystemEmployeeCount">0</span> ท่าน</span>
+          </div>
+        </div>
+
+        <!-- Input Form -->
+        <div class="space-y-3">
+          <label for="inputNewTargetCount" class="block text-xs font-bold text-slate-700">
+            ระบุจำนวนกลุ่มเป้าหมายใหม่ ณ วันสรุปผล (ท่าน):
+          </label>
+          <div class="flex items-center gap-2">
+            <input type="number" id="inputNewTargetCount" min="1" max="9999" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-[#0369a1] focus:ring-2 focus:ring-[#0369a1]/20 text-slate-900 font-mono font-bold text-base outline-none transition-all" placeholder="เช่น 175 หรือ 180">
+            <button type="button" onclick="syncWithSystemEmployees()" class="shrink-0 px-3 py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95" title="ดึงยอดพนักงานปัจจุบันจากระบบมาใส่ทันที">
+              <span>🔄 ดึงยอดปัจจุบัน</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500">
+            💡 เมื่อปรับตัวเลขนี้ ระบบจะคำนวณสัดส่วน % การลงทะเบียน และ % เข้าอบรมจริงบนโปสเตอร์ A4 ใหม่ให้อัตโนมัติทันที
+          </p>
+        </div>
+
+        <!-- Advanced Target Audience Link -->
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">ต้องการคัดกรองตามรายชื่อ/แผนก/ตำแหน่ง?</span>
+          <a id="linkAdvancedTarget" href="#" target="_blank" class="text-[#0369a1] hover:text-[#0a2540] font-bold hover:underline flex items-center gap-1">
+            <span>⚙️ กำหนดกลุ่มเป้าหมายละเอียด</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-2 flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeEditTargetModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold text-xs transition-all cursor-pointer">
+            ยกเลิก
+          </button>
+          <button type="button" onclick="saveTargetCountAdjustment()" id="btnSaveTargetAdjust" class="px-5 py-2.5 rounded-xl bg-[#0369a1] hover:bg-[#0a2540] text-white font-bold text-xs shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
+            <span>💾 บันทึกยอด ณ วันสรุปผล</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL: PHOTO CROP & FIT ADJUSTER (WYSIWYG CANVAS PREVIEW)                 -->
+    <!-- ========================================================================= -->
+    <div id="photoCropModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] hidden items-center justify-center p-4 transition-all duration-200 ease-out font-sans" data-html2canvas-ignore>
+      <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full shadow-2xl border border-slate-100 transform transition-all duration-200 ease-out text-left relative max-h-[94vh] overflow-y-auto space-y-5">
+        
+        <!-- Close Button -->
+        <button type="button" onclick="closeCropAdjustModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center text-sm transition-all cursor-pointer">✕</button>
+
+        <!-- Modal Header -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200/80 text-[#0369a1] flex items-center justify-center text-2xl shadow-inner shrink-0">
+            🔍
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900" id="cropModalTitle">ปรับขนาดและตำแหน่งภาพกิจกรรม (ภาพที่ 1)</h3>
+            <p class="text-xs text-slate-500 font-light mt-0.5">ภาพที่แสดงบนเว็บและภาพที่ดาวน์โหลดเป็นโปสเตอร์จะตรงกัน 100% ไม่เพี้ยน</p>
+          </div>
+        </div>
+
+        <!-- Live Preview Canvas & Container -->
+        <div class="bg-slate-900/95 rounded-2xl p-4 flex flex-col items-center justify-center shadow-inner relative">
+          <div class="text-[11px] text-slate-400 mb-2 font-medium flex items-center gap-2">
+            <span>👁️ ตัวอย่างผลลัพธ์ (สัดส่วนตรงกับที่จะพิมพ์ลงโปสเตอร์จริง 100%):</span>
+            <span id="cropPreviewRatioBadge" class="px-2 py-0.5 rounded-md bg-sky-900/60 text-sky-300 font-mono text-[10px]">4:3</span>
+          </div>
+          <div class="relative rounded-xl overflow-hidden border-2 border-sky-400/80 shadow-2xl max-w-full max-h-[300px] flex items-center justify-center bg-slate-950">
+            <canvas id="cropPreviewCanvas" class="max-w-full max-h-[280px] object-contain block"></canvas>
+          </div>
+        </div>
+
+        <!-- Adjustment Controls -->
+        <div class="space-y-4 text-xs">
+          
+          <!-- Fit Mode Selector -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">รูปแบบการจัดวางภาพ (Fit Mode):</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="setCropFitMode('cover')" id="fitModeCoverBtn" class="p-3 rounded-xl border-2 border-[#0369a1] bg-sky-50/70 text-[#0369a1] font-bold text-left flex items-start gap-2.5 transition-all cursor-pointer">
+                <span class="text-lg">📐</span>
+                <div>
+                  <div class="font-bold">ตัดพอดีกรอบ (Fill / Cover)</div>
+                  <div class="text-[11px] text-slate-500 font-normal">ขยายเต็มช่องพอดี ไม่มีขอบว่าง (สามารถเลื่อนเลือกตำแหน่งได้)</div>
+                </div>
+              </button>
+              <button type="button" onclick="setCropFitMode('contain')" id="fitModeContainBtn" class="p-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-slate-300 font-medium text-left flex items-start gap-2.5 transition-all cursor-pointer">
+                <span class="text-lg">🖼️</span>
+                <div>
+                  <div class="font-bold">แสดงเต็มภาพ (Fit / Contain)</div>
+                  <div class="text-[11px] text-slate-500 font-normal">เห็นภาพครบ 100% ไม่ถูกตัดขอบ (เหมาะสำหรับ Infographic/แนวตั้ง)</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Position Presets (for tall images or cover mode) -->
+          <div id="cropPositionPresetBox" class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-700">ตำแหน่งภาพด่วน (Quick Presets):</label>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="setCropPreset(50, 0)" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-all cursor-pointer">🔼 โชว์ส่วนบนสุด</button>
+              <button type="button" onclick="setCropPreset(50, 50)" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-all cursor-pointer">⏺️ กึ่งกลาง</button>
+              <button type="button" onclick="setCropPreset(50, 100)" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium transition-all cursor-pointer">🔽 โชว์ส่วนล่างสุด</button>
+              <button type="button" onclick="resetCropValues()" class="ml-auto px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold transition-all cursor-pointer">🔄 รีเซ็ตค่า</button>
+            </div>
+          </div>
+
+          <!-- Sliders: Zoom, Offset Y, Offset X -->
+          <div id="cropSlidersBox" class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-slate-700">🔍 ซูมภาพ:</span>
+                <span id="valCropZoom" class="font-mono text-sky-700 font-bold">100%</span>
+              </div>
+              <input type="range" id="sliderCropZoom" min="1.0" max="2.5" step="0.05" value="1.0" oninput="onCropSliderChange()" class="w-full accent-[#0369a1] cursor-pointer">
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-slate-700">↕️ เลื่อนบน-ล่าง:</span>
+                <span id="valCropOffsetY" class="font-mono text-sky-700 font-bold">50%</span>
+              </div>
+              <input type="range" id="sliderCropOffsetY" min="0" max="100" step="1" value="50" oninput="onCropSliderChange()" class="w-full accent-[#0369a1] cursor-pointer">
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-slate-700">↔️ เลื่อนซ้าย-ขวา:</span>
+                <span id="valCropOffsetX" class="font-mono text-sky-700 font-bold">50%</span>
+              </div>
+              <input type="range" id="sliderCropOffsetX" min="0" max="100" step="1" value="50" oninput="onCropSliderChange()" class="w-full accent-[#0369a1] cursor-pointer">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-2 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeCropAdjustModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold text-xs transition-all cursor-pointer">
+            ยกเลิก
+          </button>
+          <button type="button" onclick="applyCropAdjustment()" id="btnApplyCrop" class="px-5 py-2.5 rounded-xl bg-[#0369a1] hover:bg-[#0a2540] text-white font-bold text-xs shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
+            <span>💾 ใช้ขนาดและสัดส่วนนี้</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-400 mt-auto w-full">
+    <div class="w-full px-6 lg:px-12 text-center">
+      © โรงพยาบาลพิษณุเวช พิจิตร • ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • Course Analytics Dashboard
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================================
+    // DASHBOARD CONSTANTS & LOGIC
+    // ============================================================================
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwyROi0_EfFm21mVZUAqZ08rrkc11vISYzcBJFDaGh1vCB3P2Tum8ZtgZv2MJZjTY4g/exec';
+
+    const DASHBOARD_QUESTIONS = [
+      { id: 'q1_1', title: '1.1 ท่านมีความเข้าใจในเนื้อหาหลักสูตรก่อนการอบรม', sec: 'sec1' },
+      { id: 'q1_2', title: '1.2 ท่านมีความเข้าใจในเนื้อหาหลักสูตรหลังการอบรม', sec: 'sec1' },
+      { id: 'q1_3', title: '1.3 ท่านสามารถนำความรู้จากการอบรมไปประยุกต์ใช้ได้', sec: 'sec1' },
+      { id: 'q2_1', title: '2.1 วิทยากรถ่ายทอดเนื้อหาที่ชัดเจนเป็นลำดับขั้นตอน', sec: 'sec2' },
+      { id: 'q2_2', title: '2.2 วิทยากรตอบคำถามได้ตรงประเด็น', sec: 'sec2' },
+      { id: 'q2_3', title: '2.3 วิทยากรกระตุ้นให้ผู้เรียนมีส่วนร่วมในการอบรม', sec: 'sec2' },
+      { id: 'q2_4', title: '2.4 วิทยากรสรุปเนื้อหาการอบรมให้กับผู้เรียน', sec: 'sec2' },
+      { id: 'q2_5', title: '2.5 วิทยากรสามารถบริหารเวลาในการบรรยายได้ครบ', sec: 'sec2' },
+      { id: 'q2_6', title: '2.6 วิทยากรสอนได้ครบตามหัวข้อที่กำหนดขึ้น', sec: 'sec2' },
+      { id: 'q3_1', title: '3.1 เอกสารการอบรมและกิจกรรมเหมาะสมกับหลักสูตรที่จัด', sec: 'sec3' },
+      { id: 'q3_2', title: '3.2 สื่อที่ใช้บรรยายชัดเจนและทำให้เกิดความเข้าใจง่าย', sec: 'sec3' },
+      { id: 'q3_3', title: '3.3 สื่อและอุปกรณ์ที่ใช้เหมาะสมกับการเรียนรู้', sec: 'sec3' },
+      { id: 'q4_1', title: '4.1 การจัดสถานที่เหมาะสมกับเนื้อหาหลักสูตรที่อบรม', sec: 'sec4' },
+      { id: 'q5_1', title: '5.1 ความรวดเร็วในการให้ความช่วยเหลือผู้เข้าอบรม', sec: 'sec5' },
+      { id: 'q5_2', title: '5.2 การให้ความชัดเจนกับผู้เรียน', sec: 'sec5' }
+    ];
+
+    let currentCourse = null;
+    let employeeDatabase = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+    let comparisonChartInstance = null;
+
+    // Fast Fetch with Timeout (prevents hanging network requests)
+    function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+      if (typeof AbortController === 'undefined') {
+        return fetch(url, options);
+      }
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(id));
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Hard safety timeout: loader will ALWAYS close after max 1200ms
+      const safetyTimer = setTimeout(() => {
+        hideLoader();
+      }, 1200);
+
+      try {
+        loadEmployeeDatabase(); // Non-blocking in background
+        await initDashboardCourse();
+      } catch (err) {
+        console.warn('Dashboard init error:', err);
+      } finally {
+        clearTimeout(safetyTimer);
+        hideLoader();
+      }
+    });
+
+    function hideLoader() {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        setTimeout(() => { loader.style.display = 'none'; }, 300);
+      }
+    }
+
+    function showLoader(title, subtitle) {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        const t = document.getElementById('loaderTitle');
+        const s = document.getElementById('loaderSubtitle');
+        if (t) t.textContent = title || 'กำลังประมวลผลข้อมูลแดชบอร์ด...';
+        if (s) s.textContent = subtitle || 'โรงพยาบาลพิษณุเวช พิจิตร';
+        loader.style.display = 'flex';
+        loader.style.visibility = 'visible';
+        loader.style.opacity = '1';
+      }
+    }
+
+    async function loadEmployeeDatabase() {
+      try {
+        const resp = await fetchWithTimeout('employees.json', {}, 4000);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (Array.isArray(data) && data.length > 0) {
+            employeeDatabase = data;
+          }
+        }
+      } catch(e) {}
+    }
+
+    async function initDashboardCourse() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let courseId = urlParams.get('course') || urlParams.get('id');
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      // Tier 1: Check localStorage first (0ms - Instant!)
+      if (courseId) {
+        try {
+          const cached = localStorage.getItem('hrd_course_' + courseId);
+          if (cached) {
+            currentCourse = JSON.parse(cached);
+            populateCourseHeader(currentCourse);
+            initSummaryPhotos(currentCourse.id);
+            hideLoader(); // Unblock UI immediately
+          }
+        } catch(e) {}
+      }
+
+      // Tier 2: Check bundled courses.json (<50ms from Surge CDN - Ultra Fast!)
+      if (!currentCourse) {
+        try {
+          const resStatic = await fetchWithTimeout('courses.json?t=' + Date.now(), {}, 3000).then(r => r.json());
+          if (Array.isArray(resStatic) && resStatic.length > 0) {
+            const dd = document.getElementById('courseDropdownSelect');
+            if (dd) {
+              dd.innerHTML = '<option value="">-- กรุณาเลือกหลักสูตรที่ต้องการดูแดชบอร์ด --</option>' +
+                resStatic.map(c => '<option value="' + c.id + '">' + (c.title || c.id) + '</option>').join('');
+            }
+            if (courseId) {
+              currentCourse = resStatic.find(c => String(c.id).toLowerCase() === String(courseId).toLowerCase());
+            }
+            if (!currentCourse && !courseId) {
+              currentCourse = resStatic[0];
+            }
+            if (currentCourse) {
+              try { localStorage.setItem('hrd_course_' + currentCourse.id, JSON.stringify(currentCourse)); } catch(e) {}
+              populateCourseHeader(currentCourse);
+              initSummaryPhotos(currentCourse.id);
+              hideLoader(); // Unblock UI immediately
+            }
+          }
+        } catch(e) {
+          console.warn('courses.json static lookup note:', e);
+        }
+      }
+
+      // Tier 3: Fetch targeted course from GAS (if still not found)
+      if (!currentCourse && courseId) {
+        try {
+          const res = await fetchWithTimeout(gasUrl + '?action=getCourse&id=' + encodeURIComponent(courseId), {}, 6000);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success && data.course) {
+              currentCourse = data.course;
+              try { localStorage.setItem('hrd_course_' + courseId, JSON.stringify(currentCourse)); } catch(e) {}
+              populateCourseHeader(currentCourse);
+              initSummaryPhotos(currentCourse.id);
+              hideLoader();
+            }
+          }
+        } catch(e) {
+          console.warn('Targeted getCourse failed:', e);
+        }
+      }
+
+      // Tier 4: Fallback to getAllCourses from GAS
+      if (!currentCourse) {
+        try {
+          const res = await fetchWithTimeout(gasUrl + '?action=getAllCourses', {}, 6000);
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : (data && Array.isArray(data.courses) ? data.courses : []);
+            if (list.length > 0) {
+              const dd = document.getElementById('courseDropdownSelect');
+              if (dd) {
+                dd.innerHTML = '<option value="">-- กรุณาเลือกหลักสูตรที่ต้องการดูแดชบอร์ด --</option>' +
+                  list.map(c => '<option value="' + c.id + '">' + (c.title || c.id) + '</option>').join('');
+              }
+              if (courseId) {
+                currentCourse = list.find(c => String(c.id).toLowerCase() === String(courseId).toLowerCase());
+              }
+              if (!currentCourse) {
+                currentCourse = list[0];
+                document.getElementById('courseSelectNotice').classList.remove('hidden');
+              }
+              if (currentCourse) {
+                try { localStorage.setItem('hrd_course_' + currentCourse.id, JSON.stringify(currentCourse)); } catch(e) {}
+              }
+            }
+          }
+        } catch(e) {
+          console.warn('getAllCourses fallback failed:', e);
+        }
+      }
+
+      // 4. Render initial data & start background sync
+      if (currentCourse) {
+        populateCourseHeader(currentCourse);
+        initSummaryPhotos(currentCourse.id);
+        hideLoader(); // Make sure loader is definitely closed
+        // Non-blocking background sync
+        loadAndRenderDashboard(currentCourse);
+      } else {
+        hideLoader();
+        document.getElementById('dispCourseTitle').textContent = 'ไม่พบข้อมูลหลักสูตรที่ระบุ';
+        document.getElementById('courseSelectNotice').classList.remove('hidden');
+      }
+    }
+
+    function onSelectCourseFromDropdown(cId) {
+      if (!cId) return;
+      showLoader('กำลังเปิดแดชบอร์ด...', 'กำลังประมวลผลข้อมูลหลักสูตรที่เลือก');
+      window.location.href = 'dashboard.html?course=' + encodeURIComponent(cId);
+    }
+
+    function populateCourseHeader(c) {
+      document.getElementById('dispCourseTitle').textContent = c.title || '-';
+      document.getElementById('dispCourseId').textContent = c.id || '-';
+      document.getElementById('dispCourseSpeaker').textContent = c.speaker || 'HRD';
+      document.getElementById('dispCourseDate').textContent = c.date || '-';
+      document.getElementById('dispCourseTime').textContent = c.time || '-';
+      document.getElementById('dispCourseCategory').textContent = c.category || 'Mandatory Course';
+      document.getElementById('dispCoursePlanType').textContent = c.planType || 'ในแผน';
+
+      const batches = (c.batches && c.batches.length > 0) ? c.batches : ['รุ่นที่ 1'];
+      document.getElementById('dispCourseBatches').textContent = batches.length + ' รุ่นการอบรม';
+
+      // Sheet Link (Secured: Visible only when ?admin=true or authenticated admin session)
+      const sheetUrl = c.sheetUrl || (c.sheetId ? ('https://docs.google.com/spreadsheets/d/' + c.sheetId + '/edit') : '');
+      const btnSheet = document.getElementById('btnSheet');
+      if (btnSheet) {
+        btnSheet.href = sheetUrl;
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get('admin') === 'true' || 
+                        sessionStorage.getItem('hrd_admin_auth') === 'true' || 
+                        localStorage.getItem('hrd_admin_role') === 'admin';
+        if (isAdmin && sheetUrl) {
+          btnSheet.classList.remove('hidden');
+          btnSheet.classList.add('inline-flex');
+        } else {
+          btnSheet.classList.add('hidden');
+          btnSheet.classList.remove('inline-flex');
+        }
+      }
+
+      // Report Date
+      const now = new Date();
+      const thMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const dateStr = `${now.getDate()} ${thMonths[now.getMonth()]} ${now.getFullYear() + 543}`;
+      const elReportDate = document.getElementById('dispReportDate');
+      if (elReportDate) elReportDate.textContent = dateStr;
+    }
+
+    function switchDashboardTab(tabName) {
+      const tabRatings = document.getElementById('tabContentRatings');
+      const tabFeedback = document.getElementById('tabContentFeedback');
+
+      const btnRatings = document.getElementById('tabBtnRatings');
+      const btnFeedback = document.getElementById('tabBtnFeedback');
+
+      const activeClass = 'py-2.5 px-4 rounded-2xl bg-[#0369a1] text-white shadow-xs font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 shrink-0';
+      const inactiveClass = 'py-2.5 px-4 rounded-2xl text-slate-600 hover:text-slate-900 font-medium text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 shrink-0 border border-transparent';
+
+      if (tabName === 'ratings') {
+        if (tabRatings) tabRatings.classList.remove('hidden');
+        if (tabFeedback) tabFeedback.classList.add('hidden');
+        if (btnRatings) btnRatings.className = activeClass;
+        if (btnFeedback) btnFeedback.className = inactiveClass;
+      } else if (tabName === 'feedback') {
+        if (tabRatings) tabRatings.classList.add('hidden');
+        if (tabFeedback) tabFeedback.classList.remove('hidden');
+        if (btnRatings) btnRatings.className = inactiveClass;
+        if (btnFeedback) btnFeedback.className = activeClass;
+      }
+    }
+
+    function toggleDetailedEvaluation() {
+      const container = document.getElementById('detailedEvaluationContainer');
+      const text = document.getElementById('evalToggleText');
+      const icon = document.getElementById('evalToggleIcon');
+      if (!container) return;
+
+      const isHidden = container.classList.contains('hidden');
+      if (isHidden) {
+        container.classList.remove('hidden');
+        if (text) text.textContent = 'ซ่อนรายละเอียดผลประเมิน';
+        if (icon) icon.textContent = '▲';
+      } else {
+        container.classList.add('hidden');
+        if (text) text.textContent = 'คลิกเพื่อดูรายละเอียด 15 ข้อ';
+        if (icon) icon.textContent = '▼';
+      }
+    }
+
+    // ============================================================================
+    // 📸 9 TRAINING ACTIVITY PHOTOS LOGIC (WYSIWYG CROP & FIT ENGINE)
+    // ============================================================================
+    const MAX_PHOTOS = 9;
+    let summaryPhotos = new Array(MAX_PHOTOS).fill(null);
+    let currentGalleryAspectRatio = '4/3';
+    let currentEditingPhotoIdx = null;
+    let currentCropState = {
+      fitMode: 'cover',
+      zoom: 1.0,
+      offsetX: 50,
+      offsetY: 50
+    };
+
+    function normalizePhotoItem(item) {
+      if (!item) return null;
+      if (typeof item === 'string') {
+        return {
+          raw: item,
+          cropped: item,
+          fitMode: 'cover',
+          zoom: 1.0,
+          offsetX: 50,
+          offsetY: 50,
+          aspectRatio: currentGalleryAspectRatio
+        };
+      }
+      return item;
+    }
+
+    function getGalleryAspectClass() {
+      switch (currentGalleryAspectRatio) {
+        case '1/1': return 'aspect-square';
+        case '16/9': return 'aspect-[16/9]';
+        case '3/4': return 'aspect-[3/4]';
+        case '4/3':
+        default:
+          return 'aspect-[4/3]';
+      }
+    }
+
+    function setGalleryAspectRatio(ratio) {
+      currentGalleryAspectRatio = ratio;
+      if (currentCourse && currentCourse.id) {
+        try { localStorage.setItem('hrd_gallery_ratio_' + currentCourse.id, ratio); } catch(e) {}
+      }
+      updateRatioButtonsUI();
+      reprocessAllPhotosWithRatio();
+    }
+
+    function updateRatioButtonsUI() {
+      ['4/3', '1/1', '16/9', '3/4'].forEach(r => {
+        const id = 'btnRatio_' + r.replace('/', '_');
+        const el = document.getElementById(id);
+        if (el) {
+          if (r === currentGalleryAspectRatio) {
+            el.className = 'px-2 py-0.5 rounded-lg font-bold bg-white text-[#0369a1] shadow-2xs transition-all cursor-pointer';
+          } else {
+            el.className = 'px-2 py-0.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition-all cursor-pointer';
+          }
+        }
+      });
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function compressImageMaxDim(dataUrl, maxDim = 1600) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width;
+          let h = img.height;
+          if (w <= maxDim && h <= maxDim) {
+            resolve(dataUrl);
+            return;
+          }
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.90));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
+    function generateProcessedPhoto(rawBase64, options = {}) {
+      return new Promise((resolve) => {
+        if (!rawBase64) { resolve(null); return; }
+        const img = new Image();
+        img.onload = () => {
+          const targetRatioStr = options.aspectRatio || currentGalleryAspectRatio || '4/3';
+          let ratioVal = 4 / 3;
+          let targetW = 800;
+          let targetH = 600;
+
+          if (targetRatioStr === '1/1') {
+            ratioVal = 1; targetW = 800; targetH = 800;
+          } else if (targetRatioStr === '16/9') {
+            ratioVal = 16 / 9; targetW = 960; targetH = 540;
+          } else if (targetRatioStr === '3/4') {
+            ratioVal = 3 / 4; targetW = 600; targetH = 800;
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = targetW;
+          canvas.height = targetH;
+          const ctx = canvas.getContext('2d');
+
+          const fitMode = options.fitMode || 'cover';
+          const zoom = Math.max(1.0, options.zoom || 1.0);
+          const offsetX = typeof options.offsetX === 'number' ? options.offsetX : 50;
+          const offsetY = typeof options.offsetY === 'number' ? options.offsetY : 50;
+
+          if (fitMode === 'contain') {
+            // Clean neutral background for letterbox
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(0, 0, targetW, targetH);
+
+            const imgRatio = img.width / img.height;
+            let dw, dh, dx, dy;
+            if (imgRatio > ratioVal) {
+              dw = targetW;
+              dh = targetW / imgRatio;
+              dx = 0;
+              dy = (targetH - dh) / 2;
+            } else {
+              dh = targetH;
+              dw = targetH * imgRatio;
+              dy = 0;
+              dx = (targetW - dw) / 2;
+            }
+            ctx.drawImage(img, dx, dy, dw, dh);
+          } else {
+            // Cover mode with precise source crop
+            const imgRatio = img.width / img.height;
+            let baseSw, baseSh;
+
+            if (imgRatio > ratioVal) {
+              baseSh = img.height;
+              baseSw = img.height * ratioVal;
+            } else {
+              baseSw = img.width;
+              baseSh = img.width / ratioVal;
+            }
+
+            const sw = baseSw / zoom;
+            const sh = baseSh / zoom;
+
+            const maxSx = Math.max(0, img.width - sw);
+            const maxSy = Math.max(0, img.height - sh);
+
+            const sx = Math.max(0, Math.min(maxSx, maxSx * (offsetX / 100)));
+            const sy = Math.max(0, Math.min(maxSy, maxSy * (offsetY / 100)));
+
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+          }
+
+          resolve(canvas.toDataURL('image/jpeg', 0.90));
+        };
+        img.onerror = () => resolve(rawBase64);
+        img.src = rawBase64;
+      });
+    }
+
+    async function reprocessAllPhotosWithRatio() {
+      for (let i = 0; i < summaryPhotos.length; i++) {
+        if (summaryPhotos[i]) {
+          const norm = normalizePhotoItem(summaryPhotos[i]);
+          norm.aspectRatio = currentGalleryAspectRatio;
+          norm.cropped = await generateProcessedPhoto(norm.raw, norm);
+          summaryPhotos[i] = norm;
+        }
+      }
+      saveSummaryPhotos();
+      renderPhotoGallery();
+    }
+
+    async function initSummaryPhotos(courseId) {
+      if (!courseId) return;
+      try {
+        const savedRatio = localStorage.getItem('hrd_gallery_ratio_' + courseId);
+        if (savedRatio) currentGalleryAspectRatio = savedRatio;
+      } catch(e) {}
+      updateRatioButtonsUI();
+
+      try {
+        const raw = localStorage.getItem('hrd_summary_photos_' + courseId);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            summaryPhotos = parsed;
+          }
+        }
+      } catch(e) {}
+      while (summaryPhotos.length < MAX_PHOTOS) summaryPhotos.push(null);
+
+      // Auto-normalize any legacy raw string photos to exact aspect ratio crop
+      let needSave = false;
+      for (let i = 0; i < summaryPhotos.length; i++) {
+        if (summaryPhotos[i]) {
+          const norm = normalizePhotoItem(summaryPhotos[i]);
+          if (!norm.cropped || norm.cropped === norm.raw || typeof summaryPhotos[i] === 'string') {
+            norm.cropped = await generateProcessedPhoto(norm.raw, norm);
+            needSave = true;
+          }
+          summaryPhotos[i] = norm;
+        }
+      }
+      if (needSave) saveSummaryPhotos();
+      renderPhotoGallery();
+
+      // Check Drive synced status
+      try {
+        const syncedTime = localStorage.getItem('hrd_photos_synced_drive_' + courseId);
+        const badge = document.getElementById('driveSyncStatusBadge');
+        if (syncedTime && badge) badge.classList.remove('hidden');
+
+        const btnOpenFolder = document.getElementById('btnOpenDriveFolder');
+        if (btnOpenFolder && currentCourse && (currentCourse.folderUrl || currentCourse.folderId)) {
+          btnOpenFolder.href = currentCourse.folderUrl || ('https://drive.google.com/drive/folders/' + currentCourse.folderId);
+          btnOpenFolder.classList.remove('hidden');
+          btnOpenFolder.classList.add('inline-flex');
+        }
+      } catch(e) {}
+    }
+
+    function saveSummaryPhotos() {
+      if (!currentCourse || !currentCourse.id) return;
+      try {
+        localStorage.setItem('hrd_summary_photos_' + currentCourse.id, JSON.stringify(summaryPhotos));
+      } catch(e) {
+        console.warn('LocalStorage save photo error:', e);
+      }
+    }
+
+    function renderPhotoGallery() {
+      const grid = document.getElementById('photoGalleryGrid');
+      if (!grid) return;
+
+      const aspectClass = getGalleryAspectClass();
+
+      grid.innerHTML = summaryPhotos.map((item, idx) => {
+        const photo = normalizePhotoItem(item);
+        if (photo && (photo.cropped || photo.raw)) {
+          const displaySrc = photo.cropped || photo.raw;
+          const fitLabel = photo.fitMode === 'contain' ? '🖼️ เต็มภาพ' : '📐 ตัดพอดี';
+          return `
+            <div class="relative group rounded-2xl overflow-hidden ${aspectClass} bg-slate-100 border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+              <img src="${displaySrc}" alt="ภาพบรรยากาศการอบรมที่ ${idx + 1}" class="w-full h-full object-cover">
+              
+              <!-- Hover Overlay Controls -->
+              <div class="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-2" data-html2canvas-ignore>
+                <div class="flex items-center gap-1.5 flex-wrap justify-center">
+                  <button type="button" onclick="openCropAdjustModal(${idx})" class="px-2.5 py-1.5 bg-[#0369a1] hover:bg-[#0a2540] text-white text-[11px] font-bold rounded-xl shadow-xs transition-all flex items-center gap-1 active:scale-95 cursor-pointer" title="ปรับขนาด ซูม และเลื่อนตำแหน่ง">
+                    <span>🔍 ปรับขนาด/ตำแหน่ง</span>
+                  </button>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <label class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-800 text-[10px] font-semibold rounded-lg shadow-xs cursor-pointer transition-all flex items-center gap-1">
+                    <span>🔄 เปลี่ยน</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="handleSinglePhotoUpload(${idx}, this.files[0])">
+                  </label>
+                  <button type="button" onclick="removePhoto(${idx})" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-semibold rounded-lg shadow-xs transition-all flex items-center gap-1 cursor-pointer">
+                    <span>🗑️ ลบ</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Info Badges -->
+              <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-[10px] text-white font-medium flex items-center gap-1 pointer-events-none leading-normal overflow-visible">
+                <span class="leading-normal">ภาพที่ ${idx + 1}</span>
+                <span class="opacity-80 leading-normal">• ${fitLabel}</span>
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <label class="group relative rounded-2xl ${aspectClass} border-2 border-dashed border-slate-300 hover:border-[#0369a1] bg-white/80 hover:bg-sky-50/40 transition-all cursor-pointer flex flex-col items-center justify-center p-3 text-center">
+              <input type="file" accept="image/*" class="hidden" onchange="handleSinglePhotoUpload(${idx}, this.files[0])">
+              <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 group-hover:border-[#0369a1]/40 text-slate-400 group-hover:text-[#0369a1] flex items-center justify-center text-lg shadow-2xs group-hover:scale-105 transition-all mb-1.5">
+                📷
+              </div>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-[#0369a1]">ภาพที่ ${idx + 1}</span>
+              <span class="text-[10px] text-slate-400 font-light">คลิกเพื่ออัปโหลด</span>
+            </label>
+          `;
+        }
+      }).join('');
+    }
+
+    async function handleSinglePhotoUpload(index, file) {
+      if (!file) return;
+      try {
+        const rawBase64 = await readFileAsDataUrl(file);
+        const compressedRaw = await compressImageMaxDim(rawBase64, 1600);
+        const photoItem = {
+          raw: compressedRaw,
+          fitMode: 'cover',
+          zoom: 1.0,
+          offsetX: 50,
+          offsetY: 50,
+          aspectRatio: currentGalleryAspectRatio
+        };
+        photoItem.cropped = await generateProcessedPhoto(photoItem.raw, photoItem);
+        summaryPhotos[index] = photoItem;
+        saveSummaryPhotos();
+        renderPhotoGallery();
+        if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+          HrdModal.toast(`อัปโหลดภาพกิจกรรมที่ ${index + 1} เรียบร้อยแล้วค่ะ`, 'success');
+        }
+      } catch(err) {
+        console.error('Upload single photo error:', err);
+      }
+    }
+
+    async function handleBatchPhotosUpload(files) {
+      if (!files || files.length === 0) return;
+      const fileArray = Array.from(files).slice(0, MAX_PHOTOS);
+      let processed = 0;
+      
+      for (let idx = 0; idx < fileArray.length; idx++) {
+        try {
+          const file = fileArray[idx];
+          const rawBase64 = await readFileAsDataUrl(file);
+          const compressedRaw = await compressImageMaxDim(rawBase64, 1600);
+          const photoItem = {
+            raw: compressedRaw,
+            fitMode: 'cover',
+            zoom: 1.0,
+            offsetX: 50,
+            offsetY: 50,
+            aspectRatio: currentGalleryAspectRatio
+          };
+          photoItem.cropped = await generateProcessedPhoto(photoItem.raw, photoItem);
+          summaryPhotos[idx] = photoItem;
+          processed++;
+        } catch(e) {}
+      }
+      saveSummaryPhotos();
+      renderPhotoGallery();
+      if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+        HrdModal.toast(`อัปโหลดภาพกิจกรรมครบ ${processed} ภาพเรียบร้อยแล้วค่ะ`, 'success');
+      }
+    }
+
+    function removePhoto(index) {
+      summaryPhotos[index] = null;
+      saveSummaryPhotos();
+      renderPhotoGallery();
+    }
+
+    function clearAllPhotos() {
+      if (confirm('ต้องการล้างรูปภาพกิจกรรมทั้งหมดใช่หรือไม่คะ?')) {
+        summaryPhotos = new Array(MAX_PHOTOS).fill(null);
+        saveSummaryPhotos();
+        renderPhotoGallery();
+      }
+    }
+
+    async function uploadPhotosToGoogleDrive() {
+      if (!currentCourse) return;
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      // Filter valid uploaded photos
+      const validPhotos = [];
+      for (let i = 0; i < summaryPhotos.length; i++) {
+        const item = normalizePhotoItem(summaryPhotos[i]);
+        if (item && (item.cropped || item.raw)) {
+          validPhotos.push({
+            index: i,
+            base64: item.cropped || item.raw
+          });
+        }
+      }
+
+      if (validPhotos.length === 0) {
+        if (typeof HrdModal !== 'undefined' && HrdModal.warning) {
+          HrdModal.warning('ยังไม่มีภาพกิจกรรมในระบบ กรุณาอัปโหลดภาพก่อนบันทึกลง Google Drive นะคะ', 'ไม่มีรูปภาพ');
+        } else {
+          alert('ยังไม่มีภาพกิจกรรมในระบบ กรุณาอัปโหลดภาพก่อนบันทึกลง Google Drive นะคะ');
+        }
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveToDrive');
+      const btnText = document.getElementById('btnSaveToDriveText');
+      const origText = 'บันทึกลง Drive';
+      if (btn) btn.disabled = true;
+
+      let successCount = 0;
+      let lastFolderUrl = currentCourse.folderUrl || '';
+
+      try {
+        for (let p = 0; p < validPhotos.length; p++) {
+          const item = validPhotos[p];
+          if (btnText) {
+            btnText.textContent = `กำลังบันทึกภาพ ${p + 1}/${validPhotos.length}...`;
+          }
+
+          const payload = {
+            action: 'uploadCoursePhoto',
+            courseId: currentCourse.id,
+            courseTitle: currentCourse.title,
+            folderId: currentCourse.folderId || '',
+            index: item.index,
+            fileName: 'activity_photo_' + (item.index + 1) + '.jpg',
+            base64: item.base64,
+            mimeType: 'image/jpeg'
+          };
+
+          const res = await fetch(gasUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          }).then(r => r.json()).catch(err => {
+            console.warn('Upload photo error:', err);
+            return null;
+          });
+
+          if (res && res.success) {
+            successCount++;
+            if (res.folderUrl) lastFolderUrl = res.folderUrl;
+          }
+        }
+
+        if (successCount > 0) {
+          localStorage.setItem('hrd_photos_synced_drive_' + currentCourse.id, new Date().toISOString());
+          const badge = document.getElementById('driveSyncStatusBadge');
+          if (badge) badge.classList.remove('hidden');
+
+          const btnOpenFolder = document.getElementById('btnOpenDriveFolder');
+          if (btnOpenFolder && (lastFolderUrl || currentCourse.folderUrl)) {
+            btnOpenFolder.href = lastFolderUrl || currentCourse.folderUrl;
+            btnOpenFolder.classList.remove('hidden');
+            btnOpenFolder.classList.add('inline-flex');
+          }
+
+          if (btnText) btnText.textContent = `✓ บันทึกสำเร็จ (${successCount} ภาพ)`;
+          if (typeof HrdModal !== 'undefined' && HrdModal.success) {
+            HrdModal.success(
+              `บันทึกภาพกิจกรรม ${successCount} ภาพลง Google Drive ในโฟลเดอร์ "${currentCourse.title}" เรียบร้อยแล้วค่ะ!`,
+              'บันทึกลง Google Drive สำเร็จ'
+            );
+          }
+        } else {
+          throw new Error('ไม่สามารถบันทึกภาพลง Google Drive ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
+        }
+      } catch(err) {
+        console.error('Save to Drive error:', err);
+        alert('เกิดข้อผิดพลาดในการบันทึกภาพลง Google Drive: ' + err.message);
+      } finally {
+        if (btn) btn.disabled = false;
+        setTimeout(() => {
+          if (btnText) btnText.textContent = origText;
+        }, 4000);
+      }
+    }
+
+    // ============================================================================
+    // ✂️ PHOTO CROP & FIT ADJUSTER MODAL LOGIC
+    // ============================================================================
+    function openCropAdjustModal(idx) {
+      const item = normalizePhotoItem(summaryPhotos[idx]);
+      if (!item || !item.raw) return;
+
+      currentEditingPhotoIdx = idx;
+      currentCropState = {
+        fitMode: item.fitMode || 'cover',
+        zoom: item.zoom || 1.0,
+        offsetX: typeof item.offsetX === 'number' ? item.offsetX : 50,
+        offsetY: typeof item.offsetY === 'number' ? item.offsetY : 50
+      };
+
+      const titleEl = document.getElementById('cropModalTitle');
+      if (titleEl) titleEl.textContent = `ปรับขนาดและตำแหน่งภาพกิจกรรม (ภาพที่ ${idx + 1})`;
+
+      const badgeEl = document.getElementById('cropPreviewRatioBadge');
+      if (badgeEl) badgeEl.textContent = currentGalleryAspectRatio;
+
+      const sliderZoom = document.getElementById('sliderCropZoom');
+      if (sliderZoom) sliderZoom.value = currentCropState.zoom;
+      const sliderY = document.getElementById('sliderCropOffsetY');
+      if (sliderY) sliderY.value = currentCropState.offsetY;
+      const sliderX = document.getElementById('sliderCropOffsetX');
+      if (sliderX) sliderX.value = currentCropState.offsetX;
+
+      updateCropControlsUI();
+      renderCropPreview();
+
+      const modal = document.getElementById('photoCropModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeCropAdjustModal() {
+      const modal = document.getElementById('photoCropModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function setCropFitMode(mode) {
+      currentCropState.fitMode = mode;
+      updateCropControlsUI();
+      renderCropPreview();
+    }
+
+    function setCropPreset(ox, oy) {
+      currentCropState.offsetX = ox;
+      currentCropState.offsetY = oy;
+      const sliderX = document.getElementById('sliderCropOffsetX');
+      if (sliderX) sliderX.value = ox;
+      const sliderY = document.getElementById('sliderCropOffsetY');
+      if (sliderY) sliderY.value = oy;
+      updateCropControlsUI();
+      renderCropPreview();
+    }
+
+    function resetCropValues() {
+      currentCropState.fitMode = 'cover';
+      currentCropState.zoom = 1.0;
+      currentCropState.offsetX = 50;
+      currentCropState.offsetY = 50;
+      const sliderZ = document.getElementById('sliderCropZoom');
+      if (sliderZ) sliderZ.value = 1.0;
+      const sliderX = document.getElementById('sliderCropOffsetX');
+      if (sliderX) sliderX.value = 50;
+      const sliderY = document.getElementById('sliderCropOffsetY');
+      if (sliderY) sliderY.value = 50;
+      updateCropControlsUI();
+      renderCropPreview();
+    }
+
+    function onCropSliderChange() {
+      const sliderZ = document.getElementById('sliderCropZoom');
+      const sliderY = document.getElementById('sliderCropOffsetY');
+      const sliderX = document.getElementById('sliderCropOffsetX');
+
+      if (sliderZ) currentCropState.zoom = parseFloat(sliderZ.value);
+      if (sliderY) currentCropState.offsetY = parseInt(sliderY.value, 10);
+      if (sliderX) currentCropState.offsetX = parseInt(sliderX.value, 10);
+
+      updateCropControlsUI();
+      renderCropPreview();
+    }
+
+    function updateCropControlsUI() {
+      const isContain = currentCropState.fitMode === 'contain';
+      const btnCover = document.getElementById('fitModeCoverBtn');
+      const btnContain = document.getElementById('fitModeContainBtn');
+
+      if (btnCover && btnContain) {
+        if (isContain) {
+          btnCover.className = 'p-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-slate-300 font-medium text-left flex items-start gap-2.5 transition-all cursor-pointer';
+          btnContain.className = 'p-3 rounded-xl border-2 border-[#0369a1] bg-sky-50/70 text-[#0369a1] font-bold text-left flex items-start gap-2.5 transition-all cursor-pointer';
+        } else {
+          btnCover.className = 'p-3 rounded-xl border-2 border-[#0369a1] bg-sky-50/70 text-[#0369a1] font-bold text-left flex items-start gap-2.5 transition-all cursor-pointer';
+          btnContain.className = 'p-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:border-slate-300 font-medium text-left flex items-start gap-2.5 transition-all cursor-pointer';
+        }
+      }
+
+      const zVal = document.getElementById('valCropZoom');
+      if (zVal) zVal.textContent = Math.round(currentCropState.zoom * 100) + '%';
+      const yVal = document.getElementById('valCropOffsetY');
+      if (yVal) yVal.textContent = currentCropState.offsetY + '%';
+      const xVal = document.getElementById('valCropOffsetX');
+      if (xVal) xVal.textContent = currentCropState.offsetX + '%';
+    }
+
+    function renderCropPreview() {
+      if (currentEditingPhotoIdx === null) return;
+      const item = normalizePhotoItem(summaryPhotos[currentEditingPhotoIdx]);
+      if (!item || !item.raw) return;
+
+      const canvas = document.getElementById('cropPreviewCanvas');
+      if (!canvas) return;
+
+      const img = new Image();
+      img.onload = () => {
+        let ratioVal = 4 / 3;
+        let targetW = 800;
+        let targetH = 600;
+
+        if (currentGalleryAspectRatio === '1/1') {
+          ratioVal = 1; targetW = 800; targetH = 800;
+        } else if (currentGalleryAspectRatio === '16/9') {
+          ratioVal = 16 / 9; targetW = 960; targetH = 540;
+        } else if (currentGalleryAspectRatio === '3/4') {
+          ratioVal = 3 / 4; targetW = 600; targetH = 800;
+        }
+
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const ctx = canvas.getContext('2d');
+
+        const fitMode = currentCropState.fitMode;
+        const zoom = currentCropState.zoom;
+        const offsetX = currentCropState.offsetX;
+        const offsetY = currentCropState.offsetY;
+
+        if (fitMode === 'contain') {
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(0, 0, targetW, targetH);
+
+          const imgRatio = img.width / img.height;
+          let dw, dh, dx, dy;
+          if (imgRatio > ratioVal) {
+            dw = targetW;
+            dh = targetW / imgRatio;
+            dx = 0;
+            dy = (targetH - dh) / 2;
+          } else {
+            dh = targetH;
+            dw = targetH * imgRatio;
+            dy = 0;
+            dx = (targetW - dw) / 2;
+          }
+          ctx.drawImage(img, dx, dy, dw, dh);
+        } else {
+          const imgRatio = img.width / img.height;
+          let baseSw, baseSh;
+          if (imgRatio > ratioVal) {
+            baseSh = img.height;
+            baseSw = img.height * ratioVal;
+          } else {
+            baseSw = img.width;
+            baseSh = img.width / ratioVal;
+          }
+
+          const sw = baseSw / zoom;
+          const sh = baseSh / zoom;
+          const maxSx = Math.max(0, img.width - sw);
+          const maxSy = Math.max(0, img.height - sh);
+          const sx = Math.max(0, Math.min(maxSx, maxSx * (offsetX / 100)));
+          const sy = Math.max(0, Math.min(maxSy, maxSy * (offsetY / 100)));
+
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+        }
+      };
+      img.src = item.raw;
+    }
+
+    async function applyCropAdjustment() {
+      if (currentEditingPhotoIdx === null) return;
+      const item = normalizePhotoItem(summaryPhotos[currentEditingPhotoIdx]);
+      if (!item || !item.raw) return;
+
+      const btn = document.getElementById('btnApplyCrop');
+      const origText = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="animate-spin inline-block mr-1">⏳</span> กำลังประมวลผล...';
+      }
+
+      try {
+        item.fitMode = currentCropState.fitMode;
+        item.zoom = currentCropState.zoom;
+        item.offsetX = currentCropState.offsetX;
+        item.offsetY = currentCropState.offsetY;
+        item.aspectRatio = currentGalleryAspectRatio;
+
+        item.cropped = await generateProcessedPhoto(item.raw, item);
+        summaryPhotos[currentEditingPhotoIdx] = item;
+
+        saveSummaryPhotos();
+        renderPhotoGallery();
+        closeCropAdjustModal();
+
+        if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+          HrdModal.toast(`ปรับขนาดและตำแหน่งภาพที่ ${currentEditingPhotoIdx + 1} เรียบร้อยแล้วค่ะ`, 'success');
+        }
+      } catch(err) {
+        console.error('Apply crop error:', err);
+        alert('เกิดข้อผิดพลาดในการบันทึกภาพ: ' + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+      }
+    }
+
+    // ============================================================================
+    // 🎯 TARGET AUDIENCE HEADCOUNT ADJUSTMENT ON SUMMARY DATE
+    // ============================================================================
+    function openEditTargetModal() {
+      if (!currentCourse) return;
+      const modal = document.getElementById('editTargetModal');
+      if (!modal) return;
+
+      const courseTitle = document.getElementById('modalCourseTitle');
+      if (courseTitle) courseTitle.textContent = currentCourse.title || currentCourse.id;
+
+      let curCount = 177;
+      if (currentCourse.targetAudience && currentCourse.targetAudience.totalCount) {
+        curCount = currentCourse.targetAudience.totalCount;
+      }
+      const curCountEl = document.getElementById('modalCurrentTargetCount');
+      if (curCountEl) curCountEl.textContent = curCount;
+
+      const sysCount = (employeeDatabase && employeeDatabase.length > 0) ? employeeDatabase.length : 177;
+      const sysCountEl = document.getElementById('modalSystemEmployeeCount');
+      if (sysCountEl) sysCountEl.textContent = sysCount;
+
+      const input = document.getElementById('inputNewTargetCount');
+      if (input) input.value = curCount;
+
+      const advLink = document.getElementById('linkAdvancedTarget');
+      if (advLink) advLink.href = 'admin-target.html?course=' + encodeURIComponent(currentCourse.id);
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      if (input) setTimeout(() => { input.focus(); input.select(); }, 100);
+    }
+
+    function closeEditTargetModal() {
+      const modal = document.getElementById('editTargetModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function syncWithSystemEmployees() {
+      const sysCount = (employeeDatabase && employeeDatabase.length > 0) ? employeeDatabase.length : 177;
+      const input = document.getElementById('inputNewTargetCount');
+      if (input) {
+        input.value = sysCount;
+        input.classList.add('ring-2', 'ring-sky-400');
+        setTimeout(() => input.classList.remove('ring-2', 'ring-sky-400'), 500);
+      }
+    }
+
+    async function saveTargetCountAdjustment() {
+      if (!currentCourse) return;
+      const input = document.getElementById('inputNewTargetCount');
+      if (!input) return;
+
+      const newCount = parseInt(input.value, 10);
+      if (isNaN(newCount) || newCount <= 0) {
+        alert('กรุณาระบุจำนวนกลุ่มเป้าหมายให้ถูกต้อง (ต้องมากกว่า 0) ค่ะ');
+        return;
+      }
+
+      const btnSave = document.getElementById('btnSaveTargetAdjust');
+      const origText = btnSave ? btnSave.innerHTML : '';
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<span class="animate-spin inline-block mr-1">⏳</span> กำลังบันทึก...';
+      }
+
+      try {
+        if (!currentCourse.targetAudience) {
+          currentCourse.targetAudience = {
+            type: 'all',
+            summary: 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง',
+            departments: [],
+            positions: [],
+            employeeIds: []
+          };
+        }
+
+        currentCourse.targetAudience.totalCount = newCount;
+        if (currentCourse.targetAudience.type === 'all') {
+          currentCourse.targetAudience.summary = 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง (ณ วันสรุป ' + newCount + ' ท่าน)';
+        }
+
+        // Save to localStorage (individual course and full registry)
+        localStorage.setItem('hrd_course_' + currentCourse.id, JSON.stringify(currentCourse));
+        const allRaw = localStorage.getItem('hrd_all_courses');
+        if (allRaw) {
+          const allCourses = JSON.parse(allRaw);
+          if (Array.isArray(allCourses)) {
+            const idx = allCourses.findIndex(c => c && String(c.id).toLowerCase() === String(currentCourse.id).toLowerCase());
+            if (idx !== -1) {
+              allCourses[idx] = currentCourse;
+              localStorage.setItem('hrd_all_courses', JSON.stringify(allCourses));
+            }
+          }
+        }
+
+        // Re-render dashboard metrics instantly without reloading
+        let attendees = [];
+        try { const rawAtt = localStorage.getItem('hrd_attendees_' + currentCourse.id); if (rawAtt) attendees = JSON.parse(rawAtt); } catch(e) {}
+        let checkins = [];
+        try { const rawChk = localStorage.getItem('hrd_checkins_' + currentCourse.id); if (rawChk) checkins = JSON.parse(rawChk); } catch(e) {}
+        let evaluations = [];
+        try { const rawEval = localStorage.getItem('hrd_evaluations_' + currentCourse.id); if (rawEval) evaluations = JSON.parse(rawEval); } catch(e) {}
+
+        renderDashboardMetrics(currentCourse, attendees, evaluations, checkins);
+        closeEditTargetModal();
+
+        if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+          HrdModal.toast(`ปรับปรุงยอดกลุ่มเป้าหมาย ณ วันสรุปผลเป็น ${newCount} ท่าน เรียบร้อยแล้วค่ะ`, 'success');
+        }
+
+        // Background sync to GAS
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        if (gasUrl) {
+          fetchWithTimeout(gasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'updateTargetAudience',
+              courseId: currentCourse.id,
+              targetAudience: currentCourse.targetAudience
+            })
+          }, 10000).catch(e => console.warn('GAS sync note:', e));
+        }
+      } catch(err) {
+        console.error('Save target adjust error:', err);
+        alert('เกิดข้อผิดพลาดในการบันทึก: ' + err.message);
+      } finally {
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = origText;
+        }
+      }
+    }
+
+    // ============================================================================
+    // 📥 DOWNLOAD TRAINING SUMMARY POSTER AS IMAGE (PNG)
+    // ============================================================================
+    async function downloadDashboardAsImage() {
+      const target = document.getElementById('summaryPosterCard');
+      if (!target) return;
+
+      if (typeof html2canvas === 'undefined') {
+        alert('ระบบประมวลผลรูปภาพกำลังโหลด กรุณารอสักครู่แล้วลองอีกครั้งค่ะ');
+        return;
+      }
+
+      const btnTop = document.getElementById('btnDownloadPoster');
+      const originalHtml = btnTop ? btnTop.innerHTML : '';
+      if (btnTop) {
+        btnTop.disabled = true;
+        btnTop.innerHTML = '<span class="animate-spin inline-block mr-1">⌛</span> กำลังประมวลผลรูปภาพ...';
+      }
+
+      if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+        HrdModal.toast('กำลังสร้างภาพสรุปการอบรมความละเอียดสูง กรุณารอสักครู่ค่ะ...', 'info');
+      }
+
+      try {
+        window.scrollTo(0, 0);
+
+        // Pre-fill report date if empty
+        const now = new Date();
+        const thMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        const dateStr = `${now.getDate()} ${thMonths[now.getMonth()]} ${now.getFullYear() + 543}`;
+        const elDate = document.getElementById('dispReportDate');
+        if (elDate && (!elDate.textContent || elDate.textContent === '-')) {
+          elDate.textContent = dateStr;
+        }
+
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const canvas = await html2canvas(target, {
+          scale: 2, // 2x resolution for crystal clear export
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          scrollX: 0,
+          scrollY: 0,
+          onclone: (clonedDoc) => {
+            const card = clonedDoc.getElementById('summaryPosterCard');
+            if (card) {
+              card.querySelectorAll('p, span, strong, h1, h2, h3, h4').forEach(el => {
+                el.style.overflow = 'visible';
+                el.style.lineHeight = '1.45';
+              });
+            }
+          },
+          ignoreElements: (element) => {
+            return element.hasAttribute('data-html2canvas-ignore') || element.classList.contains('no-export');
+          }
+        });
+
+        const safeTitle = (currentCourse && currentCourse.title)
+          ? currentCourse.title.replace(/[\\/:*?"<>|]/g, '_').substring(0, 30)
+          : 'สรุปการอบรม';
+        const fileDate = new Date().toISOString().slice(0, 10);
+        const fileName = `สรุปผลการฝึกอบรม_A4_${safeTitle}_${fileDate}.png`;
+
+        const link = document.createElement('a');
+        link.download = fileName;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+          HrdModal.toast('ดาวน์โหลดภาพสรุปผลการอบรมสำเร็จเรียบร้อยแล้วค่ะ', 'success');
+        }
+      } catch (err) {
+        console.error('Download error:', err);
+        alert('เกิดข้อผิดพลาดในการสร้างรูปภาพ: ' + err.message);
+      } finally {
+        if (btnTop) {
+          btnTop.disabled = false;
+          btnTop.innerHTML = originalHtml;
+        }
+      }
+    }
+
+    async function loadAndRenderDashboard(course) {
+      if (!course) return;
+
+      // 1. Local Cache Data - Instant first paint
+      let attendees = [];
+      try {
+        const rawAtt = localStorage.getItem('hrd_attendees_' + course.id);
+        if (rawAtt) attendees = JSON.parse(rawAtt);
+      } catch(e) {}
+
+      let checkins = [];
+      try {
+        const rawChk = localStorage.getItem('hrd_checkins_' + course.id);
+        if (rawChk) checkins = JSON.parse(rawChk);
+      } catch(e) {}
+
+      let evaluations = [];
+      try {
+        const rawEval = localStorage.getItem('hrd_evaluations_' + course.id);
+        if (rawEval) evaluations = JSON.parse(rawEval);
+      } catch(e) {}
+
+      renderDashboardMetrics(course, attendees, evaluations, checkins);
+
+      // 2. Non-blocking Background Sync with GAS
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      const targetSheetId = course.sheetId || '';
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('animate-spin');
+
+      try {
+        const promises = [];
+
+        if (targetSheetId) {
+          promises.push(
+            fetchWithTimeout(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(targetSheetId), {}, 9000)
+              .then(r => r.json())
+              .then(data => {
+                if (data && data.success && Array.isArray(data.attendees) && data.attendees.length > 0) {
+                  attendees = data.attendees;
+                  try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(attendees)); } catch(e) {}
+                }
+              }).catch(() => {})
+          );
+
+          promises.push(
+            fetchWithTimeout(gasUrl + '?action=getCheckins&courseId=' + encodeURIComponent(course.id) + '&sheetId=' + encodeURIComponent(targetSheetId), {}, 9000)
+              .then(r => r.json())
+              .then(data => {
+                if (data && data.success && Array.isArray(data.checkins)) {
+                  checkins = data.checkins;
+                  try { localStorage.setItem('hrd_checkins_' + course.id, JSON.stringify(checkins)); } catch(e) {}
+                }
+              }).catch(() => {})
+          );
+        }
+
+        promises.push(
+          fetchWithTimeout(gasUrl + '?action=getEvaluations&courseId=' + encodeURIComponent(course.id) + '&sheetId=' + encodeURIComponent(targetSheetId), {}, 9000)
+            .then(r => r.json())
+            .then(data => {
+              if (data && data.success && Array.isArray(data.evaluations) && data.evaluations.length > 0) {
+                const map = new Map();
+                evaluations.forEach(ev => { if (ev.timestamp) map.set(ev.timestamp + (ev.batch || ''), ev); });
+                data.evaluations.forEach(ev => { if (ev.timestamp) map.set(ev.timestamp + (ev.batch || ''), ev); });
+                evaluations = Array.from(map.values());
+                try { localStorage.setItem('hrd_evaluations_' + course.id, JSON.stringify(evaluations)); } catch(e) {}
+              }
+            }).catch(() => {})
+        );
+
+        await Promise.all(promises);
+        renderDashboardMetrics(course, attendees, evaluations, checkins);
+      } catch(err) {
+        console.warn('Live sync note:', err);
+      } finally {
+        if (icon) icon.classList.remove('animate-spin');
+      }
+    }
+
+    async function refreshDashboard() {
+      if (!currentCourse) return;
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('animate-spin');
+
+      await loadAndRenderDashboard(currentCourse);
+
+      if (icon) icon.classList.remove('animate-spin');
+      if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+        HrdModal.toast('อัปเดตข้อมูลล่าสุดเรียบร้อยแล้วค่ะ', 'success');
+      }
+    }
+
+    function getUniqueAttendees(list) {
+      if (!Array.isArray(list)) return [];
+      const map = new Map();
+      list.forEach(a => {
+        const id = String(a.id || a.empId || a.employeeId || (a.firstName ? (a.firstName + ' ' + (a.lastName || '')) : '') || '').trim();
+        if (id && !map.has(id)) {
+          map.set(id, a);
+        }
+      });
+      return Array.from(map.values());
+    }
+
+    function getValidCheckins(list) {
+      if (!Array.isArray(list)) return [];
+      const map = new Map();
+      list.forEach(c => {
+        const status = String(c.status || '').trim();
+        const time = String(c.timestamp || '').trim();
+        
+        // Exclude anyone marked as not attended, waiting, or placeholder
+        if (status === 'ยังไม่เข้าอบรม' || status.includes('ยังไม่')) return;
+        
+        const isAttended = (status === 'เข้าอบรมแล้ว' || status.includes('เข้าอบรม')) ||
+                           (time && time !== '-');
+        if (!isAttended) return;
+
+        const id = String(c.employeeId || c.id || c.empId || (c.firstName ? (c.firstName + ' ' + (c.lastName || '')) : '') || '').trim();
+        if (id && !map.has(id)) {
+          map.set(id, c);
+        }
+      });
+      return Array.from(map.values());
+    }
+
+    function renderDashboardMetrics(course, rawAttendees, evaluations, rawCheckins = []) {
+      // Normalize unique attendees and valid check-ins (deduplicate multiple sub-topics or repeat rows)
+      const attendees = getUniqueAttendees(rawAttendees);
+      const checkins = getValidCheckins(rawCheckins);
+
+      // 1. Target Audience Metrics (Headcount Snapshotting)
+      let targetCount = 0;
+      let targetDesc = 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง';
+      let targetBadgeText = 'ทุกคน';
+
+      if (course.targetAudience) {
+        if (course.targetAudience.type === 'specific') {
+          targetCount = course.targetAudience.totalCount || (course.targetAudience.employeeIds ? course.targetAudience.employeeIds.length : 0);
+          targetDesc = course.targetAudience.summary || 'กลุ่มเป้าหมายเฉพาะ';
+          targetBadgeText = 'เฉพาะกลุ่ม';
+        } else {
+          // Lock headcount snapshot permanently so future employee database updates won't alter past courses
+          if (!course.targetAudience.totalCount || course.targetAudience.totalCount <= 0) {
+            course.targetAudience.totalCount = (employeeDatabase && employeeDatabase.length > 0) ? employeeDatabase.length : 177;
+            try { localStorage.setItem('hrd_course_' + course.id, JSON.stringify(course)); } catch(e) {}
+          }
+          targetCount = course.targetAudience.totalCount;
+          targetDesc = 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง';
+          targetBadgeText = 'ทุกคน (' + targetCount + ' ท่าน)';
+        }
+      } else {
+        // Create permanent snapshot record if not exists
+        course.targetAudience = {
+          type: 'all',
+          totalCount: (employeeDatabase && employeeDatabase.length > 0) ? employeeDatabase.length : 177,
+          summary: 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง'
+        };
+        try { localStorage.setItem('hrd_course_' + course.id, JSON.stringify(course)); } catch(e) {}
+        targetCount = course.targetAudience.totalCount;
+      }
+
+      const elTargetCount = document.getElementById('kpiTargetCount');
+      if (elTargetCount) elTargetCount.textContent = targetCount;
+      const elTargetDesc = document.getElementById('kpiTargetDesc');
+      if (elTargetDesc) elTargetDesc.textContent = targetDesc;
+      const elTargetBadge = document.getElementById('kpiTargetBadge');
+      if (elTargetBadge) elTargetBadge.textContent = targetBadgeText;
+
+      // 2. Pre-booked Enrollment (Deduplicated individual attendees)
+      const enrolledCount = attendees.length;
+      const enrollPctNum = targetCount > 0 ? ((enrolledCount / targetCount) * 100) : 0;
+      const enrollPct = enrollPctNum.toFixed(1);
+
+      const elEnrollCount = document.getElementById('kpiEnrollCount');
+      if (elEnrollCount) elEnrollCount.textContent = enrolledCount;
+      const elEnrollPct = document.getElementById('kpiEnrollPct');
+      if (elEnrollPct) elEnrollPct.textContent = enrollPct + '% ของเป้าหมาย';
+      
+      const enrollBar = document.getElementById('kpiEnrollBar');
+      if (enrollBar) enrollBar.style.width = Math.min(100, enrollPctNum) + '%';
+
+      // Quota summary
+      let totalQuota = 0;
+      if (course.quota) {
+        Object.values(course.quota).forEach(q => { totalQuota += Number(q || 0); });
+      } else {
+        totalQuota = ((course.batches || []).length || 1) * 40;
+      }
+      const elQuotaDesc = document.getElementById('kpiQuotaDesc');
+      if (elQuotaDesc) elQuotaDesc.textContent = 'จองแล้ว ' + enrolledCount + ' จากโควตาทั้งหมด ' + totalQuota + ' ที่นั่ง';
+
+      // 3. Actual Attendance (Valid individual check-ins)
+      const actualCount = Array.isArray(checkins) ? checkins.length : 0;
+      const actualTargetPctNum = targetCount > 0 ? ((actualCount / targetCount) * 100) : 0;
+      const actualTargetPct = actualTargetPctNum.toFixed(1);
+      const showUpRateNum = enrolledCount > 0 ? ((actualCount / enrolledCount) * 100) : (actualCount > 0 ? 100 : 0);
+      const showUpRate = showUpRateNum.toFixed(1);
+
+      const preBookedAttended = Array.isArray(checkins) ? checkins.filter(c => (c.regType || '').includes('จองล่วงหน้า')).length : 0;
+      const walkinAttended = Array.isArray(checkins) ? checkins.filter(c => !(c.regType || '').includes('จองล่วงหน้า')).length : 0;
+
+      const elActualCount = document.getElementById('kpiActualCount');
+      if (elActualCount) elActualCount.textContent = actualCount;
+      const elActualPct = document.getElementById('kpiActualPct');
+      if (elActualPct) elActualPct.textContent = showUpRate + '% ของยอดจอง';
+      const elActualBar = document.getElementById('kpiActualBar');
+      if (elActualBar) elActualBar.style.width = Math.min(100, showUpRateNum) + '%';
+      const elActualDesc = document.getElementById('kpiActualDesc');
+      if (elActualDesc) {
+        if (walkinAttended > 0) {
+          elActualDesc.textContent = 'คิดเป็น ' + actualTargetPct + '% ของกลุ่มเป้าหมาย (จองล่วงหน้า ' + preBookedAttended + ' • Walk-in ' + walkinAttended + ' ท่าน)';
+        } else if (actualCount > 0) {
+          elActualDesc.textContent = 'คิดเป็น ' + actualTargetPct + '% ของกลุ่มเป้าหมาย (จองล่วงหน้าทั้งหมด ' + actualCount + ' ท่าน)';
+        } else {
+          elActualDesc.textContent = 'คิดเป็น 0% ของกลุ่มเป้าหมาย (ยังไม่มีการเช็คชื่อเข้าอบรม)';
+        }
+      }
+
+      // 4. Comparison Section Elements (จำนวนเต็มและเปอร์เซ็นต์)
+      const elCompShowUp = document.getElementById('compShowUpBadge');
+      if (elCompShowUp) elCompShowUp.textContent = showUpRate + '%';
+
+      const elCompTargetCount = document.getElementById('compTargetCount');
+      if (elCompTargetCount) elCompTargetCount.textContent = targetCount;
+      const elCompTargetSummary = document.getElementById('compTargetSummary');
+      if (elCompTargetSummary) elCompTargetSummary.textContent = targetDesc;
+
+      const elCompEnrollCount = document.getElementById('compEnrollCount');
+      if (elCompEnrollCount) elCompEnrollCount.textContent = enrolledCount;
+      const elCompEnrollBadge = document.getElementById('compEnrollTargetPctBadge');
+      if (elCompEnrollBadge) elCompEnrollBadge.textContent = enrollPct + '%';
+      const elCompEnrollTargetPct = document.getElementById('compEnrollTargetPct');
+      if (elCompEnrollTargetPct) elCompEnrollTargetPct.textContent = enrollPct + '%';
+      const elCompEnrollBar = document.getElementById('compEnrollBar');
+      if (elCompEnrollBar) elCompEnrollBar.style.width = Math.min(100, enrollPctNum) + '%';
+
+      const elCompActualCount = document.getElementById('compActualCount');
+      if (elCompActualCount) elCompActualCount.textContent = actualCount;
+      const elCompActualBadge = document.getElementById('compActualEnrollPctBadge');
+      if (elCompActualBadge) elCompActualBadge.textContent = showUpRate + '%';
+      const elCompActualEnrollPct = document.getElementById('compActualEnrollPct');
+      if (elCompActualEnrollPct) elCompActualEnrollPct.textContent = showUpRate + '%';
+      const elCompActualBar = document.getElementById('compActualBar');
+      if (elCompActualBar) elCompActualBar.style.width = Math.min(100, showUpRateNum) + '%';
+      const elCompActualTargetPct = document.getElementById('compActualTargetPct');
+      if (elCompActualTargetPct) elCompActualTargetPct.textContent = actualTargetPct + '%';
+      const elCompWalkinDetail = document.getElementById('compWalkinDetail');
+      if (elCompWalkinDetail) elCompWalkinDetail.textContent = 'จองล่วงหน้ามา ' + preBookedAttended + ' จาก ' + enrolledCount + ' ท่าน | Walk-in ' + walkinAttended + ' ท่าน';
+
+      // Render Visual Comparison Chart
+      renderComparisonChart(targetCount, enrolledCount, actualCount, enrollPct, actualTargetPct, showUpRate);
+
+      // 5. Evaluations Count
+      const evalCount = evaluations.length;
+      const baseForEval = actualCount > 0 ? actualCount : enrolledCount;
+      const evalRate = baseForEval > 0 ? Math.min(100, Math.round((evalCount / baseForEval) * 100)) : (evalCount > 0 ? 100 : 0);
+      document.getElementById('kpiEvalCount').textContent = evalCount;
+      document.getElementById('kpiEvalRate').textContent = evalRate + '% ของผู้เข้าอบรม';
+      document.getElementById('ratingsSampleCountBadge').textContent = 'คำนวณจาก ' + evalCount + ' ผู้ตอบแบบประเมิน';
+
+      // 6. Ratings Calculation
+      const qSums = {};
+      const qCounts = {};
+      DASHBOARD_QUESTIONS.forEach(q => {
+        qSums[q.id] = 0;
+        qCounts[q.id] = 0;
+      });
+
+      let grandSum = 0;
+      let grandCount = 0;
+
+      evaluations.forEach(item => {
+        const r = item.ratings || {};
+        DASHBOARD_QUESTIONS.forEach(q => {
+          const val = Number(r[q.id]);
+          if (!isNaN(val) && val > 0) {
+            qSums[q.id] += val;
+            qCounts[q.id]++;
+            grandSum += val;
+            grandCount++;
+          }
+        });
+      });
+
+      const qAvgs = {};
+      DASHBOARD_QUESTIONS.forEach(q => {
+        qAvgs[q.id] = qCounts[q.id] > 0 ? (qSums[q.id] / qCounts[q.id]).toFixed(2) : "0.00";
+      });
+
+      const overallAvg = grandCount > 0 ? (grandSum / grandCount).toFixed(2) : "0.00";
+      document.getElementById('kpiOverallScore').textContent = overallAvg;
+
+      // Grade badge
+      const numScore = Number(overallAvg);
+      let gradeLabel = 'รอผลประเมิน';
+      let gradeColor = 'bg-slate-100 text-slate-600 border border-slate-200';
+      let starStr = '☆☆☆☆☆';
+
+      if (numScore >= 4.75) {
+        gradeLabel = 'ดีเยี่ยมมาก (A+)';
+        gradeColor = 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+        starStr = '★★★★★';
+      } else if (numScore >= 4.50) {
+        gradeLabel = 'ดีเยี่ยม (A)';
+        gradeColor = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+        starStr = '★★★★★';
+      } else if (numScore >= 3.75) {
+        gradeLabel = 'ดีมาก (B+)';
+        gradeColor = 'bg-blue-50 text-[#2e5e8b] border border-blue-200';
+        starStr = '★★★★☆';
+      } else if (numScore >= 3.00) {
+        gradeLabel = 'ดี (B)';
+        gradeColor = 'bg-amber-50 text-amber-800 border border-amber-200';
+        starStr = '★★★☆☆';
+      } else if (numScore > 0) {
+        gradeLabel = 'ต้องปรับปรุง (C)';
+        gradeColor = 'bg-rose-50 text-rose-700 border border-rose-200';
+        starStr = '★★☆☆☆';
+      }
+
+      const sBadge = document.getElementById('kpiScoreBadge');
+      if (sBadge) {
+        sBadge.textContent = gradeLabel;
+        sBadge.className = 'text-[10px] px-2.5 py-0.5 rounded-full font-bold ' + gradeColor;
+      }
+      const sStars = document.getElementById('kpiStarDisplay');
+      if (sStars) sStars.textContent = starStr;
+
+      // Section Averages Helper
+      const calcSecAvg = (qIds) => {
+        let s = 0, c = 0;
+        qIds.forEach(id => {
+          s += qSums[id];
+          c += qCounts[id];
+        });
+        return c > 0 ? (s / c).toFixed(2) : "0.00";
+      };
+
+      document.getElementById('sec1AvgBadge').textContent = calcSecAvg(['q1_1', 'q1_2', 'q1_3']) + ' / 5.00';
+      document.getElementById('sec2AvgBadge').textContent = calcSecAvg(['q2_1', 'q2_2', 'q2_3', 'q2_4', 'q2_5', 'q2_6']) + ' / 5.00';
+      document.getElementById('sec3AvgBadge').textContent = calcSecAvg(['q3_1', 'q3_2', 'q3_3']) + ' / 5.00';
+      document.getElementById('sec4AvgBadge').textContent = calcSecAvg(['q4_1']) + ' / 5.00';
+      document.getElementById('sec5AvgBadge').textContent = calcSecAvg(['q5_1', 'q5_2']) + ' / 5.00';
+
+      // Render Individual Question Bars
+      DASHBOARD_QUESTIONS.forEach(q => {
+        const box = document.getElementById('bar_' + q.id + '_box');
+        if (!box) return;
+        const score = Number(qAvgs[q.id]);
+        const pct = Math.min(100, Math.round((score / 5) * 100));
+
+        let barCol = 'bg-emerald-500';
+        if (score < 3.0 && score > 0) barCol = 'bg-rose-500';
+        else if (score < 4.0 && score > 0) barCol = 'bg-amber-500';
+        else if (score < 4.5 && score > 0) barCol = 'bg-sky-500';
+
+        box.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="text-slate-700 font-medium truncate max-w-[80%]">${q.title}</span>
+              <span class="font-bold font-mono ${score >= 4.5 ? 'text-emerald-700' : 'text-slate-800'}">
+                ${score > 0 ? score.toFixed(2) : '-'} <span class="text-[11px] text-slate-400 font-normal">/ 5</span>
+              </span>
+            </div>
+            <div class="w-full bg-slate-200/80 rounded-full h-2.5 overflow-hidden">
+              <div class="${barCol} h-2.5 rounded-full transition-all duration-700" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      // 5. Render Qualitative Feedback
+      renderFeedbackList(evaluations);
+
+      // 6. Render Attendees List
+      renderAttendeesList(attendees, course, checkins);
+    }
+
+    function renderFeedbackList(evaluations) {
+      const fbCols = [
+        { key: 'q6_1', listId: 'fbList_6_1', countId: 'fbCount_6_1' },
+        { key: 'q6_2', listId: 'fbList_6_2', countId: 'fbCount_6_2' },
+        { key: 'q6_3', listId: 'fbList_6_3', countId: 'fbCount_6_3' },
+        { key: 'q6_4', listId: 'fbList_6_4', countId: 'fbCount_6_4' }
+      ];
+
+      fbCols.forEach(col => {
+        const listEl = document.getElementById(col.listId);
+        const countEl = document.getElementById(col.countId);
+        if (!listEl) return;
+
+        const items = [];
+        evaluations.forEach(ev => {
+          const fb = ev.feedback || {};
+          const txt = (fb[col.key] || '').trim();
+          if (txt) {
+            items.push({
+              text: txt,
+              batch: ev.batch || 'ไม่ระบุรุ่น',
+              time: ev.timestamp || '-'
+            });
+          }
+        });
+
+        if (countEl) countEl.textContent = items.length;
+
+        if (items.length === 0) {
+          listEl.innerHTML = '<div class="py-5 text-center text-xs text-slate-400 font-light bg-white rounded-xl border border-dashed border-slate-200">ยังไม่มีข้อเสนอแนะในหัวข้อนี้ค่ะ</div>';
+          return;
+        }
+
+        listEl.innerHTML = items.map(item => `
+          <div class="p-3.5 bg-white rounded-xl border border-slate-200/80 text-xs space-y-1.5 shadow-2xs">
+            <p class="text-slate-800 leading-relaxed italic">"${escapeHtml(item.text)}"</p>
+            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-100">
+              <span class="font-medium text-[#2e5e8b] bg-blue-50 px-2 py-0.5 rounded-md">${escapeHtml(item.batch)}</span>
+              <span>${escapeHtml(item.time)}</span>
+            </div>
+          </div>
+        `).join('');
+      });
+    }
+
+    function renderComparisonChart(targetCount, enrolledCount, actualCount, enrollPct, actualTargetPct, showUpRate) {
+      const canvas = document.getElementById('comparisonChartCanvas');
+      if (!canvas) return;
+
+      if (typeof Chart === 'undefined') {
+        console.warn('Chart.js is not loaded yet');
+        return;
+      }
+
+      if (comparisonChartInstance) {
+        try { comparisonChartInstance.destroy(); } catch(e) {}
+        comparisonChartInstance = null;
+      }
+
+      const ctx = canvas.getContext('2d');
+      comparisonChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1. กลุ่มเป้าหมาย', '2. ลงทะเบียนล่วงหน้า', '3. เข้าอบรมจริง'],
+          datasets: [
+            {
+              label: 'จำนวนบุคลากร (ท่าน)',
+              data: [targetCount, enrolledCount, actualCount],
+              backgroundColor: [
+                'rgba(46, 94, 139, 0.85)',   // Navy Blue #2e5e8b
+                'rgba(99, 102, 241, 0.85)',  // Indigo #6366f1
+                'rgba(16, 185, 129, 0.85)'   // Emerald Green #10b981
+              ],
+              borderColor: [
+                '#2e5e8b',
+                '#6366f1',
+                '#10b981'
+              ],
+              borderWidth: 1.5,
+              borderRadius: 8,
+              borderSkipped: false,
+              barPercentage: 0.55,
+              categoryPercentage: 0.7
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.92)',
+              titleFont: { family: 'Prompt', size: 13, weight: 'bold' },
+              bodyFont: { family: 'Prompt', size: 12 },
+              padding: 12,
+              cornerRadius: 10,
+              callbacks: {
+                label: function(context) {
+                  const val = context.raw || 0;
+                  const idx = context.dataIndex;
+                  if (idx === 0) {
+                    return `จำนวน: ${val} ท่าน (ฐานกลุ่มเป้าหมาย 100.0%)`;
+                  } else if (idx === 1) {
+                    return `จำนวน: ${val} ท่าน (${enrollPct}% ของกลุ่มเป้าหมาย)`;
+                  } else if (idx === 2) {
+                    return `จำนวน: ${val} ท่าน (${actualTargetPct}% ของเป้าหมาย | Show-up: ${showUpRate}%)`;
+                  }
+                  return `จำนวน: ${val} ท่าน`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(226, 232, 240, 0.7)',
+                drawBorder: false
+              },
+              ticks: {
+                font: { family: 'Inter', size: 11 },
+                color: '#64748b',
+                precision: 0
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                font: { family: 'Prompt', size: 12, weight: '600' },
+                color: '#334155'
+              }
+            }
+          },
+          animation: {
+            duration: 600,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+    }
+
+    function isMatchingBatch(b1, b2) {
+      if (!b1 || !b2) return false;
+      b1 = String(b1).trim().toLowerCase();
+      b2 = String(b2).trim().toLowerCase();
+      if (b1 === b2) return true;
+
+      const m1 = b1.match(/รุ่นที่\s*(\d+)/i);
+      const m2 = b2.match(/รุ่นที่\s*(\d+)/i);
+      if (m1 && m2 && m1[1] === m2[1]) return true;
+
+      const num1 = b1.match(/\d+/);
+      const num2 = b2.match(/\d+/);
+      if (num1 && num2 && num1[0] === num2[0] && (b1.includes('รุ่น') || b2.includes('รุ่น'))) {
+        return true;
+      }
+
+      return b1.includes(b2) || b2.includes(b1);
+    }
+
+    function renderAttendeesList(attendees, course, checkins = []) {
+      // 1. Batches
+      const batchListEl = document.getElementById('dashBatchList');
+      if (batchListEl) {
+        const batches = (course && course.batches && course.batches.length > 0) ? course.batches : ['รุ่นที่ 1'];
+        const quotas = (course && course.quota) || {};
+
+        batchListEl.innerHTML = batches.map(b => {
+          const bAttendees = (batches.length === 1 || (course && course.hasSubTopics))
+            ? attendees
+            : attendees.filter(a => isMatchingBatch(a.batch, b));
+          const bCheckins = (batches.length === 1 || (course && course.hasSubTopics))
+            ? checkins
+            : checkins.filter(c => isMatchingBatch(c.batch, b));
+          const count = bAttendees.length;
+          const actualCnt = bCheckins.length;
+          const quota = quotas[b] ? Number(quotas[b]) : 40;
+          const pct = Math.min(100, Math.round((count / quota) * 100));
+          const showUpRate = count > 0 ? Math.round((actualCnt / count) * 100) : (actualCnt > 0 ? 100 : 0);
+
+          let barColor = 'bg-[#2e5e8b]';
+          if (pct >= 90) barColor = 'bg-rose-500';
+          else if (pct >= 70) barColor = 'bg-amber-500';
+
+          return `
+            <div class="p-4 bg-white rounded-2xl border border-slate-200/80 space-y-3 shadow-2xs">
+              <div class="flex items-center justify-between text-xs sm:text-sm flex-wrap gap-2">
+                <span class="font-bold text-slate-800">${escapeHtml(b)}</span>
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-xl bg-blue-50 text-[#2e5e8b] font-medium text-xs border border-blue-200">
+                    จองล่วงหน้า: <strong class="font-bold font-mono text-sm">${count}</strong> / ${quota}
+                    <span class="text-[10px] ml-1 opacity-80 font-bold">(${pct}%)</span>
+                  </span>
+                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 font-medium text-xs border border-emerald-200">
+                    เข้าอบรมจริง: <strong class="font-bold font-mono text-sm text-emerald-700">${actualCnt}</strong> ท่าน
+                    <span class="text-[10px] ml-1 text-emerald-600 font-bold">(${showUpRate}%)</span>
+                  </span>
+                </div>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                <div class="${barColor} h-2.5 rounded-full transition-all duration-700" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. Department Breakdown
+      const deptListEl = document.getElementById('dashDeptList');
+      if (deptListEl) {
+        if (attendees.length === 0) {
+          deptListEl.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-slate-400 font-light bg-white rounded-2xl border border-dashed border-slate-200">ยังไม่มีผู้ลงทะเบียนในขณะนี้ค่ะ</div>';
+          return;
+        }
+
+        const deptCounts = {};
+        attendees.forEach(a => {
+          const dept = (a.department || 'ไม่ระบุแผนก').trim();
+          deptCounts[dept] = (deptCounts[dept] || 0) + 1;
+        });
+
+        const sortedDepts = Object.entries(deptCounts).sort((a, b) => b[1] - a[1]);
+
+        deptListEl.innerHTML = sortedDepts.map(([dept, cnt]) => `
+          <div class="p-3 bg-white rounded-xl border border-slate-200/80 flex items-center justify-between text-xs shadow-2xs">
+            <span class="text-slate-700 font-medium truncate max-w-[70%]" title="${escapeHtml(dept)}">${escapeHtml(dept)}</span>
+            <span class="px-2.5 py-1 bg-slate-100 text-[#2e5e8b] font-bold font-mono rounded-lg border border-slate-200/80">${cnt} ท่าน</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>

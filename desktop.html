@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบลงทะเบียนเข้าอบรม | โรงพยาบาลพิษณุเวช พิจิตร</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="modal.js"></script>
+  <script src="demo_data.js"></script>
+  <script src="target-modal.js"></script>
+  <style>
+    * { font-family: 'Prompt', sans-serif; }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* CSS Medical Cross Loader (Phitsanuvej Style) */
+    .css-logo-loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 40px;
+      -webkit-transform: scale(1.6);
+      transform: scale(1.6);
+      -webkit-transform-origin: center;
+      transform-origin: center;
+    }
+
+    .logo-petal {
+      position: absolute;
+      -webkit-animation: loadingPulse 1.6s ease-in-out infinite;
+      animation: loadingPulse 1.6s ease-in-out infinite;
+      will-change: transform, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .logo-petal.outer {
+      background: #1e5387; /* สีน้ำเงินเข้มสำหรับกลีบนอก */
+      border-radius: 6px;
+    }
+
+    .logo-petal.inner {
+      background: #5faee3; /* สีน้ำเงินอ่อนสำหรับกลีบใน */
+      border-radius: 5px;
+    }
+
+    /* ตั้งตำแหน่งแต่ละกลีบของสัญลักษณ์กากบาทแพทย์ */
+    .logo-petal.outer.top {
+      top: 0px; left: 30px; width: 20px; height: 24px;
+      -webkit-animation-delay: 0s;
+      animation-delay: 0s;
+    }
+    .logo-petal.inner.top-right {
+      top: 14px; right: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 0.2s;
+      animation-delay: 0.2s;
+    }
+    .logo-petal.outer.right {
+      top: 30px; right: 0px; width: 24px; height: 20px;
+      -webkit-animation-delay: 0.4s;
+      animation-delay: 0.4s;
+    }
+    .logo-petal.inner.bottom-right {
+      bottom: 14px; right: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 0.6s;
+      animation-delay: 0.6s;
+    }
+    .logo-petal.outer.bottom {
+      bottom: 0px; left: 30px; width: 20px; height: 24px;
+      -webkit-animation-delay: 0.8s;
+      animation-delay: 0.8s;
+    }
+    .logo-petal.inner.bottom-left {
+      bottom: 14px; left: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 1.0s;
+      animation-delay: 1.0s;
+    }
+    .logo-petal.outer.left {
+      top: 30px; left: 0px; width: 24px; height: 20px;
+      -webkit-animation-delay: 1.2s;
+      animation-delay: 1.2s;
+    }
+    .logo-petal.inner.top-left {
+      top: 14px; left: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 1.4s;
+      animation-delay: 1.4s;
+    }
+
+    /* เอฟเฟกต์การกะพริบไล่ระดับคลื่นแบบวนลูป */
+    @-webkit-keyframes loadingPulse {
+      0%, 100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0.45;
+      }
+      50% {
+        -webkit-transform: scale(1.22);
+        transform: scale(1.22);
+        opacity: 1;
+      }
+    }
+
+    @keyframes loadingPulse {
+      0%, 100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0.45;
+      }
+      50% {
+        -webkit-transform: scale(1.22);
+        transform: scale(1.22);
+        opacity: 1;
+      }
+    }
+
+    @-webkit-keyframes loaderPop {
+      0% { -webkit-transform: scale(0.9); transform: scale(0.9); opacity: 0; }
+      100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes loaderPop {
+      0% { -webkit-transform: scale(0.9); transform: scale(0.9); opacity: 0; }
+      100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-[#0284c7] selection:text-white">
+
+  <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) -->
+  <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
+    <div class="loader-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.06); min-width: 300px; transform: scale(0.95); animation: loaderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      
+      <!-- ตัวหมุนแอนิเมชันกากบาทแพทย์ -->
+      <div class="css-logo-loader">
+        <div class="logo-petal outer top"></div>
+        <div class="logo-petal inner top-right"></div>
+        <div class="logo-petal outer right"></div>
+        <div class="logo-petal inner bottom-right"></div>
+        <div class="logo-petal outer bottom"></div>
+        <div class="logo-petal inner bottom-left"></div>
+        <div class="logo-petal outer left"></div>
+        <div class="logo-petal inner top-left"></div>
+      </div>
+      
+      <!-- ข้อความประกอบการรอข้อมูล -->
+      <div style="margin-top: 24px; text-align: center;">
+        <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #1e5387; margin-bottom: 6px; letter-spacing: 0.5px;">
+          ระบบลงทะเบียนเข้าอบรม
+        </div>
+        <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
+          โรงพยาบาลพิษณุเวช พิจิตร
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Global Bar (Full Width) -->
+  <header class="bg-white border-b border-slate-200/80 shadow-xs w-full">
+    <div class="w-full px-6 lg:px-12 py-3 flex items-center justify-between">
+      
+      <!-- Brand & Hospital Identity -->
+      <div class="flex items-center space-x-4">
+        <a href="desktop.html" class="flex items-center space-x-3 group">
+          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02]">
+          <div class="border-l border-slate-200 pl-3.5 hidden sm:block">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm font-bold text-[#0369a1] tracking-tight">ระบบลงทะเบียนเข้าอบรม</span>
+              <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 bg-sky-50 text-[#0369a1] border border-sky-200 rounded-full">
+                HRD Workstation
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 font-light">ฝ่ายพัฒนาทรัพยากรบุคคล โรงพยาบาลพิษณุเวช พิจิตร</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Header Tools & Navigation -->
+      <div class="flex items-center space-x-2.5">
+        <span class="text-xs px-3.5 py-2 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-200/80 font-medium flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>เปิดรับจอง</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container: TRUE FULL WIDTH WORKSTATION -->
+  <main class="flex-1 w-full px-6 lg:px-12 py-6 space-y-6">
+
+    <!-- Empty State: เมื่อไม่มีหลักสูตรเปิดรับลงทะเบียนหรือรหัสหลักสูตรไม่ถูกต้อง -->
+    <div id="noCourseNotice" class="hidden w-full max-w-3xl mx-auto my-12 bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-xl shadow-slate-200/50 space-y-6">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-blue-50 border border-blue-100 flex items-center justify-center text-4xl shadow-inner">
+        📋
+      </div>
+      <div class="space-y-2">
+        <h3 id="noCourseTitle" class="text-2xl font-bold text-slate-800">
+          ยังไม่มีหลักสูตรอบรมที่เปิดรับลงทะเบียนในขณะนี้
+        </h3>
+        <p id="noCourseSubtitle" class="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+          ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) ยังไม่ได้เปิดรับลงทะเบียนหลักสูตรใหม่ หรือหลักสูตรเดิมได้สิ้นสุดลงแล้วค่ะ
+        </p>
+      </div>
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="admin.html" class="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#0a2540] via-[#0369a1] to-[#0284c7] hover:from-[#00382e] hover:to-[#0369a1] text-white font-semibold text-sm shadow-lg shadow-sky-900/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all">
+          <span>⚙️</span>
+          <span>เข้าสู่ระบบจัดการหลักสูตร (Admin Portal)</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Top Hero Banner (Full Width) -->
+    <div id="courseHeroBanner" class="w-full rounded-3xl bg-gradient-to-r from-[#0a2540] via-[#0369a1] to-[#0284c7] p-8 text-white shadow-xl shadow-[#0a2540]/15 relative overflow-hidden">
+      <!-- Background subtle glow graphics -->
+      <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-[#0284c7]/20 blur-3xl pointer-events-none"></div>
+      <div class="absolute right-1/3 -bottom-20 w-60 h-60 rounded-full bg-[#00a896]/15 blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+        
+        <!-- Left Part: Course Info -->
+        <div class="space-y-3.5 max-w-5xl">
+          <div class="flex items-center space-x-2.5 flex-wrap gap-y-2">
+            <span id="courseTypeBadge" class="text-xs font-semibold px-3 py-1 bg-white/15 backdrop-blur-md rounded-lg border border-white/10 text-cyan-200">
+              หลักสูตรอบรม
+            </span>
+            <span id="courseIdBadge" class="text-xs font-mono text-cyan-100/90 bg-black/25 px-2.5 py-1 rounded-lg">
+              -
+            </span>
+            <span id="courseTargetBadge" onclick="openTargetAudienceModal()" class="text-xs font-medium px-3 py-1 bg-amber-400/20 backdrop-blur-md rounded-lg border border-amber-300/30 text-amber-200 flex items-center space-x-1.5 shadow-xs cursor-pointer hover:bg-amber-400/30 hover:scale-[1.02] active:scale-[0.98] transition-all hover:ring-2 hover:ring-amber-300/50 select-none group" title="คลิกเพื่อดูแผนกและรายชื่อกลุ่มเป้าหมายที่ยังไม่ได้ลงทะเบียน">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <span id="courseTargetText">🎯 กลุ่มเป้าหมาย: เปิดรับทุกแผนกและทุกตำแหน่ง</span>
+              <span class="ml-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-400/30 text-amber-100 group-hover:bg-amber-300 group-hover:text-slate-900 transition-colors flex items-center gap-1 shadow-xs">
+                <span>คลิกดูรายชื่อ</span>
+                <svg class="w-2.5 h-2.5 inline-block group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+              </span>
+            </span>
+          </div>
+
+          <h2 id="courseTitle" class="text-2xl lg:text-3xl font-bold tracking-tight text-white leading-tight">
+            หลักสูตรการฝึกอบรม
+          </h2>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs text-blue-100/90 pt-1 font-light">
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-sky-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              <div><span class="text-cyan-200/70 block text-[10px] uppercase tracking-wider">วันที่จัดอบรม</span><strong id="courseDate" class="font-medium text-white">-</strong></div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-sky-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <div><span class="text-cyan-200/70 block text-[10px] uppercase tracking-wider">เวลาอบรม</span><strong id="courseTime" class="font-medium text-white">-</strong></div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-sky-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+              <div><span class="text-cyan-200/70 block text-[10px] uppercase tracking-wider">วิทยากรผู้บรรยาย</span><strong id="courseSpeaker" class="font-medium text-white">-</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Part: Real-Time Counter -->
+        <div class="shrink-0 flex items-center justify-end">
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex items-center justify-around shadow-inner min-w-[300px]">
+            <div class="text-center pr-5 border-r border-white/15">
+              <span class="text-[11px] text-cyan-200 block uppercase font-medium">ยอดลงทะเบียนแล้ว</span>
+              <div id="statTotalRegistered" class="text-3xl font-bold text-white tracking-tight mt-0.5">0</div>
+              <span class="text-[10px] text-emerald-300 font-medium">ยืนยันแล้ว</span>
+            </div>
+            <div class="text-center pl-5">
+              <span class="text-[11px] text-cyan-200 block uppercase font-medium">ที่นั่งคงเหลือ</span>
+              <div id="statTotalRemaining" class="text-3xl font-bold text-sky-300 tracking-tight mt-0.5">0</div>
+              <span class="text-[10px] text-blue-200" id="statTotalCapacityText">จากทั้งหมด 80 ที่นั่ง</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FULL-WIDTH WORKSTATION CONTAINER -->
+    <div id="tabContainer" class="w-full space-y-6">
+
+      <!-- Navigation Tabs (Sleek Segmented Buttons) -->
+      <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 w-full">
+        <button id="tabRegisterBtn" onclick="switchTab('register')" class="flex-1 py-3 text-center font-bold text-sm bg-white text-[#0369a1] rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer">
+          <svg class="w-4 h-4 text-[#0369a1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+          <span>ฟอร์มลงทะเบียนจองที่นั่ง</span>
+        </button>
+        <button id="tabListBtn" onclick="switchTab('list')" class="flex-1 py-3 text-center font-medium text-sm text-slate-600 hover:text-[#0369a1] rounded-xl transition-all flex items-center justify-center space-x-2 cursor-pointer">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+          <span>ตรวจสอบรายชื่อ (<span id="tabCount">0</span> ท่าน)</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: REGISTRATION FORM (EXPANDED FULL WIDTH) -->
+      <section id="tabRegister" class="w-full bg-white rounded-3xl border border-slate-200/80 p-8 lg:p-10 shadow-sm space-y-8">
+        <form id="regForm" onsubmit="handleRegistration(event)" class="space-y-8 w-full">
+          
+          <!-- Employee Search Box -->
+          <div class="space-y-3">
+            <div>
+              <label class="text-sm font-bold text-slate-800">
+                ค้นหาข้อมูลพนักงาน <span class="text-rose-500">*</span>
+              </label>
+            </div>
+
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </div>
+              <input 
+                type="text" 
+                id="empSearchInput" 
+                placeholder="พิมพ์รหัสพนักงาน, ชื่อจริง, นามสกุล หรือชื่อแผนก..." 
+                autocomplete="off"
+                oninput="handleEmpSearch(this.value)"
+                class="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-300 text-sm focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/20 transition-all outline-none shadow-xs"
+              >
+              
+              <!-- Dropdown Autocomplete Results -->
+              <div id="searchResults" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-slate-200 shadow-xl z-30 max-h-72 overflow-y-auto custom-scroll divide-y divide-slate-100">
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected Employee Card (Auto-filled Preview) -->
+          <div id="selectedEmpCard" class="hidden bg-gradient-to-r from-[#f0fdfa] via-white to-[#f0fdfa] rounded-2xl p-5 border border-sky-200 space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-sky-100 pb-2.5">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-bold text-[#0369a1] uppercase tracking-wider">ข้อมูลพนักงานที่เลือก</span>
+              </div>
+              <button type="button" onclick="clearSelectedEmp()" class="text-xs text-slate-400 hover:text-rose-600 transition-colors cursor-pointer">
+                ✕ ล้างข้อมูล
+              </button>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+              <div>
+                <span class="text-slate-400 block text-[11px]">รหัสพนักงาน</span>
+                <strong id="dispEmpId" class="font-mono text-sm text-[#0369a1]">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">ชื่อ - นามสกุล</span>
+                <strong id="dispEmpName" class="text-sm text-slate-800">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">ตำแหน่ง</span>
+                <span id="dispEmpPosition" class="text-slate-700 font-medium">-</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]">แผนก / สังกัด</span>
+                <span id="dispEmpDept" class="text-slate-700 font-medium">-</span>
+              </div>
+            </div>
+
+            <!-- Target Audience Notice Badge for Selected Employee -->
+            <div id="empTargetNotice" class="hidden pt-3 border-t border-sky-100"></div>
+          </div>
+
+          <!-- Hidden Form Fields -->
+          <input type="hidden" id="empId">
+          <input type="hidden" id="empTitle">
+          <input type="hidden" id="empFirstName">
+          <input type="hidden" id="empLastName">
+          <input type="hidden" id="empPosition">
+          <input type="hidden" id="empDepartment">
+          <input type="hidden" id="selectedBatchValue">
+
+          <!-- Batch & Quota Selection (Dropdown + Change Batch Feature) -->
+          <div id="desktopBatchSection" class="hidden space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-bold text-slate-800 flex items-center space-x-1.5">
+                <span>เลือกรุ่นที่ต้องการ</span>
+                <span class="text-rose-500">*</span>
+              </label>
+              <span id="batchStatusLabel" class="text-xs text-slate-400 font-light">เลือกรุ่นที่ต้องการเข้าอบรม</span>
+            </div>
+
+            <!-- Red Alert Notice: Displays in red when employee is already registered -->
+            <div id="alreadyRegisteredAlert" class="hidden p-4 bg-rose-50/90 border border-rose-200 rounded-2xl flex items-start space-x-3 text-rose-800 transition-all shadow-xs">
+              <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 text-base font-bold">
+                ⚠️
+              </div>
+              <div class="text-xs space-y-1 flex-1">
+                <p class="font-bold text-rose-700 text-sm">
+                  ท่านได้ลงทะเบียนไว้แล้วใน: <span id="registeredBatchName" class="underline font-extrabold text-rose-900 bg-rose-100/70 px-2 py-0.5 rounded-md"></span>
+                </p>
+                <p class="text-rose-600 font-light leading-relaxed">
+                  * หากต้องการเปลี่ยนรุ่น สามารถเลือก <strong>"เลือกรุ่นที่ต้องการ"</strong> จากดรอปดาวน์ด้านล่างนี้ แล้วกดปุ่ม <strong>"บันทึกเปลี่ยนรุ่นการอบรม"</strong> ได้ทันทีค่ะ
+                </p>
+              </div>
+            </div>
+
+            <!-- Batch Cards Container (Prominent Visual Radio Cards) -->
+            <div id="batchCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <!-- Rendered dynamically with high-visibility selectable cards -->
+            </div>
+
+            <!-- Hidden native select for fallback & form sync -->
+            <select id="batchSelect" onchange="handleBatchSelectChange(this.value)" class="hidden" required>
+              <!-- Populated dynamically -->
+            </select>
+
+            <!-- Hidden placeholder for safety -->
+            <div id="batchQuotaProgressBar" class="hidden"></div>
+          </div>
+
+          <!-- Topic Selection Section (Sub-topics / Stations) -->
+          <div id="desktopTopicSection" class="hidden space-y-3 pt-3 border-t border-slate-100">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-bold text-slate-800 flex items-center space-x-1.5">
+                <span>หัวข้อการอบรม</span>
+                <span id="topicRequiredAsterisk" class="text-rose-500 hidden">*</span>
+              </label>
+              <span id="topicSectionSubLabel" class="text-xs text-slate-400 font-light"></span>
+            </div>
+
+            <!-- Container for selective checkboxes or 'all' info alert -->
+            <div id="desktopTopicCardsContainer" class="space-y-2">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div id="desktopSubmitContainer" class="hidden pt-4">
+            <button 
+              type="submit" 
+              id="submitBtn" 
+              class="w-full py-4 bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-[#009688] hover:from-[#0a2540] hover:to-[#00796b] active:scale-[0.99] text-white font-bold text-base rounded-2xl shadow-xl shadow-[#0369a1]/20 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+            >
+              <svg id="submitBtnIcon" class="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span id="submitBtnText">ยืนยันการลงทะเบียนจองที่นั่ง</span>
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- TAB 2: ATTENDEE ROSTER TABLE (EXPANDED FULL WIDTH) -->
+      <section id="tabList" class="hidden w-full bg-white rounded-3xl border border-slate-200/80 p-8 lg:p-10 shadow-sm space-y-6">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div>
+            <h3 class="text-base font-bold text-[#0369a1] tracking-tight">รายชื่อผู้ลงทะเบียนเข้าอบรมที่ได้รับการยืนยัน</h3>
+            <p class="text-xs text-slate-400 font-light mt-0.5" id="rosterSyncStatus">เชื่อมโยงข้อมูลสดกับ Google Sheet</p>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <button onclick="syncAttendeesFromSheet(true)" id="syncAttendeesBtn" class="flex items-center space-x-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95" title="ดึงข้อมูลล่าสุดจาก Google Sheet ทันที">
+              <svg id="syncAttendeesIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              <span>ซิงค์จาก Sheet</span>
+            </button>
+            <select id="batchFilterSelect" onchange="filterAttendees(this.value)" class="text-xs font-semibold px-3.5 py-2.5 bg-[#f0fdfa] border border-sky-200 rounded-xl outline-none text-[#0369a1] cursor-pointer">
+              <option value="">ทุกรุ่นการอบรม</option>
+            </select>
+            <input 
+              type="text" 
+              id="rosterSearchInput" 
+              oninput="searchRoster(this.value)"
+              placeholder="ค้นหารายชื่อในตาราง..." 
+              class="text-xs px-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl outline-none w-48 focus:w-64 transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Full-Width Responsive Table -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 custom-scroll shadow-2xs w-full">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-[#f0fdfa] text-[#0369a1] font-semibold border-b border-sky-200">
+                <th class="py-3.5 px-4 w-14 text-center">ลำดับ</th>
+                <th class="py-3.5 px-4 w-28">รหัสพนักงาน</th>
+                <th class="py-3.5 px-4 w-24">คำนำหน้า</th>
+                <th class="py-3.5 px-4 min-w-[180px]">ชื่อ - นามสกุล</th>
+                <th class="py-3.5 px-4 min-w-[220px]">ตำแหน่ง</th>
+                <th class="py-3.5 px-4 min-w-[220px]">แผนก / ฝ่าย</th>
+                <th id="thBatchCol" class="py-3.5 px-4 min-w-[180px]">รุ่นที่เข้าอบรม</th>
+                <th class="py-3.5 px-4 w-36 text-center">เวลาลงทะเบียน</th>
+                <th class="py-3.5 px-4 w-24 text-center">สถานะ</th>
+                <th class="py-3.5 px-4 w-20 text-center">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="attendeeTableBody" class="divide-y divide-slate-100 text-slate-600 bg-white">
+              <!-- Dynamically Populated Rows -->
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-400 mt-auto w-full">
+    <div class="w-full px-6 lg:px-12 text-center">
+      © โรงพยาบาลพิษณุเวช พิจิตร • ระบบลงทะเบียนเข้าอบรมบุคลากร
+    </div>
+  </footer>
+
+  <script>
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwyROi0_EfFm21mVZUAqZ08rrkc11vISYzcBJFDaGh1vCB3P2Tum8ZtgZv2MJZjTY4g/exec';
+
+    function isDemoCourse(c) {
+      if (!c || !c.id) return true;
+      const id = String(c.id).toLowerCase();
+      const title = String(c.title || '').toLowerCase();
+      return id === 'cpr-2026' || id === 'fire-safety-2026' || id === 'bls-2026' || id === 'c-2026-2zqr' || id.includes('2zqr') || title.includes('คู่มือการใช้งานระบบ');
+    }
+
+    // Clean legacy demo attendees cache
+    try {
+      localStorage.removeItem('hrd_attendees_cpr-2026');
+      localStorage.removeItem('hrd_attendees_fire-safety-2026');
+      localStorage.removeItem('hrd_attendees_bls-2026');
+      localStorage.removeItem('hrd_attendees_c-2026-2zqr');
+      localStorage.removeItem('hrd_course_c-2026-2zqr');
+    } catch(e) {}
+
+    let ALL_COURSES = [];
+
+    function getCourseSheetId() {
+      if (!currentCourse) return '';
+      if (currentCourse.sheetId) return currentCourse.sheetId;
+      if (currentCourse.sheetUrl) {
+        var match = currentCourse.sheetUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match) return match[1];
+      }
+      return '';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatDisplayDate(dateStr) {
+      if (!dateStr) return '-';
+      var str = String(dateStr).trim();
+      
+      var matchGmt = str.match(/([A-Za-z]{3})\s+([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})/);
+      if (matchGmt) {
+        var thaiMonths = {
+          'Jan': 'ม.ค.', 'Feb': 'ก.พ.', 'Mar': 'มี.ค.', 'Apr': 'เม.ย.',
+          'May': 'พ.ค.', 'Jun': 'มิ.ย.', 'Jul': 'ก.ค.', 'Aug': 'ส.ค.',
+          'Sep': 'ก.ย.', 'Oct': 'ต.ค.', 'Nov': 'พ.ย.', 'Dec': 'ธ.ค.'
+        };
+        var mStr = matchGmt[2];
+        var day = parseInt(matchGmt[3], 10);
+        var year = parseInt(matchGmt[4], 10);
+        if (year < 2400) year += 543;
+        var thaiM = thaiMonths[mStr] || mStr;
+        return day + ' ' + thaiM + ' ' + year;
+      }
+
+      var matchIso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (matchIso) {
+        var thaiMonths = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        var y = parseInt(matchIso[1], 10);
+        if (y < 2400) y += 543;
+        var m = parseInt(matchIso[2], 10);
+        var d = parseInt(matchIso[3], 10);
+        return d + ' ' + (thaiMonths[m] || m) + ' ' + y;
+      }
+
+      return str;
+    }
+
+    function fetchWithTimeout(url, options = {}, timeoutMs = 60000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(id));
+    }
+
+    function normalizeBatchName(batchStr) {
+      if (!batchStr) return '';
+      var str = String(batchStr).trim();
+      var m = str.match(/^(รุ่นที่\s*[\d]+[a-zA-Z\d\.]*)/i);
+      if (m) {
+        return m[1].replace(/\s+/g, ' ');
+      }
+      return str.split('(')[0].trim();
+    }
+
+    function isSameBatch(batchA, batchB) {
+      if (!batchA || !batchB) return false;
+      if (batchA === batchB) return true;
+      var normA = normalizeBatchName(batchA);
+      var normB = normalizeBatchName(batchB);
+      if (normA && normB && normA.toLowerCase() === normB.toLowerCase()) {
+        return true;
+      }
+      return false;
+    }
+
+    function isSameTopic(batchA, batchB) {
+      if (!batchA || !batchB) return false;
+      if (batchA === batchB) return true;
+      var numA = (batchA.match(/^(\d+)[\.\-]/) || [])[1];
+      var numB = (batchB.match(/^(\d+)[\.\-]/) || [])[1];
+      if (numA && numB && numA === numB) return true;
+      return String(batchA).trim().toLowerCase() === String(batchB).trim().toLowerCase();
+    }
+
+    function getCourseTopicsList() {
+      if (!currentCourse || !currentCourse.hasSubTopics) return [];
+      
+      var tabsFound = [];
+      allAttendees.forEach(function(a) {
+        if (a && a.batch && !tabsFound.includes(a.batch)) {
+          tabsFound.push(a.batch);
+        }
+      });
+
+      if (tabsFound.length > 0) {
+        tabsFound.sort(function(a, b) {
+          var numA = parseInt((a.match(/^\d+/) || ['0'])[0], 10);
+          var numB = parseInt((b.match(/^\d+/) || ['0'])[0], 10);
+          return numA - numB;
+        });
+        return tabsFound;
+      }
+
+      if (Array.isArray(currentCourse.topics) && currentCourse.topics.length > 0) {
+        return currentCourse.topics.map(function(t, idx) {
+          var prefix = (idx + 1) + '. ';
+          var tTitle = t.title || ('หัวข้อที่ ' + (idx + 1));
+          return tTitle.startsWith(prefix) ? tTitle : (prefix + tTitle);
+        });
+      }
+
+      return [];
+    }
+
+    function findFullBatch(batchStr) {
+      if (!batchStr) return '';
+      if (!currentCourse || !Array.isArray(currentCourse.batches)) return batchStr;
+      var found = currentCourse.batches.find(function(b) {
+        return isSameBatch(b, batchStr);
+      });
+      return found || batchStr;
+    }
+
+    function getBatchQuota(batchStr) {
+      if (!currentCourse || !currentCourse.quota) return 40;
+      if (currentCourse.quota[batchStr] !== undefined && currentCourse.quota[batchStr] !== null && currentCourse.quota[batchStr] !== '') {
+        return Number(currentCourse.quota[batchStr]);
+      }
+      var norm = normalizeBatchName(batchStr);
+      if (currentCourse.quota[norm] !== undefined && currentCourse.quota[norm] !== null && currentCourse.quota[norm] !== '') {
+        return Number(currentCourse.quota[norm]);
+      }
+      for (var k in currentCourse.quota) {
+        if (isSameBatch(k, batchStr)) {
+          if (currentCourse.quota[k] !== undefined && currentCourse.quota[k] !== null && currentCourse.quota[k] !== '') {
+            return Number(currentCourse.quota[k]);
+          }
+        }
+      }
+      return 40;
+    }
+
+    async function syncAttendeeToSheet(attendee) {
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (!gasUrl || !currentCourse) return null;
+      var targetSheetId = getCourseSheetId();
+      if (!targetSheetId) return null;
+
+      try {
+        const res = await fetchWithTimeout(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'register',
+            sheetId: targetSheetId,
+            id: attendee.id,
+            title: attendee.title || '',
+            firstName: attendee.firstName || '',
+            lastName: attendee.lastName || '',
+            position: attendee.position || '',
+            department: attendee.department || '',
+            batch: attendee.batch || '',
+            quota: getBatchQuota(attendee.batch),
+            timestamp: attendee.timestamp || ''
+          })
+        }, 60000).then(r => r.json());
+        return res;
+      } catch(e) {
+        console.warn('Sync to Google Sheet failed:', e);
+        throw e;
+      }
+    }
+
+    async function deleteAttendeeFromSheet(empId, enteredPassword, batchName) {
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (!gasUrl || !currentCourse) return null;
+      var targetSheetId = getCourseSheetId();
+      if (!targetSheetId) return null;
+
+      try {
+        const res = await fetchWithTimeout(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'deleteAttendee',
+            sheetId: targetSheetId,
+            id: empId,
+            batch: batchName || '',
+            adminPassword: enteredPassword || ''
+          })
+        }, 60000).then(r => r.json());
+        return res;
+      } catch(e) {
+        console.warn('Delete attendee from Google Sheet failed:', e);
+        throw e;
+      }
+    }
+
+    async function syncAttendeesFromSheet(isManual) {
+      var sheetId = getCourseSheetId();
+      if (!sheetId) return null;
+
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (!gasUrl) return null;
+
+      var syncIcon = document.getElementById('syncAttendeesIcon');
+      var statusEl = document.getElementById('rosterSyncStatus');
+      if (syncIcon) syncIcon.classList.add('animate-spin');
+      if (statusEl) statusEl.textContent = 'กำลังซิงค์ข้อมูลกับ Google Sheet...';
+
+      try {
+        const res = await fetchWithTimeout(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(sheetId), {}, 40000).then(r => r.json());
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+        if (res && res.success && Array.isArray(res.attendees)) {
+          allAttendees = res.attendees;
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+          updateStatsHeader();
+          renderBatchDropdown();
+          renderBatchFilterDropdown();
+          renderAttendees(allAttendees);
+          if (statusEl) statusEl.textContent = 'ซิงค์ข้อมูลเรียบร้อย (' + new Date().toLocaleTimeString('th-TH') + ')';
+          if (isManual) HrdModal.toast('ซิงค์ข้อมูลกับ Google Sheet สำเร็จแล้วค่ะ', 'success');
+          return res.attendees;
+        } else {
+          if (statusEl) statusEl.textContent = 'แสดงข้อมูลจากความจำเครื่อง';
+          if (isManual) {
+            HrdModal.toast('ไม่สามารถดึงข้อมูลจากชีตได้ในขณะนี้ค่ะ', 'error');
+          }
+          return null;
+        }
+      } catch(e) {
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+        if (statusEl) statusEl.textContent = 'การเชื่อมต่อขัดข้อง แสดงข้อมูลจากความจำเครื่อง';
+        console.warn('Sync attendees failed:', e);
+        if (isManual) {
+          HrdModal.toast('เกิดข้อผิดพลาดในการเชื่อมต่อ Google Sheet ค่ะ', 'error');
+        }
+        return null;
+      }
+    }
+
+    let employeeDatabase = (typeof DEMO_EMPLOYEES !== "undefined" && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+
+    let currentCourse = null;
+    let allAttendees = [];
+
+    async function loadLiveEmployees() {
+      try {
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        const res = await fetch(`${gasUrl}?action=getEmployees`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.employees) && data.employees.length > 0) {
+            employeeDatabase = data.employees;
+            console.log(`[HRD AI] Loaded ${employeeDatabase.length} live employees from Master Sheet.`);
+          }
+        }
+      } catch (err) {
+        console.warn('[HRD AI] Bundled employee fallback:', err);
+      }
+    }
+
+    async function decodeAndInitCourse() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cdata = urlParams.get('cdata');
+      const requestedCourseId = urlParams.get('course') || urlParams.get('c');
+
+      // 1. รองรับลิงก์รุ่นเก่าที่แนบ cdata (Backward compatibility)
+      if (cdata) {
+        try {
+          let jsonStr = '';
+          try {
+            jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(cdata))));
+          } catch(e1) {
+            jsonStr = decodeURIComponent(escape(atob(cdata)));
+          }
+          const parsed = JSON.parse(jsonStr);
+          if (parsed && parsed.id && !isDemoCourse(parsed)) {
+            saveAndSetCourse(parsed);
+            return;
+          }
+        } catch(err) {
+          console.warn('cdata decode error:', err);
+        }
+      }
+
+      // 1.5. Instant Cache & Static Fallback Lookup (0ms - 50ms)
+      try {
+        let cachedStr = localStorage.getItem('hrd_all_courses');
+        let list = cachedStr ? JSON.parse(cachedStr) : null;
+        if (!list || !Array.isArray(list) || list.length === 0) {
+          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json()).catch(() => null);
+          if (Array.isArray(resStatic) && resStatic.length > 0) {
+            list = resStatic;
+            try { localStorage.setItem('hrd_all_courses', JSON.stringify(resStatic)); } catch(e) {}
+          }
+        }
+        if (Array.isArray(list) && list.length > 0) {
+          ALL_COURSES = list.filter(c => !isDemoCourse(c));
+          if (ALL_COURSES.length !== list.length) {
+            try { localStorage.setItem('hrd_all_courses', JSON.stringify(ALL_COURSES)); } catch(e) {}
+          }
+          if (requestedCourseId) {
+            const found = ALL_COURSES.find(c => c.id && c.id.toLowerCase() === requestedCourseId.toLowerCase());
+            if (found) currentCourse = found;
+          } else {
+            currentCourse = ALL_COURSES.length > 0 ? ALL_COURSES[0] : null;
+          }
+        }
+      } catch(e) {
+        console.warn('Initial cache lookup error:', e);
+      }
+
+      // 2. ดึงข้อมูลสดใหม่ล่าสุดจากคลังกลาง Google Apps Script (Single Source of Truth)
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        let staticCatalog = [];
+        try {
+          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
+          if (Array.isArray(resStatic)) staticCatalog = resStatic;
+        } catch(e) {}
+
+        if (requestedCourseId) {
+          try {
+            const res = await fetchWithTimeout(gasUrl + '?action=getCourse&id=' + encodeURIComponent(requestedCourseId), {}, 10000).then(r => r.json());
+            if (res && res.success && res.course && !isDemoCourse(res.course)) {
+              const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === String(res.course.id).toLowerCase());
+              if (staticMatch && staticMatch.hasSubTopics && !res.course.hasSubTopics) {
+                res.course.hasSubTopics = staticMatch.hasSubTopics;
+                res.course.topicMode = staticMatch.topicMode || 'all';
+                res.course.topics = staticMatch.topics || [];
+              }
+              saveAndSetCourse(res.course);
+            } else if (res && !res.success && !currentCourse) {
+              currentCourse = null;
+              ALL_COURSES = ALL_COURSES.filter(c => c.id && c.id.toLowerCase() !== requestedCourseId.toLowerCase());
+            }
+          } catch(err) {
+            console.warn('Fetch course from GAS failed (fallback active):', err);
+          }
+        } else {
+          // Opened root without course parameter: Sync all courses from server
+          try {
+            const res = await fetchWithTimeout(gasUrl + '?action=getAllCourses', {}, 12000).then(r => r.json());
+            if (res && res.success && Array.isArray(res.courses)) {
+              const remoteCourses = res.courses.filter(c => !isDemoCourse(c));
+              ALL_COURSES = remoteCourses.map(rc => {
+                const existing = ALL_COURSES.find(ec => ec.id === rc.id);
+                const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === String(rc.id).toLowerCase());
+                const subSource = (existing && existing.hasSubTopics) ? existing : (staticMatch && staticMatch.hasSubTopics ? staticMatch : null);
+
+                if (subSource && !rc.hasSubTopics) {
+                  return Object.assign({}, rc, {
+                    hasSubTopics: subSource.hasSubTopics,
+                    topicMode: subSource.topicMode || 'all',
+                    topics: subSource.topics || []
+                  });
+                }
+                return rc;
+              });
+              currentCourse = ALL_COURSES.length > 0 ? ALL_COURSES[0] : null;
+              try { localStorage.setItem('hrd_all_courses', JSON.stringify(ALL_COURSES)); } catch(e) {}
+            }
+          } catch(functionErr) {
+            console.warn('Sync all courses failed (fallback active):', functionErr);
+          }
+        }
+      }
+    }
+
+    function saveAndSetCourse(c) {
+      if (!c || isDemoCourse(c)) return;
+      const idx = ALL_COURSES.findIndex(x => x.id === c.id);
+      if (idx >= 0) {
+        const existing = ALL_COURSES[idx];
+        const merged = Object.assign({}, existing, c);
+        if (existing.hasSubTopics && !c.hasSubTopics) {
+          merged.hasSubTopics = existing.hasSubTopics;
+          merged.topicMode = existing.topicMode || 'all';
+          merged.topics = existing.topics || [];
+        }
+        ALL_COURSES[idx] = merged;
+        currentCourse = merged;
+      } else {
+        ALL_COURSES.unshift(c);
+        currentCourse = c;
+      }
+      ALL_COURSES = ALL_COURSES.filter(x => !isDemoCourse(x));
+    }
+
+    function hideLoader() {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        loader.style.pointerEvents = 'none';
+        setTimeout(() => { 
+          if (loader.style.opacity === '0') {
+            loader.style.display = 'none'; 
+          }
+        }, 350);
+      }
+    }
+
+    function showLoader(title, subtitle) {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        const t = document.getElementById('loaderTitle');
+        const s = document.getElementById('loaderSubtitle');
+        if (t) t.textContent = title || 'ระบบลงทะเบียนเข้าอบรม';
+        if (s) s.textContent = subtitle || 'โรงพยาบาลพิษณุเวช พิจิตร';
+
+        // Re-create petals to guarantee animation runs fresh on all browsers
+        const loaderBox = loader.querySelector('.css-logo-loader');
+        if (loaderBox) {
+          loaderBox.innerHTML = 
+            '<div class="logo-petal outer top"></div>' +
+            '<div class="logo-petal inner top-right"></div>' +
+            '<div class="logo-petal outer right"></div>' +
+            '<div class="logo-petal inner bottom-right"></div>' +
+            '<div class="logo-petal outer bottom"></div>' +
+            '<div class="logo-petal inner bottom-left"></div>' +
+            '<div class="logo-petal outer left"></div>' +
+            '<div class="logo-petal inner top-left"></div>';
+        }
+
+        const card = loader.querySelector('.loader-card');
+        if (card) {
+          card.style.animation = 'none';
+          void card.offsetWidth;
+          card.style.animation = 'loaderPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+        }
+
+        loader.style.display = 'flex';
+        loader.style.visibility = 'visible';
+        loader.style.pointerEvents = 'auto';
+        void loader.offsetWidth;
+        loader.style.opacity = '1';
+      }
+    }
+
+    let appInitialized = false;
+    async function initApp() {
+      if (appInitialized) return;
+      appInitialized = true;
+
+      // 1. Temporarily disable progress bar transition to prevent it sliding upon reveal
+      const barEl = document.getElementById('batchQuotaProgressBar');
+      if (barEl) {
+        barEl.style.transition = 'none';
+      }
+
+      try {
+        loadLiveEmployees();
+        await decodeAndInitCourse();
+        const hasCourse = loadCourseData();
+        if (hasCourse) {
+          initAttendees(true); // render cache behind loader, skip background sync
+
+          // Fetch live attendees from sheet before lifting loading curtain
+          if (getCourseSheetId()) {
+            await syncAttendeesFromSheet(false);
+          }
+        }
+      } catch (err) {
+        console.warn('Initialization error:', err);
+      } finally {
+        // Force reflow so DOM paints exact target width
+        if (barEl) {
+          void barEl.offsetWidth;
+        }
+        setTimeout(() => {
+          hideLoader();
+          // Restore smooth transition for user interaction
+          if (barEl) {
+            setTimeout(() => {
+              barEl.style.transition = '';
+            }, 150);
+          }
+        }, 120);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initApp();
+
+      document.addEventListener('click', (e) => {
+        const input = document.getElementById('empSearchInput');
+        const results = document.getElementById('searchResults');
+        if (input && results && !input.contains(e.target) && !results.contains(e.target)) {
+          results.classList.add('hidden');
+        }
+      });
+    });
+
+    function initCourseSelector() {
+      // Course selector dropdown removed from header as requested
+    }
+
+    function switchCourse(courseId) {
+      const params = new URLSearchParams(window.location.search);
+      params.set('course', courseId);
+      window.location.search = params.toString();
+    }
+
+    function loadCourseData() {
+      const bannerEl = document.getElementById('courseHeroBanner');
+      const tabContainerEl = document.getElementById('tabContainer');
+      const noCourseNoticeEl = document.getElementById('noCourseNotice');
+
+      if (!currentCourse || !currentCourse.id || !currentCourse.title || isDemoCourse(currentCourse)) {
+        currentCourse = null;
+        if (bannerEl) bannerEl.classList.add('hidden');
+        if (tabContainerEl) tabContainerEl.classList.add('hidden');
+        if (noCourseNoticeEl) {
+          noCourseNoticeEl.classList.remove('hidden');
+          const urlParams = new URLSearchParams(window.location.search);
+          const reqId = urlParams.get('course') || urlParams.get('c');
+          const titleEl = document.getElementById('noCourseTitle');
+          const subEl = document.getElementById('noCourseSubtitle');
+          if (reqId) {
+            if (titleEl) titleEl.textContent = 'ไม่พบข้อมูลหลักสูตรอบรมที่ระบุ (' + reqId + ')';
+            if (subEl) subEl.textContent = 'หลักสูตรนี้อาจถูกปิดรับลงทะเบียนหรือถูกลบออกจากระบบแล้วค่ะ';
+          } else {
+            if (titleEl) titleEl.textContent = 'ยังไม่มีหลักสูตรอบรมที่เปิดรับลงทะเบียนในขณะนี้';
+            if (subEl) subEl.textContent = 'ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) ยังไม่ได้เปิดรับลงทะเบียนหลักสูตรใหม่ หรือหลักสูตรเดิมได้สิ้นสุดลงแล้วค่ะ';
+          }
+        }
+        return false;
+      }
+
+      if (noCourseNoticeEl) noCourseNoticeEl.classList.add('hidden');
+      if (bannerEl) bannerEl.classList.remove('hidden');
+      if (tabContainerEl) tabContainerEl.classList.remove('hidden');
+
+      document.getElementById('courseTitle').textContent = currentCourse.title;
+      document.getElementById('courseIdBadge').textContent = currentCourse.id;
+      document.getElementById('courseTypeBadge').textContent = currentCourse.type || 'หลักสูตรอบรม';
+      document.getElementById('courseDate').textContent = formatDisplayDate(currentCourse.date);
+      document.getElementById('courseTime').textContent = currentCourse.time || '-';
+      document.getElementById('courseSpeaker').textContent = currentCourse.speaker || 'ฝ่ายพัฒนาทรัพยากรบุคคล (HRD)';
+      const locEl = document.getElementById('courseLocation');
+      if (locEl) locEl.textContent = currentCourse.location || '-';
+
+      const targetBadgeEl = document.getElementById('courseTargetBadge');
+      const targetTextEl = document.getElementById('courseTargetText');
+      if (targetBadgeEl && targetTextEl) {
+        const ta = currentCourse.targetAudience;
+        if (ta && ta.type === 'specific' && ta.summary) {
+          targetTextEl.textContent = '🎯 กลุ่มเป้าหมาย: ' + ta.summary;
+          targetBadgeEl.classList.remove('hidden');
+        } else {
+          targetTextEl.textContent = '🎯 กลุ่มเป้าหมาย: เปิดรับทุกแผนกและทุกตำแหน่ง';
+          targetBadgeEl.classList.remove('hidden');
+        }
+      }
+
+      renderBatchFilterDropdown();
+      renderBatchDropdown();
+      return true;
+    }
+
+    function renderBatchFilterDropdown() {
+      const filterSelect = document.getElementById('batchFilterSelect');
+      const thBatchCol = document.getElementById('thBatchCol');
+      if (!filterSelect || !currentCourse) return;
+
+      if (currentCourse.hasSubTopics) {
+        if (thBatchCol) thBatchCol.textContent = 'หัวข้อที่เข้าอบรม';
+        const topicList = getCourseTopicsList();
+        const curVal = filterSelect.value;
+        
+        // สำหรับหลักสูตรแบบหลายหัวข้อ: ไม่มีตัวกรองทั้งหมด!
+        filterSelect.innerHTML = topicList.map(t => {
+          return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>';
+        }).join('');
+
+        if (curVal && topicList.some(t => isSameTopic(t, curVal))) {
+          filterSelect.value = curVal;
+        } else if (topicList.length > 0) {
+          filterSelect.value = topicList[0];
+        }
+      } else {
+        if (thBatchCol) thBatchCol.textContent = 'รุ่นที่เข้าอบรม';
+        const curVal = filterSelect.value;
+        filterSelect.innerHTML = '<option value="">ทุกรุ่นการอบรม</option>' + 
+          (currentCourse.batches || []).map(b => '<option value="' + escapeHtml(b) + '">' + escapeHtml(b) + '</option>').join('');
+        filterSelect.value = curVal || '';
+      }
+    }
+
+    function formatBatchCardInfo(b) {
+      const cleanName = normalizeBatchName(b);
+      const mParen = b.match(/\((.*?)\)/);
+      const inside = mParen ? mParen[1].trim() : '';
+
+      let datePart = '';
+      let timePart = '';
+
+      if (inside.includes('เวลา')) {
+        const parts = inside.split(/เวลา/i);
+        datePart = parts[0].trim();
+        timePart = 'เวลา ' + parts[1].trim();
+      } else if (/\d{1,2}\s+[ก-๙]+\s+\d{4}/.test(inside)) {
+        const mDate = inside.match(/(\d{1,2}\s+[ก-๙]+\s+\d{4})/);
+        datePart = mDate[1];
+        timePart = inside.replace(mDate[1], '').trim();
+      } else if (inside) {
+        timePart = inside;
+      }
+
+      if (!datePart && currentCourse && currentCourse.date) {
+        datePart = formatDisplayDate(currentCourse.date);
+      }
+      if (!timePart && currentCourse && currentCourse.time) {
+        timePart = currentCourse.time;
+      }
+
+      let title = cleanName;
+      if (datePart) {
+        const cleanDate = datePart.replace(/^วันที่\s*/, '').trim();
+        title = cleanName + ' : วันที่ ' + cleanDate;
+      }
+
+      let timeSub = '';
+      if (timePart) {
+        const cleanTime = timePart.replace(/^(⏰\s*|เวลา\s*)+/, '').trim();
+        timeSub = '<div class="text-xs text-slate-500 font-light flex items-center gap-1 mt-0.5">⏰ เวลา ' + cleanTime + '</div>';
+      }
+
+      return { title, timeSub };
+    }
+
+    function selectDesktopBatch(val) {
+      const empId = document.getElementById('empId').value;
+      const existingAttendee = empId ? allAttendees.find(a => a.id === empId) : null;
+      const submitContainer = document.getElementById('desktopSubmitContainer');
+
+      if (existingAttendee && isSameBatch(existingAttendee.batch, val)) {
+        HrdModal.warning('ท่านได้ลงทะเบียนใน "' + normalizeBatchName(val) + '" อยู่แล้วค่ะ\nหากต้องการเปลี่ยนรุ่น กรุณาเลือกรุ่นใหม่นะคะ', 'รุ่นปัจจุบันของคุณ');
+        document.getElementById('selectedBatchValue').value = '';
+        const batchSelect = document.getElementById('batchSelect');
+        if (batchSelect) batchSelect.value = '';
+        if (submitContainer) submitContainer.classList.add('hidden');
+        renderBatchDropdown();
+        return;
+      }
+
+      const quota = getBatchQuota(val);
+      const enrolled = allAttendees.filter(a => isSameBatch(a.batch, val)).length;
+      if (enrolled >= quota) {
+        HrdModal.warning('ขออภัยค่ะ ' + normalizeBatchName(val) + ' มีผู้ลงทะเบียนเต็มโควตา ' + quota + ' ที่นั่งแล้ว (ที่นั่งเต็ม - Sold Out)\nกรุณาเลือกรุ่นอื่นที่ยังมีที่นั่งว่างนะคะ', 'ที่นั่งเต็ม (Sold Out)');
+        document.getElementById('selectedBatchValue').value = '';
+        const batchSelect = document.getElementById('batchSelect');
+        if (batchSelect) batchSelect.value = '';
+        if (submitContainer) submitContainer.classList.add('hidden');
+        renderBatchDropdown();
+        return;
+      }
+
+      document.getElementById('selectedBatchValue').value = val;
+      const batchSelect = document.getElementById('batchSelect');
+      if (batchSelect) batchSelect.value = val;
+
+      if (submitContainer) {
+        submitContainer.classList.remove('hidden');
+      }
+
+      renderDesktopTopics();
+      renderBatchDropdown();
+    }
+
+    function renderDesktopTopics() {
+      const topicSec = document.getElementById('desktopTopicSection');
+      const container = document.getElementById('desktopTopicCardsContainer');
+      const subLabel = document.getElementById('topicSectionSubLabel');
+      const asterisk = document.getElementById('topicRequiredAsterisk');
+      if (!topicSec || !container) return;
+
+      if (!currentCourse || !currentCourse.hasSubTopics || !Array.isArray(currentCourse.topics) || currentCourse.topics.length === 0) {
+        topicSec.classList.add('hidden');
+        return;
+      }
+
+      topicSec.classList.remove('hidden');
+
+      if (currentCourse.topicMode === 'selective') {
+        if (asterisk) asterisk.classList.remove('hidden');
+        if (subLabel) subLabel.textContent = 'กรุณาติ๊กเลือกหัวข้อที่ต้องการเข้าอบรม (เลือกได้มากกว่า 1 หัวข้อ)';
+
+        container.innerHTML = currentCourse.topics.map((t, idx) => {
+          const tTitle = t.title || ('หัวข้อที่ ' + (idx + 1));
+          const tDate = t.date ? ` • 📅 วันที่: ${formatDisplayDate(t.date)}` : '';
+          const tSpeaker = t.speaker ? ` • 🎤 วิทยากร: ${t.speaker}` : '';
+          const tTime = t.time ? ` • ⏰ ${t.time}` : '';
+
+          return `
+            <label class="flex items-start space-x-3 p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-[#0284c7] hover:bg-sky-50/20 transition-all cursor-pointer shadow-2xs">
+              <input type="checkbox" name="selectedTopics" value="${escapeHtml(tTitle)}" class="topic-select-checkbox w-4 h-4 text-[#0284c7] rounded mt-0.5" checked>
+              <div class="text-xs">
+                <strong class="text-slate-900 block font-semibold">${escapeHtml(tTitle)}</strong>
+                <span class="text-slate-500 font-light text-[11px]">${escapeHtml(tDate + tTime + tSpeaker)}</span>
+              </div>
+            </label>
+          `;
+        }).join('');
+      } else {
+        // topicMode === 'all'
+        if (asterisk) asterisk.classList.add('hidden');
+        if (subLabel) subLabel.textContent = 'เข้าครบทุกหัวข้อ (เวียนฐาน)';
+
+        container.innerHTML = `
+          <div class="p-3.5 bg-sky-50/70 border border-sky-200 rounded-2xl space-y-2">
+            <div class="flex items-center space-x-2 text-xs text-[#0369a1] font-bold">
+              <span>🔄</span>
+              <span>หลักสูตรนี้กำหนดให้ผู้สมัครเข้าเรียนรู้ครบทุกหัวข้อ (${currentCourse.topics.length} หัวข้อ)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
+              ${currentCourse.topics.map((t, idx) => {
+                const dtSub = t.date ? ` (${formatDisplayDate(t.date)})` : '';
+                return `
+                  <div class="bg-white/90 px-2.5 py-1.5 rounded-xl border border-sky-100 flex items-center space-x-2 text-slate-700 font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#0284c7]"></span>
+                    <span class="truncate">${escapeHtml(t.title || ('หัวข้อที่ ' + (idx + 1)))}${escapeHtml(dtSub)}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <p class="text-[11px] text-slate-500 font-light mt-1">
+              * รายชื่อของท่านจะปรากฏในใบเซ็นชื่อของทุกหัวข้อโดยอัตโนมัติ เพื่อรับการประเมินครบทุกหัวข้อ
+            </p>
+          </div>
+        `;
+      }
+    }
+
+    // Render batches as prominent visual cards + clean dropdown fallback
+    function renderBatchDropdown() {
+      const batchSelect = document.getElementById('batchSelect');
+      const cardsContainer = document.getElementById('batchCardsContainer');
+      const batches = (currentCourse && currentCourse.batches) ? currentCourse.batches : [];
+      let currentSelected = document.getElementById('selectedBatchValue').value;
+
+      if (currentCourse && currentCourse.hasSubTopics && !currentSelected && batches.length > 0) {
+        currentSelected = batches[0];
+        document.getElementById('selectedBatchValue').value = currentSelected;
+        const submitContainer = document.getElementById('desktopSubmitContainer');
+        if (submitContainer) submitContainer.classList.remove('hidden');
+      }
+
+      const empId = document.getElementById('empId').value;
+      const existingAttendee = empId ? allAttendees.find(a => a.id === empId) : null;
+
+      // Keep native select in sync
+      if (batchSelect) {
+        batchSelect.innerHTML = '<option value="">-- กรุณาเลือกรุ่นที่ต้องการ --</option>' + batches.map(b => {
+          const isSelected = isSameBatch(b, currentSelected);
+          const q = getBatchQuota(b);
+          const enr = (currentCourse && currentCourse.hasSubTopics)
+            ? new Set(allAttendees.map(a => a && a.id ? String(a.id).trim() : '')).size
+            : allAttendees.filter(a => isSameBatch(a.batch, b)).length;
+          const full = (q - enr) <= 0;
+          const isCur = existingAttendee && isSameBatch(existingAttendee.batch, b);
+          const fullLabel = full && !isCur ? ' [ที่นั่งเต็ม - Sold Out]' : '';
+          const disabledAttr = full && !isCur ? ' disabled="disabled"' : '';
+          return '<option value="' + b + '"' + (isSelected ? ' selected' : '') + disabledAttr + '>' + b + fullLabel + '</option>';
+        }).join('');
+        batchSelect.value = currentSelected || '';
+      }
+
+      // Render Visual Prominent Cards
+      if (cardsContainer) {
+        cardsContainer.innerHTML = batches.map(b => {
+          const quota = getBatchQuota(b);
+          const enrolled = (currentCourse && currentCourse.hasSubTopics)
+            ? new Set(allAttendees.map(a => a && a.id ? String(a.id).trim() : '')).size
+            : allAttendees.filter(a => isSameBatch(a.batch, b)).length;
+          const remaining = Math.max(0, quota - enrolled);
+          const percent = quota > 0 ? Math.min(100, Math.round((enrolled / quota) * 100)) : 100;
+          const isCurrent = existingAttendee && isSameBatch(existingAttendee.batch, b);
+          const isSelected = isSameBatch(b, currentSelected);
+          const isFull = remaining <= 0;
+
+          // Badges
+          let badgeHtml = '';
+          if (isCurrent) {
+            badgeHtml = '<span class="text-xs text-amber-800 bg-amber-100/90 border border-amber-300 px-3 py-0.5 rounded-full font-bold shadow-2xs flex items-center gap-1.5">★ รุ่นปัจจุบันของคุณ</span>';
+          } else if (isFull) {
+            badgeHtml = '<span class="text-xs text-rose-800 bg-rose-100 border border-rose-300 px-3 py-0.5 rounded-full font-black shadow-xs flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-600 inline-block animate-ping"></span> 🔴 ที่นั่งเต็ม (Sold Out)</span>';
+          } else if (remaining <= 5) {
+            badgeHtml = '<span class="text-xs text-amber-700 bg-amber-50 border border-amber-200 px-3 py-0.5 rounded-full font-bold">เหลือ ' + remaining + ' ที่นั่ง!</span>';
+          } else {
+            badgeHtml = '<span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-0.5 rounded-full font-bold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> ว่าง ' + remaining + ' / ' + quota + ' ที่นั่ง</span>';
+          }
+
+          // Card styles
+          const cardStyle = isSelected
+            ? 'border-2 border-[#0369a1] bg-gradient-to-br from-sky-50/80 via-emerald-50/30 to-white shadow-md ring-2 ring-[#0369a1]/15 transform scale-[1.01]'
+            : (isFull && !isCurrent
+                ? 'border border-rose-200 bg-rose-50/20 opacity-80 cursor-not-allowed shadow-2xs'
+                : 'border border-slate-200 bg-white hover:border-[#0284c7]/60 hover:bg-slate-50/70 shadow-2xs');
+
+          // Radio Indicator
+          const radioIcon = isSelected
+            ? '<div class="w-6 h-6 rounded-full bg-[#0369a1] text-white flex items-center justify-center text-xs shadow-xs font-bold shrink-0 mt-0.5">✓</div>'
+            : '<div class="w-6 h-6 rounded-full border-2 border-slate-300 bg-white shrink-0 mt-0.5"></div>';
+
+          // Format Title: "รุ่นที่ x : วันที่ x กันยายน 2569" & Time: "⏰ เวลา 09:00 - 12:00 น."
+          const batchInfo = formatBatchCardInfo(b);
+
+          // Bar color
+          const barColor = isFull ? 'bg-rose-500' : (percent >= 80 ? 'bg-amber-500' : 'bg-gradient-to-r from-[#0369a1] to-[#0284c7]');
+
+          return '<div onclick="selectDesktopBatch(\'' + b.replace(/'/g, "\\'") + '\')" class="p-4 rounded-2xl cursor-pointer transition-all ' + cardStyle + ' space-y-3">' +
+            '<div class="flex items-start justify-between gap-2">' +
+              '<div class="flex items-start space-x-3">' +
+                radioIcon +
+                '<div>' +
+                  '<div class="text-sm font-bold ' + (isSelected ? 'text-[#0369a1]' : 'text-slate-900') + '">' + batchInfo.title + '</div>' +
+                  batchInfo.timeSub +
+                '</div>' +
+              '</div>' +
+              '<div class="shrink-0">' + badgeHtml + '</div>' +
+            '</div>' +
+            '<div class="space-y-1.5 pt-1.5 border-t border-slate-100">' +
+              '<div class="flex justify-between text-xs text-slate-500 font-medium">' +
+                '<span>ผู้ลงทะเบียนแล้ว</span>' +
+                '<span class="font-mono text-slate-700">' + enrolled + ' / ' + quota + ' ท่าน (' + percent + '%)</span>' +
+              '</div>' +
+              '<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">' +
+                '<div class="' + barColor + ' h-2 rounded-full transition-all duration-300" style="width: ' + percent + '%"></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      updateBatchQuotaBar();
+    }
+
+    function handleBatchSelectChange(val) {
+      if (val) {
+        selectDesktopBatch(val);
+      } else {
+        document.getElementById('selectedBatchValue').value = '';
+        const submitContainer = document.getElementById('desktopSubmitContainer');
+        if (submitContainer) submitContainer.classList.add('hidden');
+        renderBatchDropdown();
+      }
+    }
+
+    function updateBatchQuotaBar() {
+      const batchSelectEl = document.getElementById('batchSelect');
+      const selectedBatch = (batchSelectEl && batchSelectEl.value) || document.getElementById('selectedBatchValue').value;
+      if (!selectedBatch) return;
+
+      const quota = getBatchQuota(selectedBatch);
+      let enrolled = 0;
+      if (currentCourse && currentCourse.hasSubTopics) {
+        enrolled = new Set(allAttendees.map(a => a && a.id ? String(a.id).trim() : '')).size;
+      } else {
+        enrolled = allAttendees.filter(a => isSameBatch(a.batch, selectedBatch)).length;
+      }
+      const remaining = Math.max(0, quota - enrolled);
+      const percent = quota > 0 ? Math.min(100, Math.round((enrolled / quota) * 100)) : 100;
+
+      const statsEl = document.getElementById('batchQuotaStats');
+      const barEl = document.getElementById('batchQuotaProgressBar');
+
+      if (statsEl) {
+        statsEl.innerHTML = 'ลงแล้ว <strong class="text-[#0369a1]">' + enrolled + '</strong> ท่าน (ว่าง <strong class="text-emerald-600 font-bold">' + remaining + '</strong> / โควตา ' + quota + ' ที่นั่ง)';
+      }
+      if (barEl) {
+        barEl.style.width = percent + '%';
+      }
+    }
+
+    function updateStatsHeader() {
+      if (!currentCourse) return;
+      let totalRegistered = 0;
+      let totalCapacity = 0;
+      let totalRemaining = 0;
+
+      if (currentCourse.hasSubTopics) {
+        const uniqueEmpIds = new Set();
+        allAttendees.forEach(a => {
+          if (a && a.id) uniqueEmpIds.add(String(a.id).trim());
+        });
+        totalRegistered = uniqueEmpIds.size;
+        const b = (currentCourse.batches && currentCourse.batches[0]) || 'รุ่นที่ 1';
+        totalCapacity = getBatchQuota(b);
+        totalRemaining = Math.max(0, totalCapacity - totalRegistered);
+      } else {
+        totalRegistered = allAttendees.length;
+        (currentCourse.batches || []).forEach(b => {
+          const q = getBatchQuota(b);
+          totalCapacity += q;
+          const enrolled = allAttendees.filter(a => isSameBatch(a.batch, b)).length;
+          totalRemaining += Math.max(0, q - enrolled);
+        });
+      }
+
+      const statReg = document.getElementById('statTotalRegistered');
+      const statRem = document.getElementById('statTotalRemaining');
+      const statCap = document.getElementById('statTotalCapacityText');
+      const tabCnt = document.getElementById('tabCount');
+      if (statReg) statReg.textContent = totalRegistered;
+      if (statRem) statRem.textContent = totalRemaining;
+      if (statCap) statCap.textContent = 'จากทั้งหมด ' + totalCapacity + ' ที่นั่ง';
+      if (tabCnt) tabCnt.textContent = totalRegistered;
+    }
+
+    function getStorageKey() {
+      return currentCourse && currentCourse.id ? 'hrd_attendees_' + currentCourse.id : '';
+    }
+
+    function initAttendees(skipBackgroundSync = false) {
+      const key = getStorageKey();
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          allAttendees = JSON.parse(raw);
+        } else {
+          allAttendees = [];
+        }
+      } catch(e) {
+        allAttendees = [];
+      }
+
+      updateStatsHeader();
+      renderBatchDropdown();
+      renderBatchFilterDropdown();
+      renderAttendees(allAttendees);
+
+      // Background live sync from Google Sheet
+      if (!skipBackgroundSync) {
+        syncAttendeesFromSheet(false);
+      }
+    }
+
+    function switchTab(tab, skipSync = false) {
+      const regSection = document.getElementById('tabRegister');
+      const listSection = document.getElementById('tabList');
+      const regBtn = document.getElementById('tabRegisterBtn');
+      const listBtn = document.getElementById('tabListBtn');
+
+      if (tab === 'register') {
+        regSection.classList.remove('hidden');
+        listSection.classList.add('hidden');
+        regBtn.className = "flex-1 py-3 text-center font-bold text-sm bg-white text-[#0369a1] rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer";
+        listBtn.className = "flex-1 py-3 text-center font-medium text-sm text-slate-600 hover:text-[#0369a1] rounded-xl transition-all flex items-center justify-center space-x-2 cursor-pointer";
+      } else {
+        regSection.classList.add('hidden');
+        listSection.classList.remove('hidden');
+        listBtn.className = "flex-1 py-3 text-center font-bold text-sm bg-white text-[#0369a1] rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer";
+        regBtn.className = "flex-1 py-3 text-center font-medium text-sm text-slate-600 hover:text-[#0369a1] rounded-xl transition-all flex items-center justify-center space-x-2 cursor-pointer";
+        renderAttendees(allAttendees);
+        if (!skipSync) {
+          syncAttendeesFromSheet(false);
+        }
+      }
+    }
+
+    function handleEmpSearch(query) {
+      const resultsDiv = document.getElementById('searchResults');
+      if (!query || query.trim().length === 0) {
+        resultsDiv.classList.add('hidden');
+        return;
+      }
+      const q = query.trim().toLowerCase();
+      const matches = employeeDatabase.filter(e => 
+        (e.id && e.id.toLowerCase().includes(q)) ||
+        (e.firstName && e.firstName.toLowerCase().includes(q)) ||
+        (e.lastName && e.lastName.toLowerCase().includes(q)) ||
+        (e.department && e.department.toLowerCase().includes(q))
+      ).slice(0, 8);
+
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = '<div class="p-4 text-xs text-slate-400 text-center">ไม่พบข้อมูลพนักงานที่ตรงกับคำค้นหา</div>';
+      } else {
+        resultsDiv.innerHTML = matches.map(m => {
+          const registered = allAttendees.find(a => a.id === m.id);
+          const badgeHtml = registered 
+            ? '<span class="text-[10px] text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full font-bold">⚠️ ลงทะเบียนแล้ว (' + registered.batch.split('(')[0].trim() + ')</span>'
+            : '<span class="text-xs text-[#0284c7] font-bold">เลือก →</span>';
+
+          return '<div onclick="selectEmployee(\'' + m.id + '\')" class="p-3.5 hover:bg-[#f0fdfa] cursor-pointer flex items-center justify-between transition-colors">' +
+            '<div class="flex items-center space-x-3">' +
+              '<span class="font-mono text-xs font-bold text-[#0369a1] bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200">' + m.id + '</span>' +
+              '<div>' +
+                '<div class="text-xs font-bold text-slate-800">' + (m.title || '') + m.firstName + ' ' + m.lastName + '</div>' +
+                '<div class="text-[11px] text-slate-500 font-light">' + m.position + ' • ' + m.department + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div>' + badgeHtml + '</div>' +
+          '</div>';
+        }).join('');
+      }
+      resultsDiv.classList.remove('hidden');
+    }
+
+    function selectEmployee(empInput) {
+      const idToFind = (typeof empInput === 'object' && empInput !== null) ? String(empInput.id || '').trim() : String(empInput || '').trim();
+      const emp = employeeDatabase.find(e => String(e.id).trim() === idToFind);
+      if (!emp) return;
+
+      document.getElementById('empId').value = emp.id;
+      document.getElementById('empTitle').value = emp.title || '';
+      document.getElementById('empFirstName').value = emp.firstName || '';
+      document.getElementById('empLastName').value = emp.lastName || '';
+      document.getElementById('empPosition').value = emp.position || '';
+      document.getElementById('empDepartment').value = emp.department || '';
+
+      document.getElementById('dispEmpId').textContent = emp.id;
+      document.getElementById('dispEmpName').textContent = (emp.title || '') + emp.firstName + ' ' + emp.lastName;
+      document.getElementById('dispEmpPosition').textContent = emp.position || '-';
+      document.getElementById('dispEmpDept').textContent = emp.department || '-';
+
+      document.getElementById('selectedEmpCard').classList.remove('hidden');
+      document.getElementById('searchResults').classList.add('hidden');
+      document.getElementById('empSearchInput').value = emp.id + ' ' + (emp.title || '') + emp.firstName + ' ' + emp.lastName;
+
+      // Check Target Audience Status
+      const targetNoticeEl = document.getElementById('empTargetNotice');
+      if (targetNoticeEl) {
+        const ta = currentCourse ? currentCourse.targetAudience : null;
+        if (ta && ta.type === 'specific') {
+          targetNoticeEl.classList.remove('hidden');
+          const isTarget = (Array.isArray(ta.employeeIds) && (ta.employeeIds.includes(emp.id) || ta.employeeIds.includes(String(emp.id)))) ||
+            (Array.isArray(ta.departments) && ta.departments.includes((emp.department || '').trim())) ||
+            (Array.isArray(ta.positions) && ta.positions.includes((emp.position || '').trim()));
+          if (isTarget) {
+            targetNoticeEl.innerHTML = '<div class="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl text-xs flex items-center gap-2 shadow-2xs"><span>✓</span><span><strong>ท่านอยู่ในกลุ่มเป้าหมายของหลักสูตรนี้</strong> (' + escapeHtml(ta.summary || 'กำหนดเฉพาะกลุ่ม') + ')</span></div>';
+          } else {
+            targetNoticeEl.innerHTML = '<div class="text-amber-800 font-semibold bg-amber-50 border border-amber-200 px-3.5 py-2 rounded-xl text-xs flex items-center gap-2 shadow-2xs"><span>⚠️</span><span><strong>คำแนะนำ:</strong> ท่านไม่ได้อยู่ในกลุ่มเป้าหมายหลัก (' + escapeHtml(ta.summary || 'กำหนดเฉพาะกลุ่ม') + ') ทั้งนี้ท่านยังคงสามารถลงทะเบียนได้ตามปกติ</span></div>';
+          }
+        } else {
+          targetNoticeEl.classList.add('hidden');
+          targetNoticeEl.innerHTML = '';
+        }
+      }
+
+      // 1. Reveal Batch Selection Section
+      const batchSec = document.getElementById('desktopBatchSection');
+      if (batchSec) batchSec.classList.remove('hidden');
+
+      // 2. Reset batch selection & keep submit button hidden until user picks a batch
+      document.getElementById('selectedBatchValue').value = '';
+      const batchSelect = document.getElementById('batchSelect');
+      if (batchSelect) batchSelect.value = '';
+
+      const submitContainer = document.getElementById('desktopSubmitContainer');
+      if (submitContainer) submitContainer.classList.add('hidden');
+
+      // 3. Check if this employee has already registered in this course
+      const existingAttendee = allAttendees.find(a => a.id === emp.id);
+      const alertBox = document.getElementById('alreadyRegisteredAlert');
+      const registeredBatchName = document.getElementById('registeredBatchName');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitBtnText = document.getElementById('submitBtnText');
+
+      if (existingAttendee) {
+        alertBox.classList.remove('hidden');
+        registeredBatchName.textContent = normalizeBatchName(existingAttendee.batch);
+        
+        // Update submit button style & text to reflect change mode
+        submitBtnText.textContent = '🔄 บันทึกยืนยันการเปลี่ยนรุ่นการอบรม';
+        submitBtn.className = "w-full py-4 bg-gradient-to-r from-rose-600 via-rose-500 to-[#0369a1] hover:from-rose-700 hover:to-[#0a2540] active:scale-[0.99] text-white font-bold text-base rounded-2xl shadow-xl shadow-rose-600/20 transition-all flex items-center justify-center space-x-2 cursor-pointer";
+      } else {
+        alertBox.classList.add('hidden');
+        submitBtnText.textContent = 'ยืนยันการลงทะเบียนจองที่นั่ง';
+        submitBtn.className = "w-full py-4 bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-[#009688] hover:from-[#0a2540] hover:to-[#00796b] active:scale-[0.99] text-white font-bold text-base rounded-2xl shadow-xl shadow-[#0369a1]/20 transition-all flex items-center justify-center space-x-2 cursor-pointer";
+      }
+
+      renderBatchDropdown();
+    }
+
+    function clearSelectedEmp() {
+      document.getElementById('empId').value = '';
+      document.getElementById('empTitle').value = '';
+      document.getElementById('empFirstName').value = '';
+      document.getElementById('empLastName').value = '';
+      document.getElementById('empPosition').value = '';
+      document.getElementById('empDepartment').value = '';
+      document.getElementById('selectedBatchValue').value = '';
+      const batchSelect = document.getElementById('batchSelect');
+      if (batchSelect) batchSelect.value = '';
+
+      const targetNoticeEl = document.getElementById('empTargetNotice');
+      if (targetNoticeEl) {
+        targetNoticeEl.classList.add('hidden');
+        targetNoticeEl.innerHTML = '';
+      }
+
+      document.getElementById('selectedEmpCard').classList.add('hidden');
+      document.getElementById('alreadyRegisteredAlert').classList.add('hidden');
+
+      // Hide batch section and submit container
+      const batchSec = document.getElementById('desktopBatchSection');
+      if (batchSec) batchSec.classList.add('hidden');
+
+      const topicSec = document.getElementById('desktopTopicSection');
+      if (topicSec) topicSec.classList.add('hidden');
+
+      const submitContainer = document.getElementById('desktopSubmitContainer');
+      if (submitContainer) submitContainer.classList.add('hidden');
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const submitBtnText = document.getElementById('submitBtnText');
+      if (submitBtn && submitBtnText) {
+        submitBtnText.textContent = 'ยืนยันการลงทะเบียนจองที่นั่ง';
+        submitBtn.className = "w-full py-4 bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-[#009688] hover:from-[#0a2540] hover:to-[#00796b] active:scale-[0.99] text-white font-bold text-base rounded-2xl shadow-xl shadow-[#0369a1]/20 transition-all flex items-center justify-center space-x-2 cursor-pointer";
+      }
+
+      document.getElementById('empSearchInput').value = '';
+      document.getElementById('empSearchInput').focus();
+      renderBatchDropdown();
+    }
+
+    async function handleRegistration(e) {
+      e.preventDefault();
+      const empId = document.getElementById('empId').value;
+      if (!empId) {
+        HrdModal.warning('กรุณาค้นหาและเลือกรหัสพนักงานก่อนทำการลงทะเบียนค่ะ', 'ยังไม่ได้เลือกพนักงาน');
+        document.getElementById('empSearchInput').focus();
+        return;
+      }
+
+      const batchSelectEl = document.getElementById('batchSelect');
+      const selectedBatch = (batchSelectEl && batchSelectEl.value) || document.getElementById('selectedBatchValue').value;
+      if (!selectedBatch) {
+        HrdModal.warning('กรุณาเลือกรุ่นที่ต้องการเข้าอบรมค่ะ', 'ยังไม่ได้เลือกรุ่น');
+        return;
+      }
+
+      // 0. Sub-topics / Stations Extraction
+      let selectedTopics = [];
+      if (currentCourse && currentCourse.hasSubTopics && Array.isArray(currentCourse.topics) && currentCourse.topics.length > 0) {
+        if (currentCourse.topicMode === 'selective') {
+          const checkboxes = document.querySelectorAll('.topic-select-checkbox:checked');
+          if (checkboxes.length === 0) {
+            HrdModal.warning('กรุณาเลือกหัวข้อที่ต้องการเข้าอบรมอย่างน้อย 1 หัวข้อค่ะ', 'ยังไม่ได้เลือกหัวข้อ');
+            return;
+          }
+          checkboxes.forEach(cb => selectedTopics.push(cb.value));
+        } else {
+          selectedTopics = currentCourse.topics.map(t => t.title || '');
+        }
+      }
+
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' น.';
+
+      // Check if employee is already registered in this course
+      const existingIndex = allAttendees.findIndex(a => a.id === empId);
+
+      if (existingIndex !== -1) {
+        // CASE: Already registered -> CHANGE BATCH
+        const currentAttendee = allAttendees[existingIndex];
+        const oldBatch = currentAttendee.batch;
+
+        if (isSameBatch(oldBatch, selectedBatch)) {
+          HrdModal.warning('พนักงานท่านนี้ (' + (currentAttendee.title || '') + currentAttendee.firstName + ' ' + currentAttendee.lastName + ')\n\nได้ลงทะเบียนใน "' + normalizeBatchName(oldBatch) + '" อยู่แล้วค่ะ\nหากต้องการเปลี่ยนรุ่น กรุณาเลือกรุ่นใหม่จากดรอปดาวน์นะคะ', 'ลงทะเบียนรุ่นนี้อยู่แล้ว');
+          return;
+        }
+
+        // Check quota of newly selected batch
+        const quota = getBatchQuota(selectedBatch);
+        const enrolledInNewBatch = allAttendees.filter(a => isSameBatch(a.batch, selectedBatch)).length;
+        if (enrolledInNewBatch >= quota) {
+          HrdModal.warning('ขออภัยค่ะ ' + normalizeBatchName(selectedBatch) + ' มีผู้ลงทะเบียนเต็มโควตา ' + quota + ' ที่นั่งแล้ว กรุณาเลือกรุ่นอื่นนะคะ', 'โควตาเต็ม');
+          return;
+        }
+
+        const updatedAttendee = Object.assign({}, currentAttendee, {
+          batch: normalizeBatchName(selectedBatch),
+          selectedTopics: selectedTopics.length > 0 ? selectedTopics : (currentAttendee.selectedTopics || []),
+          timestamp: timeStr + ' (เปลี่ยนรุ่น)'
+        });
+
+        const originalAttendees = JSON.parse(JSON.stringify(allAttendees));
+
+        // 1. แสดงหน้าโหลดทันที เพื่อซ่อนการอัปเดตข้อมูลเบื้องหลัง
+        showLoader('กำลังเปลี่ยนรุ่นการอบรม...', 'กำลังบันทึกลง Google Sheet และอัปเดตข้อมูลให้เป็นปัจจุบัน กรุณารอสักครู่นะคะ');
+
+        try {
+          const res = await syncAttendeeToSheet(updatedAttendee);
+          if (res && res.success) {
+            if (Array.isArray(res.attendees)) {
+              allAttendees = res.attendees;
+            } else {
+              allAttendees[existingIndex].batch = updatedAttendee.batch;
+              allAttendees[existingIndex].timestamp = updatedAttendee.timestamp;
+            }
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+
+            // 2. อัปเดต DOM ทั้งหมดให้เสร็จสมบูรณ์ 100% ขณะอยู่ใต้หน้าโหลด
+            updateStatsHeader();
+            renderBatchDropdown();
+            renderAttendees(allAttendees);
+            clearSelectedEmp();
+            switchTab('list', true); // ข้าม background sync ซ้ำซ้อน
+
+            // 3. ปิดหน้าโหลดเมื่อข้อมูลแสดงผลสมบูรณ์แล้วเท่านั้น
+            hideLoader();
+
+            // 4. แสดงหน้าต่างยืนยันความสำเร็จ
+            HrdModal.success('บันทึกเปลี่ยนรุ่นการอบรมสำเร็จ!\n\n' +
+                  'ผู้เข้าอบรม: ' + (currentAttendee.title || '') + currentAttendee.firstName + ' ' + currentAttendee.lastName + '\n' +
+                  'จากเดิม: ' + normalizeBatchName(oldBatch) + '\n' +
+                  'เปลี่ยนเป็น: ' + normalizeBatchName(selectedBatch) + '\n' +
+                  'เวลาที่บันทึก: ' + timeStr, 'เปลี่ยนรุ่นสำเร็จ 🎉');
+          } else {
+            allAttendees = originalAttendees;
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+            updateStatsHeader();
+            renderBatchDropdown();
+            renderAttendees(allAttendees);
+            hideLoader();
+            await HrdModal.error((res && res.message) || 'ไม่สามารถเปลี่ยนรุ่นการอบรมได้ค่ะ', 'เปลี่ยนรุ่นไม่สำเร็จ');
+          }
+        } catch (err) {
+          console.warn('Sync attendee error:', err);
+          allAttendees = originalAttendees;
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+          updateStatsHeader();
+          renderBatchDropdown();
+          renderAttendees(allAttendees);
+          hideLoader();
+          await HrdModal.error('การเชื่อมต่อ Google Sheet ล้มเหลว ข้อมูลยังไม่ถูกเปลี่ยนรุ่นค่ะ', 'เชื่อมต่อไม่สำเร็จ');
+        }
+
+        return;
+      }
+
+      // CASE: New Registration
+      const quota = getBatchQuota(selectedBatch);
+      const enrolled = allAttendees.filter(a => isSameBatch(a.batch, selectedBatch)).length;
+      if (enrolled >= quota) {
+        HrdModal.warning('ขออภัยค่ะ ' + normalizeBatchName(selectedBatch) + ' มีผู้ลงทะเบียนเต็มโควตา ' + quota + ' ที่นั่งแล้ว กรุณาเลือกรุ่นอื่นนะคะ', 'โควตาเต็ม');
+        return;
+      }
+
+      const newAttendee = {
+        no: allAttendees.length + 1,
+        id: empId,
+        title: document.getElementById('empTitle').value,
+        firstName: document.getElementById('empFirstName').value,
+        lastName: document.getElementById('empLastName').value,
+        position: document.getElementById('empPosition').value,
+        department: document.getElementById('empDepartment').value,
+        batch: normalizeBatchName(selectedBatch),
+        selectedTopics: selectedTopics,
+        timestamp: timeStr
+      };
+
+      // 1. แสดงหน้าโหลดทันที เพื่อซ่อนการอัปเดตข้อมูลเบื้องหลัง
+      showLoader('กำลังลงทะเบียน...', 'กำลังบันทึกลง Google Sheet และอัปเดตข้อมูลให้เป็นปัจจุบัน กรุณารอสักครู่นะคะ');
+
+      try {
+        const res = await syncAttendeeToSheet(newAttendee);
+        if (res && res.success) {
+          if (Array.isArray(res.attendees)) {
+            allAttendees = res.attendees;
+          } else {
+            allAttendees.push(newAttendee);
+          }
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+
+          // 2. อัปเดต DOM ทั้งหมดให้เสร็จสมบูรณ์ 100% ขณะอยู่ใต้หน้าโหลด
+          updateStatsHeader();
+          renderBatchDropdown();
+          renderAttendees(allAttendees);
+          clearSelectedEmp();
+          switchTab('list', true); // ข้าม background sync ซ้ำซ้อน
+
+          // 3. ปิดหน้าโหลดเมื่อข้อมูลแสดงผลสมบูรณ์แล้วเท่านั้น
+          hideLoader();
+
+          // 4. แสดงหน้าต่างยืนยันความสำเร็จ
+          HrdModal.success('ลงทะเบียนจองที่นั่งสำเร็จ!\n\n' +
+                'ผู้เข้าอบรม: ' + (newAttendee.title || '') + newAttendee.firstName + ' ' + newAttendee.lastName + '\n' +
+                'หลักสูตร: ' + currentCourse.title + '\n' +
+                'รุ่น: ' + normalizeBatchName(selectedBatch), 'ลงทะเบียนสำเร็จ 🎉');
+        } else {
+          hideLoader();
+          await HrdModal.error((res && res.message) || 'ไม่สามารถลงทะเบียนได้ค่ะ กรุณาลองใหม่อีกครั้ง', 'ลงทะเบียนไม่สำเร็จ');
+        }
+      } catch (err) {
+        hideLoader();
+        console.warn('Sync attendee error:', err);
+        await HrdModal.error('ไม่สามารถเชื่อมต่อ Google Sheet เพื่อบันทึกข้อมูลได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้งนะคะ', 'การเชื่อมต่อล้มเหลว');
+      }
+    }
+
+    function renderAttendees(list) {
+      if (Array.isArray(list) && list !== allAttendees) {
+        renderAttendeesList(list);
+      } else {
+        filterAttendees();
+      }
+    }
+
+    function renderAttendeesList(list) {
+      const tbody = document.getElementById('attendeeTableBody');
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="py-8 text-center text-slate-400 font-light text-xs">ยังไม่มีข้อมูลผู้ลงทะเบียนในหัวข้อ/รุ่นนี้</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map((a, idx) => {
+        let topicsHtml = '';
+        if (a.selectedTopics && a.selectedTopics.length > 0) {
+          const tList = Array.isArray(a.selectedTopics) ? a.selectedTopics : [a.selectedTopics];
+          topicsHtml = '<div class="mt-1 flex flex-wrap gap-1">' + tList.map(t => '<span class="text-[10px] bg-sky-50 text-sky-800 border border-sky-200 px-1.5 py-0.5 rounded font-medium">' + escapeHtml(t) + '</span>').join('') + '</div>';
+        }
+
+        return '<tr class="hover:bg-[#f0fdfa] transition-colors">' +
+          '<td class="py-3 px-4 text-center font-mono text-slate-400 font-light">' + (idx + 1) + '</td>' +
+          '<td class="py-3 px-4 font-mono font-bold text-[#0369a1]">' + a.id + '</td>' +
+          '<td class="py-3 px-4 text-slate-600">' + (a.title || '-') + '</td>' +
+          '<td class="py-3 px-4 font-bold text-slate-900">' + a.firstName + ' ' + a.lastName + '</td>' +
+          '<td class="py-3 px-4 text-slate-600">' + (a.position || '-') + '</td>' +
+          '<td class="py-3 px-4 text-slate-600">' + (a.department || '-') + '</td>' +
+          '<td class="py-3 px-4"><span class="px-2.5 py-1 bg-sky-50 text-[#0369a1] border border-sky-200 rounded-lg text-[11px] font-semibold">' + a.batch + '</span>' + topicsHtml + '</td>' +
+          '<td class="py-3 px-4 text-center font-mono text-slate-500">' + (a.timestamp || '-') + '</td>' +
+          '<td class="py-3 px-4 text-center"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[10px] font-bold">ยืนยันแล้ว</span></td>' +
+          '<td class="py-3 px-4 text-center">' +
+            '<button onclick="confirmDeleteAttendee(\'' + a.id + '\')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 inline-flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95 mx-auto group" title="ลบข้อมูลการลงทะเบียนของ ' + a.firstName + ' ' + a.lastName + '">' +
+              '<svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>' +
+            '</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    async function confirmDeleteAttendee(empId) {
+      const attendee = allAttendees.find(a => a && a.id.toString().trim() === empId.toString().trim());
+      if (!attendee) {
+        HrdModal.warning('ไม่พบข้อมูลผู้ลงทะเบียนท่านนี้ในระบบค่ะ', 'ไม่พบข้อมูล');
+        return;
+      }
+
+      const fullName = (attendee.title ? attendee.title + ' ' : '') + attendee.firstName + ' ' + attendee.lastName;
+      const batchDisplay = attendee.batch || '-';
+
+      const enteredPassword = await HrdModal.prompt(
+        'ต้องการลบข้อมูลการลงทะเบียนของ:\n' +
+        'คุณ ' + fullName + ' (รหัสพนักงาน: ' + attendee.id + ')\n' +
+        'รุ่นการอบรม: ' + batchDisplay + '\n\n' +
+        '⚠️ การลบข้อมูลจะนำรายชื่อออกจากระบบและคืนสิทธิ์ที่นั่งว่างให้ผู้อื่น\n' +
+        'กรุณากรอกรหัสผ่านผู้ดูแลระบบ (6 หลัก) เพื่อยืนยัน:',
+        '',
+        'ยืนยันการลบข้อมูลผู้ลงทะเบียน',
+        {
+          placeholder: 'กรอกรหัสผ่าน 6 หลัก...',
+          label: 'รหัสผ่านผู้ดูแลระบบ (Security Code):',
+          inputType: 'password',
+          danger: true,
+          confirmText: 'ยืนยันลบข้อมูล',
+          cancelText: 'ยกเลิก'
+        }
+      );
+
+      if (enteredPassword === null) return; // User cancelled
+
+      if (enteredPassword.trim() !== '014125') {
+        await HrdModal.error('รหัสผ่านไม่ถูกต้องค่ะ! ไม่สามารถลบข้อมูลผู้ลงทะเบียนได้', 'รหัสผ่านไม่ถูกต้อง');
+        return;
+      }
+
+      // Proceed with deletion
+      showLoader('กำลังลบข้อมูลผู้ลงทะเบียน...', 'กำลังนำข้อมูลออกจากระบบและอัปเดต Google Sheet ประจำวิชา');
+
+      const originalAttendees = allAttendees.slice();
+
+      // Optimistically update local view
+      allAttendees = allAttendees.filter(a => a && a.id.toString().trim() !== empId.toString().trim());
+      localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+      updateStatsHeader();
+      renderBatchDropdown();
+      renderAttendees(allAttendees);
+
+      // Sync delete to Google Sheet
+      try {
+        const res = await deleteAttendeeFromSheet(empId, enteredPassword.trim(), attendee.batch);
+        if (res && res.success) {
+          if (Array.isArray(res.attendees)) {
+            allAttendees = res.attendees;
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+            updateStatsHeader();
+            renderBatchDropdown();
+            renderAttendees(allAttendees);
+          }
+          hideLoader();
+          await HrdModal.success(
+            'ลบข้อมูลการลงทะเบียนของคุณ ' + fullName + ' เรียบร้อยแล้วค่ะ!\n\n(ระบบได้คืนโควตาสิทธิ์ที่นั่งว่างและอัปเดตตาราง Google Sheet แล้ว)',
+            'ลบข้อมูลสำเร็จ'
+          );
+        } else {
+          // Rollback local state
+          allAttendees = originalAttendees;
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+          updateStatsHeader();
+          renderBatchDropdown();
+          renderAttendees(allAttendees);
+          hideLoader();
+          await HrdModal.error((res && res.message) || 'ไม่สามารถลบข้อมูลจาก Google Sheet ได้ค่ะ กรุณาลองใหม่อีกครั้ง', 'เกิดข้อผิดพลาด');
+        }
+      } catch (err) {
+        // Rollback local state on network error
+        console.warn('Sync delete attendee error:', err);
+        allAttendees = originalAttendees;
+        localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+        updateStatsHeader();
+        renderBatchDropdown();
+        renderAttendees(allAttendees);
+        hideLoader();
+        await HrdModal.error('การเชื่อมต่อล้มเหลว ไม่สามารถลบข้อมูลจาก Google Sheet ได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง', 'เชื่อมต่อไม่สำเร็จ');
+      }
+    }
+
+    function filterAttendees(batchOrTopic) {
+      const filterSelect = document.getElementById('batchFilterSelect');
+      let val = batchOrTopic !== undefined ? batchOrTopic : (filterSelect ? filterSelect.value : '');
+      const searchInput = document.getElementById('rosterSearchInput');
+      const q = (searchInput ? searchInput.value : '').trim().toLowerCase();
+
+      // If multi-topic and filterSelect has not been set yet, ensure it is populated
+      if (filterSelect && (!filterSelect.options || filterSelect.options.length === 0)) {
+        renderBatchFilterDropdown();
+        val = filterSelect.value;
+      }
+
+      let filtered = allAttendees.slice();
+
+      if (currentCourse && currentCourse.hasSubTopics) {
+        // Multi-topic mode: Must filter by the selected topic (no "ทั้งหมด" option)
+        if (!val && filterSelect && filterSelect.value) {
+          val = filterSelect.value;
+        }
+        if (val) {
+          filtered = filtered.filter(a => isSameTopic(a.batch, val));
+        }
+      } else {
+        // Standard batch mode
+        if (val) {
+          filtered = filtered.filter(a => isSameBatch(a.batch, val));
+        }
+      }
+
+      if (q) {
+        filtered = filtered.filter(a => 
+          (a.id && a.id.toLowerCase().includes(q)) ||
+          (a.firstName && a.firstName.toLowerCase().includes(q)) ||
+          (a.lastName && a.lastName.toLowerCase().includes(q)) ||
+          (a.department && a.department.toLowerCase().includes(q)) ||
+          (a.batch && a.batch.toLowerCase().includes(q))
+        );
+      }
+
+      renderAttendeesList(filtered);
+    }
+
+    function searchRoster(query) {
+      filterAttendees();
+    }
+  </script>
+</body>
+</html>

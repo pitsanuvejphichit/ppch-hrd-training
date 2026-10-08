@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ลงทะเบียนเข้าอบรม | รพ.พิษณุเวช</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="modal.js"></script>
+  <script src="demo_data.js"></script>
+  <script src="target-modal.js"></script>
+  <style>
+    * { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; }
+    .active-scale:active { transform: scale(0.97); }
+
+    /* CSS Medical Cross Loader (Phitsanuvej Style) */
+    .css-logo-loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 40px;
+      -webkit-transform: scale(1.6);
+      transform: scale(1.6);
+      -webkit-transform-origin: center;
+      transform-origin: center;
+    }
+
+    .logo-petal {
+      position: absolute;
+      -webkit-animation: loadingPulse 1.6s ease-in-out infinite;
+      animation: loadingPulse 1.6s ease-in-out infinite;
+      will-change: transform, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    .logo-petal.outer {
+      background: #1e5387; /* สีน้ำเงินเข้มสำหรับกลีบนอก */
+      border-radius: 6px;
+    }
+
+    .logo-petal.inner {
+      background: #5faee3; /* สีน้ำเงินอ่อนสำหรับกลีบใน */
+      border-radius: 5px;
+    }
+
+    /* ตั้งตำแหน่งแต่ละกลีบของสัญลักษณ์กากบาทแพทย์ */
+    .logo-petal.outer.top {
+      top: 0px; left: 30px; width: 20px; height: 24px;
+      -webkit-animation-delay: 0s;
+      animation-delay: 0s;
+    }
+    .logo-petal.inner.top-right {
+      top: 14px; right: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 0.2s;
+      animation-delay: 0.2s;
+    }
+    .logo-petal.outer.right {
+      top: 30px; right: 0px; width: 24px; height: 20px;
+      -webkit-animation-delay: 0.4s;
+      animation-delay: 0.4s;
+    }
+    .logo-petal.inner.bottom-right {
+      bottom: 14px; right: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 0.6s;
+      animation-delay: 0.6s;
+    }
+    .logo-petal.outer.bottom {
+      bottom: 0px; left: 30px; width: 20px; height: 24px;
+      -webkit-animation-delay: 0.8s;
+      animation-delay: 0.8s;
+    }
+    .logo-petal.inner.bottom-left {
+      bottom: 14px; left: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 1.0s;
+      animation-delay: 1.0s;
+    }
+    .logo-petal.outer.left {
+      top: 30px; left: 0px; width: 24px; height: 20px;
+      -webkit-animation-delay: 1.2s;
+      animation-delay: 1.2s;
+    }
+    .logo-petal.inner.top-left {
+      top: 14px; left: 14px; width: 20px; height: 20px;
+      -webkit-animation-delay: 1.4s;
+      animation-delay: 1.4s;
+    }
+
+    /* เอฟเฟกต์การกะพริบไล่ระดับคลื่นแบบวนลูป */
+    @-webkit-keyframes loadingPulse {
+      0%, 100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0.45;
+      }
+      50% {
+        -webkit-transform: scale(1.22);
+        transform: scale(1.22);
+        opacity: 1;
+      }
+    }
+
+    @keyframes loadingPulse {
+      0%, 100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0.45;
+      }
+      50% {
+        -webkit-transform: scale(1.22);
+        transform: scale(1.22);
+        opacity: 1;
+      }
+    }
+
+    @-webkit-keyframes loaderPop {
+      0% { -webkit-transform: scale(0.9); transform: scale(0.9); opacity: 0; }
+      100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes loaderPop {
+      0% { -webkit-transform: scale(0.9); transform: scale(0.9); opacity: 0; }
+      100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col pb-32">
+
+  <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) -->
+  <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
+    <div class="loader-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.06); min-width: 300px; transform: scale(0.95); animation: loaderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      
+      <!-- ตัวหมุนแอนิเมชันกากบาทแพทย์ -->
+      <div class="css-logo-loader">
+        <div class="logo-petal outer top"></div>
+        <div class="logo-petal inner top-right"></div>
+        <div class="logo-petal outer right"></div>
+        <div class="logo-petal inner bottom-right"></div>
+        <div class="logo-petal outer bottom"></div>
+        <div class="logo-petal inner bottom-left"></div>
+        <div class="logo-petal outer left"></div>
+        <div class="logo-petal inner top-left"></div>
+      </div>
+      
+      <!-- ข้อความประกอบการรอข้อมูล -->
+      <div style="margin-top: 24px; text-align: center;">
+        <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #1e5387; margin-bottom: 6px; letter-spacing: 0.5px;">
+          ระบบลงทะเบียนเข้าอบรม
+        </div>
+        <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
+          โรงพยาบาลพิษณุเวช พิจิตร
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile App Bar -->
+  <header class="bg-white border-b border-slate-200/80 px-4 py-3 flex items-center justify-between shadow-xs sticky top-0 z-30">
+    <div class="flex items-center space-x-2.5">
+      <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-9 w-auto object-contain">
+      <div class="border-l border-slate-200 pl-2">
+        <h1 class="text-xs font-bold text-[#0369a1] leading-tight">ระบบลงทะเบียนเข้าอบรม</h1>
+        <p class="text-[10px] text-slate-400 font-light">รพ.พิษณุเวช พิจิตร • Clinical Sanctuary</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+        เปิดรับจอง
+      </span>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 py-4 space-y-4">
+
+    <!-- Empty State: เมื่อไม่มีหลักสูตรเปิดรับลงทะเบียนหรือรหัสหลักสูตรไม่ถูกต้อง -->
+    <div id="mNoCourseNotice" class="hidden bg-white rounded-3xl p-8 text-center border border-slate-200/90 shadow-sm space-y-5 my-6">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-3xl">
+        📋
+      </div>
+      <div class="space-y-1.5">
+        <h3 id="mNoCourseTitle" class="text-lg font-bold text-slate-800">
+          ยังไม่มีหลักสูตรอบรมที่เปิดรับลงทะเบียนในขณะนี้
+        </h3>
+        <p id="mNoCourseSubtitle" class="text-xs text-slate-500 leading-relaxed">
+          ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) ยังไม่ได้เปิดรับลงทะเบียนหลักสูตรใหม่ หรือหลักสูตรเดิมได้สิ้นสุดลงแล้วค่ะ
+        </p>
+      </div>
+      <div class="pt-2">
+        <a href="admin.html" class="inline-flex items-center justify-center space-x-2 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#0369a1] to-[#0284c7] text-white font-bold text-xs shadow-md shadow-sky-900/15">
+          <span>⚙️</span>
+          <span>เข้าสู่ระบบจัดการหลักสูตร (Admin Portal)</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Course Card (Collapsible Header) - Clinical Sanctuary Theme -->
+    <div id="mHeroCard" class="bg-gradient-to-br from-[#0a2540] via-[#0369a1] to-[#0284c7] rounded-3xl p-5 text-white shadow-lg shadow-sky-950/15 relative overflow-hidden">
+      <div class="flex items-center justify-between text-[11px] mb-2">
+        <span id="mCourseTypeBadge" class="bg-white/15 px-2.5 py-0.5 rounded-full text-sky-100 font-medium border border-white/10">
+          หลักสูตรอบรม
+        </span>
+        <button onclick="toggleCourseDetails()" class="text-white/90 hover:text-white bg-white/10 hover:bg-white/20 px-2.5 py-0.5 rounded-full text-[10px] flex items-center space-x-1 transition-colors">
+          <span id="btnDetailText">รายละเอียด</span> <span>▾</span>
+        </button>
+      </div>
+      
+      <h2 id="mCourseTitle" class="text-base font-bold leading-snug tracking-tight">
+        หลักสูตรอบรม
+      </h2>
+
+      <!-- Target Audience Badge -->
+      <div id="mCourseTargetBadge" onclick="openTargetAudienceModal()" class="mt-2 inline-flex items-center space-x-1.5 px-2.5 py-1 bg-amber-400/20 backdrop-blur-md rounded-lg border border-amber-300/30 text-amber-200 text-[11px] font-medium shadow-xs cursor-pointer active:scale-95 transition-all select-none hover:bg-amber-400/30 group" title="คลิกเพื่อดูแผนกและรายชื่อกลุ่มเป้าหมายที่ยังไม่ได้ลงทะเบียน">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="mCourseTargetText">🎯 กลุ่มเป้าหมาย: เปิดรับทุกแผนกและทุกตำแหน่ง</span>
+        <span class="ml-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-400/30 text-amber-100 flex items-center gap-0.5 group-hover:bg-amber-300 group-hover:text-slate-900 transition-colors">
+          <span>ดูรายชื่อ</span> ❯
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-4 text-xs text-sky-100 pt-2.5 border-t border-white/10 mt-3 font-light">
+        <div class="flex items-center space-x-1.5">
+          <span>📅</span> <span id="mCourseDate">-</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <span>⏰</span> <span id="mCourseTime">-</span>
+        </div>
+      </div>
+
+      <!-- Drawer Details -->
+      <div id="mCourseFullDetails" class="hidden text-xs text-sky-100 pt-3 mt-3 border-t border-white/15 space-y-1.5 font-light">
+        <div>🎤 <strong>วิทยากร:</strong> <span id="mCourseSpeaker">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD)</span></div>
+        <div class="pt-1 text-[11px] text-sky-200">
+          ✓ บันทึกข้อมูลสดตรงสู่ Google Sheet ประจำวิชาทันที
+        </div>
+      </div>
+    </div>
+
+    <!-- Segmented Control Tabs -->
+    <div id="mTabControls" class="flex bg-slate-200/70 p-1 rounded-2xl">
+      <button id="mTabRegisterBtn" onclick="switchMobileTab('register')" class="flex-1 py-2.5 text-center font-bold text-xs bg-white text-[#0369a1] rounded-xl shadow-xs transition-all flex items-center justify-center space-x-1.5">
+        <span>✍️</span> <span>ลงทะเบียน</span>
+      </button>
+      <button id="mTabListBtn" onclick="switchMobileTab('list')" class="flex-1 py-2.5 text-center font-medium text-xs text-slate-600 transition-all flex items-center justify-center space-x-1.5">
+        <span>📋</span> <span>ดูรายชื่อ (<span id="mTabCount">0</span>)</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: REGISTRATION -->
+    <section id="mTabRegister" class="space-y-4">
+
+      <!-- Employee Search Box -->
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs space-y-2.5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold text-slate-800">
+            ค้นหาข้อมูลพนักงาน <span class="text-rose-500">*</span>
+          </label>
+          <span class="text-[10px] text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded-full">
+            209 ท่าน
+          </span>
+        </div>
+        
+        <div class="relative">
+          <input 
+            type="text" 
+            id="mEmpSearchInput" 
+            autocomplete="off"
+            placeholder="พิมพ์รหัส 6 หลัก หรือชื่อ-นามสกุล..." 
+            oninput="searchEmployeeMobile(this.value)"
+            class="w-full px-4 py-3.5 pl-11 text-sm rounded-2xl border border-slate-300 focus:ring-2 focus:ring-[#0e3d6e] outline-none shadow-xs bg-slate-50/50 focus:bg-white"
+            required
+          >
+          <span class="absolute left-3.5 top-3.5 text-slate-400 pointer-events-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </span>
+          <button type="button" onclick="clearMobileSearch()" class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 text-sm hidden p-1" id="mBtnClear">✖</button>
+
+          <!-- Floating Dropdown for Mobile -->
+          <div id="mSearchResults" class="hidden absolute top-full left-0 right-0 mt-2 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-2xl z-30 divide-y divide-slate-100">
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-400 font-light">💡 พิมพ์รหัสพนักงานหรือชื่อ ระบบจะดึงตำแหน่งและแผนกให้ทันที</p>
+
+        <!-- Selected Employee Info Preview Card -->
+        <div id="mEmpCard" class="hidden mt-3 bg-blue-50/80 border border-blue-200/80 rounded-2xl p-4 space-y-1.5 text-xs">
+          <div class="flex items-center justify-between font-bold text-blue-950 border-b border-blue-200/60 pb-1.5">
+            <span id="mDispName"></span>
+            <span id="mDispId" class="font-mono text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-200"></span>
+          </div>
+          <div class="text-slate-600 pt-1">ตำแหน่ง: <strong id="mDispPos" class="font-semibold text-slate-800"></strong></div>
+          <div class="text-slate-600">แผนก: <strong id="mDispDept" class="font-semibold text-slate-800"></strong></div>
+          <div id="mEmpTargetNotice" class="hidden pt-1.5 border-t border-blue-200/60 text-[11px]"></div>
+        </div>
+      </div>
+
+      <!-- Batch Selection (Prominent Visual Radio Cards) & Change Batch Feature -->
+      <div id="mBatchSection" class="hidden bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs space-y-3.5">
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#0e3d6e]"></span>
+            <span class="text-sm font-bold text-slate-900">เลือกรุ่นที่ต้องการเข้าอบรม</span>
+            <span class="text-rose-500">*</span>
+          </label>
+          <span class="text-[11px] text-slate-400 font-light">แตะเลือกรุ่น</span>
+        </div>
+
+        <!-- Red Alert Notice for Mobile -->
+        <div id="mAlreadyRegisteredAlert" class="hidden p-3.5 bg-rose-50 border border-rose-200 rounded-2xl flex items-start space-x-2.5 text-rose-800 shadow-xs">
+          <span class="text-base leading-none">⚠️</span>
+          <div class="text-[11px] space-y-1 flex-1">
+            <p class="font-bold text-rose-700">
+              ท่านได้ลงทะเบียนไว้แล้วใน: <span id="mRegisteredBatchName" class="underline font-bold text-rose-900"></span>
+            </p>
+            <p class="text-rose-600 font-light leading-relaxed">
+              * หากต้องการเปลี่ยนรุ่น สามารถแตะเลือก <strong>รุ่นใหม่</strong> จากการ์ดด้านล่างนี้ แล้วกดยืนยันเปลี่ยนรุ่นได้ทันทีค่ะ
+            </p>
+          </div>
+        </div>
+
+        <!-- Prominent Visual Batch Selection Cards Container -->
+        <div id="mBatchCardsContainer" class="space-y-3">
+          <!-- Populated dynamically with high-visibility selectable cards -->
+        </div>
+
+        <!-- Hidden Native Select (Kept for compatibility) -->
+        <select id="mBatchSelect" onchange="handleMobileBatchChange(this.value)" class="hidden" required>
+        </select>
+
+        <!-- Hidden progressBar placeholder for safety -->
+        <div id="mBatchProgressBar" class="hidden"></div>
+        <input type="hidden" id="mSelectedBatch" required>
+      </div>
+
+      <!-- Sub-topics / Stations Section for Mobile -->
+      <div id="mTopicSection" class="hidden bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs space-y-3.5">
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#0284c7]"></span>
+            <span class="text-sm font-bold text-slate-900">หัวข้อการอบรม</span>
+            <span id="mTopicRequiredAsterisk" class="text-rose-500 hidden">*</span>
+          </label>
+          <span id="mTopicSubLabel" class="text-[11px] text-slate-400 font-light"></span>
+        </div>
+
+        <div id="mTopicCardsContainer" class="space-y-2">
+          <!-- Dynamically populated topic cards / checkboxes -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 2: ATTENDEE LIST -->
+    <section id="mTabList" class="hidden space-y-3">
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs space-y-3.5">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900">รายชื่อผู้ลงทะเบียน (Live)</h3>
+            <p class="text-[10px] text-slate-400 font-light" id="mRosterSyncStatus">เชื่อมโยงกับ Google Sheet</p>
+          </div>
+          <button onclick="syncMobileAttendeesFromSheet(true)" id="mSyncBtn" class="text-xs text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200/70 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 active:scale-95 transition-all cursor-pointer shadow-2xs">
+            <span id="mSyncIcon" class="inline-block text-xs">🔄</span>
+            <span>ซิงค์จาก Sheet</span>
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <select 
+            id="mBatchFilterSelect" 
+            onchange="handleMobileFilterChange()" 
+            class="w-5/12 px-2.5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-[#0e3d6e] bg-slate-50 outline-none truncate cursor-pointer shadow-2xs"
+          >
+            <option value="">ทุกรุ่นการอบรม</option>
+          </select>
+          <input 
+            type="text" 
+            id="mListSearch" 
+            placeholder="ค้นหาชื่อ หรือรหัส..." 
+            oninput="handleMobileFilterChange()"
+            class="w-7/12 px-3 py-2.5 rounded-xl border border-slate-200 text-xs outline-none bg-slate-50 focus:bg-white transition-all shadow-2xs"
+          >
+        </div>
+
+        <div id="mAttendeeListContainer" class="space-y-2.5 pt-1">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sticky Bottom Thumb-Friendly CTA -->
+  <div id="mStickyBottomBar" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-5 py-3.5 z-40 shadow-xl">
+    <!-- Submit Button (shown on Register tab) -->
+    <button 
+      type="button" 
+      id="mSubmitBtn" 
+      onclick="handleMobileSubmit()" 
+      class="hidden w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active-scale text-white font-bold text-sm shadow-md shadow-sky-900/20 flex items-center justify-center space-x-2 cursor-pointer transition-all"
+    >
+      <span id="mBtnText">ยืนยันการลงทะเบียนจองที่นั่ง</span>
+      <span id="mBtnSpinner" class="hidden animate-spin inline-block">⏳</span>
+    </button>
+
+    <!-- Return/Add More Button (shown ONLY on List tab to avoid confusion) -->
+    <button 
+      type="button" 
+      id="mReturnToRegBtn" 
+      onclick="switchMobileTab('register')" 
+      class="hidden w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-50 to-emerald-50 hover:from-sky-100 hover:to-emerald-100 border border-sky-200/80 text-[#0369a1] font-bold text-xs shadow-2xs flex items-center justify-center space-x-2 active-scale transition-all cursor-pointer"
+    >
+      <span>➕ ลงทะเบียนใหม่อีกท่าน / กลับไปหน้าลงทะเบียน</span>
+    </button>
+
+    <div class="text-center pt-2">
+      <button onclick="switchToDesktop()" class="text-[11px] text-slate-400 hover:text-blue-600 font-light cursor-pointer">
+        🖥️ สลับเป็นเวอร์ชั่นคอมพิวเตอร์ (Desktop)
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwyROi0_EfFm21mVZUAqZ08rrkc11vISYzcBJFDaGh1vCB3P2Tum8ZtgZv2MJZjTY4g/exec';
+
+    function isDemoCourse(c) {
+      if (!c || !c.id) return true;
+      const id = String(c.id).toLowerCase();
+      const title = String(c.title || '').toLowerCase();
+      return id === 'cpr-2026' || id === 'fire-safety-2026' || id === 'bls-2026' || id === 'c-2026-2zqr' || id.includes('2zqr') || title.includes('คู่มือการใช้งานระบบ');
+    }
+
+    // Clean legacy demo attendees cache
+    try {
+      localStorage.removeItem('hrd_attendees_cpr-2026');
+      localStorage.removeItem('hrd_attendees_fire-safety-2026');
+      localStorage.removeItem('hrd_attendees_bls-2026');
+      localStorage.removeItem('hrd_attendees_c-2026-2zqr');
+      localStorage.removeItem('hrd_course_c-2026-2zqr');
+    } catch(e) {}
+
+    let ALL_COURSES = [];
+
+    function getMobileCourseSheetId() {
+      if (!currentCourse) return '';
+      if (currentCourse.sheetId) return currentCourse.sheetId;
+      if (currentCourse.sheetUrl) {
+        var match = currentCourse.sheetUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match) return match[1];
+      }
+      return '';
+    }
+
+    function formatDisplayDate(dateStr) {
+      if (!dateStr) return '-';
+      var str = String(dateStr).trim();
+      
+      var matchGmt = str.match(/([A-Za-z]{3})\s+([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})/);
+      if (matchGmt) {
+        var thaiMonths = {
+          'Jan': 'ม.ค.', 'Feb': 'ก.พ.', 'Mar': 'มี.ค.', 'Apr': 'เม.ย.',
+          'May': 'พ.ค.', 'Jun': 'มิ.ย.', 'Jul': 'ก.ค.', 'Aug': 'ส.ค.',
+          'Sep': 'ก.ย.', 'Oct': 'ต.ค.', 'Nov': 'พ.ย.', 'Dec': 'ธ.ค.'
+        };
+        var mStr = matchGmt[2];
+        var day = parseInt(matchGmt[3], 10);
+        var year = parseInt(matchGmt[4], 10);
+        if (year < 2400) year += 543;
+        var thaiM = thaiMonths[mStr] || mStr;
+        return day + ' ' + thaiM + ' ' + year;
+      }
+
+      var matchIso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (matchIso) {
+        var thaiMonths = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        var y = parseInt(matchIso[1], 10);
+        if (y < 2400) y += 543;
+        var m = parseInt(matchIso[2], 10);
+        var d = parseInt(matchIso[3], 10);
+        return d + ' ' + (thaiMonths[m] || m) + ' ' + y;
+      }
+
+      return str;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function fetchWithTimeout(url, options = {}, timeoutMs = 60000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(id));
+    }
+
+    function normalizeBatchName(batchStr) {
+      if (!batchStr) return '';
+      var str = String(batchStr).trim();
+      var m = str.match(/^(รุ่นที่\s*[\d]+[a-zA-Z\d\.]*)/i);
+      if (m) {
+        return m[1].replace(/\s+/g, ' ');
+      }
+      return str.split('(')[0].trim();
+    }
+
+    function isSameBatch(batchA, batchB) {
+      if (!batchA || !batchB) return false;
+      if (batchA === batchB) return true;
+      var normA = normalizeBatchName(batchA);
+      var normB = normalizeBatchName(batchB);
+      if (normA && normB && normA.toLowerCase() === normB.toLowerCase()) {
+        return true;
+      }
+      return false;
+    }
+
+    function isSameTopic(batchA, batchB) {
+      if (!batchA || !batchB) return false;
+      if (batchA === batchB) return true;
+      var numA = (batchA.match(/^(\d+)[\.\-]/) || [])[1];
+      var numB = (batchB.match(/^(\d+)[\.\-]/) || [])[1];
+      if (numA && numB && numA === numB) return true;
+      return String(batchA).trim().toLowerCase() === String(batchB).trim().toLowerCase();
+    }
+
+    function getMobileCourseTopicsList() {
+      if (!currentCourse || !currentCourse.hasSubTopics) return [];
+      
+      var tabsFound = [];
+      allAttendees.forEach(function(a) {
+        if (a && a.batch && !tabsFound.includes(a.batch)) {
+          tabsFound.push(a.batch);
+        }
+      });
+
+      if (tabsFound.length > 0) {
+        tabsFound.sort(function(a, b) {
+          var numA = parseInt((a.match(/^\d+/) || ['0'])[0], 10);
+          var numB = parseInt((b.match(/^\d+/) || ['0'])[0], 10);
+          return numA - numB;
+        });
+        return tabsFound;
+      }
+
+      if (Array.isArray(currentCourse.topics) && currentCourse.topics.length > 0) {
+        return currentCourse.topics.map(function(t, idx) {
+          var prefix = (idx + 1) + '. ';
+          var tTitle = t.title || ('หัวข้อที่ ' + (idx + 1));
+          return tTitle.startsWith(prefix) ? tTitle : (prefix + tTitle);
+        });
+      }
+
+      return [];
+    }
+
+    function findFullBatch(batchStr) {
+      if (!batchStr) return '';
+      if (!currentCourse || !Array.isArray(currentCourse.batches)) return batchStr;
+      var found = currentCourse.batches.find(function(b) {
+        return isSameBatch(b, batchStr);
+      });
+      return found || batchStr;
+    }
+
+    function getBatchQuota(batchStr) {
+      if (!currentCourse || !currentCourse.quota) return 40;
+      if (currentCourse.quota[batchStr] !== undefined && currentCourse.quota[batchStr] !== null && currentCourse.quota[batchStr] !== '') {
+        return Number(currentCourse.quota[batchStr]);
+      }
+      var norm = normalizeBatchName(batchStr);
+      if (currentCourse.quota[norm] !== undefined && currentCourse.quota[norm] !== null && currentCourse.quota[norm] !== '') {
+        return Number(currentCourse.quota[norm]);
+      }
+      for (var k in currentCourse.quota) {
+        if (isSameBatch(k, batchStr)) {
+          if (currentCourse.quota[k] !== undefined && currentCourse.quota[k] !== null && currentCourse.quota[k] !== '') {
+            return Number(currentCourse.quota[k]);
+          }
+        }
+      }
+      return 40;
+    }
+
+    async function syncMobileAttendeeToSheet(attendee) {
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (!gasUrl || !currentCourse) return null;
+      var targetSheetId = getMobileCourseSheetId();
+      if (!targetSheetId) return null;
+
+      try {
+        const res = await fetchWithTimeout(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'register',
+            sheetId: targetSheetId,
+            id: attendee.id,
+            title: attendee.title || '',
+            firstName: attendee.firstName || '',
+            lastName: attendee.lastName || '',
+            position: attendee.position || '',
+            department: attendee.department || '',
+            batch: attendee.batch || '',
+            quota: getBatchQuota(attendee.batch),
+            timestamp: attendee.timestamp || ''
+          })
+        }, 60000).then(r => r.json());
+        return res;
+      } catch(e) {
+        console.warn('Sync to Google Sheet failed:', e);
+        throw e;
+      }
+    }
+
+    async function deleteMobileAttendeeFromSheet(empId, enteredPassword, batchName) {
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (!gasUrl || !currentCourse) return null;
+      var targetSheetId = getMobileCourseSheetId();
+      if (!targetSheetId) return null;
+
+      try {
+        const res = await fetchWithTimeout(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'deleteAttendee',
+            sheetId: targetSheetId,
+            id: empId,
+            batch: batchName || '',
+            adminPassword: enteredPassword || ''
+          })
+        }, 60000).then(r => r.json());
+        return res;
+      } catch(e) {
+        console.warn('Delete attendee from Google Sheet failed:', e);
+        throw e;
+      }
+    }
+
+    async function syncMobileAttendeesFromSheet(isManual) {
+      var sheetId = getMobileCourseSheetId();
+      if (!sheetId) return null;
+
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (!gasUrl) return null;
+
+      var syncIcon = document.getElementById('mSyncIcon');
+      var statusEl = document.getElementById('mRosterSyncStatus');
+      if (syncIcon) syncIcon.classList.add('animate-spin');
+      if (statusEl) statusEl.textContent = 'กำลังซิงค์ Google Sheet...';
+
+      try {
+        const res = await fetchWithTimeout(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(sheetId), {}, 40000).then(r => r.json());
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+        if (res && res.success && Array.isArray(res.attendees)) {
+          allAttendees = res.attendees;
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+          updateMobileStats();
+          renderMobileBatches();
+          renderMobileBatchFilterDropdown();
+          renderMobileAttendees();
+          if (statusEl) statusEl.textContent = 'ซิงค์สด (' + new Date().toLocaleTimeString('th-TH') + ')';
+          if (isManual) {
+            HrdModal.toast('ซิงค์ข้อมูลจาก Google Sheet สำเร็จ (' + allAttendees.length + ' ท่าน)', 'success');
+          }
+          return res.attendees;
+        } else {
+          if (statusEl) statusEl.textContent = 'แสดงข้อมูลจากความจำเครื่อง';
+        }
+      } catch(e) {
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+        if (statusEl) statusEl.textContent = 'การเชื่อมต่อขัดข้อง แสดงข้อมูลจากความจำเครื่อง';
+        console.warn('Sync attendees failed:', e);
+      }
+    }
+    let employeeDatabase = (typeof DEMO_EMPLOYEES !== "undefined" && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+    let currentCourse = null;
+    let allAttendees = [];
+    let selectedEmp = null;
+
+    async function loadLiveEmployees() {
+      try {
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        const res = await fetch(`${gasUrl}?action=getEmployees`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.employees) && data.employees.length > 0) {
+            employeeDatabase = data.employees;
+            console.log(`[HRD AI Mobile] Loaded ${employeeDatabase.length} live employees from Master Sheet.`);
+          }
+        }
+      } catch (err) {
+        console.warn('[HRD AI Mobile] Bundled employee fallback:', err);
+      }
+    }
+
+    async function decodeAndInitCourse() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cdata = urlParams.get('cdata');
+      const requestedCourseId = urlParams.get('course') || urlParams.get('c');
+
+      // 1. รองรับลิงก์รุ่นเก่าที่แนบ cdata (Backward compatibility)
+      if (cdata) {
+        try {
+          let jsonStr = '';
+          try {
+            jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(cdata))));
+          } catch(e1) {
+            jsonStr = decodeURIComponent(escape(atob(cdata)));
+          }
+          const parsed = JSON.parse(jsonStr);
+          if (parsed && parsed.id && !isDemoCourse(parsed)) {
+            saveAndSetMobileCourse(parsed);
+            return;
+          }
+        } catch(err) {
+          console.warn('cdata decode error:', err);
+        }
+      }
+
+      // 1.5. Instant Cache & Static Fallback Lookup (0ms - 50ms)
+      try {
+        let cachedStr = localStorage.getItem('hrd_all_courses');
+        let list = cachedStr ? JSON.parse(cachedStr) : null;
+        if (!list || !Array.isArray(list) || list.length === 0) {
+          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json()).catch(() => null);
+          if (Array.isArray(resStatic) && resStatic.length > 0) {
+            list = resStatic;
+            try { localStorage.setItem('hrd_all_courses', JSON.stringify(resStatic)); } catch(e) {}
+          }
+        }
+        if (Array.isArray(list) && list.length > 0) {
+          ALL_COURSES = list.filter(c => !isDemoCourse(c));
+          if (ALL_COURSES.length !== list.length) {
+            try { localStorage.setItem('hrd_all_courses', JSON.stringify(ALL_COURSES)); } catch(e) {}
+          }
+          if (requestedCourseId) {
+            const found = ALL_COURSES.find(c => c.id && c.id.toLowerCase() === requestedCourseId.toLowerCase());
+            if (found) currentCourse = found;
+          } else {
+            currentCourse = ALL_COURSES.length > 0 ? ALL_COURSES[0] : null;
+          }
+        }
+      } catch(e) {
+        console.warn('Initial mobile cache lookup error:', e);
+      }
+
+      // 2. ดึงข้อมูลสดใหม่ล่าสุดจากคลังกลาง Google Apps Script (Single Source of Truth)
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        let staticCatalog = [];
+        try {
+          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
+          if (Array.isArray(resStatic)) staticCatalog = resStatic;
+        } catch(e) {}
+
+        if (requestedCourseId) {
+          try {
+            const res = await fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(requestedCourseId)).then(r => r.json());
+            if (res && res.success && res.course && !isDemoCourse(res.course)) {
+              const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === String(res.course.id).toLowerCase());
+              if (staticMatch && staticMatch.hasSubTopics && !res.course.hasSubTopics) {
+                res.course.hasSubTopics = staticMatch.hasSubTopics;
+                res.course.topicMode = staticMatch.topicMode || 'all';
+                res.course.topics = staticMatch.topics || [];
+              }
+              saveAndSetMobileCourse(res.course);
+            } else if (res && !res.success && !currentCourse) {
+              currentCourse = null;
+              ALL_COURSES = ALL_COURSES.filter(c => c.id && c.id.toLowerCase() !== requestedCourseId.toLowerCase());
+            }
+          } catch(err) {
+            console.warn('Fetch course from GAS failed (fallback active):', err);
+          }
+        } else {
+          // Opened root without course parameter: Sync all courses from server
+          try {
+            const res = await fetch(gasUrl + '?action=getAllCourses').then(r => r.json());
+            if (res && res.success && Array.isArray(res.courses)) {
+              const remoteCourses = res.courses.filter(c => !isDemoCourse(c));
+              ALL_COURSES = remoteCourses.map(rc => {
+                const existing = ALL_COURSES.find(ec => ec.id === rc.id);
+                const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === String(rc.id).toLowerCase());
+                const subSource = (existing && existing.hasSubTopics) ? existing : (staticMatch && staticMatch.hasSubTopics ? staticMatch : null);
+
+                if (subSource && !rc.hasSubTopics) {
+                  return Object.assign({}, rc, {
+                    hasSubTopics: subSource.hasSubTopics,
+                    topicMode: subSource.topicMode || 'all',
+                    topics: subSource.topics || []
+                  });
+                }
+                return rc;
+              });
+              currentCourse = ALL_COURSES.length > 0 ? ALL_COURSES[0] : null;
+              try { localStorage.setItem('hrd_all_courses', JSON.stringify(ALL_COURSES)); } catch(e) {}
+            }
+          } catch(functionErr) {
+            console.warn('Sync all courses failed (fallback active):', functionErr);
+          }
+        }
+      }
+    }
+
+    function saveAndSetMobileCourse(c) {
+      if (!c || isDemoCourse(c)) return;
+      const idx = ALL_COURSES.findIndex(x => x.id === c.id);
+      if (idx >= 0) {
+        const existing = ALL_COURSES[idx];
+        const merged = Object.assign({}, existing, c);
+        if (existing.hasSubTopics && !c.hasSubTopics) {
+          merged.hasSubTopics = existing.hasSubTopics;
+          merged.topicMode = existing.topicMode || 'all';
+          merged.topics = existing.topics || [];
+        }
+        ALL_COURSES[idx] = merged;
+        currentCourse = merged;
+      } else {
+        ALL_COURSES.unshift(c);
+        currentCourse = c;
+      }
+      ALL_COURSES = ALL_COURSES.filter(x => !isDemoCourse(x));
+    }
+
+    function hideLoader() {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        loader.style.pointerEvents = 'none';
+        setTimeout(() => { 
+          if (loader.style.opacity === '0') {
+            loader.style.display = 'none'; 
+          }
+        }, 350);
+      }
+    }
+
+    function showLoader(title, subtitle) {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        const t = document.getElementById('loaderTitle');
+        const s = document.getElementById('loaderSubtitle');
+        if (t) t.textContent = title || 'ระบบลงทะเบียนเข้าอบรม';
+        if (s) s.textContent = subtitle || 'โรงพยาบาลพิษณุเวช พิจิตร';
+
+        // Re-create petals to guarantee animation runs fresh on iOS Safari / WebKit
+        const loaderBox = loader.querySelector('.css-logo-loader');
+        if (loaderBox) {
+          loaderBox.innerHTML = 
+            '<div class="logo-petal outer top"></div>' +
+            '<div class="logo-petal inner top-right"></div>' +
+            '<div class="logo-petal outer right"></div>' +
+            '<div class="logo-petal inner bottom-right"></div>' +
+            '<div class="logo-petal outer bottom"></div>' +
+            '<div class="logo-petal inner bottom-left"></div>' +
+            '<div class="logo-petal outer left"></div>' +
+            '<div class="logo-petal inner top-left"></div>';
+        }
+
+        const card = loader.querySelector('.loader-card');
+        if (card) {
+          card.style.animation = 'none';
+          void card.offsetWidth;
+          card.style.animation = 'loaderPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+        }
+
+        loader.style.display = 'flex';
+        loader.style.visibility = 'visible';
+        loader.style.pointerEvents = 'auto';
+        void loader.offsetWidth;
+        loader.style.opacity = '1';
+      }
+    }
+
+    let mobileAppInitialized = false;
+    async function initMobileApp() {
+      if (mobileAppInitialized) return;
+      mobileAppInitialized = true;
+
+      // 1. Temporarily disable progress bar transition to prevent it sliding upon reveal
+      const bar = document.getElementById('mBatchProgressBar');
+      if (bar) {
+        bar.style.transition = 'none';
+      }
+
+      try {
+        await decodeAndInitCourse();
+        const hasCourse = loadMobileCourse();
+        if (hasCourse) {
+          initMobileAttendees(true); // render cache behind loader, skip background sync
+
+          if (getMobileCourseSheetId()) {
+            await syncMobileAttendeesFromSheet(false);
+          }
+        }
+      } catch (err) {
+        console.warn('Mobile initialization error:', err);
+      } finally {
+        if (bar) {
+          void bar.offsetWidth;
+        }
+        setTimeout(() => {
+          hideLoader();
+          if (bar) {
+            setTimeout(() => {
+              bar.style.transition = '';
+            }, 150);
+          }
+        }, 120);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadLiveEmployees();
+      initMobileApp();
+
+      document.addEventListener('click', (e) => {
+        const input = document.getElementById('mEmpSearchInput');
+        const results = document.getElementById('mSearchResults');
+        if (input && results && !input.contains(e.target) && !results.contains(e.target)) {
+          results.classList.add('hidden');
+        }
+      });
+    });
+
+    function switchToDesktop() {
+      localStorage.setItem('preferred_view', 'desktop');
+      const params = new URLSearchParams(window.location.search);
+      params.set('view', 'desktop');
+      window.location.href = 'desktop.html?' + params.toString();
+    }
+
+    function toggleCourseDetails() {
+      const d = document.getElementById('mCourseFullDetails');
+      const txt = document.getElementById('btnDetailText');
+      if (d.classList.contains('hidden')) {
+        d.classList.remove('hidden');
+        txt.textContent = 'ซ่อน';
+      } else {
+        d.classList.add('hidden');
+        txt.textContent = 'รายละเอียด';
+      }
+    }
+
+    function loadMobileCourse() {
+      const heroCard = document.getElementById('mHeroCard');
+      const tabControls = document.getElementById('mTabControls');
+      const tabRegister = document.getElementById('mTabRegister');
+      const tabList = document.getElementById('mTabList');
+      const noCourseNotice = document.getElementById('mNoCourseNotice');
+      const submitBtn = document.getElementById('mSubmitBtn');
+      const returnBtn = document.getElementById('mReturnToRegBtn');
+
+      if (!currentCourse || !currentCourse.id || !currentCourse.title || isDemoCourse(currentCourse)) {
+        currentCourse = null;
+        if (heroCard) heroCard.classList.add('hidden');
+        if (tabControls) tabControls.classList.add('hidden');
+        if (tabRegister) tabRegister.classList.add('hidden');
+        if (tabList) tabList.classList.add('hidden');
+        if (submitBtn) submitBtn.classList.add('hidden');
+        if (returnBtn) returnBtn.classList.add('hidden');
+
+        if (noCourseNotice) {
+          noCourseNotice.classList.remove('hidden');
+          const urlParams = new URLSearchParams(window.location.search);
+          const reqId = urlParams.get('course') || urlParams.get('c');
+          const titleEl = document.getElementById('mNoCourseTitle');
+          const subEl = document.getElementById('mNoCourseSubtitle');
+          if (reqId) {
+            if (titleEl) titleEl.textContent = 'ไม่พบข้อมูลหลักสูตรอบรมที่ระบุ (' + reqId + ')';
+            if (subEl) subEl.textContent = 'หลักสูตรนี้อาจถูกปิดรับลงทะเบียนหรือถูกลบออกจากระบบแล้วค่ะ';
+          } else {
+            if (titleEl) titleEl.textContent = 'ยังไม่มีหลักสูตรอบรมที่เปิดรับลงทะเบียนในขณะนี้';
+            if (subEl) subEl.textContent = 'ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) ยังไม่ได้เปิดรับลงทะเบียนหลักสูตรใหม่ หรือหลักสูตรเดิมได้สิ้นสุดลงแล้วค่ะ';
+          }
+        }
+        return false;
+      }
+
+      if (noCourseNotice) noCourseNotice.classList.add('hidden');
+      if (heroCard) heroCard.classList.remove('hidden');
+      if (tabControls) tabControls.classList.remove('hidden');
+
+      const isListActive = tabList && !tabList.classList.contains('hidden');
+      if (isListActive) {
+        if (tabList) tabList.classList.remove('hidden');
+        if (tabRegister) tabRegister.classList.add('hidden');
+      } else {
+        if (tabRegister) tabRegister.classList.remove('hidden');
+        if (tabList) tabList.classList.add('hidden');
+      }
+
+      document.getElementById('mCourseTitle').textContent = currentCourse.title;
+      document.getElementById('mCourseTypeBadge').textContent = currentCourse.type || 'หลักสูตรอบรม';
+      document.getElementById('mCourseDate').textContent = formatDisplayDate(currentCourse.date);
+      document.getElementById('mCourseTime').textContent = currentCourse.time || '-';
+      document.getElementById('mCourseSpeaker').textContent = currentCourse.speaker || 'ฝ่ายพัฒนาทรัพยากรบุคคล (HRD)';
+      const mLocEl = document.getElementById('mCourseLocation');
+      if (mLocEl) mLocEl.textContent = currentCourse.location || '-';
+
+      const mTargetBadgeEl = document.getElementById('mCourseTargetBadge');
+      const mTargetTextEl = document.getElementById('mCourseTargetText');
+      if (mTargetBadgeEl && mTargetTextEl) {
+        const ta = currentCourse.targetAudience;
+        if (ta && ta.type === 'specific' && ta.summary) {
+          mTargetTextEl.textContent = '🎯 กลุ่มเป้าหมาย: ' + ta.summary;
+          mTargetBadgeEl.classList.remove('hidden');
+        } else {
+          mTargetTextEl.textContent = '🎯 กลุ่มเป้าหมาย: เปิดรับทุกแผนกและทุกตำแหน่ง';
+          mTargetBadgeEl.classList.remove('hidden');
+        }
+      }
+
+      renderMobileBatchFilterDropdown();
+      renderMobileBatches();
+      return true;
+    }
+
+    function renderMobileBatchFilterDropdown() {
+      const filterSelect = document.getElementById('mBatchFilterSelect');
+      if (!filterSelect || !currentCourse) return;
+
+      if (currentCourse.hasSubTopics) {
+        const topicList = getMobileCourseTopicsList();
+        const curVal = filterSelect.value;
+        filterSelect.innerHTML = topicList.map(t => '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>').join('');
+        if (curVal && topicList.some(t => isSameTopic(t, curVal))) {
+          filterSelect.value = curVal;
+        } else if (topicList.length > 0) {
+          filterSelect.value = topicList[0];
+        }
+      } else {
+        const curVal = filterSelect.value;
+        filterSelect.innerHTML = '<option value="">ทุกรุ่นการอบรม</option>' + 
+          (currentCourse.batches || []).map(b => '<option value="' + b + '">' + normalizeBatchName(b) + '</option>').join('');
+        filterSelect.value = curVal || '';
+      }
+    }
+
+    function getStorageKey() {
+      return (currentCourse && currentCourse.id) ? ('hrd_attendees_' + currentCourse.id) : '';
+    }
+
+    function initMobileAttendees(skipBackgroundSync = false) {
+      const key = getStorageKey();
+      if (!key) {
+        allAttendees = [];
+        updateMobileStats();
+        renderMobileBatches();
+        renderMobileAttendees();
+        return;
+      }
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          allAttendees = JSON.parse(raw);
+        } else {
+          allAttendees = [];
+        }
+      } catch(e) {
+        allAttendees = [];
+      }
+      updateMobileStats();
+      renderMobileBatches();
+      renderMobileBatchFilterDropdown();
+      renderMobileAttendees();
+      if (!skipBackgroundSync) {
+        syncMobileAttendeesFromSheet(false);
+      }
+    }
+
+    function updateMobileStats() {
+      const el = document.getElementById('mTabCount');
+      if (el) {
+        if (currentCourse && currentCourse.hasSubTopics) {
+          const uniqueEmpIds = new Set(allAttendees.map(a => a && a.id ? String(a.id).trim() : ''));
+          uniqueEmpIds.delete('');
+          el.textContent = uniqueEmpIds.size;
+        } else {
+          el.textContent = allAttendees.length;
+        }
+      }
+      updateMobileQuotaBar();
+    }
+
+    function renderMobileAttendees(list) {
+      const container = document.getElementById('mAttendeeListContainer');
+      if (!container) return;
+
+      let data = list;
+      if (!data) {
+        const filterSelect = document.getElementById('mBatchFilterSelect');
+        const searchInput = document.getElementById('mListSearch');
+        const selectedBatch = filterSelect ? filterSelect.value : '';
+        const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+        data = allAttendees.slice();
+        if (selectedBatch) {
+          if (currentCourse && currentCourse.hasSubTopics) {
+            data = data.filter(a => isSameTopic(a.batch, selectedBatch));
+          } else {
+            data = data.filter(a => isSameBatch(a.batch, selectedBatch));
+          }
+        }
+        if (q) {
+          data = data.filter(a => {
+            return (a.id && a.id.toString().toLowerCase().includes(q)) ||
+                   (a.firstName && a.firstName.toLowerCase().includes(q)) ||
+                   (a.lastName && a.lastName.toLowerCase().includes(q)) ||
+                   (a.department && a.department.toLowerCase().includes(q));
+          });
+        }
+      }
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<div class="p-8 text-center text-xs text-slate-400 font-light">ไม่พบข้อมูลผู้ลงทะเบียนในเงื่อนไขที่เลือก</div>';
+        return;
+      }
+
+      container.innerHTML = data.map((att, idx) => {
+        let topicsHtml = '';
+        if (att.selectedTopics && att.selectedTopics.length > 0) {
+          const tList = Array.isArray(att.selectedTopics) ? att.selectedTopics : [att.selectedTopics];
+          topicsHtml = '<div class="mt-1 flex flex-wrap gap-1">' + tList.map(t => '<span class="text-[9px] bg-sky-50 text-sky-800 border border-sky-200 px-1.5 py-0.5 rounded font-medium">' + escapeHtml(t) + '</span>').join('') + '</div>';
+        }
+
+        return '<div class="p-3.5 bg-slate-50 border border-slate-200/70 rounded-2xl space-y-1 text-xs shadow-xs">' +
+          '<div class="flex items-center justify-between">' +
+            '<div class="font-bold text-slate-900 truncate mr-2">' + (idx + 1) + '. ' + (att.title ? att.title + ' ' : '') + att.firstName + ' ' + att.lastName + '</div>' +
+            '<div class="flex items-center space-x-1.5 shrink-0">' +
+              '<span class="font-mono text-blue-700 font-bold bg-white px-2 py-0.5 rounded border border-slate-200">#' + att.id + '</span>' +
+              '<button onclick="confirmDeleteMobileAttendee(\'' + att.id + '\')" class="w-9 h-9 rounded-xl bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="ลบข้อมูลการลงทะเบียน">' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>' +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="text-[11px] text-slate-500 font-light">' + (att.position || '-') + ' • ' + (att.department || '-') + '</div>' +
+          topicsHtml +
+          '<div class="pt-1 flex items-center justify-between">' +
+            '<span class="text-[10px] text-blue-800 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 font-medium">' + (att.batch || '-') + '</span>' +
+            '<span class="text-[10px] text-emerald-600 font-medium">' + (att.timestamp || 'บันทึกสำเร็จ') + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    async function confirmDeleteMobileAttendee(empId) {
+      const attendee = allAttendees.find(a => a && a.id.toString().trim() === empId.toString().trim());
+      if (!attendee) {
+        HrdModal.warning('ไม่พบข้อมูลผู้ลงทะเบียนท่านนี้ในระบบค่ะ', 'ไม่พบข้อมูล');
+        return;
+      }
+
+      const fullName = (attendee.title ? attendee.title + ' ' : '') + attendee.firstName + ' ' + attendee.lastName;
+      const batchDisplay = attendee.batch || '-';
+
+      const enteredPassword = await HrdModal.prompt(
+        'ต้องการลบข้อมูลการลงทะเบียนของ:\n' +
+        'คุณ ' + fullName + ' (รหัสพนักงาน: ' + attendee.id + ')\n' +
+        'รุ่นการอบรม: ' + batchDisplay + '\n\n' +
+        '⚠️ การลบข้อมูลจะนำรายชื่อออกจากระบบและคืนสิทธิ์ที่นั่งว่างให้ผู้อื่น\n' +
+        'กรุณากรอกรหัสผ่านผู้ดูแลระบบ (6 หลัก) เพื่อยืนยัน:',
+        '',
+        'ยืนยันการลบข้อมูลผู้ลงทะเบียน',
+        {
+          placeholder: 'กรอกรหัสผ่าน 6 หลัก...',
+          label: 'รหัสผ่านผู้ดูแลระบบ (Security Code):',
+          inputType: 'password',
+          danger: true,
+          confirmText: 'ยืนยันลบข้อมูล',
+          cancelText: 'ยกเลิก'
+        }
+      );
+
+      if (enteredPassword === null) return; // User cancelled
+
+      if (enteredPassword.trim() !== '014125') {
+        await HrdModal.error('รหัสผ่านไม่ถูกต้องค่ะ! ไม่สามารถลบข้อมูลผู้ลงทะเบียนได้', 'รหัสผ่านไม่ถูกต้อง');
+        return;
+      }
+
+      // Proceed with deletion
+      showLoader('กำลังลบข้อมูลผู้ลงทะเบียน...', 'กำลังนำข้อมูลออกจากระบบและอัปเดต Google Sheet ประจำวิชา');
+
+      const originalAttendees = allAttendees.slice();
+
+      // Optimistically update local view
+      allAttendees = allAttendees.filter(a => a && a.id.toString().trim() !== empId.toString().trim());
+      localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+      updateMobileStats();
+      renderMobileBatches();
+      renderMobileAttendees();
+
+      // Sync delete to Google Sheet
+      try {
+        const res = await deleteMobileAttendeeFromSheet(empId, enteredPassword.trim(), attendee.batch);
+        if (res && res.success) {
+          if (Array.isArray(res.attendees)) {
+            allAttendees = res.attendees;
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+            updateMobileStats();
+            renderMobileBatches();
+            renderMobileAttendees();
+          }
+          hideLoader();
+          await HrdModal.success(
+            'ลบข้อมูลการลงทะเบียนของคุณ ' + fullName + ' เรียบร้อยแล้วค่ะ!\n\n(ระบบได้คืนโควตาสิทธิ์ที่นั่งว่างและอัปเดตตาราง Google Sheet แล้ว)',
+            'ลบข้อมูลสำเร็จ'
+          );
+        } else {
+          // Rollback local state
+          allAttendees = originalAttendees;
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+          updateMobileStats();
+          renderMobileBatches();
+          renderMobileAttendees();
+          hideLoader();
+          await HrdModal.error((res && res.message) || 'ไม่สามารถลบข้อมูลจาก Google Sheet ได้ค่ะ กรุณาลองใหม่อีกครั้ง', 'เกิดข้อผิดพลาด');
+        }
+      } catch (err) {
+        // Rollback local state on network error
+        console.warn('Sync delete mobile attendee error:', err);
+        allAttendees = originalAttendees;
+        localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+        updateMobileStats();
+        renderMobileBatches();
+        renderMobileAttendees();
+        hideLoader();
+        await HrdModal.error('การเชื่อมต่อล้มเหลว ไม่สามารถลบข้อมูลจาก Google Sheet ได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง', 'เชื่อมต่อไม่สำเร็จ');
+      }
+    }
+
+    function handleMobileFilterChange() {
+      const filterSelect = document.getElementById('mBatchFilterSelect');
+      const searchInput = document.getElementById('mListSearch');
+      const selectedBatch = filterSelect ? filterSelect.value : '';
+      const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+      let filtered = allAttendees.slice();
+
+      if (selectedBatch) {
+        if (currentCourse && currentCourse.hasSubTopics) {
+          filtered = filtered.filter(a => isSameTopic(a.batch, selectedBatch));
+        } else {
+          filtered = filtered.filter(a => isSameBatch(a.batch, selectedBatch));
+        }
+      }
+
+      if (q) {
+        filtered = filtered.filter(a => {
+          return (a.id && a.id.toString().toLowerCase().includes(q)) ||
+                 (a.firstName && a.firstName.toLowerCase().includes(q)) ||
+                 (a.lastName && a.lastName.toLowerCase().includes(q)) ||
+                 (a.department && a.department.toLowerCase().includes(q));
+        });
+      }
+
+      renderMobileAttendees(filtered);
+    }
+
+    function filterMobileAttendees(q) {
+      handleMobileFilterChange();
+    }
+  
+    function formatBatchCardInfo(b) {
+      const cleanName = normalizeBatchName(b);
+      const mParen = b.match(/\((.*?)\)/);
+      const inside = mParen ? mParen[1].trim() : '';
+
+      let datePart = '';
+      let timePart = '';
+
+      if (inside.includes('เวลา')) {
+        const parts = inside.split(/เวลา/i);
+        datePart = parts[0].trim();
+        timePart = 'เวลา ' + parts[1].trim();
+      } else if (/\d{1,2}\s+[ก-๙]+\s+\d{4}/.test(inside)) {
+        const mDate = inside.match(/(\d{1,2}\s+[ก-๙]+\s+\d{4})/);
+        datePart = mDate[1];
+        timePart = inside.replace(mDate[1], '').trim();
+      } else if (inside) {
+        timePart = inside;
+      }
+
+      if (!datePart && currentCourse && currentCourse.date) {
+        datePart = formatDisplayDate(currentCourse.date);
+      }
+      if (!timePart && currentCourse && currentCourse.time) {
+        timePart = currentCourse.time;
+      }
+
+      let title = cleanName;
+      if (datePart) {
+        const cleanDate = datePart.replace(/^วันที่\s*/, '').trim();
+        title = cleanName + ' : วันที่ ' + cleanDate;
+      }
+
+      let timeSub = '';
+      if (timePart) {
+        const cleanTime = timePart.replace(/^(⏰\s*|เวลา\s*)+/, '').trim();
+        timeSub = '<div class="text-[11px] text-slate-500 font-light flex items-center gap-1 mt-0.5">⏰ เวลา ' + cleanTime + '</div>';
+      }
+
+      return { title, timeSub };
+    }
+
+    function selectMobileBatch(val) {
+      const existing = selectedEmp ? allAttendees.find(a => a.id.toString() === selectedEmp.id.toString()) : null;
+      const submitBtn = document.getElementById('mSubmitBtn');
+
+      if (existing && isSameBatch(existing.batch, val)) {
+        HrdModal.warning('ท่านได้ลงทะเบียนใน "' + normalizeBatchName(val) + '" อยู่แล้วค่ะ\nหากต้องการเปลี่ยนรุ่น กรุณาเลือกรุ่นใหม่นะคะ', 'รุ่นปัจจุบันของคุณ');
+        document.getElementById('mSelectedBatch').value = '';
+        const batchSelect = document.getElementById('mBatchSelect');
+        if (batchSelect) batchSelect.value = '';
+        if (submitBtn) submitBtn.classList.add('hidden');
+        renderMobileBatches();
+        return;
+      }
+
+      const quota = getBatchQuota(val);
+      const enrolled = allAttendees.filter(a => isSameBatch(a.batch, val)).length;
+      if (enrolled >= quota) {
+        HrdModal.warning('ขออภัยค่ะ ' + normalizeBatchName(val) + ' มีผู้ลงทะเบียนเต็มโควตา ' + quota + ' ที่นั่งแล้ว (ที่นั่งเต็ม - Sold Out)\nกรุณาเลือกรุ่นอื่นที่ยังมีที่นั่งว่างนะคะ', 'ที่นั่งเต็ม (Sold Out)');
+        document.getElementById('mSelectedBatch').value = '';
+        const batchSelect = document.getElementById('mBatchSelect');
+        if (batchSelect) batchSelect.value = '';
+        if (submitBtn) submitBtn.classList.add('hidden');
+        renderMobileBatches();
+        return;
+      }
+
+      document.getElementById('mSelectedBatch').value = val;
+      const batchSelect = document.getElementById('mBatchSelect');
+      if (batchSelect) batchSelect.value = val;
+
+      if (submitBtn) {
+        submitBtn.classList.remove('hidden');
+      }
+
+      renderMobileTopics();
+      renderMobileBatches();
+    }
+
+    function renderMobileTopics() {
+      const topicSec = document.getElementById('mTopicSection');
+      const container = document.getElementById('mTopicCardsContainer');
+      const subLabel = document.getElementById('mTopicSubLabel');
+      const asterisk = document.getElementById('mTopicRequiredAsterisk');
+      if (!topicSec || !container) return;
+
+      if (!currentCourse || !currentCourse.hasSubTopics || !Array.isArray(currentCourse.topics) || currentCourse.topics.length === 0) {
+        topicSec.classList.add('hidden');
+        return;
+      }
+
+      topicSec.classList.remove('hidden');
+
+      if (currentCourse.topicMode === 'selective') {
+        if (asterisk) asterisk.classList.remove('hidden');
+        if (subLabel) subLabel.textContent = 'เลือกหัวข้อที่ต้องการเข้า';
+
+        container.innerHTML = currentCourse.topics.map((t, idx) => {
+          const tTitle = t.title || ('หัวข้อที่ ' + (idx + 1));
+          const tDate = t.date ? ` • 📅 ${formatDisplayDate(t.date)}` : '';
+          const tSpeaker = t.speaker ? ` • 🎤 ${t.speaker}` : '';
+          const tTime = t.time ? ` • ⏰ ${t.time}` : '';
+
+          return `
+            <label class="flex items-start space-x-2.5 p-3 rounded-2xl border border-slate-200 bg-white hover:border-[#0284c7] hover:bg-sky-50/20 transition-all cursor-pointer shadow-2xs">
+              <input type="checkbox" name="mSelectedTopics" value="${escapeHtml(tTitle)}" class="m-topic-select-checkbox w-4 h-4 text-[#0284c7] rounded mt-0.5" checked>
+              <div class="text-xs">
+                <strong class="text-slate-900 block font-semibold">${escapeHtml(tTitle)}</strong>
+                <span class="text-slate-500 font-light text-[11px]">${escapeHtml(tDate + tTime + tSpeaker)}</span>
+              </div>
+            </label>
+          `;
+        }).join('');
+      } else {
+        // topicMode === 'all'
+        if (asterisk) asterisk.classList.add('hidden');
+        if (subLabel) subLabel.textContent = 'เข้าครบทุกหัวข้อ (เวียนฐาน)';
+
+        container.innerHTML = `
+          <div class="p-3 bg-sky-50/70 border border-sky-200 rounded-2xl space-y-1.5 text-xs">
+            <div class="flex items-center space-x-1.5 text-[#0369a1] font-bold">
+              <span>🔄</span>
+              <span>เข้าอบรมครบทุกหัวข้อ (${currentCourse.topics.length} หัวข้อ)</span>
+            </div>
+            <div class="space-y-1 text-[11px] text-slate-700 font-medium">
+              ${currentCourse.topics.map((t, idx) => {
+                const dtSub = t.date ? ` (${formatDisplayDate(t.date)})` : '';
+                return `
+                  <div class="bg-white/90 px-2 py-1 rounded-xl border border-sky-100 flex items-center space-x-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#0284c7]"></span>
+                    <span class="truncate">${escapeHtml(t.title || ('หัวข้อที่ ' + (idx + 1)))}${escapeHtml(dtSub)}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderMobileBatches() {
+      const batchSelect = document.getElementById('mBatchSelect');
+      const container = document.getElementById('mBatchCardsContainer');
+      const batches = (currentCourse && currentCourse.batches) ? currentCourse.batches : [];
+      let currentSelected = document.getElementById('mSelectedBatch').value;
+
+      if (currentCourse && currentCourse.hasSubTopics && !currentSelected && batches.length > 0) {
+        currentSelected = batches[0];
+        document.getElementById('mSelectedBatch').value = currentSelected;
+        const submitBtn = document.getElementById('mSubmitBtn');
+        if (submitBtn) submitBtn.classList.remove('hidden');
+      }
+
+      const existing = selectedEmp ? allAttendees.find(a => a.id.toString() === selectedEmp.id.toString()) : null;
+
+      // Keep hidden native select in sync
+      if (batchSelect) {
+        batchSelect.innerHTML = '<option value="">-- กรุณาเลือกรุ่นที่ต้องการ --</option>' + batches.map(b => {
+          const isSelected = isSameBatch(b, currentSelected);
+          const q = getBatchQuota(b);
+          const enr = (currentCourse && currentCourse.hasSubTopics)
+            ? new Set(allAttendees.map(a => a && a.id ? String(a.id).trim() : '')).size
+            : allAttendees.filter(a => isSameBatch(a.batch, b)).length;
+          const full = (q - enr) <= 0;
+          const isCur = existing && isSameBatch(existing.batch, b);
+          const fullLabel = full && !isCur ? ' [ที่นั่งเต็ม - Sold Out]' : '';
+          const disabledAttr = full && !isCur ? ' disabled="disabled"' : '';
+          return '<option value="' + b + '"' + (isSelected ? ' selected' : '') + disabledAttr + '>' + b + fullLabel + '</option>';
+        }).join('');
+        batchSelect.value = currentSelected || '';
+      }
+
+      // Render prominent visual cards
+      if (container) {
+        container.innerHTML = batches.map(b => {
+          const quota = getBatchQuota(b);
+          const enrolled = (currentCourse && currentCourse.hasSubTopics)
+            ? new Set(allAttendees.map(a => a && a.id ? String(a.id).trim() : '')).size
+            : allAttendees.filter(a => isSameBatch(a.batch, b)).length;
+          const remaining = Math.max(0, quota - enrolled);
+          const percent = quota > 0 ? Math.min(100, Math.round((enrolled / quota) * 100)) : 100;
+          const isCurrent = existing && isSameBatch(existing.batch, b);
+          const isSelected = isSameBatch(b, currentSelected);
+          const isFull = remaining <= 0;
+
+          // Badges
+          let badgeHtml = '';
+          if (isCurrent) {
+            badgeHtml = '<span class="text-[10px] text-amber-800 bg-amber-100/95 border border-amber-300 px-2.5 py-0.5 rounded-full font-bold shadow-2xs flex items-center gap-1">★ รุ่นปัจจุบันของคุณ</span>';
+          } else if (isFull) {
+            badgeHtml = '<span class="text-[10px] text-rose-800 bg-rose-100 border border-rose-300 px-2.5 py-0.5 rounded-full font-black shadow-xs flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-600 inline-block animate-ping"></span> 🔴 ที่นั่งเต็ม (Sold Out)</span>';
+          } else if (remaining <= 5) {
+            badgeHtml = '<span class="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold">เหลือ ' + remaining + ' ที่นั่ง!</span>';
+          } else {
+            badgeHtml = '<span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span> ว่าง ' + remaining + ' / ' + quota + '</span>';
+          }
+
+          // Card styles
+          const cardStyle = isSelected
+            ? 'border-2 border-[#0e3d6e] bg-gradient-to-br from-blue-50/90 via-sky-50/40 to-white shadow-md ring-2 ring-[#0e3d6e]/15 transform scale-[1.01]'
+            : (isFull && !isCurrent
+                ? 'border border-rose-200 bg-rose-50/20 opacity-80 cursor-not-allowed shadow-2xs'
+                : 'border border-slate-200/90 bg-white hover:border-slate-300 shadow-2xs');
+
+          // Radio Indicator
+          const radioIcon = isSelected
+            ? '<div class="w-5 h-5 rounded-full bg-[#0e3d6e] text-white flex items-center justify-center text-xs shadow-xs font-bold shrink-0 mt-0.5">✓</div>'
+            : '<div class="w-5 h-5 rounded-full border-2 border-slate-300 bg-white shrink-0 mt-0.5"></div>';
+
+          // Format Title: "รุ่นที่ x : วันที่ x กันยายน 2569" & Time: "⏰ เวลา 09:00 - 12:00 น."
+          const batchInfo = formatBatchCardInfo(b);
+
+          // Progress bar color
+          const barColor = isFull ? 'bg-rose-500' : (percent >= 80 ? 'bg-amber-500' : 'bg-gradient-to-r from-[#0e3d6e] to-[#0284c7]');
+
+          return '<div onclick="selectMobileBatch(\'' + b.replace(/'/g, "\\'") + '\')" class="p-3.5 rounded-2xl cursor-pointer transition-all ' + cardStyle + ' space-y-2.5">' +
+            '<div class="flex items-start justify-between gap-2">' +
+              '<div class="flex items-start space-x-2.5">' +
+                radioIcon +
+                '<div>' +
+                  '<div class="text-xs font-bold ' + (isSelected ? 'text-[#0e3d6e]' : 'text-slate-800') + '">' + batchInfo.title + '</div>' +
+                  batchInfo.timeSub +
+                '</div>' +
+              '</div>' +
+              '<div class="shrink-0">' + badgeHtml + '</div>' +
+            '</div>' +
+            '<div class="space-y-1 pt-0.5 border-t border-slate-100/80">' +
+              '<div class="flex justify-between text-[10px] text-slate-500 font-medium">' +
+                '<span>ผู้ลงทะเบียนแล้ว</span>' +
+                '<span class="font-mono text-slate-700">' + enrolled + ' / ' + quota + ' ท่าน (' + percent + '%)</span>' +
+              '</div>' +
+              '<div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">' +
+                '<div class="' + barColor + ' h-1.5 rounded-full transition-all duration-300" style="width: ' + percent + '%"></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      updateMobileQuotaBar();
+    }
+
+    function handleMobileBatchChange(val) {
+      if (val) {
+        selectMobileBatch(val);
+      } else {
+        document.getElementById('mSelectedBatch').value = '';
+        const submitBtn = document.getElementById('mSubmitBtn');
+        if (submitBtn) submitBtn.classList.add('hidden');
+        renderMobileBatches();
+      }
+    }
+
+    function updateMobileQuotaBar() {
+      const batchSelectEl = document.getElementById('mBatchSelect');
+      const b = (batchSelectEl && batchSelectEl.value) || document.getElementById('mSelectedBatch').value;
+      if (!b) return;
+      const quota = getBatchQuota(b);
+      const enrolled = allAttendees.filter(a => isSameBatch(a.batch, b)).length;
+      const remaining = Math.max(0, quota - enrolled);
+      const percent = quota > 0 ? Math.min(100, Math.round((enrolled / quota) * 100)) : 100;
+
+      const stats = document.getElementById('mBatchQuotaStats');
+      const bar = document.getElementById('mBatchProgressBar');
+      if (stats) stats.innerHTML = 'ลงแล้ว ' + enrolled + ' ท่าน (ว่าง ' + remaining + ' / โควตา ' + quota + ')';
+      if (bar) bar.style.width = percent + '%';
+    }
+
+    function switchMobileTab(tab, skipSync = false) {
+      const tabReg = document.getElementById('mTabRegister');
+      const tabList = document.getElementById('mTabList');
+      const btnReg = document.getElementById('mTabRegisterBtn');
+      const btnList = document.getElementById('mTabListBtn');
+      const submitBtn = document.getElementById('mSubmitBtn');
+      const returnBtn = document.getElementById('mReturnToRegBtn');
+
+      if (tab === 'register') {
+        tabReg.classList.remove('hidden');
+        tabList.classList.add('hidden');
+        btnReg.className = "flex-1 py-2.5 text-center font-bold text-xs bg-white text-[#0e3d6e] rounded-xl shadow-xs transition-all flex items-center justify-center space-x-1.5";
+        btnList.className = "flex-1 py-2.5 text-center font-medium text-xs text-slate-600 transition-all flex items-center justify-center space-x-1.5";
+        if (returnBtn) returnBtn.classList.add('hidden');
+        
+        // Only show submit button if both employee and batch have been selected
+        const curBatch = document.getElementById('mSelectedBatch').value;
+        const existing = selectedEmp ? allAttendees.find(a => a.id.toString() === selectedEmp.id.toString()) : null;
+        const isSameAsCurrent = existing && curBatch && isSameBatch(existing.batch, curBatch);
+        if (submitBtn) {
+          if (selectedEmp && curBatch && !isSameAsCurrent) {
+            submitBtn.classList.remove('hidden');
+          } else {
+            submitBtn.classList.add('hidden');
+          }
+        }
+      } else {
+        tabReg.classList.add('hidden');
+        tabList.classList.remove('hidden');
+        btnList.className = "flex-1 py-2.5 text-center font-bold text-xs bg-white text-[#0e3d6e] rounded-xl shadow-xs transition-all flex items-center justify-center space-x-1.5";
+        btnReg.className = "flex-1 py-2.5 text-center font-medium text-xs text-slate-600 transition-all flex items-center justify-center space-x-1.5";
+        if (submitBtn) submitBtn.classList.add('hidden');
+        if (returnBtn) returnBtn.classList.remove('hidden');
+        renderMobileAttendees();
+        if (!skipSync) {
+          syncMobileAttendeesFromSheet(false);
+        }
+      }
+    }
+
+    function searchEmployeeMobile(query) {
+      const container = document.getElementById('mSearchResults');
+      const btnClear = document.getElementById('mBtnClear');
+      if (!query || query.trim().length < 1) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        btnClear.classList.add('hidden');
+        return;
+      }
+      btnClear.classList.remove('hidden');
+
+      const q = query.toLowerCase().trim();
+      const matches = employeeDatabase.filter(emp => {
+        const empId = (emp.id || '').toString().toLowerCase();
+        const first = (emp.firstName || '').toLowerCase();
+        const last = (emp.lastName || '').toLowerCase();
+        const full = ((emp.title || '') + first + last).toLowerCase();
+        const fullSpace = (first + ' ' + last).toLowerCase();
+        const pos = (emp.position || '').toLowerCase();
+        const dept = (emp.department || '').toLowerCase();
+
+        return empId.includes(q) || first.includes(q) || last.includes(q) || full.includes(q) || fullSpace.includes(q) || pos.includes(q) || dept.includes(q);
+      }).slice(0, 6);
+
+      if (matches.length === 0) {
+        container.innerHTML = '<div class="p-4 text-xs text-slate-400 text-center font-light">ไม่พบข้อมูลพนักงาน</div>';
+        container.classList.remove('hidden');
+        return;
+      }
+
+      container.innerHTML = matches.map(emp => {
+        const name = (emp.title || '') + ' ' + (emp.firstName || '') + ' ' + (emp.lastName || '');
+        const registered = allAttendees.find(a => a.id.toString() === emp.id.toString());
+        const badge = registered 
+          ? '<span class="text-[10px] text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full font-bold">⚠️ ลงทะเบียนแล้ว</span>' 
+          : '<span class="text-xs text-blue-600 font-semibold">เลือก ➜</span>';
+
+        return '<div onclick="selectMobileEmployee(\'' + emp.id + '\')" class="p-3.5 hover:bg-blue-50 active:bg-blue-100 cursor-pointer transition-all flex items-center justify-between border-b border-slate-100 last:border-b-0">' +
+          '<div>' +
+            '<div class="text-xs font-bold text-slate-900">' + name + '</div>' +
+            '<div class="text-[11px] text-slate-500 font-light">#' + emp.id + ' • ' + (emp.department || '-') + '</div>' +
+          '</div>' +
+          '<div>' + badge + '</div>' +
+        '</div>';
+      }).join('');
+
+      container.classList.remove('hidden');
+    }
+
+    function clearMobileSearch() {
+      selectedEmp = null;
+      document.getElementById('mEmpSearchInput').value = '';
+      document.getElementById('mSearchResults').classList.add('hidden');
+      document.getElementById('mBtnClear').classList.add('hidden');
+      document.getElementById('mEmpCard').classList.add('hidden');
+      document.getElementById('mAlreadyRegisteredAlert').classList.add('hidden');
+
+      const targetNoticeEl = document.getElementById('mEmpTargetNotice');
+      if (targetNoticeEl) {
+        targetNoticeEl.classList.add('hidden');
+        targetNoticeEl.innerHTML = '';
+      }
+      
+      // Hide batch section, topic section, and submit button
+      const batchSec = document.getElementById('mBatchSection');
+      if (batchSec) batchSec.classList.add('hidden');
+
+      const topicSec = document.getElementById('mTopicSection');
+      if (topicSec) topicSec.classList.add('hidden');
+
+      const submitBtn = document.getElementById('mSubmitBtn');
+      if (submitBtn) submitBtn.classList.add('hidden');
+
+      const txt = document.getElementById('mBtnText');
+      if (txt) txt.textContent = 'ยืนยันการลงทะเบียนจองที่นั่ง';
+      document.getElementById('mSelectedBatch').value = '';
+      const batchSelect = document.getElementById('mBatchSelect');
+      if (batchSelect) batchSelect.value = '';
+      renderMobileBatches();
+    }
+
+    function selectMobileEmployee(empInput) {
+      const idToFind = (typeof empInput === 'object' && empInput !== null) ? String(empInput.id || '').trim() : String(empInput || '').trim();
+      const emp = employeeDatabase.find(e => String(e.id).trim() === idToFind);
+      if (!emp) return;
+      selectedEmp = emp;
+
+      const fullName = (emp.title || '') + ' ' + (emp.firstName || '') + ' ' + (emp.lastName || '');
+      document.getElementById('mEmpSearchInput').value = emp.id + ' - ' + fullName;
+      document.getElementById('mSearchResults').classList.add('hidden');
+
+      document.getElementById('mDispName').textContent = fullName;
+      document.getElementById('mDispId').textContent = '#' + emp.id;
+      document.getElementById('mDispPos').textContent = emp.position || '-';
+      document.getElementById('mDispDept').textContent = emp.department || '-';
+      document.getElementById('mEmpCard').classList.remove('hidden');
+
+      // Check Target Audience Status
+      const targetNoticeEl = document.getElementById('mEmpTargetNotice');
+      if (targetNoticeEl) {
+        const ta = currentCourse ? currentCourse.targetAudience : null;
+        if (ta && ta.type === 'specific') {
+          targetNoticeEl.classList.remove('hidden');
+          const isTarget = (Array.isArray(ta.employeeIds) && (ta.employeeIds.includes(emp.id) || ta.employeeIds.includes(String(emp.id)))) ||
+            (Array.isArray(ta.departments) && ta.departments.includes((emp.department || '').trim())) ||
+            (Array.isArray(ta.positions) && ta.positions.includes((emp.position || '').trim()));
+          if (isTarget) {
+            targetNoticeEl.innerHTML = '<div class="text-emerald-700 font-semibold bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-[11px] flex items-center gap-1.5 shadow-2xs"><span>✓</span><span><strong>อยู่ในกลุ่มเป้าหมาย</strong> (' + escapeHtml(ta.summary || 'กำหนดเฉพาะกลุ่ม') + ')</span></div>';
+          } else {
+            targetNoticeEl.innerHTML = '<div class="text-amber-800 font-semibold bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl text-[11px] flex items-center gap-1.5 shadow-2xs"><span>⚠️</span><span><strong>คำแนะนำ:</strong> ไม่อยู่ในกลุ่มเป้าหมายหลัก (' + escapeHtml(ta.summary || 'กำหนดเฉพาะกลุ่ม') + ') ยังคงลงทะเบียนได้</span></div>';
+          }
+        } else {
+          targetNoticeEl.classList.add('hidden');
+          targetNoticeEl.innerHTML = '';
+        }
+      }
+
+      // 1. Reveal Batch Selection Section
+      const batchSec = document.getElementById('mBatchSection');
+      if (batchSec) batchSec.classList.remove('hidden');
+
+      // 2. Reset selected batch & keep submit button hidden until user picks a batch
+      document.getElementById('mSelectedBatch').value = '';
+      const batchSelect = document.getElementById('mBatchSelect');
+      if (batchSelect) batchSelect.value = '';
+
+      const submitBtn = document.getElementById('mSubmitBtn');
+      if (submitBtn) submitBtn.classList.add('hidden');
+
+      // 3. Check if already registered
+      const existing = allAttendees.find(a => a.id.toString() === emp.id.toString());
+      const alertBox = document.getElementById('mAlreadyRegisteredAlert');
+      const regName = document.getElementById('mRegisteredBatchName');
+      const btnTxt = document.getElementById('mBtnText');
+
+      if (existing) {
+        alertBox.classList.remove('hidden');
+        regName.textContent = normalizeBatchName(existing.batch);
+        btnTxt.textContent = '🔄 บันทึกยืนยันการเปลี่ยนรุ่นการอบรม';
+      } else {
+        alertBox.classList.add('hidden');
+        btnTxt.textContent = 'ยืนยันการลงทะเบียนจองที่นั่ง';
+      }
+
+      renderMobileBatches();
+    }
+
+    async function handleMobileSubmit() {
+      if (!selectedEmp) {
+        HrdModal.warning('กรุณาค้นหาและเลือกรายชื่อพนักงานก่อนค่ะ', 'ยังไม่ได้เลือกพนักงาน');
+        return;
+      }
+      const batchSelectEl = document.getElementById('mBatchSelect');
+      const batch = (batchSelectEl && batchSelectEl.value) || document.getElementById('mSelectedBatch').value;
+      if (!batch) {
+        HrdModal.warning('กรุณาเลือกรุ่นที่ต้องการเข้าอบรมค่ะ', 'ยังไม่ได้เลือกรุ่น');
+        return;
+      }
+
+      // Sub-topics / Stations Extraction
+      let selectedTopics = [];
+      if (currentCourse && currentCourse.hasSubTopics && Array.isArray(currentCourse.topics) && currentCourse.topics.length > 0) {
+        if (currentCourse.topicMode === 'selective') {
+          const checkboxes = document.querySelectorAll('.m-topic-select-checkbox:checked');
+          if (checkboxes.length === 0) {
+            HrdModal.warning('กรุณาเลือกหัวข้อที่ต้องการเข้าอบรมอย่างน้อย 1 หัวข้อค่ะ', 'ยังไม่ได้เลือกหัวข้อ');
+            return;
+          }
+          checkboxes.forEach(cb => selectedTopics.push(cb.value));
+        } else {
+          selectedTopics = currentCourse.topics.map(t => t.title || '');
+        }
+      }
+
+      const existingIndex = allAttendees.findIndex(a => a.id.toString() === selectedEmp.id.toString());
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' น.';
+
+      if (existingIndex !== -1) {
+        // Change Batch
+        const currentAtt = allAttendees[existingIndex];
+        const oldBatch = currentAtt.batch;
+
+        if (isSameBatch(oldBatch, batch)) {
+          HrdModal.warning('พนักงานท่านนี้ (' + (currentAtt.title || '') + currentAtt.firstName + ' ' + currentAtt.lastName + ')\n\nได้ลงทะเบียนใน "' + normalizeBatchName(oldBatch) + '" อยู่แล้วค่ะ\nหากต้องการเปลี่ยนรุ่น กรุณาเลือกรุ่นใหม่จากดรอปดาวน์นะคะ', 'ลงทะเบียนรุ่นนี้อยู่แล้ว');
+          return;
+        }
+
+        const quota = getBatchQuota(batch);
+        const enrolledInNew = allAttendees.filter(a => isSameBatch(a.batch, batch)).length;
+        if (enrolledInNew >= quota) {
+          HrdModal.warning('ขออภัยค่ะ ' + normalizeBatchName(batch) + ' มีผู้ลงทะเบียนเต็มโควตา ' + quota + ' ที่นั่งแล้ว กรุณาเลือกรุ่นอื่นนะคะ', 'โควตาเต็ม');
+          return;
+        }
+
+        const updatedAtt = Object.assign({}, currentAtt, {
+          batch: normalizeBatchName(batch),
+          selectedTopics: selectedTopics.length > 0 ? selectedTopics : (currentAtt.selectedTopics || []),
+          timestamp: timeStr + ' (เปลี่ยนรุ่น)'
+        });
+
+        const originalAttendees = JSON.parse(JSON.stringify(allAttendees));
+
+        // 1. แสดงหน้าโหลดทันที เพื่อซ่อนการอัปเดตข้อมูลเบื้องหลัง
+        showLoader('กำลังเปลี่ยนรุ่นการอบรม...', 'กำลังบันทึกลง Google Sheet และอัปเดตข้อมูลให้เป็นปัจจุบัน กรุณารอสักครู่นะคะ');
+
+        try {
+          const res = await syncMobileAttendeeToSheet(updatedAtt);
+          if (res && res.success) {
+            if (Array.isArray(res.attendees)) {
+              allAttendees = res.attendees;
+            } else {
+              allAttendees[existingIndex].batch = updatedAtt.batch;
+              allAttendees[existingIndex].timestamp = updatedAtt.timestamp;
+            }
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+
+            // 2. อัปเดต DOM ทั้งหมดให้เสร็จสมบูรณ์ 100% ขณะอยู่ใต้หน้าโหลด
+            updateMobileStats();
+            renderMobileBatches();
+            renderMobileAttendees();
+            clearMobileSearch();
+            switchMobileTab('list', true);
+
+            // 3. ปิดหน้าโหลดเมื่อข้อมูลแสดงผลสมบูรณ์แล้วเท่านั้น
+            hideLoader();
+
+            // 4. แสดงหน้าต่างยืนยันความสำเร็จ
+            HrdModal.success('บันทึกเปลี่ยนรุ่นการอบรมสำเร็จ!\n\n' +
+                  'ผู้เข้าอบรม: ' + (selectedEmp.title || '') + selectedEmp.firstName + ' ' + selectedEmp.lastName + '\n' +
+                  'จากเดิม: ' + normalizeBatchName(oldBatch) + '\n' +
+                  'เปลี่ยนเป็น: ' + normalizeBatchName(batch) + '\n' +
+                  'เวลาที่บันทึก: ' + timeStr, 'เปลี่ยนรุ่นสำเร็จ 🎉');
+          } else {
+            allAttendees = originalAttendees;
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+            updateMobileStats();
+            renderMobileBatches();
+            renderMobileAttendees();
+            hideLoader();
+            await HrdModal.error((res && res.message) || 'ไม่สามารถเปลี่ยนรุ่นการอบรมได้ค่ะ กรุณาลองใหม่อีกครั้ง', 'เปลี่ยนรุ่นไม่สำเร็จ');
+          }
+        } catch (err) {
+          allAttendees = originalAttendees;
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+          updateMobileStats();
+          renderMobileBatches();
+          renderMobileAttendees();
+          hideLoader();
+          console.warn('Sync attendee error:', err);
+          await HrdModal.error('ไม่สามารถเชื่อมต่อ Google Sheet เพื่อบันทึกข้อมูลได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้งนะคะ', 'การเชื่อมต่อล้มเหลว');
+        }
+        return;
+      }
+
+      // New Registration
+      const quota = getBatchQuota(batch);
+      const enrolled = allAttendees.filter(a => isSameBatch(a.batch, batch)).length;
+      if (enrolled >= quota) {
+        HrdModal.warning('ขออภัยค่ะ ' + normalizeBatchName(batch) + ' มีผู้ลงทะเบียนเต็มโควตา ' + quota + ' ที่นั่งแล้ว กรุณาเลือกรุ่นอื่นนะคะ', 'โควตาเต็ม');
+        return;
+      }
+
+      const newAtt = {
+        no: allAttendees.length + 1,
+        id: selectedEmp.id,
+        title: selectedEmp.title || '',
+        firstName: selectedEmp.firstName,
+        lastName: selectedEmp.lastName,
+        position: selectedEmp.position || '',
+        department: selectedEmp.department || '',
+        batch: normalizeBatchName(batch),
+        selectedTopics: selectedTopics,
+        timestamp: timeStr
+      };
+
+      // 1. แสดงหน้าโหลดทันที เพื่อซ่อนการอัปเดตข้อมูลเบื้องหลัง
+      showLoader('กำลังลงทะเบียน...', 'กำลังบันทึกลง Google Sheet และอัปเดตข้อมูลให้เป็นปัจจุบัน กรุณารอสักครู่นะคะ');
+
+      try {
+        const res = await syncMobileAttendeeToSheet(newAtt);
+        if (res && res.success) {
+          if (Array.isArray(res.attendees)) {
+            allAttendees = res.attendees;
+          } else {
+            allAttendees.push(newAtt);
+          }
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+
+          // 2. อัปเดต DOM ทั้งหมดให้เสร็จสมบูรณ์ 100% ขณะอยู่ใต้หน้าโหลด
+          updateMobileStats();
+          renderMobileBatches();
+          renderMobileAttendees();
+          clearMobileSearch();
+          switchMobileTab('list', true);
+
+          // 3. ปิดหน้าโหลดเมื่อข้อมูลแสดงผลสมบูรณ์แล้วเท่านั้น
+          hideLoader();
+
+          // 4. แสดงหน้าต่างยืนยันความสำเร็จ
+          HrdModal.success('ลงทะเบียนจองที่นั่งสำเร็จ!\n\n' +
+                'ผู้เข้าอบรม: ' + (newAtt.title ? newAtt.title + ' ' : '') + newAtt.firstName + ' ' + newAtt.lastName + '\n' +
+                'หลักสูตร: ' + currentCourse.title + '\n' +
+                'รุ่น: ' + normalizeBatchName(batch), 'ลงทะเบียนสำเร็จ 🎉');
+        } else {
+          hideLoader();
+          await HrdModal.error((res && res.message) || 'ไม่สามารถลงทะเบียนได้ค่ะ กรุณาลองใหม่อีกครั้ง', 'ลงทะเบียนไม่สำเร็จ');
+        }
+      } catch (err) {
+        hideLoader();
+        console.warn('Sync attendee error:', err);
+        await HrdModal.error('ไม่สามารถเชื่อมต่อ Google Sheet เพื่อบันทึกข้อมูลได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้งนะคะ', 'การเชื่อมต่อล้มเหลว');
+      }
+    }
+
+    
+
+  </script>
+</body>
+</html>

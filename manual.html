@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือการใช้งานระบบบริหารจัดการการอบรมบุคลากร (HRD Training Management System)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff; color: #000000; }
+      .page-break { page-break-before: always; }
+      .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl { box-shadow: none !important; }
+      .border { border-color: #cbd5e1 !important; }
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #38bdf8 100%);
+    }
+    .chapter-badge {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- TOP HEADER / NAV (STICKY) -->
+  <header class="no-print sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-9 w-auto object-contain" onerror="this.style.display='none'">
+        <div>
+          <span class="text-sm font-bold text-slate-900 block leading-tight">คู่มือการใช้งานระบบบริหารจัดการการอบรม</span>
+          <span class="text-[11px] text-slate-500 font-light">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • โรงพยาบาลพิษณุเวช พิจิตร</span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <a href="HRD_Training_System_Manual_A4_Landscape.pdf" download class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer shadow-md shadow-emerald-500/20">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span class="hidden sm:inline">ดาวน์โหลด PDF (A4 แนวนอน)</span>
+          <span class="sm:hidden">PDF A4</span>
+        </a>
+
+        <button onclick="window.print()" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs">
+          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          <span class="hidden sm:inline">พิมพ์คู่มือ</span>
+          <span class="sm:hidden">พิมพ์</span>
+        </button>
+
+        <a href="admin.html" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer shadow-md shadow-blue-500/20">
+          <span>เข้าสู่ระบบจริง</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-gradient text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto text-center space-y-4">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-medium text-blue-100 border border-white/20">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>ระบบเวอร์ชันล่าสุด 2.0 • ระบบเชื่อมโยง Google Sheets แบบเรียลไทม์</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-snug">
+        คู่มือการใช้งานระบบบริหารจัดการการอบรมบุคลากร<br class="hidden sm:inline">
+        <span class="text-sky-200">HRD Training Management System</span>
+      </h1>
+      <p class="text-sm sm:text-base text-blue-100 max-w-3xl mx-auto font-light leading-relaxed">
+        เอกสารสรุปขั้นตอนการทำงาน (Workflow) และคู่มือแนะนำการใช้งานทุกฟังก์ชันอย่างละเอียด พร้อมภาพถ่ายหน้าจอจริงจากระบบจริง เพื่อใช้เป็นมาตรฐานการปฏิบัติงานของฝ่ายพัฒนาทรัพยากรบุคคล (HRD) และบุคลากรโรงพยาบาลพิษณุเวช พิจิตร
+      </p>
+
+      <!-- Quick Nav Buttons -->
+      <div class="no-print pt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
+        <a href="#workflow" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">1. ภาพรวมระบบ (Workflow)</a>
+        <a href="#admin-portal" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">2. ทะเบียนหลักสูตร (Admin)</a>
+        <a href="#create-course" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">3. สร้าง/แก้ไขหลักสูตร</a>
+        <a href="#target-setting" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">4. กำหนดกลุ่มเป้าหมาย</a>
+        <a href="#registration" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">5. ลงทะเบียนจองที่นั่ง</a>
+        <a href="#checkin" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">6. เช็คชื่อ ณ จุดอบรม</a>
+        <a href="#evaluation" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">7. แบบประเมินผล</a>
+        <a href="#dashboard" class="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/20 transition-all font-medium">8. แดชบอร์ด KPI</a>
+        <a href="#canva-guide" class="px-3 py-1.5 bg-amber-400/90 text-slate-950 hover:bg-amber-300 rounded-lg transition-all font-bold">✨ โครงสร้างสไลด์สำหรับ Canva</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN MANUAL CONTAINER -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+    <!-- CHAPTER 1: WORKFLOW -->
+    <section id="workflow" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 1</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ภาพรวมวงจรการทำงานของระบบ (End-to-End Workflow)</h2>
+      </div>
+
+      <p class="text-sm text-slate-600 leading-relaxed font-normal">
+        ระบบบริหารจัดการการอบรมบุคลากร HRD ถูกออกแบบให้สอดคล้องกับมาตรฐานการทำงานของโรงพยาบาล โดยแบ่งกระบวนการทำงานออกเป็น 5 ลำดับขั้นที่เชื่อมโยงกันอย่างไร้รอยต่อ ผ่านฐานข้อมูลกลาง Google Sheets เดียวกัน:
+      </p>
+
+      <!-- Flow Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-4 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-blue-500/20">1</div>
+          <h3 class="text-xs font-bold text-blue-950">สร้างหลักสูตรและกำหนดรุ่น</h3>
+          <p class="text-[11px] text-slate-500 leading-tight">HRD สร้างชื่อหลักสูตร วัน เวลา วิทยากร จำนวนที่นั่ง และห้องอบรม</p>
+        </div>
+
+        <div class="bg-sky-50/70 border border-sky-100 rounded-2xl p-4 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-sky-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-sky-500/20">2</div>
+          <h3 class="text-xs font-bold text-sky-950">กำหนดกลุ่มเป้าหมาย</h3>
+          <p class="text-[11px] text-slate-500 leading-tight">ระบุฝ่าย แผนก หรือเลือกบุคคลที่ต้องเข้าอบรม เพื่อใช้เทียบสถิติ KPI</p>
+        </div>
+
+        <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-indigo-500/20">3</div>
+          <h3 class="text-xs font-bold text-indigo-950">พนักงานจองที่นั่งล่วงหน้า</h3>
+          <p class="text-[11px] text-slate-500 leading-tight">พนักงานค้นหารหัสตนเอง เลือกรุ่นที่สะดวก และพิมพ์ใบเซ็นชื่อเพื่อเตรียมห้อง</p>
+        </div>
+
+        <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-emerald-500/20">4</div>
+          <h3 class="text-xs font-bold text-emerald-950">เช็คชื่อจริง ณ จุดอบรม</h3>
+          <p class="text-[11px] text-slate-500 leading-tight">กรอกรหัสพนักงานหน้าห้องเพื่อยืนยันการเข้าอบรมจริง (บันทึกแยกชีทเฉพาะ)</p>
+        </div>
+
+        <div class="bg-purple-50/70 border border-purple-100 rounded-2xl p-4 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-purple-500/20">5</div>
+          <h3 class="text-xs font-bold text-purple-950">ประเมินและสรุป KPI</h3>
+          <p class="text-[11px] text-slate-500 leading-tight">ประเมินหลังอบรม พร้อมดู Dashboard อัตรามาจริง (Show-up Rate) และความพึงพอใจ</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 2: ADMIN PORTAL -->
+    <section id="admin-portal" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 2</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">หน้าทะเบียนหลักสูตรทั้งหมด (Course Registry)</h2>
+      </div>
+
+      <div class="bg-slate-50 border-l-4 border-blue-600 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-blue-900">📍 URL ประจำหน้าจอ: <a href="admin.html" target="_blank" class="text-blue-600 underline">https://ps-hrd-training.surge.sh/admin.html</a></div>
+        <div><strong>ผู้มีสิทธิ์ใช้งาน:</strong> เจ้าหน้าที่ฝ่ายพัฒนาทรัพยากรบุคคล (HRD Officer / Admin)</div>
+        <div><strong>หน้าที่หลัก:</strong> เป็นศูนย์กลางบัญชาการ จัดการหลักสูตรทั้งหมด และเป็นทางลัดเข้าสู่ระบบย่อยแต่ละส่วน</div>
+      </div>
+
+      <!-- Real Screenshot -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-500 flex items-center space-x-1.5">
+          <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <span>ภาพถ่ายหน้าจอจริง: หน้าทะเบียนหลักสูตร (Admin Portal) หลังปรับปรุงแถบเครื่องมือด้านบนให้คลีนตามมาตรฐาน</span>
+        </div>
+        <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-md">
+          <img src="assets/manual/01_admin_portal.jpg?v=2" alt="หน้าทะเบียนหลักสูตรทั้งหมด" class="w-full h-auto object-cover">
+        </div>
+      </div>
+
+      <!-- Features & Guide -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">องค์ประกอบและปุ่มสั่งการสำคัญในการ์ดหลักสูตร:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+            <div class="font-bold text-slate-800 flex items-center space-x-1.5">
+              <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold">1</span>
+              <span>ปุ่มสร้างหลักสูตรใหม่ (+ สร้างหลักสูตรใหม่)</span>
+            </div>
+            <p class="text-slate-500">ปุ่มสีน้ำเงินหลักที่มุมขวาบน สำหรับเปิดฟอร์มสร้างหลักสูตรและกำหนดรุ่นใหม่</p>
+          </div>
+
+          <div class="p-3 bg-purple-50/70 border border-purple-200 rounded-xl space-y-1">
+            <div class="font-bold text-purple-900 flex items-center space-x-1.5">
+              <span class="w-6 h-6 rounded-lg bg-purple-200 text-purple-800 flex items-center justify-center font-bold">📊</span>
+              <span>ไอคอนแดชบอร์ด (สรุป KPI)</span>
+            </div>
+            <p class="text-purple-700">เปิดหน้ารายงานสถิติ การเปรียบเทียบเป้าหมาย และผลการประเมินความพึงพอใจ</p>
+          </div>
+
+          <div class="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-1">
+            <div class="font-bold text-emerald-900 flex items-center space-x-1.5">
+              <span class="w-6 h-6 rounded-lg bg-emerald-200 text-emerald-800 flex items-center justify-center font-bold">📍</span>
+              <span>ไอคอนจุดเช็คชื่อ (On-site Check-in)</span>
+            </div>
+            <p class="text-emerald-700">เปิดหน้าจอสำหรับตั้งไว้หน้าห้องอบรม เพื่อให้พนักงานพิมพ์รหัสเช็คชื่อเข้าอบรมจริง</p>
+          </div>
+
+          <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
+            <div class="font-bold text-amber-900 flex items-center space-x-1.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-200 text-amber-800 flex items-center justify-center font-bold">🎯</span>
+              <span>ไอคอนกลุ่มเป้าหมาย (Target Setting)</span>
+            </div>
+            <p class="text-amber-700">เปิดหน้ากำหนดฝ่ายและตำแหน่งที่ถูกกำหนดให้ต้องเข้าอบรมในหลักสูตรนี้</p>
+          </div>
+
+          <div class="p-3 bg-sky-50/70 border border-sky-200 rounded-xl space-y-1">
+            <div class="font-bold text-sky-900 flex items-center space-x-1.5">
+              <span class="w-6 h-6 rounded-lg bg-sky-200 text-sky-800 flex items-center justify-center font-bold">🔗</span>
+              <span>ไอคอนลิงก์ & QR Code ลงทะเบียน</span>
+            </div>
+            <p class="text-sky-700">คัดลอกลิงก์หรือดาวน์โหลดภาพ QR Code ส่งเข้ากลุ่มไลน์พนักงานเพื่อให้ลงทะเบียนจองรุ่น</p>
+          </div>
+
+          <div class="p-3 bg-slate-100 border border-slate-300 rounded-xl space-y-1">
+            <div class="font-bold text-slate-800 flex items-center space-x-1.5">
+              <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center font-bold">✏️</span>
+              <span>ไอคอนแก้ไขหลักสูตร (Edit)</span>
+            </div>
+            <p class="text-slate-600">เปิดหน้าฟอร์มแก้ไขข้อมูลหลักสูตร วัน เวลา วิทยากร เพิ่ม/ลดรุ่น หรือปรับจำนวนที่นั่ง</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 3: CREATE & EDIT COURSE -->
+    <section id="create-course" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 3</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">การสร้างและแก้ไขหลักสูตรการอบรม (Create & Edit Course)</h2>
+      </div>
+
+      <div class="bg-slate-50 border-l-4 border-blue-600 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-blue-900">📍 URL ประจำหน้าจอ: <a href="admin-create.html" target="_blank" class="text-blue-600 underline">admin-create.html</a> หรือคลิกปุ่มดินสอแก้ไขจากหน้าหลัก</div>
+        <div><strong>การแก้ไขข้อมูล:</strong> ระบบเวอร์ชันล่าสุดมีระบบ <em>Save Progress Modal</em> และกลไกบันทึกแบบ Hyper-speed ประมวลผลเสร็จในไม่กี่วินาที ไม่ค้างหน้านาน</div>
+      </div>
+
+      <!-- Real Screenshots (Grid 2 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500">ภาพที่ 1: ส่วนข้อมูลหลักสูตร (ชื่อ, วิทยากร, หมวดหมู่ และสถานะ)</div>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <img src="assets/manual/02_create_edit_course.jpg?v=2" alt="ฟอร์มสร้างและแก้ไขหลักสูตร" class="w-full h-auto object-cover">
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500">ภาพที่ 2: ส่วนจัดการรุ่นการอบรม (เพิ่มรุ่น, ระบุวันที่, เวลา, ห้อง และโควตาที่นั่ง)</div>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <img src="assets/manual/02b_batch_configuration.jpg?v=2" alt="ส่วนจัดการรุ่นการอบรม" class="w-full h-auto object-cover">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step by Step Instructions -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">ขั้นตอนการสร้างหลักสูตรใหม่แบบทีละขั้น:</h3>
+        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-600 font-normal leading-relaxed">
+          <li><strong class="text-slate-800">กรอกข้อมูลพื้นฐาน:</strong> ระบุชื่อหลักสูตรอบรม, ชื่อวิทยากรบรรยาย, เลือกประเภทแผน (ในแผน/นอกแผน) และเลือกหมวดหมู่หลักสูตร (เช่น Functional Course, Mandatory Course)</li>
+          <li><strong class="text-slate-800">กำหนดรุ่นการอบรม (Batches):</strong> ในกล่อง "กำหนดรุ่นการอบรม" สามารถระบุวันจัดอบรม, เวลาเริ่มต้น-สิ้นสุด, สถานที่/ห้องอบรม และกำหนดจำนวนที่นั่งสูงสุด (เช่น 40 ที่นั่งต่อรุ่น)</li>
+          <li><strong class="text-slate-800">เพิ่มหรือลบรุ่น:</strong> หากหลักสูตรมีการจัดมากกว่า 1 รุ่น ให้กดปุ่ม <code>+ เพิ่มรุ่นการอบรม</code> ระบบจะสร้างการ์ดรุ่นใหม่ให้ทันที</li>
+          <li><strong class="text-slate-800">บันทึกข้อมูล:</strong> กดปุ่ม <code>บันทึกข้อมูลหลักสูตร</code> ระบบจะแสดงหน้าต่างความคืบหน้า (Save Progress Modal) แจ้งสถานะการเชื่อมต่อไปยัง Google Sheets และพากลับสู่หน้าทะเบียนหลักสูตรโดยอัตโนมัติ</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4: TARGET AUDIENCE -->
+    <section id="target-setting" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 4</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">การกำหนดกลุ่มเป้าหมายผู้เข้าอบรม (Target Audience Setting)</h2>
+      </div>
+
+      <div class="bg-slate-50 border-l-4 border-amber-500 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-amber-900">📍 URL ประจำหน้าจอ: <a href="admin-target.html?course=c-2026-orientation-oct" target="_blank" class="text-blue-600 underline">admin-target.html?course=[COURSE_ID]</a></div>
+        <div><strong>ความสำคัญ:</strong> กลุ่มเป้าหมายที่เลือกจะถูกนำไปคำนวณเป็นยอดตั้งต้น (Base Target) ในหน้า Dashboard เพื่อเปรียบเทียบสถิติการเข้าอบรมจริงตาม KPI โรงพยาบาล</div>
+      </div>
+
+      <!-- Real Screenshot -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-500">ภาพถ่ายหน้าจอจริง: หน้าตั้งค่ากลุ่มเป้าหมาย (Target Audience) แสดงฝ่าย แผนก และสถิติจำนวนเป้าหมาย</div>
+        <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-md">
+          <img src="assets/manual/03_target_audience.jpg?v=2" alt="หน้าตั้งค่ากลุ่มเป้าหมาย" class="w-full h-auto object-cover">
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">รูปแบบการกำหนดกลุ่มเป้าหมาย:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 bg-blue-50/60 border border-blue-200 rounded-xl space-y-1">
+            <div class="font-bold text-blue-900">1. เปิดรับบุคลากรทุกคน (All Staff Target)</div>
+            <p class="text-slate-600">เหมาะกับหลักสูตร Mandatory Course หรือหลักสูตรนโยบายโรงพยาบาลที่พนักงานทุกคนต้องเข้าอบรม ระบบจะดึงฐานพนักงานทั้งหมดมาเป็นกลุ่มเป้าหมาย</p>
+          </div>
+
+          <div class="p-3 bg-amber-50/60 border border-amber-200 rounded-xl space-y-1">
+            <div class="font-bold text-amber-900">2. กำหนดเฉพาะฝ่าย / แผนก / ตำแหน่ง (Specific Department)</div>
+            <p class="text-slate-600">เหมาะกับหลักสูตรเฉพาะทาง เช่น เฉพาะพยาบาล, เฉพาะช่าง, เฉพาะแผนกฉุกเฉิน สามารถติ๊กเลือกเฉพาะแผนกที่ต้องการได้ตามโครงสร้างองค์กร</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 5: STAFF PRE-REGISTRATION -->
+    <section id="registration" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 5</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">การลงทะเบียนจองที่นั่งล่วงหน้าสำหรับพนักงาน (Staff Pre-Registration)</h2>
+      </div>
+
+      <div class="bg-slate-50 border-l-4 border-sky-500 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-sky-900">📍 URL ประจำหน้าจอ: <a href="index.html?course=c-2026-orientation-oct" target="_blank" class="text-blue-600 underline">index.html?course=[COURSE_ID]</a> (บนมือถือแสดงหน้าจอสำหรับโทรศัพท์ บนคอมพิวเตอร์แสดงแบบเต็มจอ Full Screen)</div>
+        <div><strong>การบันทึกข้อมูล:</strong> ข้อมูลการจองจะถูกจัดเก็บลงในแท็บชีท <code>ลงทะเบียนล่วงหน้า</code> เพื่อใช้พิมพ์ออกมาเป็นใบเซ็นชื่อหน้าห้อง</div>
+      </div>
+
+      <!-- Real Screenshots (Grid 2 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500">ภาพที่ 1: หน้าฟอร์มค้นหาและเลือกรุ่นที่ต้องการจอง พร้อมแสดงจำนวนที่นั่งว่าง</div>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <img src="assets/manual/04_employee_registration.jpg?v=2" alt="หน้าลงทะเบียนพนักงาน" class="w-full h-auto object-cover">
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500">ภาพที่ 2: แท็บตรวจสอบรายชื่อผู้ลงทะเบียนล่วงหน้า (แสดงรุ่นและเวลาที่จอง)</div>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <img src="assets/manual/04b_registration_verify_list.jpg?v=2" alt="แท็บตรวจสอบรายชื่อ" class="w-full h-auto object-cover">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step by Step -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">ขั้นตอนการลงทะเบียนจองที่นั่งสำหรับพนักงาน:</h3>
+        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-600 font-normal leading-relaxed">
+          <li><strong class="text-slate-800">ค้นหาข้อมูลตนเอง:</strong> พิมพ์รหัสพนักงาน 6 หลัก (เช่น <code>014125</code>) หรือพิมพ์ชื่อ-นามสกุล ในช่องค้นหา ระบบจะค้นหาและแสดงชื่อ ตำแหน่ง และแผนกของพนักงานทันที</li>
+          <li><strong class="text-slate-800">เลือกรุ่นการอบรม:</strong> เลือกรุ่นและวันเวลาที่ต้องการเข้าร่วมอบรม ระบบจะแสดงจำนวนที่นั่งคงเหลือของแต่ละรุ่นให้เห็นแบบเรียลไทม์</li>
+          <li><strong class="text-slate-800">กดยืนยันการจอง:</strong> ตรวจสอบความถูกต้องและกดยืนยัน ระบบจะบันทึกรายชื่อลงฐานข้อมูลทันที</li>
+          <li><strong class="text-slate-800">ตรวจสอบรายชื่อ:</strong> พนักงานสามารถคลิกแท็บ <code>ตรวจสอบรายชื่อ</code> เพื่อดูว่าตนเองมีชื่อในรุ่นที่ต้องการเรียบร้อยแล้วหรือไม่</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- CHAPTER 6: ONSITE CHECK-IN -->
+    <section id="checkin" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 6</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">การเช็คชื่อเข้าอบรมจริง ณ จุดอบรม (On-site Attendance Check-in)</h2>
+      </div>
+
+      <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-emerald-950">📍 URL ประจำหน้าจอ: <a href="checkin.html?course=c-2026-orientation-oct" target="_blank" class="text-emerald-700 underline">checkin.html?course=[COURSE_ID]</a></div>
+        <div><strong>การแยกชีทบันทึกข้อมูล:</strong> ข้อมูลการเช็คชื่อเข้าอบรมจริงจะถูกบันทึกแยกต่างหากในแท็บชีท <code>ลงทะเบียนหน้างาน</code> ไม่รวมกับยอดจองล่วงหน้าตามข้อกำหนด</div>
+        <div><strong>คุณสมบัติสำคัญ:</strong> ตัดระบบกล้องออกเพื่อความสะดวกรวดเร็ว ใช้ช่องกรอกรหัสพนักงาน 6 หลัก และแสดงรายชื่อผู้เช็คชื่อล่าสุดอยู่บนสุดเสมอ (Latest First)</div>
+      </div>
+
+      <!-- Real Screenshot -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-500">ภาพถ่ายหน้าจอจริง: หน้าระบบลงทะเบียนเข้าอบรมจริง ณ จุดอบรม (On-site Check-in Station)</div>
+        <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-md">
+          <img src="assets/manual/05_onsite_checkin.jpg?v=2" alt="หน้าเช็คชื่อเข้าอบรมจริง" class="w-full h-auto object-cover">
+        </div>
+      </div>
+
+      <!-- Step by Step -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">ขั้นตอนการปฏิบัติงานสำหรับเจ้าหน้าที่ประจำจุดอบรม:</h3>
+        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-600 font-normal leading-relaxed">
+          <li><strong class="text-slate-800">เลือกรุ่นที่กำลังจัดอบรม:</strong> เจ้าหน้าที่เลือก "รุ่นที่กำลังจัดอบรมขณะนี้" ที่เมนูด้านบน เพื่อกรองรายชื่อผู้เข้าอบรมของรุ่นนั้น</li>
+          <li><strong class="text-slate-800">พนักงานกรอกรหัส:</strong> พนักงานพิมพ์รหัสพนักงาน 6 หลัก ในช่องด้านซ้าย แล้วกดปุ่ม <code>ค้นหา</code> (หรือกด Enter)</li>
+          <li><strong class="text-slate-800">กดยืนยันการเข้าอบรม:</strong> หน้าต่างจะแสดงข้อมูลพนักงาน พร้อมสถานะว่าเคยจองล่วงหน้ามาหรือไม่ แล้วกด "ยืนยันการลงชื่อเข้าอบรม"</li>
+          <li><strong class="text-slate-800">แสดงผลและส่งเสียงยืนยัน:</strong> การ์ดรายชื่อพนักงานจะเด้งขึ้นมาแสดงที่ด้านขวาบนสุด (#1) ทันที พร้อมแสดงเวลาเช็คชื่อจริง และมีเสียงสัญญาณยืนยันความถูกต้อง</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7: EVALUATION -->
+    <section id="evaluation" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 7</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">ระบบแบบประเมินความพึงพอใจหลังการอบรม (Post-Training Evaluation)</h2>
+      </div>
+
+      <div class="bg-slate-50 border-l-4 border-indigo-500 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-indigo-900">📍 URL ประจำหน้าจอ: <a href="eval.html?course=c-2026-orientation-oct" target="_blank" class="text-blue-600 underline">eval.html?course=[COURSE_ID]</a></div>
+        <div><strong>มาตรฐานการประเมิน:</strong> ประเมินเฉพาะหลังการอบรมเพียงครั้งเดียว (Post-Training Only) ตามข้อกำหนด เพื่อความสะดวก ไม่ต้องประเมินก่อน-หลังให้ยุ่งยาก</div>
+        <div><strong>ความเป็นส่วนตัว:</strong> การประเมินเป็นแบบไม่ระบุตัวตน (Anonymous 100%) เพื่อให้ได้ผลสะท้อนความคิดเห็นที่แท้จริง</div>
+      </div>
+
+      <!-- Real Screenshot -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-500">ภาพถ่ายหน้าจอจริง: ระบบแบบประเมินผลการฝึกอบรม (คะแนนระดับ 1-5 และข้อเสนอแนะ)</div>
+        <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-md">
+          <img src="assets/manual/06_course_evaluation.jpg?v=2" alt="หน้าแบบประเมินผลการอบรม" class="w-full h-auto object-cover">
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">ขั้นตอนการทำแบบประเมิน:</h3>
+        <ol class="list-decimal list-inside space-y-2 text-xs text-slate-600 font-normal leading-relaxed">
+          <li><strong class="text-slate-800">เลือกรุ่นที่ตนเองเข้าอบรม:</strong> คลิกเลือกบัตรระบุรุ่นที่ 1, 2, 3 หรือ 4</li>
+          <li><strong class="text-slate-800">ให้คะแนนความพึงพอใจ (1 ถึง 5):</strong> ประเมินตามหัวข้อด้านเนื้อหา, วิทยากร, สถานที่ และการนำไปประยุกต์ใช้ หรือกดปุ่มลัด <code>✨ ให้คะแนนดีมากทั้งหมด (5)</code> เพื่อความรวดเร็ว</li>
+          <li><strong class="text-slate-800">พิมพ์ข้อเสนอแนะเพิ่มเติม:</strong> กรอกความเห็นเพื่อการพัฒนาหลักสูตร และกดส่งแบบประเมิน คะแนนจะถูกส่งเข้า Dashboard แบบสดทันที</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- CHAPTER 8: ANALYTICS & KPI DASHBOARD -->
+    <section id="dashboard" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 8</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">แดชบอร์ดวิเคราะห์ผลและสถิติ KPI (Analytics & KPI Dashboard)</h2>
+      </div>
+
+      <div class="bg-slate-50 border-l-4 border-purple-500 p-4 rounded-r-xl text-xs text-slate-700 space-y-1">
+        <div class="font-bold text-purple-900">📍 URL ประจำหน้าจอ: <a href="dashboard.html?course=c-2026-orientation-oct" target="_blank" class="text-blue-600 underline">dashboard.html?course=[COURSE_ID]</a></div>
+        <div><strong>คุณสมบัติเด่น:</strong> มี Loading Screen ป้องกันการแสดงผลก่อนโหลดเสร็จ พร้อมแสดงตารางเปรียบเทียบ 3 ระดับ ทั้งจำนวนเต็มและสัดส่วนเปอร์เซ็นต์อย่างชัดเจน</div>
+      </div>
+
+      <!-- Real Screenshots (Grid 2 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500">ภาพที่ 1: การ์ดตัวชี้วัด KPI สรุปภาพรวม 5 มิติ และอัตรามาอบรมจริง (Show-up Rate)</div>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <img src="assets/manual/07_analytics_dashboard.jpg?v=2" alt="การ์ดตัวชี้วัด KPI สรุปภาพรวม" class="w-full h-auto object-cover">
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500">ภาพที่ 2: กราฟแท่งและสัดส่วนเปรียบเทียบ (กลุ่มเป้าหมาย vs ลงทะเบียนล่วงหน้า vs เข้าอบรมจริง)</div>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <img src="assets/manual/07b_dashboard_charts.jpg?v=2" alt="กราฟเปรียบเทียบ 3 ระดับ" class="w-full h-auto object-cover">
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric Details -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">ความหมายของตัวชี้วัด 3 ระดับในกราฟเปรียบเทียบ:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+            <div class="font-bold text-slate-800">1. กลุ่มเป้าหมาย (Target Audience)</div>
+            <p class="text-slate-500">จำนวนบุคลากรทั้งหมดที่ถูกกำหนดว่าต้องเข้ารับการอบรม (คิดเป็นฐาน 100%) เพื่อใช้วัดความครอบคลุมของการฝึกอบรม</p>
+          </div>
+
+          <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl space-y-1">
+            <div class="font-bold text-blue-900">2. ลงทะเบียนล่วงหน้า (Pre-booked)</div>
+            <p class="text-blue-700">จำนวนบุคลากรที่ได้จองที่นั่งผ่านระบบล่วงหน้า แสดงทั้งจำนวนคนและสัดส่วนเปอร์เซ็นต์เทียบกับกลุ่มเป้าหมาย</p>
+          </div>
+
+          <div class="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-1">
+            <div class="font-bold text-emerald-900">3. เข้าอบรมจริง (Actual Check-in)</div>
+            <p class="text-emerald-700">จำนวนบุคลากรที่มาเช็คชื่อหน้าห้องจริง พร้อมอัตรา Show-up Rate (เข้าจริงเทียบยอดจอง) และสัดส่วนเทียบกลุ่มเป้าหมาย</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 9: GOOGLE SHEET DATA ARCHITECTURE -->
+    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="chapter-badge text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 9</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">โครงสร้าง Google Sheets และการจัดเก็บข้อมูล (Data Architecture)</h2>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed font-normal">
+        เพื่อให้ข้อมูลเป็นระเบียบและนำไปใช้ทำรายงานได้อย่างมีประสิทธิภาพ ระบบจะแยกแท็บการจัดเก็บข้อมูลใน Google Sheets ตามบทบาทหน้าที่ ดังนี้:
+      </p>
+
+      <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+        <table class="w-full text-xs text-left text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+            <tr>
+              <th class="p-3">ชื่อแท็บ Sheet</th>
+              <th class="p-3">วัตถุประสงค์ในการใช้งาน</th>
+              <th class="p-3">การบันทึกข้อมูล</th>
+              <th class="p-3">การนำไปใช้งานต่อ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr>
+              <td class="p-3 font-semibold text-blue-900 bg-blue-50/30">CourseRegistry</td>
+              <td class="p-3">ทะเบียนแม่บทหลักสูตรทั้งหมด</td>
+              <td class="p-3">บันทึกอัตโนมัติเมื่อกดสร้าง/แก้ไขหลักสูตร</td>
+              <td class="p-3">แสดงรายการในหน้า Admin Portal</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-blue-900 bg-blue-50/30">ลงทะเบียนล่วงหน้า</td>
+              <td class="p-3">เก็บรายชื่อผู้จองที่นั่งอบรม</td>
+              <td class="p-3">บันทึกเมื่อพนักงานกดจองรุ่นใน index.html</td>
+              <td class="p-3"><strong>ปริ้นเป็นใบเซ็นชื่อจริงหน้าห้องอบรม</strong></td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-emerald-900 bg-emerald-50/30">ลงทะเบียนหน้างาน</td>
+              <td class="p-3">เก็บบันทึกการเช็คชื่อเข้าอบรมจริง</td>
+              <td class="p-3">บันทึกเมื่อพนักงานกรอกรหัสหน้าห้องใน checkin.html</td>
+              <td class="p-3"><strong>คำนวณยอดเข้าอบรมจริงและ Show-up Rate ใน Dashboard</strong></td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-purple-900 bg-purple-50/30">Evaluation_Data</td>
+              <td class="p-3">เก็บผลการประเมินความพึงพอใจ 15 ข้อ</td>
+              <td class="p-3">บันทึกเมื่อพนักงานส่งแบบประเมินใน eval.html</td>
+              <td class="p-3">คำนวณคะแนนเฉลี่ยและสรุปเสียงสะท้อน 4 ด้าน</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-amber-900 bg-amber-50/30">TargetAudience</td>
+              <td class="p-3">เก็บรายการกลุ่มเป้าหมายตามฝ่าย/แผนก</td>
+              <td class="p-3">บันทึกเมื่อแอดมินตั้งค่าใน admin-target.html</td>
+              <td class="p-3">เป็นฐานตัวเลขเปรียบเทียบใน Dashboard KPI</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CHAPTER 10: CANVA PRESENTATION GUIDE -->
+    <section id="canva-guide" class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-6 sm:p-8 border border-amber-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3">
+        <span class="bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทที่ 10</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">แนวทางการนำเนื้อหาและภาพจริงไปสร้างสไลด์บน Canva (Slide Outline)</h2>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed font-normal">
+        หากต้องการนำเสนอผู้บริหารหรือจัดทำคู่มือแบบเอกสารสไลด์ (Presentation Slide) สามารถคัดลอกโครงร่าง 8 สไลด์ด้านล่างนี้ และนำไฟล์ภาพที่แคปเจอร์จริงในโฟลเดอร์ <code>assets/manual/</code> ไปวางในเทมเพลตของ Canva ได้ทันที:
+      </p>
+
+      <!-- Slides Outline Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <!-- Slide 1 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 1: ปกและภาพรวมโครงการ</span>
+            <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-semibold">Title Slide</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> คู่มือการใช้งานระบบบริหารจัดการการอบรมบุคลากร (HRD Training Management System)</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใส่โลโก้โรงพยาบาลพิษณุเวช และภาพระบบกว้างรวม</p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> ระบบจัดการครบวงจรตั้งแต่สร้างหลักสูตร, จองที่นั่ง, เช็คชื่อหน้าห้อง, สู่แดชบอร์ดสรุป KPI</p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 2: วงจรการทำงาน 5 ขั้นตอน (Workflow)</span>
+            <span class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-semibold">Process Flow</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> แผนผังกระบวนการทำงานแบบบูรณาการ</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ไดอะแกรม 5 ขั้นตอน (สร้างหลักสูตร &gt; กำหนดเป้าหมาย &gt; จองที่นั่ง &gt; เช็คชื่อจริง &gt; ประเมิน/KPI)</p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> ข้อมูลเชื่อมโยงผ่าน Google Sheets แบบเรียลไทม์ 100%</p>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 3: ศูนย์จัดการหลักสูตร (Admin Portal)</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">Admin Module</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> ทะเบียนหลักสูตรทั้งหมดและการควบคุมระบบ</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใช้ภาพ <code>assets/manual/01_admin_portal.jpg</code></p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> ปุ่มทางลัดไปยังแดชบอร์ด, จุดเช็คชื่อ, QR Code, และการสร้างหลักสูตรใหม่</p>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 4: การสร้างและแก้ไขหลักสูตร</span>
+            <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-semibold">Course Creation</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> การจัดสรรรุ่น วันที่ เวลา และโควตาที่นั่ง</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใช้ภาพ <code>assets/manual/01_admin_portal.jpg</code> และ <code>02b_batch_configuration.png</code></p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> รองรับการจัดอบรมหลายรุ่น (Multiple Batches) และระบบบันทึกความเร็วสูง</p>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 5: การลงทะเบียนจองที่นั่งล่วงหน้า</span>
+            <span class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-semibold">Staff Pre-Booking</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> ประสบการณ์การใช้งานของพนักงานในการเลือกที่นั่ง</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใช้ภาพ <code>assets/manual/01_admin_portal.jpg</code></p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> ใช้งานง่าย รองรับทั้งคอมพิวเตอร์และมือถือ แสดงจำนวนที่นั่งว่างแบบสด</p>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 6: การเช็คชื่อเข้าอบรมจริงหน้าห้อง</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">On-site Attendance</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> จุดเช็คชื่อ ณ วันจัดอบรมจริง</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใช้ภาพ <code>assets/manual/01_admin_portal.jpg</code></p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> กรอกรหัส 6 หลักยืนยัน รายชื่อล่าสุดขึ้นบนสุด พร้อมบันทึกแยกชีทเฉพาะ</p>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 7: การประเมินผลความพึงพอใจ</span>
+            <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-semibold">Course Evaluation</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> แบบประเมินหลังการอบรมแบบไม่ระบุตัวตน</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใช้ภาพ <code>assets/manual/01_admin_portal.jpg</code></p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> 15 ข้อมาตรฐาน และปุ่มลัดให้คะแนน 5 ดาว เพื่อเพิ่มอัตราการตอบกลับ</p>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-blue-900">สไลด์ที่ 8: แดชบอร์ดวิเคราะห์ผลและสถิติ KPI</span>
+            <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-semibold">Executive Dashboard</span>
+          </div>
+          <p class="text-slate-600 font-light"><strong>หัวข้อ:</strong> การเปรียบเทียบสถิติ 3 มิติเพื่อรายงานผู้บริหาร</p>
+          <p class="text-slate-500"><strong>ภาพประกอบ:</strong> ใช้ภาพ <code>assets/manual/01_admin_portal.jpg</code> และ <code>07b_dashboard_charts.png</code></p>
+          <p class="text-slate-500"><strong>จุดเน้น:</strong> อัตรา Show-up Rate, สัดส่วนกลุ่มเป้าหมาย, และผลการประเมินเกรด A+</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 py-8 px-4 text-center text-xs space-y-2">
+    <div class="font-semibold text-slate-200">ระบบบริหารจัดการการอบรมบุคลากร HRD • โรงพยาบาลพิษณุเวช พิจิตร</div>
+    <div>ฝ่ายพัฒนาทรัพยากรบุคคล (Human Resource Development) • พัฒนาด้วยมาตรฐานเว็บแอปพลิเคชันยุคใหม่</div>
+  </footer>
+
+</body>
+</html>

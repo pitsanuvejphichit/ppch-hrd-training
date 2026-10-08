@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สร้างหลักสูตรอบรมใหม่ - Training System | โรงพยาบาลพิษณุเวช พิจิตร</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="modal.js"></script>
+  <script src="demo_data.js"></script>
+  <style>
+    * { font-family: 'Prompt', sans-serif; }
+
+    /* CSS Medical Cross Loader (Phitsanuvej Style) */
+    .css-logo-loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 40px;
+      transform: scale(1.6);
+      transform-origin: center;
+    }
+
+    .logo-petal {
+      position: absolute;
+      animation: loadingPulse 1.6s ease-in-out infinite;
+    }
+
+    .logo-petal.outer {
+      background: #1e5387; /* สีน้ำเงินเข้มสำหรับกลีบนอก */
+      border-radius: 6px;
+    }
+
+    .logo-petal.inner {
+      background: #5faee3; /* สีน้ำเงินอ่อนสำหรับกลีบใน */
+      border-radius: 5px;
+    }
+
+    /* ตั้งตำแหน่งแต่ละกลีบของสัญลักษณ์กากบาทแพทย์ */
+    .logo-petal.outer.top {
+      top: 0px; left: 30px; width: 20px; height: 24px;
+      animation-delay: 0s;
+    }
+    .logo-petal.inner.top-right {
+      top: 14px; right: 14px; width: 20px; height: 20px;
+      animation-delay: 0.2s;
+    }
+    .logo-petal.outer.right {
+      top: 30px; right: 0px; width: 24px; height: 20px;
+      animation-delay: 0.4s;
+    }
+    .logo-petal.inner.bottom-right {
+      bottom: 14px; right: 14px; width: 20px; height: 20px;
+      animation-delay: 0.6s;
+    }
+    .logo-petal.outer.bottom {
+      bottom: 0px; left: 30px; width: 20px; height: 24px;
+      animation-delay: 0.8s;
+    }
+    .logo-petal.inner.bottom-left {
+      bottom: 14px; left: 14px; width: 20px; height: 20px;
+      animation-delay: 1.0s;
+    }
+    .logo-petal.outer.left {
+      top: 30px; left: 0px; width: 24px; height: 20px;
+      animation-delay: 1.2s;
+    }
+    .logo-petal.inner.top-left {
+      top: 14px; left: 14px; width: 20px; height: 20px;
+      animation-delay: 1.4s;
+    }
+
+    /* เอฟเฟกต์การกะพริบไล่ระดับคลื่นแบบวนลูป */
+    @keyframes loadingPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.55;
+      }
+      50% {
+        transform: scale(1.18);
+        opacity: 1;
+      }
+    }
+
+    @keyframes loaderPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-[#0284c7] selection:text-white">
+
+  <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) -->
+  <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
+    <div class="loader-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px; text-align: center; box-shadow: 0 20px 40px rgba(0,101,101,0.08); min-width: 300px; transform: scale(0.95); animation: loaderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      
+      <!-- ตัวหมุนแอนิเมชันกากบาทแพทย์ -->
+      <div class="css-logo-loader">
+        <div class="logo-petal outer top"></div>
+        <div class="logo-petal inner top-right"></div>
+        <div class="logo-petal outer right"></div>
+        <div class="logo-petal inner bottom-right"></div>
+        <div class="logo-petal outer bottom"></div>
+        <div class="logo-petal inner bottom-left"></div>
+        <div class="logo-petal outer left"></div>
+        <div class="logo-petal inner top-left"></div>
+      </div>
+      
+      <!-- ข้อความประกอบการรอข้อมูล -->
+      <div style="margin-top: 24px; text-align: center;">
+        <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #0369a1; margin-bottom: 6px; letter-spacing: 0.5px;">
+          Training System
+        </div>
+        <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
+          โรงพยาบาลพิษณุเวช พิจิตร
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header with Brand Logo (Full Width) -->
+  <header class="bg-white border-b border-slate-200 shadow-xs w-full sticky top-0 z-40">
+    <div class="h-1 bg-gradient-to-r from-[#0a2540] via-[#0284c7] to-[#0284c7] w-full"></div>
+    <div class="w-full px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      
+      <!-- Left: Mobile Sidebar Toggle + Brand Logo & Title -->
+      <div class="flex items-center space-x-3">
+        <!-- Mobile Sidebar Hamburger Toggle -->
+        <button type="button" onclick="toggleSidebar()" class="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer" title="เปิด/ปิด เมนูด้านข้าง">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+
+        <a href="admin.html" class="flex items-center space-x-3 group">
+          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-10 sm:h-11 w-auto object-contain transition-transform group-hover:scale-[1.02]">
+          <div class="border-l border-slate-200 pl-3.5 hidden sm:block">
+            <h1 class="text-sm font-bold text-[#0369a1] tracking-tight font-display">ระบบบริหารจัดการการอบรม (HRD Admin)</h1>
+          </div>
+        </a>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <a href="admin.html" class="px-4 py-2 bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-[#0369a1] border border-slate-300 hover:border-sky-200 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs group">
+          <svg class="w-4 h-4 text-slate-500 group-hover:text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span>กลับหน้ารายการ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container: Left Sidebar + Right Workspace Area -->
+  <div class="flex-1 flex w-full relative">
+
+    <!-- Mobile Backdrop Overlay -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 hidden md:hidden"></div>
+
+    <!-- LEFT SIDEBAR -->
+    <aside id="adminSidebar" class="hidden md:flex flex-col w-64 lg:w-72 bg-slate-900 border-r border-slate-800 shrink-0 select-none shadow-xl sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto z-30 transition-all text-slate-300">
+      
+      <!-- Sidebar Brand Banner -->
+      <div class="p-4 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0284c7] to-[#0369a1] flex items-center justify-center text-white text-sm font-bold shadow-md shadow-sky-950/40">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white tracking-wide">Training System</div>
+            <div class="text-[10px] text-slate-400 font-medium">โรงพยาบาลพิษณุเวช พิจิตร</div>
+          </div>
+        </div>
+        <button type="button" onclick="toggleSidebar()" class="md:hidden p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer" title="ปิดเมนู">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex-1 p-3 space-y-4 overflow-y-auto">
+        
+        <!-- Group 1: Training System -->
+        <div>
+          <div class="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            ระบบฝึกอบรม
+          </div>
+          <div class="space-y-1">
+            <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-2 transition-all shadow-xs">
+              <div class="flex items-center justify-between text-xs font-bold text-sky-400 px-1 py-0.5">
+                <div class="flex items-center space-x-2">
+                  <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+                  <span>หลักสูตรอบรม</span>
+                </div>
+                <span class="text-[9px] font-bold px-1.5 py-0.5 bg-[#0284c7] text-white rounded-md tracking-wider shadow-2xs">ACTIVE</span>
+              </div>
+              
+              <!-- Sub Options -->
+              <div class="mt-2 pl-3 ml-2 border-l-2 border-slate-700 space-y-1">
+                <!-- Sub 1: รายการหลักสูตร -->
+                <a href="admin.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all cursor-pointer">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    <span>รายการหลักสูตร</span>
+                  </div>
+                </a>
+
+                <!-- Sub 2: สร้างหลักสูตร (Current) -->
+                <a href="admin-create.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600/30 border border-sky-400/40 shadow-xs transition-all cursor-pointer">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>สร้างหลักสูตร</span>
+                  </div>
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: Training Record -->
+        <div>
+          <div class="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            ประวัติและแดชบอร์ด
+          </div>
+          <div class="space-y-1">
+            <a href="https://script.google.com/macros/s/AKfycbz-xgUV8y_YRDo2wkxdgODsGdbnSwkrLXezFKT2a0KziRQgxkEOLcfjkmhnSNoSt_CJ9w/exec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-700/60 transition-all group cursor-pointer">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-6 h-6 rounded-lg bg-slate-800 text-emerald-400 flex items-center justify-center font-bold text-xs group-hover:bg-emerald-500/20 group-hover:text-emerald-300 transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <span>Training Record</span>
+              </div>
+              <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+
+            <!-- Sub Options under Training Record -->
+            <div class="pl-4 ml-3 border-l border-slate-800 space-y-1">
+              <a href="https://script.google.com/macros/s/AKfycbxcrwcqGzSFbk2538N-WEp34Ff3gsYIhEY-vQJ-9B8liHfZYEgwgGCH1ay8K0AQCd991Q/exec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all group cursor-pointer">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                  <span>Training Dashboard</span>
+                </div>
+                <svg class="w-3 h-3 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+
+              <a href="https://script.google.com/macros/s/AKfycbwjmLsZGN1x_3M-A0jw5JY2DmDW0SHlZ_hYQsyd89l1hHYdEOcqn7_bi5iaZl_77Sjw_Q/exec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all group cursor-pointer">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                  <span>Personal Dashboard</span>
+                </div>
+                <svg class="w-3 h-3 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="p-3 border-t border-slate-800/80 bg-slate-950/50">
+        <div class="text-[10px] text-slate-400 text-center leading-tight">
+          ฝ่ายพัฒนาทรัพยากรบุคคล (HRD)<br>
+          <span class="font-semibold text-slate-300">โรงพยาบาลพิษณุเวช พิจิตร</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT WORKSPACE AREA -->
+    <div class="flex-1 min-w-0 flex flex-col">
+  <!-- Breadcrumb Navigator Bar -->
+  <nav aria-label="Breadcrumb" class="w-full bg-white/95 border-b border-slate-200/90 px-4 sm:px-6 lg:px-8 py-2.5 text-xs select-none shadow-2xs flex items-center justify-between flex-wrap gap-2">
+    <div class="flex items-center space-x-2 flex-wrap text-xs">
+      <a href="admin.html" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] transition-colors cursor-pointer">
+        <span>หน้าหลัก</span>
+      </a>
+
+      <span class="text-slate-400 font-light">&gt;</span>
+
+      <!-- Level 2: ชื่อหลักสูตร (เฉพาะโหมดแก้ไข) -->
+      <div id="navCourseSegment" class="hidden items-center space-x-2">
+        <span id="navCourseName" class="font-bold text-slate-800 truncate max-w-[200px] sm:max-w-md">-</span>
+        <span class="text-slate-400 font-light">&gt;</span>
+      </div>
+
+      <!-- Level 3: สถานะหน้าปัจจุบัน -->
+      <span id="navCurrentAction" class="font-bold text-[#0369a1] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
+        <span id="navCurrentActionText">สร้างหลักสูตรใหม่</span>
+      </span>
+    </div>
+
+    <!-- Quick Action in Edit Mode -->
+    <div id="navEditActions" class="hidden items-center gap-2">
+      <a id="navItemTarget" href="#" class="px-3 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs">
+        <span>🎯 กำหนดกลุ่มเป้าหมาย</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content Form -->
+  <main class="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <div class="w-full bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 lg:p-10 shadow-2xs space-y-6">
+      
+      <div class="border-b border-slate-100 pb-4">
+        <h2 class="text-lg font-bold text-slate-900 tracking-tight font-display">สร้างหลักสูตรอบรม</h2>
+      </div>
+
+      <form id="createForm" onsubmit="handleSaveCourse(event)" class="space-y-6 w-full">
+        
+        <!-- Section 1: General Info -->
+        <div class="space-y-4">
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-2 border-b border-slate-100 pb-2">
+            <span>1. ข้อมูลทั่วไป</span>
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Course ID -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                รหัสหลักสูตร <span class="text-rose-500">*</span>
+              </label>
+              <div class="flex items-center space-x-2">
+                <input 
+                  type="text" 
+                  id="fCourseId" 
+                  placeholder="เช่น c-2026-x7k9" 
+                  class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-bold text-[#0369a1] focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs"
+                  required
+                >
+                <button 
+                  type="button" 
+                  id="btnRegenerateId" 
+                  onclick="regenerateCourseId()" 
+                  title="สุ่มรหัสหลักสูตรใหม่"
+                  class="shrink-0 px-3 py-2.5 bg-sky-50/70 hover:bg-sky-100/70 active:scale-95 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs group"
+                >
+                  <svg class="w-4 h-4 text-[#0369a1] group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                  </svg>
+                  <span>สุ่มรหัส</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Speaker -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                วิทยากร <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="fCourseSpeaker" 
+                placeholder="เช่น นพ.สมชาย หรือ ทีมผู้เชี่ยวชาญ" 
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs"
+                required
+              >
+            </div>
+
+            <!-- Course Title -->
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                ชื่อหลักสูตร <span class="text-rose-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="fCourseTitle" 
+                placeholder="ระบุชื่อหลักสูตรอบรม" 
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs"
+                required
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Course Type -->
+        <div class="space-y-4">
+          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-2 border-b border-slate-100 pb-2">
+            <span>2. ประเภทหลักสูตร</span>
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+            <!-- Type Group 1: Plan -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-700">
+                แผนการฝึกอบรม <span class="text-rose-500">*</span>
+              </label>
+              <div class="flex items-center space-x-6 pt-0.5">
+                <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                  <input type="radio" name="planType" value="ในแผน" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]" checked>
+                  <span>ในแผน</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                  <input type="radio" name="planType" value="นอกแผน" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                  <span>นอกแผน</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Type Group 2: Category -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-700">
+                หมวดหมู่ <span class="text-rose-500">*</span>
+              </label>
+              <div class="grid grid-cols-2 gap-2 pt-0.5">
+                <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                  <input type="radio" name="courseCategory" value="Mandatory Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]" checked>
+                  <span>Mandatory</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                  <input type="radio" name="courseCategory" value="Managerial Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                  <span>Managerial</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                  <input type="radio" name="courseCategory" value="Functional Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                  <span>Functional</span>
+                </label>
+                <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                  <input type="radio" name="courseCategory" value="Quality Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                  <span>Quality</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Batches & Quota -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              3. รุ่นการอบรม
+            </h3>
+            <button type="button" onclick="addBatchRow()" class="px-3 py-1 bg-sky-50/70 hover:bg-sky-100/70 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer">
+              <span>+ เพิ่มรุ่น</span>
+            </button>
+          </div>
+
+          <div id="batchRowsContainer" class="space-y-3">
+            <!-- Row 1: Default 1 Batch -->
+            <div class="batch-row bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
+              <div class="lg:col-span-3">
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">ชื่อรุ่น</label>
+                <input type="text" class="batch-name w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-semibold" value="รุ่นที่ 1" required>
+              </div>
+
+              <div class="lg:col-span-4">
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">วันที่ <span class="text-rose-500">*</span></label>
+                <input type="date" class="batch-date w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white" required>
+              </div>
+
+              <div class="lg:col-span-3">
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">เวลา <span class="text-rose-500">*</span></label>
+                <div class="flex items-center space-x-1">
+                  <input type="text" maxlength="5" placeholder="09:00" oninput="formatTimeInput(this)" class="batch-time-start w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="09:00" required>
+                  <span class="text-xs text-slate-400">-</span>
+                  <input type="text" maxlength="5" placeholder="12:00" oninput="formatTimeInput(this)" class="batch-time-end w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="12:00" required>
+                  <span class="text-xs text-slate-500">น.</span>
+                </div>
+              </div>
+
+              <div class="lg:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">โควตาที่นั่ง</label>
+                <div class="flex items-center space-x-2">
+                  <input type="number" class="batch-quota w-20 px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-mono font-bold" value="40" required>
+                  <span class="text-xs text-slate-400">ที่นั่ง</span>
+                  <button type="button" onclick="removeBatchRow(this)" class="text-slate-400 hover:text-rose-500 text-sm ml-auto cursor-pointer" title="ลบรุ่นนี้">✖</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Sub-topics -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              4. หัวข้อย่อยในหลักสูตร
+            </h3>
+            <label class="flex items-center space-x-2 text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 hover:bg-sky-50 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors">
+              <input type="checkbox" id="fEnableTopics" onchange="toggleTopicsSection(this.checked)" class="w-4 h-4 text-[#0284c7] rounded">
+              <span>เปิดใช้งานหัวข้อย่อย</span>
+            </label>
+          </div>
+
+          <div id="topicsSectionBody" class="hidden space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+            <!-- Topic Mode Option -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-700">
+                รูปแบบการเข้าอบรม:
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium cursor-pointer p-3 rounded-xl border border-slate-200 bg-white hover:border-[#0284c7] transition-colors">
+                  <input type="radio" name="topicMode" value="all" checked class="w-4 h-4 text-[#0284c7]">
+                  <strong class="text-slate-900">เข้าครบทุกหัวข้อ (เวียนฐาน)</strong>
+                </label>
+                <label class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium cursor-pointer p-3 rounded-xl border border-slate-200 bg-white hover:border-[#0284c7] transition-colors">
+                  <input type="radio" name="topicMode" value="selective" class="w-4 h-4 text-[#0284c7]">
+                  <strong class="text-slate-900">เลือกหัวข้อได้</strong>
+                </label>
+              </div>
+            </div>
+
+            <!-- Topic Rows Container -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-bold text-slate-700">
+                  รายการหัวข้อ:
+                </label>
+                <button type="button" onclick="addTopicRow()" class="px-3 py-1 bg-white hover:bg-sky-50 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-2xs">
+                  <span>+ เพิ่มหัวข้อ</span>
+                </button>
+              </div>
+
+              <div id="topicRowsContainer" class="space-y-2.5">
+                <!-- Dynamically populated topic rows -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Bar -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+          <a href="admin.html" class="px-5 py-2.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer">
+            ยกเลิก
+          </a>
+
+          <button 
+            type="submit" 
+            id="btnSaveCourse" 
+            class="px-8 py-3 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-md shadow-[#0284c7]/20 transition-all flex items-center space-x-2 cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            <span>บันทึกหลักสูตร</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </main>
+    </div>
+  </div>
+
+  <!-- SUCCESS / QR MODAL DIALOG (IDENTICAL TO ADMIN QR MODAL) -->
+  <div id="successModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-150">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
+        <h3 class="text-sm font-bold text-slate-800 truncate max-w-[280px]" id="succCourseTitle">ชื่อหลักสูตร</h3>
+        <button type="button" onclick="closeSuccessModal()" class="text-slate-400 hover:text-slate-600 text-base cursor-pointer">✖</button>
+      </div>
+
+      <!-- QR Tab Switcher (3 Tabs) -->
+      <div class="grid grid-cols-3 p-1 bg-slate-100 rounded-xl text-xs font-semibold gap-1">
+        <button type="button" id="tabQrRegBtn" onclick="switchSuccessQr('reg')" class="py-1.5 px-1.5 rounded-lg bg-white text-[#0369a1] shadow-2xs transition-all cursor-pointer truncate font-bold">
+          📋 ลงทะเบียนจอง
+        </button>
+        <button type="button" id="tabQrEvalBtn" onclick="switchSuccessQr('eval')" class="py-1.5 px-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer truncate font-medium">
+          ⭐ แบบประเมิน
+        </button>
+        <button type="button" id="tabQrCheckinBtn" onclick="switchSuccessQr('checkin')" class="py-1.5 px-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer truncate font-medium">
+          📍 เช็คชื่อเข้าอบรม
+        </button>
+      </div>
+
+      <div class="flex flex-col items-center justify-center p-4 bg-sky-50/40 border border-sky-100 rounded-2xl">
+        <div id="succQrcodeContainer" class="p-2 bg-white rounded-xl shadow-2xs"></div>
+        <span id="succQrLabel" class="text-[11px] font-bold text-[#0369a1] mt-2.5">สแกนเพื่อเปิดหน้าลงทะเบียนจองที่นั่ง</span>
+      </div>
+
+      <p class="text-xs text-slate-500 break-all font-mono text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-200/70" id="succModalLink"></p>
+
+      <div class="flex space-x-2 pt-1">
+        <button type="button" onclick="copySuccModalLink()" class="flex-1 py-2.5 bg-sky-50 hover:bg-sky-100 active:scale-95 text-[#0369a1] border border-sky-200 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-2xs flex items-center justify-center gap-1.5">
+          <span>📋</span>
+          <span>คัดลอกลิงก์</span>
+        </button>
+        <button type="button" onclick="openCurrentSuccQrUrl()" class="flex-1 py-2.5 bg-[#0369a1] hover:bg-[#0a2540] active:scale-95 text-white font-bold rounded-xl text-xs transition-all cursor-pointer shadow-xs flex items-center justify-center gap-1.5">
+          <span>🔗</span>
+          <span>เปิดหน้าเว็บ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAVE PROGRESS MODAL (RESPONSIVE LIVE STEP PROGRESS) -->
+  <div id="saveProgressModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-5 animate-in fade-in zoom-in duration-200">
+      
+      <!-- Top Icon / Animation -->
+      <div id="saveModalIcon" class="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 text-[#0369a1] flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
+        <svg class="w-8 h-8 animate-spin text-[#0284c7]" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+      </div>
+
+      <!-- Title & Target Info -->
+      <div class="space-y-1">
+        <h3 id="saveModalTitle" class="text-lg font-bold text-slate-900 tracking-tight font-display">กำลังบันทึกการแก้ไขหลักสูตร</h3>
+        <p id="saveModalSubtitle" class="text-xs text-slate-500 font-medium truncate px-4">-</p>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="space-y-1.5 text-left">
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+          <span id="saveProgressLabel">กำลังประมวลผล...</span>
+          <span id="saveProgressPercent" class="font-mono text-[#0369a1]">35%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div id="saveProgressBar" class="bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-emerald-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 35%;"></div>
+        </div>
+      </div>
+
+      <!-- Steps Checklist -->
+      <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left space-y-2.5 text-xs">
+        <div id="saveStep1" class="flex items-center space-x-2.5 text-slate-600">
+          <span class="step-icon w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-bold">✓</span>
+          <span class="step-text font-medium">บันทึกข้อมูลและจัดเก็บลงแคชเครื่อง (Instant)</span>
+        </div>
+        <div id="saveStep2" class="flex items-center space-x-2.5 text-slate-600">
+          <span class="step-icon w-5 h-5 rounded-full bg-sky-100 text-[#0369a1] flex items-center justify-center text-[10px] font-bold animate-pulse">⏳</span>
+          <span class="step-text font-medium">อัปเดตข้อมูลลงคลังทะเบียนกลาง Google Sheet</span>
+        </div>
+        <div id="saveStep3" class="flex items-center space-x-2.5 text-slate-400">
+          <span class="step-icon w-5 h-5 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-[10px] font-bold">⚪</span>
+          <span class="step-text">ตรวจสอบและเตรียมความพร้อมรุ่นการอบรม</span>
+        </div>
+      </div>
+
+      <!-- Live Timer Counter -->
+      <div class="pt-1 flex items-center justify-center space-x-2 text-[11px] text-slate-400">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        <span id="saveElapsedTimer" class="font-mono">กำลังดำเนินการ... 0.0s</span>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-400 mt-auto w-full">
+    <div class="w-full px-6 lg:px-12 text-center">
+      © โรงพยาบาลพิษณุเวช พิจิตร • ระบบบริหารจัดการการอบรมบุคลากร HRD Admin
+    </div>
+  </footer>
+
+  <script>
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwyROi0_EfFm21mVZUAqZ08rrkc11vISYzcBJFDaGh1vCB3P2Tum8ZtgZv2MJZjTY4g/exec';
+    let coursesData = [];
+
+    // --- Save Progress Modal Helpers ---
+    let saveTimerInterval = null;
+    let saveStartTime = 0;
+
+    function openSaveProgressModal(opts) {
+      const modal = document.getElementById('saveProgressModal');
+      if (!modal) return;
+
+      const t = document.getElementById('saveModalTitle');
+      const s = document.getElementById('saveModalSubtitle');
+      const icon = document.getElementById('saveModalIcon');
+      if (t) t.textContent = opts.title || 'กำลังบันทึกข้อมูล';
+      if (s) s.textContent = opts.courseTitle ? `หลักสูตร: ${opts.courseTitle}` : '-';
+
+      if (icon) {
+        icon.className = 'w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 text-[#0369a1] flex items-center justify-center mx-auto text-2xl font-bold shadow-inner';
+        icon.innerHTML = `<svg class="w-8 h-8 animate-spin text-[#0284c7]" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>`;
+      }
+
+      setSaveProgressStep(1, 'active');
+      setSaveProgressStep(2, 'pending');
+      setSaveProgressStep(3, 'pending');
+      setSaveProgressPercent(20, 'กำลังเริ่มต้นประมวลผล...');
+
+      saveStartTime = Date.now();
+      const timerEl = document.getElementById('saveElapsedTimer');
+      if (timerEl) timerEl.textContent = 'กำลังดำเนินการ... 0.0s';
+
+      if (saveTimerInterval) clearInterval(saveTimerInterval);
+      saveTimerInterval = setInterval(() => {
+        const sec = ((Date.now() - saveStartTime) / 1000).toFixed(1);
+        if (timerEl) timerEl.textContent = `กำลังดำเนินการ... ${sec}s`;
+      }, 100);
+
+      modal.classList.remove('hidden');
+    }
+
+    function setSaveProgressStep(stepNum, status) {
+      const el = document.getElementById(`saveStep${stepNum}`);
+      if (!el) return;
+      const icon = el.querySelector('.step-icon');
+
+      if (status === 'done') {
+        el.className = 'flex items-center space-x-2.5 text-emerald-700 font-semibold';
+        if (icon) {
+          icon.className = 'step-icon w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-bold shadow-2xs';
+          icon.innerHTML = '✓';
+        }
+      } else if (status === 'active') {
+        el.className = 'flex items-center space-x-2.5 text-[#0369a1] font-semibold';
+        if (icon) {
+          icon.className = 'step-icon w-5 h-5 rounded-full bg-sky-100 text-[#0369a1] flex items-center justify-center text-[10px] font-bold animate-pulse shadow-2xs';
+          icon.innerHTML = '⏳';
+        }
+      } else {
+        el.className = 'flex items-center space-x-2.5 text-slate-400 font-normal';
+        if (icon) {
+          icon.className = 'step-icon w-5 h-5 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-[10px] font-bold';
+          icon.innerHTML = '⚪';
+        }
+      }
+    }
+
+    function setSaveProgressPercent(pct, label) {
+      const bar = document.getElementById('saveProgressBar');
+      const pctEl = document.getElementById('saveProgressPercent');
+      const lblEl = document.getElementById('saveProgressLabel');
+      if (bar) bar.style.width = `${pct}%`;
+      if (pctEl) pctEl.textContent = `${pct}%`;
+      if (lblEl && label) lblEl.textContent = label;
+    }
+
+    function closeSaveProgressModal() {
+      if (saveTimerInterval) {
+        clearInterval(saveTimerInterval);
+        saveTimerInterval = null;
+      }
+      const modal = document.getElementById('saveProgressModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function hideLoader() {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        setTimeout(() => { loader.style.display = 'none'; }, 350);
+      }
+    }
+
+    function showLoader(title, subtitle) {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        const t = document.getElementById('loaderTitle');
+        const s = document.getElementById('loaderSubtitle');
+        if (t) t.textContent = title || 'ระบบสร้างหลักสูตรอบรม';
+        if (s) s.textContent = subtitle || 'โรงพยาบาลพิษณุเวช พิจิตร';
+
+        // Re-create petals to guarantee animation runs fresh on all browsers
+        const loaderBox = loader.querySelector('.css-logo-loader');
+        if (loaderBox) {
+          loaderBox.innerHTML = 
+            '<div class="logo-petal outer top"></div>' +
+            '<div class="logo-petal inner top-right"></div>' +
+            '<div class="logo-petal outer right"></div>' +
+            '<div class="logo-petal inner bottom-right"></div>' +
+            '<div class="logo-petal outer bottom"></div>' +
+            '<div class="logo-petal inner bottom-left"></div>' +
+            '<div class="logo-petal outer left"></div>' +
+            '<div class="logo-petal inner top-left"></div>';
+        }
+
+        const card = loader.querySelector('.loader-card');
+        if (card) {
+          card.style.animation = 'none';
+          void card.offsetWidth;
+          card.style.animation = 'loaderPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+        }
+
+        loader.style.display = 'flex';
+        loader.style.visibility = 'visible';
+        loader.style.opacity = '1';
+      }
+    }
+
+    let isEditMode = false;
+    let editingCourse = null;
+
+    async function initPageMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const editId = urlParams.get('edit') || urlParams.get('course');
+
+      coursesData = [];
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      if (editId) {
+        // 1. Fast local cache lookup first (instant rendering without frozen loader!)
+        try {
+          const cachedSingle = localStorage.getItem('hrd_course_' + editId);
+          if (cachedSingle) {
+            editingCourse = JSON.parse(cachedSingle);
+          }
+          if (!editingCourse) {
+            const cachedList = localStorage.getItem('hrd_courses_list') || localStorage.getItem('hrd_all_courses');
+            if (cachedList) {
+              const parsed = JSON.parse(cachedList);
+              if (Array.isArray(parsed)) {
+                coursesData = parsed;
+                editingCourse = coursesData.find(c => c && String(c.id).toLowerCase() === String(editId).toLowerCase());
+              }
+            }
+          }
+          let staticCatalog = [];
+          try {
+            const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json()).catch(() => null);
+            if (Array.isArray(resStatic)) staticCatalog = resStatic;
+          } catch(e) {}
+
+          const staticMatch = staticCatalog.find(c => c && String(c.id).toLowerCase() === String(editId).toLowerCase());
+          if (editingCourse) {
+            if (staticMatch && staticMatch.hasSubTopics && (!editingCourse.hasSubTopics || !editingCourse.topics || editingCourse.topics.length === 0)) {
+              editingCourse.hasSubTopics = staticMatch.hasSubTopics;
+              editingCourse.topicMode = staticMatch.topicMode || 'all';
+              editingCourse.topics = staticMatch.topics || [];
+            }
+          } else if (staticMatch) {
+            editingCourse = staticMatch;
+          }
+        } catch(e) {}
+
+        if (editingCourse) {
+          setupEditMode(editingCourse);
+          hideLoader();
+        } else {
+          showLoader('กำลังโหลดข้อมูลหลักสูตร...', 'กำลังดึงข้อมูลสดจากระบบกลาง');
+        }
+
+        // 2. Fetch fresh course in parallel (25-second timeout, graceful non-blocking update)
+        if (gasUrl) {
+          try {
+            const controller = new AbortController();
+            const timerId = setTimeout(() => controller.abort(), 25000);
+            const singleResp = await fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(editId), { signal: controller.signal });
+            clearTimeout(timerId);
+            const singleData = await singleResp.json();
+            if (singleData && singleData.success && singleData.course) {
+              const freshCourse = singleData.course;
+              if (editingCourse && editingCourse.hasSubTopics && (!freshCourse.hasSubTopics || !freshCourse.topics || freshCourse.topics.length === 0)) {
+                freshCourse.hasSubTopics = editingCourse.hasSubTopics;
+                freshCourse.topicMode = editingCourse.topicMode;
+                freshCourse.topics = editingCourse.topics;
+              }
+              editingCourse = freshCourse;
+              localStorage.setItem('hrd_course_' + editId, JSON.stringify(editingCourse));
+              setupEditMode(editingCourse);
+            }
+          } catch(e2) {}
+
+          if (!editingCourse) {
+            try {
+              const controller = new AbortController();
+              const timerId = setTimeout(() => controller.abort(), 25000);
+              const resp = await fetch(gasUrl + '?action=getAllCourses', { signal: controller.signal });
+              clearTimeout(timerId);
+              const data = await resp.json();
+              const rawList = Array.isArray(data) ? data : (data && Array.isArray(data.courses) ? data.courses : []);
+              if (rawList.length > 0) {
+                coursesData = rawList;
+                editingCourse = coursesData.find(c => c && String(c.id).toLowerCase() === String(editId).toLowerCase());
+                if (editingCourse) {
+                  localStorage.setItem('hrd_course_' + editId, JSON.stringify(editingCourse));
+                  setupEditMode(editingCourse);
+                }
+              }
+            } catch(e) {}
+          }
+        }
+        hideLoader();
+
+        if (editingCourse) {
+          setupEditMode(editingCourse);
+        } else {
+          await HrdModal.error('ไม่พบข้อมูลหลักสูตรที่ต้องการแก้ไขค่ะ', 'ไม่พบหลักสูตร');
+          window.location.href = 'admin.html';
+        }
+      }
+
+      if (!isEditMode) {
+        // Setup Create Mode defaults
+        regenerateCourseId();
+      }
+
+      setTimeout(hideLoader, 200);
+    }
+
+    function setupEditMode(c) {
+      isEditMode = true;
+      document.title = 'แก้ไขรายละเอียดหลักสูตร | รพ.พิษณุเวช พิจิตร';
+
+      // 1. Update Breadcrumbs (หน้าหลัก > [ชื่อหลักสูตร] > แก้ไขรายละเอียดหลักสูตร)
+      const navCourseSeg = document.getElementById('navCourseSegment');
+      if (navCourseSeg) {
+        navCourseSeg.classList.remove('hidden');
+        navCourseSeg.classList.add('flex');
+      }
+      const navCourse = document.getElementById('navCourseName');
+      if (navCourse) navCourse.textContent = c.title || c.id;
+
+      const navAction = document.getElementById('navCurrentActionText');
+      if (navAction) navAction.textContent = 'แก้ไขหลักสูตร';
+      const navIcon = document.querySelector('#navCurrentAction span:first-child');
+      if (navIcon) navIcon.textContent = '✏️';
+
+      const navEditActions = document.getElementById('navEditActions');
+      if (navEditActions) {
+        navEditActions.classList.remove('hidden');
+        navEditActions.classList.add('flex');
+      }
+
+      const navTarget = document.getElementById('navItemTarget');
+      if (navTarget) navTarget.href = 'admin-target.html?course=' + encodeURIComponent(c.id);
+
+      const navReg = document.getElementById('navItemReg');
+      if (navReg) navReg.href = '/?course=' + encodeURIComponent(c.id);
+
+      const navSheet = document.getElementById('navItemSheet');
+      if (navSheet) {
+        navSheet.href = c.sheetUrl || ('https://docs.google.com/spreadsheets/d/1b-DkQsgUN11RJ__ydmAp8kI19xPIurRvQAcSy8SEhbw/copy?title=' + encodeURIComponent(c.title));
+      }
+
+      // 2. Update Page Headings
+      const topTitle = document.querySelector('header h1');
+      if (topTitle) topTitle.textContent = 'แก้ไขหลักสูตร';
+
+      const formTitle = document.querySelector('main h2');
+      if (formTitle) formTitle.textContent = 'แก้ไขหลักสูตร';
+
+      const formSub = formTitle ? formTitle.nextElementSibling : null;
+      if (formSub && formSub.tagName === 'P') formSub.remove();
+
+      const btnSave = document.getElementById('btnSaveCourse');
+      if (btnSave) {
+        btnSave.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg><span>บันทึกการแก้ไข</span>';
+      }
+
+      // 3. Pre-fill Course ID (Read-only)
+      const inputId = document.getElementById('fCourseId');
+      if (inputId) {
+        inputId.value = c.id;
+        inputId.readOnly = true;
+        inputId.classList.add('bg-slate-100', 'text-slate-500', 'cursor-not-allowed');
+      }
+
+      // Hide regenerate button in edit mode
+      const btnRegen = inputId ? inputId.nextElementSibling : null;
+      if (btnRegen && btnRegen.tagName === 'BUTTON') {
+        btnRegen.style.display = 'none';
+      }
+
+      // 4. Pre-fill Form Fields
+      const inputTitle = document.getElementById('fCourseTitle');
+      if (inputTitle) inputTitle.value = c.title || '';
+
+      const inputSpeaker = document.getElementById('fCourseSpeaker');
+      if (inputSpeaker) inputSpeaker.value = c.speaker || '';
+
+      // Plan Type Radio
+      if (c.planType) {
+        const radPlan = document.querySelector(`input[name="planType"][value="${c.planType}"]`);
+        if (radPlan) radPlan.checked = true;
+      }
+
+      // Course Category Radio
+      if (c.category) {
+        const radCat = document.querySelector(`input[name="courseCategory"][value="${c.category}"]`);
+        if (radCat) radCat.checked = true;
+      }
+
+      // 5. Pre-fill Batches & Quota
+      const container = document.getElementById('batchRowsContainer');
+      if (container && Array.isArray(c.batches) && c.batches.length > 0) {
+        container.innerHTML = '';
+        const quotaMap = c.quota || {};
+
+        c.batches.forEach((bStr, idx) => {
+          let bName = 'รุ่นที่ ' + (idx + 1);
+          let bDate = '';
+          let bStart = '09:00';
+          let bEnd = '12:00';
+          let bQuota = quotaMap[bStr] || 40;
+
+          if (c.batchDetails && c.batchDetails[idx]) {
+            const bd = c.batchDetails[idx];
+            bName = bd.name || bName;
+            bDate = bd.dateIso || thaiDateToIso(bd.thaiDate) || '';
+            bQuota = bd.quota || bQuota;
+            if (bd.timeRange) {
+              const parts = bd.timeRange.replace(/น.$/, '').trim().split('-');
+              if (parts.length === 2) {
+                bStart = parts[0].trim();
+                bEnd = parts[1].trim();
+              }
+            }
+          } else {
+            const parenMatch = bStr.match(/^(.*?)\s*\((.*?)\)$/);
+            if (parenMatch) {
+              bName = parenMatch[1].trim();
+              const inside = parenMatch[2].trim();
+              if (inside.includes('เวลา')) {
+                const spl = inside.split('เวลา');
+                const dPart = spl[0].trim();
+                const tPart = spl.slice(1).join('เวลา').trim().replace(/น.$/, '').trim();
+                if (dPart) bDate = thaiDateToIso(dPart) || '';
+                if (tPart.includes('-')) {
+                  const times = tPart.split('-');
+                  bStart = times[0].trim();
+                  bEnd = times[1].trim();
+                }
+              } else if (/\d{1,2}[:.]\d{2}/.test(inside)) {
+                // inside only contains time
+              } else {
+                bDate = thaiDateToIso(inside) || '';
+              }
+            } else {
+              bName = bStr;
+            }
+          }
+
+          if (!bDate && c.date) {
+            bDate = thaiDateToIso(c.date) || '';
+          }
+          if (!bDate) {
+            const defD = new Date();
+            defD.setDate(defD.getDate() + 7);
+            bDate = defD.toISOString().split('T')[0];
+          }
+
+          addBatchRowWithData(bName, bDate, bStart, bEnd, bQuota);
+        });
+      }
+
+      // 6. Pre-fill Topics (if exists)
+      const enableTopicsEl = document.getElementById('fEnableTopics');
+      const topicRowsCont = document.getElementById('topicRowsContainer');
+      if (topicRowsCont) topicRowsCont.innerHTML = '';
+
+      if (c.hasSubTopics && Array.isArray(c.topics) && c.topics.length > 0) {
+        if (enableTopicsEl) {
+          enableTopicsEl.checked = true;
+          toggleTopicsSection(true);
+        }
+        if (c.topicMode) {
+          const radMode = document.querySelector(`input[name="topicMode"][value="${c.topicMode}"]`);
+          if (radMode) radMode.checked = true;
+        }
+        c.topics.forEach(t => {
+          addTopicRow(t.title || '', t.speaker || '', t.date || '', t.time || '');
+        });
+      } else {
+        if (enableTopicsEl) {
+          enableTopicsEl.checked = false;
+          toggleTopicsSection(false);
+        }
+      }
+    }
+
+    // --------------------------------------------------
+    // Date Helpers: Thai Date Formatter & ISO Converter
+    // --------------------------------------------------
+    function formatThaiDate(dStr) {
+      if (!dStr) return '';
+      var str = dStr.toString().trim();
+      if (!str) return '';
+
+      var thaiMonthsFull = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+      // Check if already contains Thai month name
+      for (var k = 1; k <= 12; k++) {
+        if (str.indexOf(thaiMonthsFull[k]) !== -1) {
+          return str;
+        }
+      }
+
+      // Check YYYY-MM-DD
+      var mIso = str.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+      if (mIso) {
+        var y = parseInt(mIso[1], 10);
+        if (y < 2400) y += 543;
+        var m = parseInt(mIso[2], 10);
+        var d = parseInt(mIso[3], 10);
+        return d + ' ' + (thaiMonthsFull[m] || m) + ' ' + y;
+      }
+
+      // Check DD-MM-YYYY or DD/MM/YYYY
+      var mDd = str.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+      if (mDd) {
+        var d = parseInt(mDd[1], 10);
+        var m = parseInt(mDd[2], 10);
+        var y = parseInt(mDd[3], 10);
+        if (y < 2400) y += 543;
+        return d + ' ' + (thaiMonthsFull[m] || m) + ' ' + y;
+      }
+
+      return str;
+    }
+
+    function thaiDateToIso(dStr) {
+      if (!dStr) return '';
+      var str = dStr.toString().trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+
+      var thaiMonthsMap = {
+        "มกราคม": "01", "ม.ค.": "01", "มกรา": "01",
+        "กุมภาพันธ์": "02", "ก.พ.": "02", "กุมภา": "02",
+        "มีนาคม": "03", "มี.ค.": "03", "มีนา": "03",
+        "เมษายน": "04", "เม.ย.": "04", "เมษา": "04",
+        "พฤษภาคม": "05", "พ.ค.": "05", "พฤษภา": "05",
+        "มิถุนายน": "06", "มิ.ย.": "06", "มิถุนา": "06",
+        "กรกฎาคม": "07", "ก.ค.": "07", "กรกฎา": "07",
+        "สิงหาคม": "08", "ส.ค.": "08", "สิงหา": "08",
+        "กันยายน": "09", "ก.ย.": "09", "กันยา": "09",
+        "ตุลาคม": "10", "ต.ค.": "10", "ตุลา": "10",
+        "พฤศจิกายน": "11", "พ.ย.": "11", "พฤศจิกา": "11",
+        "ธันวาคม": "12", "ธ.ค.": "12", "ธันวา": "12"
+      };
+
+      var match = str.match(/(\d{1,2})\s+([^\s\d]+)\s+(\d{4})/);
+      if (match) {
+        var day = match[1].padStart(2, '0');
+        var monthName = match[2];
+        var year = parseInt(match[3], 10);
+        if (year > 2400) year -= 543;
+        var month = thaiMonthsMap[monthName];
+        if (!month) {
+          for (var key in thaiMonthsMap) {
+            if (monthName.indexOf(key) !== -1) {
+              month = thaiMonthsMap[key];
+              break;
+            }
+          }
+        }
+        if (month) {
+          return year + '-' + month + '-' + day;
+        }
+      }
+      return '';
+    }
+
+    function addBatchRowWithData(name, date, start, end, quota) {
+      const container = document.getElementById('batchRowsContainer');
+      if (!container) return;
+      const count = container.querySelectorAll('.batch-row').length + 1;
+
+      var div = document.createElement('div');
+      div.className = 'batch-row bg-[#f8fafc] p-4 rounded-2xl border border-slate-200 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center';
+      div.innerHTML = 
+        '<div class="lg:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">ชื่อรุ่น</label>' +
+          '<input type="text" class="batch-name w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-semibold" value="' + escapeHtml(name || ('รุ่นที่ ' + count)) + '" required>' +
+        '</div>' +
+        '<div class="lg:col-span-4">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">วันที่อบรม / สัมมนา (Date) <span class="text-rose-500">*</span></label>' +
+          '<input type="date" class="batch-date w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white" value="' + (date || '') + '" required>' +
+        '</div>' +
+        '<div class="lg:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">เวลา (Time) <span class="text-rose-500">*</span></label>' +
+          '<div class="flex items-center space-x-1">' +
+            '<input type="text" maxlength="5" placeholder="09:00" oninput="formatTimeInput(this)" class="batch-time-start w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (start || '09:00') + '" required>' +
+            '<span class="text-xs text-slate-400">-</span>' +
+            '<input type="text" maxlength="5" placeholder="12:00" oninput="formatTimeInput(this)" class="batch-time-end w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (end || '12:00') + '" required>' +
+            '<span class="text-xs text-slate-500">น.</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="lg:col-span-2">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">โควตาที่นั่ง</label>' +
+          '<div class="flex items-center space-x-2">' +
+            '<input type="number" class="batch-quota w-20 px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-mono font-bold" value="' + (quota || 40) + '" required>' +
+            '<span class="text-xs text-slate-400">ที่นั่ง</span>' +
+            '<button type="button" onclick="removeBatchRow(this)" class="text-slate-400 hover:text-rose-500 text-sm ml-auto cursor-pointer" title="ลบรุ่นนี้">✖</button>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(div);
+    }
+
+    window.addEventListener('load', initPageMode);
+
+    // HTML string sanitizer helper
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // ==========================================
+    // Course ID Generation & Thai Sanitization Guard
+    // ==========================================
+    const COURSE_ID_CHARSET = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let lastGeneratedCourseId = '';
+
+    function generateCourseId(existingCourses = coursesData) {
+      const year = new Date().getFullYear();
+      const existingIdSet = new Set(
+        (Array.isArray(existingCourses) ? existingCourses : [])
+          .map(c => (c && c.id ? String(c.id).toLowerCase() : ''))
+      );
+
+      let candidateId = '';
+      let attempts = 0;
+      const maxAttempts = 50;
+
+      do {
+        let randToken = '';
+        for (let i = 0; i < 4; i++) {
+          const randIdx = Math.floor(Math.random() * COURSE_ID_CHARSET.length);
+          randToken += COURSE_ID_CHARSET.charAt(randIdx);
+        }
+        candidateId = `c-${year}-${randToken}`;
+        attempts++;
+      } while (existingIdSet.has(candidateId) && attempts < maxAttempts);
+
+      return candidateId;
+    }
+
+    function regenerateCourseId() {
+      const inputEl = document.getElementById('fCourseId');
+      if (!inputEl) return;
+
+      lastGeneratedCourseId = generateCourseId(coursesData);
+      inputEl.value = lastGeneratedCourseId;
+
+      inputEl.classList.remove('ring-2', 'ring-emerald-400');
+      void inputEl.offsetWidth;
+      inputEl.classList.add('ring-2', 'ring-emerald-400');
+      setTimeout(() => {
+        inputEl.classList.remove('ring-2', 'ring-emerald-400');
+      }, 500);
+
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function sanitizeCourseSlug(rawInput, existingCourses = coursesData) {
+      if (!rawInput || typeof rawInput !== 'string') {
+        return lastGeneratedCourseId || generateCourseId(existingCourses);
+      }
+
+      let clean = rawInput.trim().toLowerCase();
+      clean = clean.replace(/[^a-z0-9_-]+/g, '-');
+      clean = clean.replace(/[-_]+/g, '-');
+      clean = clean.replace(/^-+|-+$/g, '');
+
+      // Guard: If empty, dash-only, or contains NO alphanumeric character, fallback to generated ID
+      if (!clean || !/[a-z0-9]/.test(clean)) {
+        return lastGeneratedCourseId || generateCourseId(existingCourses);
+      }
+
+      return clean;
+    }
+
+    function sanitizeCourseId(val, fallbackId) {
+      return sanitizeCourseSlug(val, coursesData);
+    }
+
+    function attachCourseIdSanitizer() {
+      const inputEl = document.getElementById('fCourseId');
+      if (!inputEl) return;
+
+      inputEl.addEventListener('blur', function() {
+        const sanitizedVal = sanitizeCourseSlug(this.value, coursesData);
+        this.value = sanitizedVal;
+      });
+    }
+
+    // Initialize course date & ID
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set default date for batch to 7 days in future
+      const today = new Date();
+      today.setDate(today.getDate() + 7);
+      const defaultDate = today.toISOString().split('T')[0];
+      // Auto-generate Course ID & Attach Sanitizer
+      const inputCourseId = document.getElementById('fCourseId');
+      if (inputCourseId && !inputCourseId.value.trim()) {
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        if (gasUrl) {
+          fetch(gasUrl + '?action=getAllCourses')
+            .then(r => r.json())
+            .then(res => {
+              const list = (res && Array.isArray(res.courses)) ? res.courses : [];
+              coursesData = list.filter(function(c) {
+                return c.id !== 'cpr-2026' && c.id !== 'fire-safety-2026' && c.id !== 'bls-2026';
+              });
+              lastGeneratedCourseId = generateCourseId(coursesData);
+              if (inputCourseId && !inputCourseId.value.trim()) {
+                inputCourseId.value = lastGeneratedCourseId;
+              }
+            })
+            .catch(() => {
+              lastGeneratedCourseId = generateCourseId([]);
+              if (inputCourseId && !inputCourseId.value.trim()) {
+                inputCourseId.value = lastGeneratedCourseId;
+              }
+            });
+        } else {
+          lastGeneratedCourseId = generateCourseId([]);
+          inputCourseId.value = lastGeneratedCourseId;
+        }
+      }
+      attachCourseIdSanitizer();
+    });
+
+    function formatTimeInput(input) {
+      var v = input.value.replace(/[^0-9]/g, '');
+      if (v.length > 2) {
+        v = v.substring(0, 2) + ':' + v.substring(2, 4);
+      }
+      input.value = v;
+    }
+
+    function addBatchRow() {
+      var container = document.getElementById('batchRowsContainer');
+      var count = container ? container.querySelectorAll('.batch-row').length + 1 : 1;
+      var today = new Date();
+      today.setDate(today.getDate() + 7);
+      var defaultDate = today.toISOString().split('T')[0];
+      addBatchRowWithData('รุ่นที่ ' + count, defaultDate, '09:00', '12:00', 40);
+    }
+
+    function removeBatchRow(btn) {
+      var container = document.getElementById('batchRowsContainer');
+      if (container.querySelectorAll('.batch-row').length <= 1) {
+        HrdModal.warning('หลักสูตรต้องมีอย่างน้อย 1 รุ่นการอบรมค่ะ', 'ไม่สามารถลบรุ่นได้');
+        return;
+      }
+      btn.closest('.batch-row').remove();
+    }
+
+    // --- Sub-topics / Stations Helpers ---
+    function toggleTopicsSection(forceShow) {
+      const checkbox = document.getElementById('fEnableTopics');
+      const sectionBody = document.getElementById('topicsSectionBody');
+      const show = typeof forceShow === 'boolean' ? forceShow : (checkbox && checkbox.checked);
+      if (sectionBody) {
+        if (show) {
+          sectionBody.classList.remove('hidden');
+          const container = document.getElementById('topicRowsContainer');
+          if (container && container.querySelectorAll('.topic-row').length === 0) {
+            addTopicRow('', '', '', '');
+          }
+        } else {
+          sectionBody.classList.add('hidden');
+        }
+      }
+    }
+
+    function addTopicRow(title, speaker, date, time) {
+      const container = document.getElementById('topicRowsContainer');
+      if (!container) return;
+      const count = container.querySelectorAll('.topic-row').length + 1;
+      const div = document.createElement('div');
+      div.className = 'topic-row bg-[#f8fafc] p-3.5 rounded-2xl border border-slate-200 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center';
+      div.innerHTML = 
+        '<div class="sm:col-span-4">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">ชื่อหัวข้อ <span class="text-rose-500">*</span></label>' +
+          '<input type="text" class="topic-title w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-semibold" placeholder="เช่น การปฐมพยาบาลเบื้องต้น" value="' + escapeHtml(title || '') + '" required>' +
+        '</div>' +
+        '<div class="sm:col-span-2">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">วันที่</label>' +
+          '<input type="date" class="topic-date w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white" value="' + escapeHtml(date || '') + '">' +
+        '</div>' +
+        '<div class="sm:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">เวลา / ห้อง (ถ้ามี)</label>' +
+          '<input type="text" class="topic-time w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-mono" placeholder="เช่น 09:00 - 12:00 น." value="' + escapeHtml(time || '') + '">' +
+        '</div>' +
+        '<div class="sm:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">วิทยากร</label>' +
+          '<div class="flex items-center space-x-2">' +
+            '<input type="text" class="topic-speaker w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white" placeholder="เช่น พว.สมหญิง / อ.ประสิทธิ์" value="' + escapeHtml(speaker || '') + '">' +
+            '<button type="button" onclick="removeTopicRow(this)" class="text-slate-400 hover:text-rose-500 text-sm cursor-pointer p-1 shrink-0" title="ลบหัวข้อนี้">✖</button>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(div);
+    }
+
+    function removeTopicRow(btn) {
+      const container = document.getElementById('topicRowsContainer');
+      if (container.querySelectorAll('.topic-row').length <= 1) {
+        HrdModal.warning('เมื่อเปิดใช้งานหัวข้อย่อย ต้องมีอย่างน้อย 1 หัวข้อค่ะ', 'ไม่สามารถลบได้');
+        return;
+      }
+      btn.closest('.topic-row').remove();
+    }
+
+    async function handleSaveCourse(e) {
+      e.preventDefault();
+      var btnSave = document.getElementById('btnSaveCourse');
+      var originalBtnText = btnSave.innerHTML;
+
+      // 1. Course ID Thai-Sanitization Guard
+      var rawCourseId = document.getElementById('fCourseId').value;
+      var courseId = sanitizeCourseSlug(rawCourseId, coursesData);
+      document.getElementById('fCourseId').value = courseId; // Reflect sanitized slug back into input
+
+      var title = document.getElementById('fCourseTitle').value.trim();
+      var speaker = document.getElementById('fCourseSpeaker').value.trim();
+
+      var planTypeEl = document.querySelector('input[name="planType"]:checked');
+      var planType = planTypeEl ? planTypeEl.value : 'ในแผน';
+
+      var catEl = document.querySelector('input[name="courseCategory"]:checked');
+      var category = catEl ? catEl.value : 'Mandatory Course';
+
+      var combinedType = planType + ' • ' + category;
+
+      // 2. Duplicate Check (เฉพาะโหมดสร้างใหม่)
+      if (!isEditMode && coursesData.some(function(c) { return c.id === courseId; })) {
+        HrdModal.warning('รหัสหลักสูตร ' + courseId + ' นี้มีอยู่ในระบบแล้ว กรุณาตั้งรหัสอื่นนะคะ', 'รหัสหลักสูตรซ้ำ');
+        document.getElementById('fCourseId').focus();
+        return;
+      }
+
+      // 3. Default Target Audience: All Employees (เปิดรับทุกแผนก/ตำแหน่งเป็นค่าเริ่มต้น)
+      var targetAudience = {
+        type: 'all',
+        summary: 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง',
+        departments: [],
+        positions: [],
+        employeeIds: [],
+        totalCount: 0
+      };
+
+      var batches = [];
+      var quota = {};
+      var batchDetails = [];
+      var datesSet = {};
+      var timesSet = {};
+
+      document.querySelectorAll('.batch-row').forEach(function(row) {
+        var bName = row.querySelector('.batch-name').value.trim();
+        var bDate = row.querySelector('.batch-date').value;
+        var bStart = row.querySelector('.batch-time-start').value.trim();
+        var bEnd = row.querySelector('.batch-time-end').value.trim();
+        var bQuota = parseInt(row.querySelector('.batch-quota').value, 10) || 40;
+
+        var thaiDate = formatThaiDate(bDate);
+        var timeRange = bStart + ' - ' + bEnd + ' น.';
+        var fullBatchDisplay = thaiDate 
+          ? (bName + ' (' + thaiDate + ' เวลา ' + timeRange + ')')
+          : (bName + ' (เวลา ' + timeRange + ')');
+
+        batches.push(fullBatchDisplay);
+        quota[fullBatchDisplay] = bQuota;
+
+        if (thaiDate) datesSet[thaiDate] = true;
+        if (timeRange) timesSet[timeRange] = true;
+
+        batchDetails.push({
+          name: bName,
+          dateIso: bDate,
+          thaiDate: thaiDate,
+          timeRange: timeRange,
+          quota: bQuota,
+          display: fullBatchDisplay
+        });
+      });
+
+      if (batches.length === 0) {
+        HrdModal.warning('กรุณาระบุรุ่นการอบรมอย่างน้อย 1 รุ่นค่ะ', 'ข้อมูลไม่ครบถ้วน');
+        return;
+      }
+
+      // 4. Sub-topics / Stations Extraction
+      var hasSubTopics = document.getElementById('fEnableTopics') ? document.getElementById('fEnableTopics').checked : false;
+      var topicModeEl = document.querySelector('input[name="topicMode"]:checked');
+      var topicMode = topicModeEl ? topicModeEl.value : 'all';
+      var topics = [];
+
+      if (hasSubTopics) {
+        document.querySelectorAll('.topic-row').forEach(function(row, idx) {
+          var tTitle = row.querySelector('.topic-title') ? row.querySelector('.topic-title').value.trim() : '';
+          var tDate = row.querySelector('.topic-date') ? row.querySelector('.topic-date').value.trim() : '';
+          var tSpeaker = row.querySelector('.topic-speaker') ? row.querySelector('.topic-speaker').value.trim() : '';
+          var tTime = row.querySelector('.topic-time') ? row.querySelector('.topic-time').value.trim() : '';
+          if (tTitle) {
+            topics.push({
+              id: 't-' + (idx + 1),
+              title: tTitle,
+              date: tDate,
+              speaker: tSpeaker,
+              time: tTime
+            });
+          }
+        });
+
+        if (topics.length === 0) {
+          HrdModal.warning('ท่านเปิดใช้งานหัวข้อย่อย แต่ยังไม่ได้ระบุชื่อหัวข้อ กรุณาระบุอย่างน้อย 1 หัวข้อ หรือปิดตัวเลือกหัวข้อย่อยค่ะ', 'ข้อมูลหัวข้อไม่ครบถ้วน');
+          return;
+        }
+      }
+
+      var summaryDate = Object.keys(datesSet).join(', ');
+      var summaryTime = Object.keys(timesSet).join(', ');
+      var autoFolderName = title;
+
+      // --- EDIT MODE SAVE FLOW (INSTANT OPTIMISTIC SAVE + RESPONSIVE PROGRESS) ---
+      if (isEditMode && editingCourse) {
+        editingCourse.title = title;
+        editingCourse.speaker = speaker;
+        editingCourse.planType = planType;
+        editingCourse.category = category;
+        editingCourse.type = combinedType;
+        editingCourse.date = summaryDate;
+        editingCourse.time = summaryTime;
+        editingCourse.batches = batches;
+        editingCourse.quota = quota;
+        editingCourse.batchDetails = batchDetails;
+        editingCourse.hasSubTopics = hasSubTopics;
+        editingCourse.topicMode = topicMode;
+        editingCourse.topics = topics;
+        if (!editingCourse.targetAudience) {
+          editingCourse.targetAudience = targetAudience;
+        }
+
+        const idx = coursesData.findIndex(c => c && String(c.id).toLowerCase() === String(editingCourse.id).toLowerCase());
+        if (idx !== -1) {
+          coursesData[idx] = editingCourse;
+        } else {
+          coursesData.unshift(editingCourse);
+        }
+
+        // 1. Optimistic Local Save (Instant & 100% Data Loss Proof)
+        try {
+          localStorage.setItem('hrd_course_' + editingCourse.id, JSON.stringify(editingCourse));
+          localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
+        } catch(storageErr) {
+          console.warn('[Edit Course] LocalStorage save warning:', storageErr);
+        }
+
+        btnSave.disabled = true;
+        btnSave.classList.add('opacity-80', 'cursor-not-allowed');
+
+        // 2. Open Lively Step-by-Step Progress Modal
+        openSaveProgressModal({
+          title: 'กำลังบันทึกการแก้ไขหลักสูตร',
+          courseTitle: title
+        });
+
+        // Step 1: Immediate instant check
+        setSaveProgressStep(1, 'done');
+        setSaveProgressPercent(35, 'บันทึกข้อมูลลงเครื่องสำเร็จแล้ว');
+
+        // Step 2: Sync to Master Sheet
+        setSaveProgressStep(2, 'active');
+        setSaveProgressPercent(60, 'กำลังอัปเดตข้อมูลลงทะเบียนกลาง Google Sheet...');
+
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        let gasSuccess = false;
+
+        if (gasUrl) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s max guard
+
+            const resp = await fetch(gasUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'saveCourse',
+                course: editingCourse,
+                skipTabSync: true
+              }),
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            const result = await resp.json();
+            if (result && result.success) {
+              gasSuccess = true;
+            }
+          } catch (err) {
+            console.warn('[Edit Course] GAS update notice:', err);
+          }
+        }
+
+        // Step 2 & 3: Mark complete
+        setSaveProgressStep(2, 'done');
+        setSaveProgressStep(3, 'done');
+        setSaveProgressPercent(100, 'บันทึกและซิงค์ข้อมูลเรียบร้อยแล้ว!');
+
+        const iconEl = document.getElementById('saveModalIcon');
+        if (iconEl) {
+          iconEl.className = 'w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner';
+          iconEl.innerHTML = '✓';
+        }
+
+        await new Promise(r => setTimeout(r, 600));
+        closeSaveProgressModal();
+
+        btnSave.disabled = false;
+        btnSave.classList.remove('opacity-80', 'cursor-not-allowed');
+        btnSave.innerHTML = originalBtnText;
+
+        await HrdModal.success(
+          `บันทึกการแก้ไขรายละเอียดหลักสูตร "${title}" เรียบร้อยแล้วค่ะ!\n\n(อัปเดตข้อมูลลงระบบกลางและแคชเครื่องเรียบร้อยแล้ว)`,
+          'บันทึกสำเร็จ'
+        );
+        window.location.href = 'admin.html';
+        return;
+      }
+      // --- END EDIT MODE SAVE FLOW ---
+
+      // --- CREATE MODE: SAVE TO GOOGLE DRIVE & SHEET ---
+      btnSave.disabled = true;
+      btnSave.classList.add('opacity-80', 'cursor-not-allowed');
+
+      openSaveProgressModal({
+        title: 'กำลังสร้างหลักสูตรและชีทอัตโนมัติ',
+        courseTitle: title
+      });
+      setSaveProgressStep(1, 'active');
+      setSaveProgressStep(2, 'pending');
+      setSaveProgressStep(3, 'pending');
+      setSaveProgressPercent(25, 'กำลังสั่ง Google Drive สร้างโฟลเดอร์และคัดลอกแบบฟอร์ม...');
+
+      var progressTimer = setTimeout(function() {
+        setSaveProgressStep(1, 'done');
+        setSaveProgressStep(2, 'active');
+        setSaveProgressPercent(60, 'กำลังแตกชีทรุ่นและจัดเตรียมหัวเอกสาร...');
+      }, 4000);
+
+      var progressTimer2 = setTimeout(function() {
+        setSaveProgressStep(2, 'done');
+        setSaveProgressStep(3, 'active');
+        setSaveProgressPercent(85, 'กำลังลงทะเบียนหลักสูตรเข้าสู่ระบบคลังกลาง...');
+      }, 9000);
+
+      var finalSheetUrl = '';
+      var finalSheetId = '';
+      var isAutoCreated = false;
+      var gasErrorMsg = '';
+
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        try {
+          var resp = await fetch(gasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'createCourse',
+              id: courseId,
+              title: title,
+              speaker: speaker,
+              date: summaryDate,
+              time: summaryTime,
+              planType: planType,
+              category: category,
+              batches: batches,
+              quota: quota,
+              targetAudience: targetAudience,
+              hasSubTopics: hasSubTopics,
+              topicMode: topicMode,
+              topics: topics
+            })
+          });
+          var textResp = await resp.text();
+          var gasResult = null;
+          try {
+            gasResult = JSON.parse(textResp);
+          } catch (pe) {
+            if (textResp.includes('ต้องมีสิทธิ์เข้าถึง') || textResp.includes('accounts.google.com')) {
+              gasErrorMsg = 'Google Apps Script แจ้งเตือนว่า "ต้องมีสิทธิ์เข้าถึง"\n(เนื่องจากใน Apps Script ยังไม่ได้ตั้งค่า Who has access เป็น "Anyone" หรือยังไม่ได้กดยืนยัน Review Permissions ค่ะ)';
+            } else {
+              gasErrorMsg = 'Google Apps Script ส่งข้อความกลับมา: ' + textResp.substring(0, 120);
+            }
+          }
+
+          if (gasResult && gasResult.success && gasResult.sheetUrl) {
+            finalSheetUrl = gasResult.sheetUrl;
+            finalSheetId = gasResult.sheetId || finalSheetId;
+            isAutoCreated = true;
+            if (gasResult.masterSheetUrl) {
+              localStorage.setItem('hrd_master_sheet_url', gasResult.masterSheetUrl);
+            }
+          } else if (gasResult && !gasResult.success) {
+            gasErrorMsg = gasResult.message || 'ไม่สามารถสร้าง Google Sheet ได้';
+          }
+        } catch (err) {
+          gasErrorMsg = 'ไม่สามารถเชื่อมต่อไปยัง Google Apps Script ได้: ' + (err.message || err);
+        } finally {
+          clearTimeout(progressTimer);
+          clearTimeout(progressTimer2);
+        }
+      } else {
+        clearTimeout(progressTimer);
+        clearTimeout(progressTimer2);
+      }
+
+      btnSave.disabled = false;
+      btnSave.classList.remove('opacity-80', 'cursor-not-allowed');
+      btnSave.innerHTML = originalBtnText;
+      closeSaveProgressModal();
+      hideLoader();
+
+      if (!isAutoCreated) {
+        HrdModal.error('⚠️ ไม่สามารถสร้างโฟลเดอร์และ Google Sheet อัตโนมัติได้ค่ะ!\n\nสาเหตุ: ' + gasErrorMsg + '\n\nระบบจะไม่สร้างหลักสูตรจนกว่า Google Apps Script จะได้รับสิทธิ์เรียบร้อยค่ะ', 'เกิดข้อผิดพลาดในการสร้างชีท');
+        return;
+      }
+
+      var newCourse = {
+        id: courseId,
+        title: title,
+        date: summaryDate,
+        time: summaryTime,
+        speaker: speaker,
+        type: combinedType,
+        planType: planType,
+        category: category,
+        batches: batches,
+        quota: quota,
+        batchDetails: batchDetails,
+        targetAudience: targetAudience,
+        hasSubTopics: hasSubTopics,
+        topicMode: topicMode,
+        topics: topics,
+        driveFolderName: autoFolderName,
+        sheetId: finalSheetId,
+        sheetUrl: finalSheetUrl,
+        status: 'active'
+      };
+
+      coursesData.unshift(newCourse);
+      try {
+        localStorage.setItem('hrd_course_' + newCourse.id, JSON.stringify(newCourse));
+        localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
+      } catch(storageErr) {
+        console.warn('LocalStorage save warning:', storageErr);
+      }
+
+      function encodeCourseData(c) {
+        var min = {
+          id: c.id,
+          title: c.title,
+          date: c.date,
+          time: c.time,
+          speaker: c.speaker,
+          type: c.type,
+          batches: c.batches,
+          quota: c.quota,
+          sheetUrl: c.sheetUrl,
+          sheetId: c.sheetId || (c.sheetUrl ? (c.sheetUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || [])[1] : '')
+        };
+        try {
+          return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(min)))));
+        } catch(e) {
+          return '';
+        }
+      }
+
+      var baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+      // ลิงก์สั้นสะอาดตา และคิวอาร์โค้ดสแกนง่าย
+      var regUrl = baseUrl + '/?course=' + encodeURIComponent(newCourse.id);
+      var evalUrl = baseUrl + '/eval.html?course=' + encodeURIComponent(newCourse.id);
+      var checkinUrl = baseUrl + '/checkin.html?course=' + encodeURIComponent(newCourse.id);
+
+      currentSuccessUrls = {
+        reg: regUrl,
+        eval: evalUrl,
+        checkin: checkinUrl
+      };
+
+      document.getElementById('succCourseTitle').textContent = newCourse.title;
+      switchSuccessQr('reg');
+
+      hideLoader();
+      document.getElementById('successModal').classList.remove('hidden');
+    }
+
+    let currentSuccessUrls = { reg: '', eval: '', checkin: '' };
+    let currentSuccessQrType = 'reg';
+
+    function switchSuccessQr(type) {
+      currentSuccessQrType = type;
+      const regBtn = document.getElementById('tabQrRegBtn');
+      const evalBtn = document.getElementById('tabQrEvalBtn');
+      const checkinBtn = document.getElementById('tabQrCheckinBtn');
+      const subLabel = document.getElementById('succQrLabel');
+      const linkEl = document.getElementById('succModalLink');
+      const url = currentSuccessUrls[type] || '';
+
+      const activeClass = 'py-1.5 px-1.5 rounded-lg bg-white shadow-2xs transition-all cursor-pointer truncate font-bold';
+      const inactiveClass = 'py-1.5 px-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer truncate font-medium';
+
+      if (regBtn) regBtn.className = inactiveClass;
+      if (evalBtn) evalBtn.className = inactiveClass;
+      if (checkinBtn) checkinBtn.className = inactiveClass;
+
+      let qrColor = '#0369a1';
+
+      if (type === 'reg') {
+        if (regBtn) regBtn.className = activeClass + ' text-[#0369a1]';
+        if (subLabel) {
+          subLabel.textContent = 'สแกนเพื่อเปิดหน้าลงทะเบียนจองที่นั่ง';
+          subLabel.className = 'text-[11px] font-bold text-[#0369a1] mt-2.5';
+        }
+        qrColor = '#0369a1';
+      } else if (type === 'eval') {
+        if (evalBtn) evalBtn.className = activeClass + ' text-amber-700';
+        if (subLabel) {
+          subLabel.textContent = 'สแกนเพื่อเปิดแบบประเมินผลการฝึกอบรม';
+          subLabel.className = 'text-[11px] font-bold text-amber-700 mt-2.5';
+        }
+        qrColor = '#b45309';
+      } else if (type === 'checkin') {
+        if (checkinBtn) checkinBtn.className = activeClass + ' text-emerald-700';
+        if (subLabel) {
+          subLabel.textContent = 'สแกนเพื่อเปิดหน้าลงทะเบียนเข้าอบรมจริง (Check-in)';
+          subLabel.className = 'text-[11px] font-bold text-emerald-700 mt-2.5';
+        }
+        qrColor = '#059669';
+      }
+
+      if (linkEl) linkEl.textContent = url;
+      const container = document.getElementById('succQrcodeContainer');
+      if (container) {
+        container.innerHTML = '';
+        new QRCode(container, {
+          text: url,
+          width: 180,
+          height: 180,
+          colorDark: qrColor,
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').classList.add('hidden');
+      window.location.href = 'admin.html';
+    }
+
+    function openCurrentSuccQrUrl() {
+      const url = currentSuccessUrls[currentSuccessQrType];
+      if (url) window.open(url, '_blank');
+    }
+
+    function copySuccModalLink() {
+      const link = document.getElementById('succModalLink').textContent;
+      if (!link) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(() => {
+          HrdModal.toast('คัดลอกลิงก์สำเร็จแล้วค่ะ! ส่งเข้ากลุ่ม LINE ได้ทันที', 'success');
+        }).catch(async () => {
+          await HrdModal.prompt('คัดลอกลิงก์ที่นี่ค่ะ:', link, 'คัดลอกลิงก์');
+        });
+      } else {
+        prompt('คัดลอกลิงก์:', link);
+      }
+    }
+
+    function toggleSidebar() {
+      const sb = document.getElementById('adminSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (!sb) return;
+      if (sb.classList.contains('hidden')) {
+        sb.classList.remove('hidden');
+        sb.classList.add('flex', 'fixed', 'inset-y-0', 'left-0', 'z-50', 'w-72', 'shadow-2xl');
+        if (bd) bd.classList.remove('hidden');
+      } else {
+        sb.classList.add('hidden');
+        sb.classList.remove('flex', 'fixed', 'inset-y-0', 'left-0', 'z-50', 'w-72', 'shadow-2xl');
+        if (bd) bd.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

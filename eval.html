@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>แบบประเมินผลหลักสูตรการฝึกอบรม | โรงพยาบาลพิษณุเวช พิจิตร</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt, Sarabun, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Scripts & Modal System -->
+  <script src="demo_data.js"></script>
+  <script src="modal.js"></script>
+
+  <style>
+    body {
+      font-family: 'Prompt', 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    /* Rating Option Custom Radio Styling */
+    .rating-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .rating-btn:active {
+      transform: scale(0.96);
+    }
+    .rating-btn.active {
+      background: linear-gradient(135deg, #1d3c5a 0%, #2e5e8b 100%);
+      color: #ffffff;
+      border-color: #1d3c5a;
+      box-shadow: 0 4px 12px rgba(46, 94, 139, 0.25);
+    }
+    .rating-btn.active-5 {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: #ffffff;
+      border-color: #059669;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+    .rating-btn.error-highlight {
+      border-color: #f43f5e;
+      background-color: #fff1f2;
+    }
+
+    /* CSS Medical Cross Loader (Phitsanuvej Style) */
+    .css-logo-loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 40px;
+      transform: scale(1.6);
+      transform-origin: center;
+    }
+    .logo-petal {
+      position: absolute;
+      animation: loadingPulse 1.6s ease-in-out infinite;
+    }
+    .logo-petal.outer {
+      background: #1e5387;
+      border-radius: 6px;
+    }
+    .logo-petal.inner {
+      background: #5faee3;
+      border-radius: 5px;
+    }
+    .logo-petal.outer.top { top: 0px; left: 30px; width: 20px; height: 24px; animation-delay: 0s; }
+    .logo-petal.inner.top-right { top: 14px; right: 14px; width: 20px; height: 20px; animation-delay: 0.2s; }
+    .logo-petal.outer.right { top: 30px; right: 0px; width: 24px; height: 20px; animation-delay: 0.4s; }
+    .logo-petal.inner.bottom-right { bottom: 14px; right: 14px; width: 20px; height: 20px; animation-delay: 0.6s; }
+    .logo-petal.outer.bottom { bottom: 0px; left: 30px; width: 20px; height: 24px; animation-delay: 0.8s; }
+    .logo-petal.inner.bottom-left { bottom: 14px; left: 14px; width: 20px; height: 20px; animation-delay: 1.0s; }
+    .logo-petal.outer.left { top: 30px; left: 0px; width: 24px; height: 20px; animation-delay: 1.2s; }
+    .logo-petal.inner.top-left { top: 14px; left: 14px; width: 20px; height: 20px; animation-delay: 1.4s; }
+    @keyframes loadingPulse {
+      0%, 100% { transform: scale(1); opacity: 0.55; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+    @keyframes loaderPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased selection:bg-[#2e5e8b] selection:text-white">
+
+  <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) ตามมาตรฐาน รพ.พิษณุเวช -->
+  <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
+    <div class="loader-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.06); min-width: 300px; transform: scale(0.95); animation: loaderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      
+      <!-- ตัวหมุนแอนิเมชันกากบาทแพทย์ -->
+      <div class="css-logo-loader">
+        <div class="logo-petal outer top"></div>
+        <div class="logo-petal inner top-right"></div>
+        <div class="logo-petal outer right"></div>
+        <div class="logo-petal inner bottom-right"></div>
+        <div class="logo-petal outer bottom"></div>
+        <div class="logo-petal inner bottom-left"></div>
+        <div class="logo-petal outer left"></div>
+        <div class="logo-petal inner top-left"></div>
+      </div>
+      
+      <!-- ข้อความประกอบการรอข้อมูล -->
+      <div style="margin-top: 24px; text-align: center;">
+        <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #1e5387; margin-bottom: 6px; letter-spacing: 0.5px;">
+          กำลังเตรียมแบบประเมินผลการอบรม...
+        </div>
+        <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
+          โรงพยาบาลพิษณุเวช พิจิตร
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP APP BAR (FULL WIDTH) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs w-full">
+    <div class="w-full px-6 lg:px-12 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-3">
+          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-10 sm:h-11 w-auto object-contain">
+          <div class="border-l border-slate-200 pl-3.5 hidden sm:block">
+            <h1 class="text-sm sm:text-base font-bold text-[#1d3c5a] leading-tight">ระบบแบบประเมินผลการฝึกอบรม</h1>
+            <p class="text-xs text-slate-400 font-light">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • โรงพยาบาลพิษณุเวช พิจิตร</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 text-xs">
+        <span class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200/80 font-semibold flex items-center gap-1.5 shadow-2xs">
+          <span>🔒</span>
+          <span>ประเมินแบบไม่ระบุตัวตน</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (FULL WIDTH WORKSTATION) -->
+  <main class="flex-1 w-full px-6 lg:px-12 py-6 space-y-6">
+
+    <!-- HERO COURSE BANNER (FULL WIDTH) -->
+    <div id="courseHeroCard" class="w-full rounded-3xl bg-gradient-to-r from-[#1d3c5a] via-[#2e5e8b] to-[#3a75aa] p-6 lg:p-8 text-white shadow-xl shadow-[#1d3c5a]/15 relative overflow-hidden">
+      <!-- Glow decoration -->
+      <div class="absolute -right-12 -top-12 w-80 h-80 rounded-full bg-[#5facde]/20 blur-3xl pointer-events-none"></div>
+      <div class="absolute right-1/3 -bottom-20 w-60 h-60 rounded-full bg-[#5facde]/15 blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-3 flex-1">
+          <div class="flex items-center space-x-2.5 flex-wrap gap-y-1.5">
+            <span class="text-xs font-semibold px-3 py-1 bg-amber-400 text-slate-950 rounded-xl shadow-2xs font-bold flex items-center gap-1">
+              <span>⭐</span> แบบประเมินผลการฝึกอบรม
+            </span>
+            <span id="courseIdBadge" class="text-xs font-mono text-cyan-100/90 bg-black/25 px-2.5 py-1 rounded-xl">
+              -
+            </span>
+            <span id="courseCategoryBadge" class="text-xs text-cyan-200 bg-white/15 px-2.5 py-1 rounded-xl border border-white/10 hidden sm:inline-block">
+              Mandatory Course
+            </span>
+          </div>
+
+          <h2 id="dispCourseTitle" class="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
+            &nbsp;
+          </h2>
+
+          <div class="flex items-center space-x-6 text-xs text-cyan-100/90 font-light flex-wrap gap-y-1.5 pt-1 border-t border-white/10">
+            <div class="flex items-center space-x-2">
+              <span class="text-cyan-200">📅</span>
+              <div><span class="text-cyan-200/70 block text-[10px] uppercase">วันที่จัดอบรม</span><strong id="dispCourseDate" class="font-medium text-white">-</strong></div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-cyan-200">⏰</span>
+              <div><span class="text-cyan-200/70 block text-[10px] uppercase">เวลาอบรม</span><strong id="dispCourseTime" class="font-medium text-white">-</strong></div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-cyan-200">🎤</span>
+              <div><span class="text-cyan-200/70 block text-[10px] uppercase">วิทยากรผู้บรรยาย</span><strong id="dispCourseSpeaker" class="font-medium text-white">-</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COURSE SELECTOR FALLBACK (เมื่อไม่มี Course ID ใน URL หรือไม่พบวิชา) -->
+    <div id="courseSelectNotice" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs space-y-2">
+      <div class="font-bold text-amber-800 flex items-center gap-1.5">
+        <span>⚠️</span>
+        <span>กรุณาเลือกหลักสูตรที่ท่านเข้ารับการอบรม:</span>
+      </div>
+      <select id="courseDropdownSelect" onchange="onSelectCourseFromDropdown(this.value)" class="w-full bg-white border border-amber-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#2e5e8b]">
+        <option value="">-- กรุณาเลือกหลักสูตร --</option>
+      </select>
+    </div>
+
+    <!-- EVALUATION FORM -->
+    <form id="evaluationForm" onsubmit="handleSubmitEvaluation(event)" class="space-y-6">
+
+      <!-- BATCH SELECTION (แสดงเฉพาะเมื่อหลักสูตรมีมากกว่า 1 รุ่น) -->
+      <div id="batchSelectionBox" class="hidden bg-white rounded-3xl p-5 lg:p-6 border border-slate-200/90 shadow-sm space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">📅</span>
+            <span class="text-xs sm:text-sm font-bold text-slate-800">รุ่นการอบรมที่ท่านเข้าร่วม</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-light">โปรดเลือกเพื่อบันทึกสถิติรายรุ่น</span>
+        </div>
+        <div id="batchRadioGroup" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <!-- Dynamically populated batch buttons -->
+        </div>
+        <input type="hidden" id="selectedBatch" name="batch" value="รุ่นที่ 1">
+      </div>
+
+      <!-- ================= SECTION 1: 15 RATING QUESTIONS ================= -->
+      <div class="bg-white rounded-3xl p-6 lg:p-8 border border-slate-200/90 shadow-sm space-y-6">
+        
+        <!-- Header with Quick Fill Option -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-8 h-8 rounded-xl bg-blue-50 text-[#2e5e8b] flex items-center justify-center text-sm font-bold shadow-2xs">
+              1
+            </span>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900">แบบประเมินความพึงพอใจการอบรม</h3>
+              <p class="text-xs text-slate-400 font-light">โปรดเลือกคะแนน 1 (น้อยมาก) ถึง 5 (ดีมาก) ให้ครบทุกข้อ (ประเมินแบบไม่ระบุตัวตน)</p>
+            </div>
+          </div>
+
+          <!-- Quick Fill Helper Button -->
+          <button 
+            type="button" 
+            onclick="quickFillAllFive()" 
+            class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 active:scale-95 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+            title="กดเพื่อให้คะแนนดีมาก (5 ดาว) ครบทุกข้อโดยอัตโนมัติ และสามารถปรับแก้รายข้อได้"
+          >
+            <span>✨</span>
+            <span>ให้คะแนนดีมากทั้งหมด (5)</span>
+          </button>
+        </div>
+
+        <!-- Scale Guide Legend -->
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500 font-medium overflow-x-auto">
+          <div class="flex items-center gap-1"><span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px]">1</span> น้อยมาก</div>
+          <div class="text-slate-300">➔</div>
+          <div class="flex items-center gap-1"><span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px]">2</span> น้อย</div>
+          <div class="text-slate-300">➔</div>
+          <div class="flex items-center gap-1"><span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px]">3</span> พอใช้</div>
+          <div class="text-slate-300">➔</div>
+          <div class="flex items-center gap-1"><span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[10px]">4</span> ดี</div>
+          <div class="text-slate-300">➔</div>
+          <div class="flex items-center gap-1"><span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]">5</span> ดีมาก</div>
+        </div>
+
+        <!-- QUESTIONS CONTAINER -->
+        <div id="questionsContainer" class="space-y-6">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </div>
+
+      <!-- ================= SECTION 2: OPEN-ENDED FEEDBACK ================= -->
+      <div class="bg-white rounded-3xl p-6 lg:p-8 border border-slate-200/90 shadow-sm space-y-6">
+        <div class="flex items-center space-x-2.5 pb-3 border-b border-slate-100">
+          <span class="w-8 h-8 rounded-xl bg-blue-50 text-[#2e5e8b] flex items-center justify-center text-sm font-bold shadow-2xs">
+            2
+          </span>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">ข้อเสนอแนะในประเด็นอื่น ๆ</h3>
+            <p class="text-xs text-slate-400 font-light">ข้อคิดเห็นและข้อเสนอแนะเพิ่มเติมเพื่อการพัฒนาหลักสูตร (ไม่บังคับ)</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- 6.1 -->
+          <div class="space-y-1.5 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/60">
+            <label for="fb_q6_1" class="block text-xs font-bold text-slate-700 leading-snug">
+              6.1 ท่านมีความประทับใจ หรือ ชอบอะไรมากที่สุดในการเข้ารับการอบรมในครั้งนี้
+            </label>
+            <textarea 
+              id="fb_q6_1" 
+              name="fb_q6_1" 
+              rows="3" 
+              placeholder="ระบุความประทับใจหรือสิ่งที่ชื่นชอบ..." 
+              class="w-full p-3 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#2e5e8b]/20 focus:border-[#2e5e8b] transition-all resize-y"
+            ></textarea>
+          </div>
+
+          <!-- 6.2 -->
+          <div class="space-y-1.5 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/60">
+            <label for="fb_q6_2" class="block text-xs font-bold text-slate-700 leading-snug">
+              6.2 ท่านคิดว่ามีเรื่องใดในการอบรมนี้ที่ท่านยังไม่เข้าใจและต้องการให้มีการจัดอบรมหรือให้คำแนะนำในเรื่องนั้นต่อไป
+            </label>
+            <textarea 
+              id="fb_q6_2" 
+              name="fb_q6_2" 
+              rows="3" 
+              placeholder="ระบุหัวข้อที่ต้องการเรียนรู้เพิ่มเติมหรือต้องการคำแนะนำ..." 
+              class="w-full p-3 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#2e5e8b]/20 focus:border-[#2e5e8b] transition-all resize-y"
+            ></textarea>
+          </div>
+
+          <!-- 6.3 -->
+          <div class="space-y-1.5 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/60">
+            <label for="fb_q6_3" class="block text-xs font-bold text-slate-700 leading-snug">
+              6.3 หลักสูตรที่ท่านต้องการอบรมเพิ่มเติม
+            </label>
+            <textarea 
+              id="fb_q6_3" 
+              name="fb_q6_3" 
+              rows="3" 
+              placeholder="เสนอแนะหลักสูตรที่อยากให้โรงพยาบาลจัดอบรมในอนาคต..." 
+              class="w-full p-3 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#2e5e8b]/20 focus:border-[#2e5e8b] transition-all resize-y"
+            ></textarea>
+          </div>
+
+          <!-- 6.4 -->
+          <div class="space-y-1.5 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/60">
+            <label for="fb_q6_4" class="block text-xs font-bold text-slate-700 leading-snug">
+              6.4 ข้อเสนอแนะอื่นๆ
+            </label>
+            <textarea 
+              id="fb_q6_4" 
+              name="fb_q6_4" 
+              rows="3" 
+              placeholder="ข้อเสนอแนะเพิ่มเติมอื่นๆ ถึงผู้จัดอบรมและวิทยากร..." 
+              class="w-full p-3 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#2e5e8b]/20 focus:border-[#2e5e8b] transition-all resize-y"
+            ></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SUBMIT ACTION BAR -->
+      <div class="pt-2">
+        <button 
+          type="submit" 
+          id="btnSubmitEvaluation" 
+          class="w-full py-4 bg-gradient-to-r from-[#1d3c5a] via-[#2e5e8b] to-[#5facde] hover:from-[#152e47] hover:to-[#2e5e8b] active:scale-[0.99] text-white font-bold text-base rounded-2xl shadow-xl shadow-[#2e5e8b]/25 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+        >
+          <span>🚀</span>
+          <span>ส่งแบบประเมินผลการฝึกอบรม</span>
+        </button>
+        <p class="text-center text-[11px] text-slate-400 mt-2 font-light">
+          ข้อมูลการประเมินของท่านจะถูกส่งตรงเข้าสู่ระบบพัฒนาบุคลากร โรงพยาบาลพิษณุเวช พิจิตร
+        </p>
+      </div>
+
+    </form>
+
+  </main>
+
+  <!-- SUCCESS CONFIRMATION MODAL -->
+  <div id="evalSuccessModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-5 animate-in fade-in zoom-in duration-200">
+      
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold shadow-xs">
+        ✓
+      </div>
+
+      <div class="space-y-1.5">
+        <h3 class="text-xl font-bold text-slate-900">ส่งแบบประเมินเรียบร้อยแล้ว</h3>
+        <p class="text-xs text-slate-500 font-light" id="succModalCourseTitle">-</p>
+        <div class="pt-2">
+          <span class="inline-block px-3.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">
+            คะแนนเฉลี่ยที่ท่านให้: <span id="succAvgScoreDisplay" class="text-sm font-extrabold text-emerald-800">5.00</span> / 5.00 ⭐
+          </span>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs text-slate-600 leading-relaxed text-left space-y-1.5">
+        <div><strong>รูปแบบ:</strong> <span class="text-emerald-700 font-semibold">ประเมินแบบไม่ระบุตัวตน (Anonymous)</span></div>
+        <div><strong>รุ่นการอบรม:</strong> <span id="succBatchDisplay" class="font-bold text-slate-800">-</span></div>
+        <div><strong>เวลาที่บันทึก:</strong> <span id="succTimeDisplay">-</span></div>
+      </div>
+
+      <div class="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl text-center space-y-1">
+        <p class="text-xs font-bold text-emerald-800">
+          ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) ขอขอบคุณค่ะ 🍁
+        </p>
+        <p class="text-[11px] text-emerald-700/90 font-light">
+          ทุกความคิดเห็นและข้อเสนอแนะอันมีค่ายิ่งของท่าน จะถูกนำไปพัฒนาและยกระดับการจัดอบรมให้ดียิ่งขึ้นในครั้งต่อไปค่ะ
+        </p>
+      </div>
+
+      <p class="text-[11px] text-slate-400 font-light">
+        บันทึกข้อมูลเสร็จสิ้นแล้ว ท่านสามารถปิดหน้าต่างนี้ได้ทันทีค่ะ
+      </p>
+
+    </div>
+  </div>
+
+  <!-- FULLSCREEN LOADING SCREEN -->
+  <div id="evalLoader" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center space-y-4">
+      <div class="w-12 h-12 border-4 border-[#2e5e8b] border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <h4 class="text-base font-bold text-slate-800" id="evalLoaderTitle">กำลังบันทึกแบบประเมิน...</h4>
+      <p class="text-xs text-slate-400 font-light" id="evalLoaderSub">กำลังส่งข้อมูลไปยัง Google Sheet และคลังกลาง กรุณารอสักครู่นะคะ</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-400 mt-auto w-full">
+    <div class="w-full px-6 lg:px-12 text-center">
+      © โรงพยาบาลพิษณุเวช พิจิตร • ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • แบบประเมินผลการฝึกอบรม
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================================
+    // EVALUATION FORM SCRIPT LOGIC
+    // ============================================================================
+    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwyROi0_EfFm21mVZUAqZ08rrkc11vISYzcBJFDaGh1vCB3P2Tum8ZtgZv2MJZjTY4g/exec";
+
+    // Evaluation Questions Definition (Matching Google Form 100%)
+    const EVAL_SECTIONS = [
+      {
+        id: "sec1",
+        title: "1. ความรู้ความเข้าใจและการประยุกต์ใช้",
+        questions: [
+          { id: "q1_1", title: "1.1 ท่านมีความเข้าใจในเนื้อหาหลักสูตรก่อนการอบรม" },
+          { id: "q1_2", title: "1.2 ท่านมีความเข้าใจในเนื้อหาหลักสูตรหลังการอบรม" },
+          { id: "q1_3", title: "1.3 ท่านสามารถนำความรู้จากการอบรมไปประยุกต์ใช้ได้" }
+        ]
+      },
+      {
+        id: "sec2",
+        title: "2. ความเหมาะสมของวิทยากรผู้สอน",
+        questions: [
+          { id: "q2_1", title: "2.1 วิทยากรถ่ายทอดเนื้อหาที่ชัดเจนเป็นลำดับขั้นตอน" },
+          { id: "q2_2", title: "2.2 วิทยากรตอบคำถามได้ตรงประเด็น" },
+          { id: "q2_3", title: "2.3 วิทยากรกระตุ้นให้ผู้เรียนมีส่วนร่วมในการอบรม" },
+          { id: "q2_4", title: "2.4 วิทยากรสรุปเนื้อหาการอบรมให้กับผู้เรียน" },
+          { id: "q2_5", title: "2.5 วิทยากรสามารถบริหารเวลาในการบรรยายได้ครบ" },
+          { id: "q2_6", title: "2.6 วิทยากรสอนได้ครบตามหัวข้อที่กำหนดขึ้น" }
+        ]
+      },
+      {
+        id: "sec3",
+        title: "3. เอกสารและอุปกรณ์ประกอบการสอน",
+        questions: [
+          { id: "q3_1", title: "3.1 เอกสารการอบรมและกิจกรรมเหมาะสมกับหลักสูตรที่จัด" },
+          { id: "q3_2", title: "3.2 สื่อที่ใช้บรรยายชัดเจนและทำให้เกิดความเข้าใจง่าย" },
+          { id: "q3_3", title: "3.3 สื่อและอุปกรณ์ที่ใช้เหมาะสมกับการเรียนรู้" }
+        ]
+      },
+      {
+        id: "sec4",
+        title: "4. การบริการและสถานที่จัดอบรม",
+        questions: [
+          { id: "q4_1", title: "4.1 การจัดสถานที่เหมาะสมกับเนื้อหาหลักสูตรที่อบรม" }
+        ]
+      },
+      {
+        id: "sec5",
+        title: "5. ความพร้อมของผู้จัดอบรม",
+        questions: [
+          { id: "q5_1", title: "5.1 ความรวดเร็วในการให้ความช่วยเหลือผู้เข้าอบรม" },
+          { id: "q5_2", title: "5.2 การให้ความชัดเจนกับผู้เรียน" }
+        ]
+      }
+    ];
+
+    let currentCourse = null;
+    let employeeDatabase = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+    let selectedRatings = {}; // { q1_1: 5, q1_2: 4, ... }
+
+    // Init on Load
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        renderQuestions();
+        await Promise.all([
+          loadEmployeeDatabase(),
+          initCourse()
+        ]);
+      } catch (err) {
+        console.warn('Eval init error:', err);
+      } finally {
+        hideLoader();
+      }
+    });
+
+    function hideLoader() {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        setTimeout(() => { loader.style.display = 'none'; }, 350);
+      }
+    }
+
+    function showLoader(title, subtitle) {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        const t = document.getElementById('loaderTitle');
+        const s = document.getElementById('loaderSubtitle');
+        if (t) t.textContent = title || 'กำลังเตรียมแบบประเมินผลการอบรม...';
+        if (s) s.textContent = subtitle || 'โรงพยาบาลพิษณุเวช พิจิตร';
+        loader.style.display = 'flex';
+        loader.style.visibility = 'visible';
+        loader.style.opacity = '1';
+      }
+    }
+
+    async function loadEmployeeDatabase() {
+      try {
+        const resp = await fetch('employees.json');
+        if (resp.ok) {
+          const data = await resp.json();
+          if (Array.isArray(data) && data.length > 0) {
+            employeeDatabase = data;
+          }
+        }
+      } catch (e) {
+        console.warn('Fallback to bundled employee database:', e);
+      }
+    }
+
+    async function initCourse() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let courseId = urlParams.get('course') || urlParams.get('id');
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      // 1. Instant check from local cache
+      if (courseId) {
+        try {
+          const cached = localStorage.getItem('hrd_course_' + courseId);
+          if (cached) {
+            currentCourse = JSON.parse(cached);
+            populateCourseDetails(currentCourse);
+          }
+        } catch(e) {}
+      }
+
+      // 2. Fetch targeted course from GAS (fastest)
+      if (courseId) {
+        try {
+          const res = await fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(courseId));
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success && data.course) {
+              currentCourse = data.course;
+              try { localStorage.setItem('hrd_course_' + courseId, JSON.stringify(currentCourse)); } catch(e) {}
+            }
+          }
+        } catch(e) {
+          console.warn('Targeted getCourse failed:', e);
+        }
+      }
+
+      // 3. Fallback: If no courseId or course not found, fetch all courses
+      if (!currentCourse) {
+        try {
+          const res = await fetch(gasUrl + '?action=getAllCourses');
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : (data && Array.isArray(data.courses) ? data.courses : []);
+            if (list.length > 0) {
+              const dd = document.getElementById('courseDropdownSelect');
+              if (dd) {
+                dd.innerHTML = '<option value="">-- กรุณาเลือกหลักสูตรที่ท่านเข้าอบรม --</option>' +
+                  list.map(c => '<option value="' + c.id + '">' + (c.title || c.id) + '</option>').join('');
+              }
+              if (courseId) {
+                currentCourse = list.find(c => String(c.id).toLowerCase() === String(courseId).toLowerCase());
+              }
+              if (!currentCourse) {
+                currentCourse = list[0];
+                document.getElementById('courseSelectNotice').classList.remove('hidden');
+              }
+              if (currentCourse) {
+                try { localStorage.setItem('hrd_course_' + currentCourse.id, JSON.stringify(currentCourse)); } catch(e) {}
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Load courses failed:', e);
+        }
+      }
+
+      if (currentCourse) {
+        populateCourseDetails(currentCourse);
+      } else {
+        document.getElementById('dispCourseTitle').textContent = 'ไม่พบข้อมูลหลักสูตรที่ระบุ';
+        document.getElementById('courseSelectNotice').classList.remove('hidden');
+      }
+    }
+
+    function onSelectCourseFromDropdown(cId) {
+      if (!cId) return;
+      showLoader('กำลังเปิดแบบประเมิน...', 'กำลังประมวลผลข้อมูลหลักสูตรที่เลือก');
+      window.location.href = 'eval.html?course=' + encodeURIComponent(cId);
+    }
+
+    function populateCourseDetails(course) {
+      document.getElementById('dispCourseTitle').textContent = course.title || 'หลักสูตรการฝึกอบรม';
+      document.getElementById('courseIdBadge').textContent = course.id || '-';
+      document.getElementById('dispCourseDate').textContent = course.date || '-';
+      document.getElementById('dispCourseTime').textContent = course.time || '-';
+      document.getElementById('dispCourseSpeaker').textContent = 'วิทยากร: ' + (course.speaker || 'ฝ่ายพัฒนาทรัพยากรบุคคล (HRD)');
+      if (course.category) {
+        document.getElementById('courseCategoryBadge').textContent = course.category;
+      }
+
+      // Render Batches
+      renderBatches(course.batches || []);
+    }
+
+    function renderBatches(batches) {
+      const box = document.getElementById('batchSelectionBox');
+      const group = document.getElementById('batchRadioGroup');
+      if (!group) return;
+
+      if (!batches || batches.length === 0) {
+        batches = ['รุ่นที่ 1'];
+      }
+
+      if (batches.length <= 1) {
+        if (box) box.classList.add('hidden');
+        const bInput = document.getElementById('selectedBatch');
+        if (bInput) bInput.value = batches[0];
+        return;
+      }
+
+      if (box) box.classList.remove('hidden');
+      group.innerHTML = batches.map((b, idx) => {
+        const isDefault = idx === 0;
+        return `
+          <div 
+            onclick="selectBatch('${b.replace(/'/g, "\\'")}', this)" 
+            class="batch-option-btn p-3 rounded-2xl border border-slate-200 bg-white hover:border-[#2e5e8b]/60 hover:bg-blue-50/40 cursor-pointer transition-all flex items-center justify-between shadow-2xs ${isDefault ? 'border-[#2e5e8b] bg-blue-50/60 ring-2 ring-[#2e5e8b]/15' : ''}"
+          >
+            <div class="flex items-center space-x-2.5">
+              <div class="radio-indicator w-5 h-5 rounded-full border-2 border-slate-300 bg-white flex items-center justify-center text-xs font-bold text-white transition-all ${isDefault ? 'bg-[#2e5e8b] border-[#2e5e8b]' : ''}">
+                ${isDefault ? '✓' : ''}
+              </div>
+              <span class="text-xs font-bold text-slate-800">${escapeHtml(b)}</span>
+            </div>
+            <span class="text-[10px] text-slate-400">รุ่นที่เข้าอบรม</span>
+          </div>
+        `;
+      }).join('');
+
+      const bInput = document.getElementById('selectedBatch');
+      if (bInput) bInput.value = batches[0];
+    }
+
+    function selectBatch(batchName, el) {
+      const bInput = document.getElementById('selectedBatch');
+      if (bInput) bInput.value = batchName;
+      document.querySelectorAll('.batch-option-btn').forEach(btn => {
+        btn.classList.remove('border-[#2e5e8b]', 'bg-blue-50/60', 'ring-2', 'ring-[#2e5e8b]/15');
+        const ind = btn.querySelector('.radio-indicator');
+        if (ind) {
+          ind.classList.remove('bg-[#2e5e8b]', 'border-[#2e5e8b]');
+          ind.textContent = '';
+        }
+      });
+      if (el) {
+        el.classList.add('border-[#2e5e8b]', 'bg-blue-50/60', 'ring-2', 'ring-[#2e5e8b]/15');
+        const ind = el.querySelector('.radio-indicator');
+        if (ind) {
+          ind.classList.add('bg-[#2e5e8b]', 'border-[#2e5e8b]');
+          ind.textContent = '✓';
+        }
+      }
+    }
+
+    // ============================================================================
+    // RENDER 15 QUESTIONS & RATING HANDLERS
+    // ============================================================================
+    function renderQuestions() {
+      const container = document.getElementById('questionsContainer');
+      if (!container) return;
+
+      container.innerHTML = EVAL_SECTIONS.map((sec, secIdx) => {
+        const qHtml = sec.questions.map((q, qIdx) => {
+          return `
+            <div id="card_${q.id}" class="question-card p-4 lg:p-5 rounded-2xl bg-white border border-slate-200/90 hover:border-slate-300 hover:shadow-xs transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-4 shadow-2xs">
+              <div class="space-y-1 flex-1 min-w-0">
+                <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
+                  <span id="badge_${q.id}" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-400 shrink-0">
+                    รอประเมิน
+                  </span>
+                  <h4 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+                    ${escapeHtml(q.title)} <span class="text-rose-500">*</span>
+                  </h4>
+                </div>
+              </div>
+
+              <!-- Rating Buttons (1 to 5) -->
+              <div class="w-full xl:w-[480px] shrink-0 grid grid-cols-5 gap-1.5 sm:gap-2 pt-1 xl:pt-0">
+                ${[1, 2, 3, 4, 5].map(score => {
+                  const labels = {
+                    1: 'น้อยมาก',
+                    2: 'น้อย',
+                    3: 'พอใช้',
+                    4: 'ดี',
+                    5: 'ดีมาก'
+                  };
+                  return `
+                    <button 
+                      type="button" 
+                      onclick="setRating('${q.id}', ${score})" 
+                      id="btn_${q.id}_${score}"
+                      class="rating-btn py-2.5 sm:py-3 px-1 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50/70 hover:border-[#2e5e8b]/40 text-slate-700 flex flex-col items-center justify-center gap-0.5 cursor-pointer"
+                    >
+                      <span class="text-sm sm:text-base font-extrabold leading-none">${score}</span>
+                      <span class="text-[9px] sm:text-[10px] font-light leading-none opacity-80">${labels[score]}</span>
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="space-y-3 pt-2">
+            <h4 class="text-xs font-bold text-[#1d3c5a] uppercase tracking-wider bg-slate-100/80 px-3.5 py-1.5 rounded-xl border border-slate-200/70 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#2e5e8b]"></span>
+              <span>${escapeHtml(sec.title)}</span>
+            </h4>
+            <div class="space-y-3">
+              ${qHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setRating(qId, score) {
+      selectedRatings[qId] = score;
+
+      // Update button active state
+      for (let s = 1; s <= 5; s++) {
+        const btn = document.getElementById(`btn_${qId}_${s}`);
+        if (btn) {
+          btn.classList.remove('active', 'active-5');
+          if (s === score) {
+            btn.classList.add(score === 5 ? 'active-5' : 'active');
+          }
+        }
+      }
+
+      // Update card and badge state
+      const card = document.getElementById(`card_${qId}`);
+      if (card) {
+        card.classList.remove('border-rose-400', 'bg-rose-50/30');
+      }
+
+      const badge = document.getElementById(`badge_${qId}`);
+      if (badge) {
+        badge.textContent = `${score} ดาว`;
+        badge.className = score >= 4 
+          ? 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0'
+          : 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-[#2e5e8b] border border-blue-200 shrink-0';
+      }
+    }
+
+    function quickFillAllFive() {
+      EVAL_SECTIONS.forEach(sec => {
+        sec.questions.forEach(q => {
+          setRating(q.id, 5);
+        });
+      });
+      if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+        HrdModal.toast('ตั้งค่าให้คะแนนดีมาก (5 ดาว) ครบทั้ง 15 ข้อเรียบร้อยแล้วค่ะ', 'success');
+      }
+    }
+
+    // ============================================================================
+    // FORM SUBMISSION & BACKEND SYNC
+    // ============================================================================
+    async function handleSubmitEvaluation(e) {
+      e.preventDefault();
+
+      const bEl = document.getElementById('selectedBatch');
+      const selectedBatch = bEl && bEl.value ? bEl.value : 'รุ่นที่ 1';
+
+      // Check all 15 questions
+      let missingQ = null;
+      EVAL_SECTIONS.forEach(sec => {
+        sec.questions.forEach(q => {
+          if (!selectedRatings[q.id] && !missingQ) {
+            missingQ = q;
+          }
+        });
+      });
+
+      if (missingQ) {
+        const card = document.getElementById(`card_${missingQ.id}`);
+        if (card) {
+          card.classList.add('border-rose-400', 'bg-rose-50/30');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        HrdModal.warning(`กรุณาให้คะแนนข้อ "${missingQ.title}" ให้ครบถ้วนนะคะ`, 'ตอบคำถามยังไม่ครบ');
+        return;
+      }
+
+      // Collect Data
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' น.';
+      const dateStr = now.toLocaleDateString('th-TH');
+
+      let targetSheetId = (currentCourse && currentCourse.sheetId) ? currentCourse.sheetId : '';
+      if (!targetSheetId && currentCourse && currentCourse.sheetUrl) {
+        const m = currentCourse.sheetUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (m) targetSheetId = m[1];
+      }
+
+      const payload = {
+        action: 'submitEvaluation',
+        courseId: currentCourse ? currentCourse.id : '',
+        courseTitle: currentCourse ? currentCourse.title : '',
+        sheetId: targetSheetId,
+        batch: selectedBatch,
+        ratings: selectedRatings,
+        feedback: {
+          q6_1: document.getElementById('fb_q6_1') ? document.getElementById('fb_q6_1').value.trim() : '',
+          q6_2: document.getElementById('fb_q6_2') ? document.getElementById('fb_q6_2').value.trim() : '',
+          q6_3: document.getElementById('fb_q6_3') ? document.getElementById('fb_q6_3').value.trim() : '',
+          q6_4: document.getElementById('fb_q6_4') ? document.getElementById('fb_q6_4').value.trim() : ''
+        },
+        timestamp: `${dateStr} ${timeStr}`
+      };
+
+      // Calculate Average Score
+      let sum = 0;
+      let count = 0;
+      Object.values(selectedRatings).forEach(val => {
+        sum += Number(val);
+        count++;
+      });
+      const avgScore = count > 0 ? (sum / count).toFixed(2) : "5.00";
+
+      // Show Fullscreen Loader
+      const loader = document.getElementById('evalLoader');
+      loader.classList.remove('hidden');
+
+      // LocalStorage Cache (Instant Resilient Storage)
+      try {
+        const storageKey = 'hrd_evaluations_' + (currentCourse ? currentCourse.id : 'default');
+        const existingRaw = localStorage.getItem(storageKey);
+        const existingList = existingRaw ? JSON.parse(existingRaw) : [];
+        existingList.push(payload);
+        localStorage.setItem(storageKey, JSON.stringify(existingList));
+      } catch (stErr) {}
+
+      // Submit to Google Apps Script
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      let isSuccess = false;
+      let errorDetail = '';
+
+      try {
+        const resp = await fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const resText = await resp.text();
+        console.log('Evaluation GAS Result:', resText);
+        try {
+          const resJson = JSON.parse(resText);
+          if (resJson && resJson.success) {
+            isSuccess = true;
+          } else {
+            errorDetail = (resJson && resJson.message) ? resJson.message : resText;
+          }
+        } catch(pe) {
+          errorDetail = 'ไม่สามารถอ่านผลลัพธ์จากเซิร์ฟเวอร์ได้: ' + resText;
+        }
+      } catch (err) {
+        console.warn('Evaluation GAS submission error:', err);
+        errorDetail = err.message || err.toString();
+      } finally {
+        loader.classList.add('hidden');
+      }
+
+      if (!isSuccess) {
+        if (typeof HrdModal !== 'undefined' && HrdModal.error) {
+          await HrdModal.error('ส่งแบบประเมินไม่สำเร็จ: ' + errorDetail + '\n\n(เนื่องจาก Google Apps Script บนคลาวด์ยังไม่ได้ Deploy เวอร์ชันใหม่ที่มีคำสั่ง submitEvaluation กรุณาอัปเดตการ Deploy บน Apps Script นะคะ)', 'บันทึกลงชีตไม่สำเร็จ');
+        } else {
+          alert('ส่งแบบประเมินไม่สำเร็จ: ' + errorDetail);
+        }
+        return;
+      }
+
+      // Show Success Modal & Hide Form
+      document.getElementById('succModalCourseTitle').textContent = currentCourse ? currentCourse.title : 'หลักสูตรอบรม';
+      document.getElementById('succAvgScoreDisplay').textContent = avgScore;
+      document.getElementById('succBatchDisplay').textContent = selectedBatch;
+      document.getElementById('succTimeDisplay').textContent = `${dateStr} เวลา ${timeStr}`;
+
+      const formEl = document.getElementById('evaluationForm');
+      if (formEl) formEl.style.display = 'none';
+
+      document.getElementById('evalSuccessModal').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>

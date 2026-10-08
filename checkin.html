@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ระบบลงทะเบียนเข้าอบรมจริง (ณ จุดอบรม) | โรงพยาบาลพิษณุเวช พิจิตร</title>
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt, Sarabun, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Scripts -->
+  <script src="modal.js"></script>
+  <script src="demo_data.js"></script>
+
+  <style>
+    body {
+      font-family: 'Prompt', 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    @keyframes highlight-new {
+      0% { background-color: rgba(16, 185, 129, 0.3); transform: scale(1.01); }
+      100% { background-color: white; transform: scale(1); }
+    }
+    .animate-highlight {
+      animation: highlight-new 2.5s ease-out;
+    }
+
+    /* CSS Medical Cross Loader (Phitsanuvej Style) */
+    .css-logo-loader {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 40px;
+      transform: scale(1.6);
+      transform-origin: center;
+    }
+    .logo-petal {
+      position: absolute;
+      animation: loadingPulse 1.6s ease-in-out infinite;
+    }
+    .logo-petal.outer {
+      background: #1e5387;
+      border-radius: 6px;
+    }
+    .logo-petal.inner {
+      background: #5faee3;
+      border-radius: 5px;
+    }
+    .logo-petal.outer.top { top: 0px; left: 30px; width: 20px; height: 24px; animation-delay: 0s; }
+    .logo-petal.inner.top-right { top: 14px; right: 14px; width: 20px; height: 20px; animation-delay: 0.2s; }
+    .logo-petal.outer.right { top: 30px; right: 0px; width: 24px; height: 20px; animation-delay: 0.4s; }
+    .logo-petal.inner.bottom-right { bottom: 14px; right: 14px; width: 20px; height: 20px; animation-delay: 0.6s; }
+    .logo-petal.outer.bottom { bottom: 0px; left: 30px; width: 20px; height: 24px; animation-delay: 0.8s; }
+    .logo-petal.inner.bottom-left { bottom: 14px; left: 14px; width: 20px; height: 20px; animation-delay: 1.0s; }
+    .logo-petal.outer.left { top: 30px; left: 0px; width: 24px; height: 20px; animation-delay: 1.2s; }
+    .logo-petal.inner.top-left { top: 14px; left: 14px; width: 20px; height: 20px; animation-delay: 1.4s; }
+    @keyframes loadingPulse {
+      0%, 100% { transform: scale(1); opacity: 0.55; }
+      50% { transform: scale(1.18); opacity: 1; }
+    }
+    @keyframes loaderPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased selection:bg-[#2e5e8b] selection:text-white">
+
+  <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) ตามมาตรฐาน รพ.พิษณุเวช -->
+  <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
+    <div class="loader-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.06); min-width: 300px; transform: scale(0.95); animation: loaderPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      
+      <!-- ตัวหมุนแอนิเมชันกากบาทแพทย์ -->
+      <div class="css-logo-loader">
+        <div class="logo-petal outer top"></div>
+        <div class="logo-petal inner top-right"></div>
+        <div class="logo-petal outer right"></div>
+        <div class="logo-petal inner bottom-right"></div>
+        <div class="logo-petal outer bottom"></div>
+        <div class="logo-petal inner bottom-left"></div>
+        <div class="logo-petal outer left"></div>
+        <div class="logo-petal inner top-left"></div>
+      </div>
+      
+      <!-- ข้อความประกอบการรอข้อมูล -->
+      <div style="margin-top: 24px; text-align: center;">
+        <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #1e5387; margin-bottom: 6px; letter-spacing: 0.5px;">
+          กำลังเตรียมระบบเช็คชื่อเข้าอบรม...
+        </div>
+        <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
+          โรงพยาบาลพิษณุเวช พิจิตร
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP APP BAR (FULL WIDTH WIDESCREEN) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs w-full">
+    <div class="w-full px-4 sm:px-6 lg:px-12 py-3.5 flex items-center justify-between">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center space-x-3.5">
+        <a href="admin.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="กลับหน้าระบบจัดการ">
+          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span class="hidden sm:inline">หน้าหลัก</span>
+        </a>
+
+        <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+
+        <div class="flex items-center space-x-3">
+          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-9 sm:h-10 w-auto object-contain">
+          <div class="border-l border-slate-200 pl-3">
+            <div class="flex items-center gap-2">
+              <h1 class="text-sm sm:text-base font-bold text-[#1d3c5a] leading-tight">ระบบลงทะเบียนเข้าอบรมจริง (ณ จุดอบรม)</h1>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold hidden sm:inline-block">
+                On-site Attendance
+              </span>
+            </div>
+            <p id="headerCourseSub" class="text-xs text-slate-500 font-light truncate max-w-xs sm:max-w-md">&nbsp;</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Counters & Audio Toggle -->
+      <div class="flex items-center space-x-2 text-xs">
+        <button type="button" onclick="printOfflineBackupRoster()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-slate-900 to-[#1d3c5a] hover:from-slate-800 hover:to-[#2e5e8b] text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 text-xs" title="พิมพ์ใบลงทะเบียนและเซ็นชื่อหน้างานแบบกระดาษ (สำหรับกรณีอินเทอร์เน็ตขัดข้อง)">
+          <span>🖨️</span>
+          <span class="hidden md:inline">พิมพ์ใบลงทะเบียนสำรอง (Offline Backup)</span>
+          <span class="md:hidden">พิมพ์ใบสำรอง</span>
+        </button>
+        <div class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>เช็คชื่อแล้ว: <strong id="headerCheckinCount" class="font-mono text-sm">0</strong> ท่าน</span>
+        </div>
+        <button type="button" onclick="toggleAudio()" id="btnAudioToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all cursor-pointer shadow-2xs active:scale-95" title="เปิด/ปิดเสียงแจ้งเตือน">
+          <span id="audioIcon">🔊</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (FULL WIDTH ON COMPUTER, RESPONSIVE ON MOBILE) -->
+  <main class="flex-1 w-full px-4 sm:px-6 lg:px-12 py-6 space-y-6">
+
+    <!-- HERO COURSE STRIP (FULL WIDTH) -->
+    <div id="courseHeroCard" class="w-full rounded-3xl bg-gradient-to-r from-[#1d3c5a] via-[#2e5e8b] to-[#3a75aa] p-6 lg:p-7 text-white shadow-xl shadow-[#1d3c5a]/15 relative overflow-hidden">
+      <!-- Glow decoration -->
+      <div class="absolute -right-12 -top-12 w-80 h-80 rounded-full bg-[#5facde]/20 blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2 flex-1 min-w-0">
+          <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-400 text-slate-950 flex items-center gap-1 shadow-2xs">
+              <span>📍</span> จุดลงทะเบียนเข้าอบรมจริงหน้าห้อง
+            </span>
+            <span id="dispCourseIdBadge" class="text-xs font-mono text-cyan-200 bg-black/25 px-2.5 py-1 rounded-lg">-</span>
+            <span id="dispCourseBatchBadge" class="text-xs text-white bg-white/20 px-2.5 py-1 rounded-lg border border-white/10">-</span>
+          </div>
+          <h2 id="dispCourseTitle" class="text-2xl lg:text-3xl font-black text-white tracking-tight truncate leading-tight">
+            &nbsp;
+          </h2>
+          <div class="flex items-center space-x-6 text-xs text-cyan-100/90 font-light flex-wrap gap-y-1 pt-1">
+            <span id="dispCourseSpeaker">🎤 วิทยากร: -</span>
+            <span id="dispCourseDate">📅 วันที่: -</span>
+            <span id="dispCourseTime">⏰ เวลา: -</span>
+          </div>
+        </div>
+
+        <!-- Batch Selector for Check-in Station -->
+        <div class="shrink-0 bg-white/10 p-3 rounded-2xl border border-white/20 space-y-1.5 min-w-[240px]">
+          <label for="checkinBatchSelect" class="block text-xs font-semibold text-cyan-200">
+            เลือกรุ่นที่กำลังจัดอบรมขณะนี้:
+          </label>
+          <select id="checkinBatchSelect" onchange="onBatchChange(this.value)" class="w-full bg-slate-900/75 border border-white/30 text-white rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-hidden focus:ring-2 focus:ring-emerald-400">
+            <option value="รุ่นที่ 1">รุ่นที่ 1</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKSTATION (FULL WIDTH ON COMPUTER, STACKED ON MOBILE) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 w-full items-start">
+      
+      <!-- LEFT WORKSTATION (lg:col-span-6): 1. ช่องกรอกรหัสพนักงาน & 2. ข้อมูลพนักงานและปุ่มยืนยัน -->
+      <div class="lg:col-span-6 space-y-6">
+
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
+          
+          <!-- 1. ช่องกรอกรหัสพนักงาน -->
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+              <span class="w-10 h-10 rounded-2xl bg-blue-100 text-[#2e5e8b] flex items-center justify-center font-bold text-lg shadow-2xs">
+                🔢
+              </span>
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">1. ช่องกรอกรหัสพนักงาน</h3>
+                <p class="text-xs text-slate-400 font-light">พิมพ์รหัสพนักงาน 6 หลัก (เช่น 014125) หรือชื่อ-นามสกุล</p>
+              </div>
+            </div>
+
+            <form onsubmit="handleSearchSubmit(event)" class="relative space-y-2">
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="empSearchInput" 
+                  placeholder="พิมพ์รหัส 6 หลัก เช่น 014125 หรือชื่อ-นามสกุล..." 
+                  oninput="handleSearchEmployee(this.value)"
+                  autocomplete="off"
+                  autofocus
+                  class="w-full pl-12 pr-28 py-4 bg-slate-50 hover:bg-slate-100/70 focus:bg-white border-2 border-slate-200 hover:border-slate-300 focus:border-[#2e5e8b] rounded-2xl text-base font-bold text-slate-900 focus:outline-hidden focus:ring-4 focus:ring-[#2e5e8b]/15 transition-all shadow-inner"
+                >
+                <span class="absolute left-4 top-4 text-xl text-slate-400">🔍</span>
+                
+                <div class="absolute right-2.5 top-2.5 flex items-center space-x-1.5">
+                  <button 
+                    type="button" 
+                    onclick="clearSearchInput()" 
+                    id="btnClearSearch" 
+                    class="hidden text-slate-400 hover:text-slate-600 p-2 text-xs cursor-pointer rounded-xl hover:bg-slate-200/60"
+                    title="ล้างข้อความ"
+                  >
+                    ✕
+                  </button>
+                  <button 
+                    type="submit" 
+                    class="px-4 py-2 bg-[#2e5e8b] hover:bg-[#1d3c5a] active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>ค้นหา</span>
+                    <span>➔</span>
+                  </button>
+                </div>
+
+                <!-- Dropdown Results -->
+                <div id="searchDropdown" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-slate-200 shadow-2xl max-h-80 overflow-y-auto custom-scroll z-30 divide-y divide-slate-100">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2. ข้อมูลพนักงานและปุ่มยืนยัน -->
+          <div id="employeeCardBox" class="pt-2">
+
+            <!-- Standby Prompt (เมื่อยังไม่ได้เลือกพนักงาน) -->
+            <div id="empCardEmpty" class="p-8 text-center space-y-2 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-slate-400">
+              <div class="text-4xl">🪪</div>
+              <p class="text-sm font-light">
+                พิมพ์รหัสพนักงาน 6 หลัก แล้วกด <strong>Enter ↵</strong> เพื่อเช็คชื่อเข้าอบรมได้ทันที ⚡<br>
+                <span class="text-xs text-slate-400 font-light">ระบบบันทึกข้อมูลเรียลไทม์รวดเร็ว ไม่ต้องกดยืนยันป๊อปอัพหน้างานค่ะ</span>
+              </p>
+            </div>
+
+            <!-- Active Employee Details & Confirm Button -->
+            <div id="empCardActive" class="hidden space-y-5 p-6 bg-gradient-to-br from-blue-50/50 via-white to-slate-50 rounded-2xl border-2 border-[#2e5e8b]/20 shadow-sm animate-in fade-in duration-150">
+              
+              <div class="flex items-center justify-between pb-3 border-b border-slate-200/80">
+                <h4 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span>👤</span>
+                  <span>2. ข้อมูลพนักงานที่พบ & ยืนยัน</span>
+                </h4>
+                <span id="bookingStatusPill" class="text-xs px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
+                  จองล่วงหน้าแล้ว
+                </span>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1d3c5a] to-[#2e5e8b] text-white flex items-center justify-center text-2xl font-black shrink-0 shadow-md shadow-[#2e5e8b]/20" id="empCardAvatar">
+                  ก
+                </div>
+                <div class="space-y-1 flex-1 min-w-0">
+                  <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                    <span class="text-sm font-mono font-bold text-[#2e5e8b] bg-white px-2.5 py-0.5 rounded-lg border border-blue-200 shadow-2xs" id="empCardId">
+                      000000
+                    </span>
+                    <span id="empCardPreBookBadge" class="text-xs px-2.5 py-0.5 rounded-lg font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      จองที่นั่งแล้ว
+                    </span>
+                  </div>
+                  <h4 id="empCardFullName" class="text-xl font-bold text-slate-900 leading-snug truncate pt-0.5">
+                    -
+                  </h4>
+                  <p id="empCardPosition" class="text-sm text-slate-600 font-medium truncate">-</p>
+                  <p id="empCardDept" class="text-xs text-slate-400 font-light truncate">-</p>
+                </div>
+              </div>
+
+              <!-- Session Info Box -->
+              <div class="p-3.5 bg-white rounded-xl border border-slate-200 space-y-1.5 text-xs text-slate-600">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">รุ่นที่เข้าอบรม:</span>
+                  <strong id="empCardBatchText" class="text-[#2e5e8b] font-bold text-sm">-</strong>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">สถานะที่นั่ง:</span>
+                  <span id="empCardSeatStatus" class="font-medium text-emerald-700">-</span>
+                </div>
+              </div>
+
+              <!-- Already Checked-in Warning Box -->
+              <div id="alreadyCheckedBox" class="hidden p-4 bg-amber-50 border border-amber-300 rounded-xl text-xs space-y-1 text-amber-900">
+                <div class="font-bold flex items-center gap-1.5 text-sm">
+                  <span>⚠️</span>
+                  <span>พนักงานท่านนี้เช็คชื่อเข้าอบรมไปแล้ว</span>
+                </div>
+                <p class="text-xs text-amber-800 font-light" id="alreadyCheckedTime">-</p>
+              </div>
+
+              <!-- ACTION BUTTONS: CONFIRM CHECKIN -->
+              <div class="space-y-2 pt-1">
+                <button 
+                  type="button" 
+                  id="btnConfirmCheckin" 
+                  onclick="executeCheckin()" 
+                  class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-[0.99] text-white font-black text-lg rounded-2xl shadow-xl shadow-emerald-600/25 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <span>✅</span>
+                  <span>ยืนยันการลงชื่อเข้าอบรม (กด Enter ↵)</span>
+                </button>
+
+                <button 
+                  type="button" 
+                  onclick="resetSelectedEmployee()" 
+                  class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-98 text-slate-600 rounded-xl text-xs font-semibold text-center transition-all cursor-pointer"
+                >
+                  ยกเลิก / ค้นหาท่านต่อไป
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT WORKSTATION (lg:col-span-6): 3. รายชื่อที่เช็คชื่อเข้าอบรมแล้ววันนี้ (คนล่าสุดอยู่บนสุด) -->
+      <div class="lg:col-span-6 space-y-6">
+
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <span>📋</span>
+                  <span>3. รายชื่อที่เช็คชื่อเข้าอบรมแล้ววันนี้</span>
+                </h3>
+                <span id="currentBatchBadgeInFeed" class="text-xs px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
+                  รุ่นที่ 1
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 font-light pt-0.5">
+                แสดงรายชื่อล่าสุดอยู่บนสุด • กรองตามรุ่นที่เลือก • บันทึกลงแท็บ "เช็คชื่อเข้าอบรม"
+              </p>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <button 
+                type="button" 
+                onclick="syncCheckinsFromBackend(true)" 
+                id="btnSyncCheckins"
+                class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                title="รีเฟรชข้อมูลจาก Google Sheet"
+              >
+                <span id="syncIcon">🔄</span>
+                <span class="hidden sm:inline">อัปเดตล่าสุด</span>
+              </button>
+              <span class="text-xs px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 shadow-2xs">
+                <span id="feedCheckinCount" class="font-mono text-sm">0</span> ท่าน
+              </span>
+            </div>
+          </div>
+
+          <!-- ATTENDEES LIST: NEWEST AT THE VERY TOP -->
+          <div id="recentCheckinsList" class="space-y-3 max-h-[640px] overflow-y-auto custom-scroll pr-1">
+            <div class="py-16 text-center text-xs text-slate-400 font-light space-y-2">
+              <div class="text-3xl">⏳</div>
+              <p>ยังไม่มีการเช็คชื่อเข้าห้องอบรมในขณะนี้</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SUCCESS CONFIRMATION MODAL -->
+  <div id="checkinSuccessToast" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-150">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold shadow-xs">
+        ✓
+      </div>
+      <div class="space-y-1">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md">
+          ลงทะเบียนเข้าอบรมสำเร็จ
+        </span>
+        <h4 id="toastEmpName" class="text-lg font-bold text-slate-900 pt-1">-</h4>
+        <p id="toastEmpInfo" class="text-xs text-slate-500 font-light">-</p>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs text-slate-600">
+        <div><strong>เวลาที่เช็คชื่อ:</strong> <span id="toastCheckinTime" class="font-bold text-emerald-800">-</span></div>
+        <div><strong>รุ่นการอบรม:</strong> <span id="toastCheckinBatch" class="font-medium text-slate-700">-</span></div>
+      </div>
+      <button 
+        type="button" 
+        onclick="closeSuccessModal()" 
+        class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer"
+      >
+        ตกลง / คนต่อไป (Enter)
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-400 mt-auto w-full">
+    <div class="w-full px-6 lg:px-12 text-center">
+      © โรงพยาบาลพิษณุเวช พิจิตร • ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • ระบบลงทะเบียนเข้าอบรมจริง
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================================
+    // ON-SITE ATTENDANCE CHECK-IN APPLICATION LOGIC
+    // ============================================================================
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwyROi0_EfFm21mVZUAqZ08rrkc11vISYzcBJFDaGh1vCB3P2Tum8ZtgZv2MJZjTY4g/exec';
+
+    let currentCourse = null;
+    let employeeDatabase = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+    let attendeesList = []; // Pre-booked attendees
+    let checkinsList = [];  // Checked-in attendees (sorted latest first)
+    let selectedEmployee = null;
+    let soundEnabled = true;
+
+    // Web Audio Chime
+    function playBeep(freq = 880, type = 'sine', duration = 0.15) {
+      if (!soundEnabled) return;
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('audioIcon');
+      if (icon) icon.textContent = soundEnabled ? '🔊' : '🔇';
+      if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+        HrdModal.toast(soundEnabled ? 'เปิดเสียงแจ้งเตือนแล้วค่ะ' : 'ปิดเสียงแจ้งเตือนแล้วค่ะ', 'info');
+      }
+    }
+
+    // Init on Load
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await Promise.all([
+          loadEmployeeDatabase(),
+          initCheckinCourse()
+        ]);
+      } catch (err) {
+        console.warn('Checkin init error:', err);
+      } finally {
+        hideLoader();
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const activeEl = document.activeElement;
+          const isSearchInput = activeEl && activeEl.id === 'empSearchInput';
+          if (!isSearchInput && selectedEmployee) {
+            e.preventDefault();
+            handleSearchSubmit();
+          }
+        }
+      });
+    });
+
+    function hideLoader() {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+        setTimeout(() => { loader.style.display = 'none'; }, 350);
+      }
+    }
+
+    function showLoader(title, subtitle) {
+      const loader = document.getElementById('loading');
+      if (loader) {
+        const t = document.getElementById('loaderTitle');
+        const s = document.getElementById('loaderSubtitle');
+        if (t) t.textContent = title || 'กำลังเตรียมระบบเช็คชื่อเข้าอบรม...';
+        if (s) s.textContent = subtitle || 'โรงพยาบาลพิษณุเวช พิจิตร';
+        loader.style.display = 'flex';
+        loader.style.visibility = 'visible';
+        loader.style.opacity = '1';
+      }
+    }
+
+    async function loadEmployeeDatabase() {
+      try {
+        const resp = await fetch('employees.json');
+        if (resp.ok) {
+          const data = await resp.json();
+          if (Array.isArray(data) && data.length > 0) {
+            employeeDatabase = data;
+          }
+        }
+      } catch(e) {}
+    }
+
+    async function initCheckinCourse() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let courseId = urlParams.get('course') || urlParams.get('id');
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      // 1. Try instant load from local cache if courseId is provided
+      if (courseId) {
+        try {
+          const cached = localStorage.getItem('hrd_course_' + courseId);
+          if (cached) {
+            currentCourse = JSON.parse(cached);
+          } else {
+            const allStr = localStorage.getItem('hrd_all_courses');
+            if (allStr) {
+              const allList = JSON.parse(allStr);
+              currentCourse = allList.find(c => c && String(c.id).toLowerCase() === String(courseId).toLowerCase());
+            }
+          }
+          if (currentCourse) {
+            populateCourseDetails(currentCourse);
+            loadLocalCheckins(currentCourse.id);
+          }
+        } catch(e) {}
+      }
+
+      // 1.5. Try static courses.json (<50ms)
+      if (!currentCourse) {
+        try {
+          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json()).catch(() => null);
+          if (Array.isArray(resStatic) && resStatic.length > 0) {
+            if (courseId) {
+              currentCourse = resStatic.find(c => c && String(c.id).toLowerCase() === String(courseId).toLowerCase());
+            }
+            if (!currentCourse) currentCourse = resStatic[0];
+            if (currentCourse) {
+              populateCourseDetails(currentCourse);
+              loadLocalCheckins(currentCourse.id);
+            }
+          }
+        } catch(e) {}
+      }
+
+      // 2. Fetch targeted course from GAS (in background / live sync)
+      if (courseId) {
+        try {
+          const res = await fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(courseId));
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success && data.course) {
+              currentCourse = data.course;
+              try { localStorage.setItem('hrd_course_' + courseId, JSON.stringify(currentCourse)); } catch(e) {}
+            }
+          }
+        } catch(e) {
+          console.warn('Targeted getCourse failed:', e);
+        }
+      }
+
+      // 3. Fallback: If no courseId or course not found, fetch all courses
+      if (!currentCourse) {
+        try {
+          const res = await fetch(gasUrl + '?action=getAllCourses');
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : (data && Array.isArray(data.courses) ? data.courses : []);
+            if (list.length > 0) {
+              if (courseId) {
+                currentCourse = list.find(c => String(c.id).toLowerCase() === String(courseId).toLowerCase());
+              }
+              if (!currentCourse) {
+                currentCourse = list[0];
+              }
+              if (currentCourse) {
+                try { localStorage.setItem('hrd_course_' + currentCourse.id, JSON.stringify(currentCourse)); } catch(e) {}
+              }
+            }
+          }
+        } catch(e) {
+          console.warn('getAllCourses fallback failed:', e);
+        }
+      }
+
+      // 4. Render details and sync attendees & checkins in parallel
+      if (currentCourse) {
+        populateCourseDetails(currentCourse);
+        loadLocalCheckins(currentCourse.id);
+        await Promise.all([
+          syncCourseAttendees(currentCourse),
+          syncCheckinsFromBackend()
+        ]);
+      } else {
+        document.getElementById('headerCourseSub').textContent = 'ไม่พบข้อมูลหลักสูตรที่ระบุ';
+        document.getElementById('dispCourseTitle').textContent = 'ไม่พบข้อมูลหลักสูตรที่ระบุ';
+      }
+    }
+
+    function populateCourseDetails(c) {
+      document.getElementById('headerCourseSub').textContent = `${c.title} • ${c.date || '-'}`;
+      document.getElementById('dispCourseTitle').textContent = c.title || '-';
+      document.getElementById('dispCourseIdBadge').textContent = c.id || '-';
+      document.getElementById('dispCourseSpeaker').textContent = '🎤 วิทยากร: ' + (c.speaker || 'HRD');
+      document.getElementById('dispCourseDate').textContent = '📅 วันที่: ' + (c.date || '-');
+      document.getElementById('dispCourseTime').textContent = '⏰ เวลา: ' + (c.time || '-');
+
+      const batches = (c.batches && c.batches.length > 0) ? c.batches : ['รุ่นที่ 1'];
+      document.getElementById('dispCourseBatchBadge').textContent = batches.length + ' รุ่นการอบรม';
+
+      const bSelect = document.getElementById('checkinBatchSelect');
+      if (bSelect) {
+        const prevVal = bSelect.value;
+        let options = batches.map(b => `<option value="${b}">${b}</option>`);
+        if (batches.length > 1) {
+          options.push(`<option value="all">🌟 แสดงทุกรุ่น (ทั้งหมด)</option>`);
+        }
+        bSelect.innerHTML = options.join('');
+        if (prevVal && (batches.includes(prevVal) || prevVal === 'all')) {
+          bSelect.value = prevVal;
+        }
+      }
+    }
+
+    function isMatchingBatch(itemBatch, selectedBatch) {
+      if (!selectedBatch || selectedBatch === 'all' || selectedBatch === 'ทุกรุ่น' || selectedBatch === 'ทุกรุ่น (ทั้งหมด)') {
+        return true;
+      }
+      if (!itemBatch) return false;
+      const b1 = String(itemBatch).trim().toLowerCase();
+      const b2 = String(selectedBatch).trim().toLowerCase();
+      if (b1 === b2) return true;
+
+      // Extract batch number: "รุ่นที่ X", "รุ่น X"
+      const m1 = b1.match(/รุ่นที่\s*(\d+)/i) || b1.match(/รุ่น\s*(\d+)/i);
+      const m2 = b2.match(/รุ่นที่\s*(\d+)/i) || b2.match(/รุ่น\s*(\d+)/i);
+      if (m1 && m2) {
+        return m1[1] === m2[1];
+      }
+
+      return b1.includes(b2) || b2.includes(b1);
+    }
+
+    function onBatchChange(val) {
+      // 1. Re-render check-in list filtered by selected batch
+      renderRecentCheckins();
+
+      // 2. If employee card is active, re-check their booking status for this batch
+      if (selectedEmployee) {
+        selectEmployee(selectedEmployee);
+      }
+    }
+
+    function selectBatchFilter(val) {
+      const bSelect = document.getElementById('checkinBatchSelect');
+      if (bSelect) {
+        bSelect.value = val;
+        onBatchChange(val);
+      }
+    }
+
+    function loadLocalCheckins(courseId) {
+      try {
+        const raw = localStorage.getItem('hrd_checkins_' + courseId);
+        if (raw) {
+          checkinsList = JSON.parse(raw);
+        } else {
+          checkinsList = [];
+        }
+      } catch(e) {
+        checkinsList = [];
+      }
+      renderRecentCheckins();
+    }
+
+    async function syncCourseAttendees(c) {
+      try {
+        const rawAtt = localStorage.getItem('hrd_attendees_' + c.id);
+        if (rawAtt) attendeesList = JSON.parse(rawAtt);
+      } catch(e) {}
+
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (c.sheetId) {
+        try {
+          const res = await fetch(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(c.sheetId));
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success && Array.isArray(data.attendees)) {
+              attendeesList = data.attendees;
+              try { localStorage.setItem('hrd_attendees_' + c.id, JSON.stringify(attendeesList)); } catch(e) {}
+            }
+          }
+        } catch(e) {}
+      }
+    }
+
+    // ดึงรายชื่อที่เช็คชื่อเข้าอบรมจริงจาก Google Sheet (แท็บ "เช็คชื่อเข้าอบรม")
+    // ดึงรายชื่อที่เช็คชื่อเข้าอบรมจริงจาก Google Sheet (แท็บ "เช็คชื่อเข้าอบรม" หรือ "ลงทะเบียนหน้างาน")
+    async function syncCheckinsFromBackend(isManual = false) {
+      if (!currentCourse || !currentCourse.sheetId) return;
+      const syncIcon = document.getElementById('syncIcon');
+      if (syncIcon) syncIcon.classList.add('animate-spin');
+
+      if (isManual) {
+        try {
+          localStorage.removeItem('hrd_checkins_' + currentCourse.id);
+        } catch(e) {}
+      }
+
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      try {
+        const res = await fetch(gasUrl + '?action=getCheckins&courseId=' + encodeURIComponent(currentCourse.id) + '&sheetId=' + encodeURIComponent(currentCourse.sheetId));
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.checkins)) {
+            // Google Sheet คือแหล่งข้อมูลจริง (Single Source of Truth)
+            const remoteChecked = data.checkins.filter(c => c.status === "เข้าอบรมแล้ว" || (c.timestamp && c.timestamp !== "-"));
+            
+            // ตรวจสอบเฉพาะรายการที่เพิ่งกดยืนยันบนเครื่องนี้ไม่เกิน 15 วินาทีและกำลังส่ง
+            const now = Date.now();
+            const inFlight = isManual ? [] : checkinsList.filter(c => c.isPendingSync && (now - (c.localCreatedAt || 0) < 15000));
+
+            const finalMap = new Map();
+            // นำข้อมูลจริงจากชีทเข้ามาก่อน
+            remoteChecked.forEach(item => {
+              if (item.employeeId) finalMap.set(String(item.employeeId), item);
+            });
+            // หากมีรายการที่เพิ่งกดยืนยันในเครื่องนี้แต่ยังส่งไม่เสร็จ ให้รวมไว้ชั่วคราว
+            inFlight.forEach(item => {
+              const id = String(item.employeeId || '');
+              if (id && !finalMap.has(id)) {
+                finalMap.set(id, item);
+              }
+            });
+
+            checkinsList = Array.from(finalMap.values());
+            try {
+              localStorage.setItem('hrd_checkins_' + currentCourse.id, JSON.stringify(checkinsList));
+            } catch(e) {}
+            renderRecentCheckins();
+
+            // หากมีบัตรพนักงานเปิดค้างอยู่ ให้คำนวณสถานะใหม่
+            if (selectedEmployee) {
+              selectEmployee(selectedEmployee);
+            }
+
+            if (isManual && typeof HrdModal !== 'undefined' && HrdModal.toast) {
+              if (checkinsList.length > 0) {
+                HrdModal.toast(`อัปเดตข้อมูลจากชีทสำเร็จ (พบผู้เช็คชื่อ ${checkinsList.length} ท่าน)`, 'success');
+              } else {
+                HrdModal.toast('อัปเดตข้อมูลแล้ว: ในชีทยังไม่มีผู้เช็คชื่อเข้าอบรม (รีเซ็ตข้อมูลเป็น 0 แล้ว)', 'info');
+              }
+            }
+          }
+        }
+      } catch(e) {
+        console.warn('Sync checkins note:', e);
+      } finally {
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+      }
+    }
+
+    // ============================================================================
+    // 1. ช่องกรอกรหัสพนักงาน & ค้นหา
+    // ============================================================================
+    function handleSearchSubmit(e) {
+      if (e) e.preventDefault();
+      const inp = document.getElementById('empSearchInput');
+      const val = (inp ? inp.value : '').trim();
+
+      // Case 1: An employee is already matched and active on screen (e.g. from typing 6 digits)
+      if (selectedEmployee) {
+        const btnConfirm = document.getElementById('btnConfirmCheckin');
+        if (btnConfirm && btnConfirm.disabled) {
+          playBeep(440, 'sawtooth', 0.2);
+          if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+            HrdModal.toast(`⚠️ ${selectedEmployee.title || ''}${selectedEmployee.firstName} ${selectedEmployee.lastName} เช็คชื่อเข้าอบรมในรุ่นนี้ไปแล้วค่ะ`, 'warning');
+          }
+          resetSelectedEmployee();
+          clearSearchInput();
+          return;
+        }
+        executeCheckin();
+        return;
+      }
+
+      // Case 2: No employee selected yet, but input has text
+      if (!val) return;
+
+      let padded = val;
+      if (/^\d+$/.test(val) && val.length <= 6) {
+        padded = ("000000" + val).slice(-6);
+      }
+
+      // 1. Match by ID
+      let emp = employeeDatabase.find(e => String(e.id) === padded || String(e.id) === val);
+      
+      // 2. Match in pre-booked attendees
+      if (!emp && Array.isArray(attendeesList)) {
+        const att = attendeesList.find(a => String(a.id) === padded || String(a.id) === val);
+        if (att) {
+          emp = {
+            id: att.id,
+            title: att.title || '',
+            firstName: att.firstName || '',
+            lastName: att.lastName || '',
+            department: att.department || '',
+            position: att.position || ''
+          };
+        }
+      }
+
+      // 3. Match by name
+      if (!emp) {
+        emp = employeeDatabase.find(e => 
+          (e.firstName && e.firstName.includes(val)) ||
+          (e.lastName && e.lastName.includes(val)) ||
+          ((e.firstName + ' ' + e.lastName).includes(val))
+        );
+      }
+
+      if (emp) {
+        selectEmployee(emp);
+        clearSearchDropdown();
+
+        // Check if already checked in
+        const btnConfirm = document.getElementById('btnConfirmCheckin');
+        if (btnConfirm && btnConfirm.disabled) {
+          playBeep(440, 'sawtooth', 0.2);
+          if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+            HrdModal.toast(`⚠️ ${emp.title || ''}${emp.firstName} ${emp.lastName} เช็คชื่อเข้าอบรมในรุ่นนี้ไปแล้วค่ะ`, 'warning');
+          }
+          resetSelectedEmployee();
+          clearSearchInput();
+          return;
+        }
+
+        executeCheckin();
+      } else {
+        playBeep(440, 'sawtooth', 0.2);
+        if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+          HrdModal.toast(`ไม่พบข้อมูลพนักงาน "${val}" ในระบบค่ะ`, 'error');
+        }
+        handleSearchEmployee(val);
+      }
+    }
+
+    function handleSearchEmployee(query) {
+      const q = (query || '').trim().toLowerCase();
+      const dd = document.getElementById('searchDropdown');
+      const btnClear = document.getElementById('btnClearSearch');
+
+      if (!q) {
+        if (dd) dd.classList.add('hidden');
+        if (btnClear) btnClear.classList.add('hidden');
+        if (selectedEmployee) resetSelectedEmployee();
+        return;
+      }
+
+      if (btnClear) btnClear.classList.remove('hidden');
+
+      // If user typed a new query different from current selected employee, clear card
+      if (selectedEmployee && String(selectedEmployee.id) !== q) {
+        document.getElementById('empCardEmpty').classList.remove('hidden');
+        document.getElementById('empCardActive').classList.add('hidden');
+        selectedEmployee = null;
+      }
+
+      // Auto-match if exactly 6 digits typed
+      if (/^\d{6}$/.test(q)) {
+        const directEmp = employeeDatabase.find(e => String(e.id) === q);
+        if (directEmp) {
+          selectEmployee(directEmp);
+          clearSearchDropdown();
+          return;
+        }
+      }
+
+      const matches = employeeDatabase.filter(e => {
+        const idMatch = String(e.id).toLowerCase().includes(q);
+        const nameMatch = (e.firstName + ' ' + e.lastName).toLowerCase().includes(q);
+        const deptMatch = String(e.department || '').toLowerCase().includes(q);
+        return idMatch || nameMatch || deptMatch;
+      }).slice(0, 10);
+
+      if (matches.length === 0) {
+        dd.innerHTML = '<div class="p-4 text-center text-xs text-slate-400">ไม่พบรายชื่อพนักงานที่ตรงกับคำค้นหา</div>';
+        dd.classList.remove('hidden');
+        return;
+      }
+
+      dd.innerHTML = matches.map(e => `
+        <div onclick="selectEmployeeFromSearch('${e.id}')" class="p-3.5 hover:bg-blue-50/80 cursor-pointer flex items-center justify-between text-xs transition-colors">
+          <div class="flex items-center space-x-3">
+            <span class="font-mono font-bold text-[#2e5e8b] bg-slate-100 px-2 py-0.5 rounded">${e.id}</span>
+            <div>
+              <span class="font-bold text-slate-800 text-sm">${e.title || ''}${e.firstName} ${e.lastName}</span>
+              <span class="text-xs text-slate-400 block">${e.position || '-'} • ${e.department || '-'}</span>
+            </div>
+          </div>
+          <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">เลือก ➔</span>
+        </div>
+      `).join('');
+
+      dd.classList.remove('hidden');
+    }
+
+    function clearSearchDropdown() {
+      const dd = document.getElementById('searchDropdown');
+      if (dd) dd.classList.add('hidden');
+    }
+
+    function clearSearchInput() {
+      const inp = document.getElementById('empSearchInput');
+      if (inp) {
+        inp.value = '';
+        inp.focus();
+      }
+      clearSearchDropdown();
+      const btnClear = document.getElementById('btnClearSearch');
+      if (btnClear) btnClear.classList.add('hidden');
+    }
+
+    function selectEmployeeFromSearch(id) {
+      clearSearchDropdown();
+      const emp = employeeDatabase.find(e => String(e.id) === String(id));
+      if (emp) {
+        selectEmployee(emp);
+      }
+    }
+
+    // ============================================================================
+    // 2. ข้อมูลพนักงาน & ยืนยันการลงชื่อเข้าอบรม
+    // ============================================================================
+    function selectEmployee(emp) {
+      selectedEmployee = emp;
+
+      document.getElementById('empCardEmpty').classList.add('hidden');
+      document.getElementById('empCardActive').classList.remove('hidden');
+
+      const bSelect = document.getElementById('checkinBatchSelect');
+      const currentSelectedBatch = bSelect ? bSelect.value : 'รุ่นที่ 1';
+
+      // Check pre-booking status
+      const booked = attendeesList.find(a => String(a.id) === String(emp.id));
+      const badgePill = document.getElementById('bookingStatusPill');
+      const preBadge = document.getElementById('empCardPreBookBadge');
+      const seatStatus = document.getElementById('empCardSeatStatus');
+
+      const isCurrentAll = (currentSelectedBatch === 'all');
+      const effectiveBatch = isCurrentAll 
+        ? (booked ? booked.batch : (currentCourse && currentCourse.batches && currentCourse.batches[0] ? currentCourse.batches[0] : 'รุ่นที่ 1'))
+        : currentSelectedBatch;
+
+      if (booked) {
+        const isMatch = isMatchingBatch(booked.batch, effectiveBatch);
+        if (isMatch || isCurrentAll) {
+          badgePill.textContent = 'จองล่วงหน้าแล้ว';
+          badgePill.className = 'text-xs px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold';
+          preBadge.textContent = '✓ จองที่นั่งแล้ว (' + (booked.batch || 'รุ่นที่ 1') + ')';
+          preBadge.className = 'text-xs px-2.5 py-0.5 rounded-lg font-bold bg-emerald-100 text-emerald-800 border border-emerald-200';
+          seatStatus.textContent = 'มีรายชื่อจองใน ' + (booked.batch || 'รุ่นที่ 1');
+        } else {
+          badgePill.textContent = 'จองรุ่นอื่น (' + (booked.batch || '-') + ')';
+          badgePill.className = 'text-xs px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-bold';
+          preBadge.textContent = 'ℹ️ จองรุ่น ' + (booked.batch || '-') + ' (ข้ามรุ่นมาอบรม)';
+          preBadge.className = 'text-xs px-2.5 py-0.5 rounded-lg font-bold bg-blue-100 text-blue-800 border border-blue-200';
+          seatStatus.textContent = 'เดิมจองไว้ที่ ' + (booked.batch || '-') + ' แต่มาร่วมใน ' + effectiveBatch;
+        }
+      } else {
+        badgePill.textContent = 'Walk-in เข้าอบรม';
+        badgePill.className = 'text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold';
+        preBadge.textContent = '⚠️ Walk-in (ไม่ได้จองล่วงหน้า)';
+        preBadge.className = 'text-xs px-2.5 py-0.5 rounded-lg font-bold bg-amber-100 text-amber-800 border border-amber-200';
+        seatStatus.textContent = 'ลงทะเบียนหน้างานทันที';
+      }
+
+      // Populate details
+      document.getElementById('empCardAvatar').textContent = (emp.firstName || emp.id || 'ก').substring(0, 1);
+      document.getElementById('empCardId').textContent = emp.id;
+      document.getElementById('empCardFullName').textContent = `${emp.title || ''}${emp.firstName} ${emp.lastName}`;
+      document.getElementById('empCardPosition').textContent = emp.position || 'พนักงานทั่วไป';
+      document.getElementById('empCardDept').textContent = emp.department || 'โรงพยาบาลพิษณุเวช พิจิตร';
+      document.getElementById('empCardBatchText').textContent = effectiveBatch;
+
+      // Check if already checked into this batch or any batch
+      const alreadyCheckedThisBatch = checkinsList.find(c => 
+        String(c.employeeId) === String(emp.id) && isMatchingBatch(c.batch, effectiveBatch)
+      );
+      const alreadyCheckedAny = checkinsList.find(c => 
+        String(c.employeeId) === String(emp.id)
+      );
+
+      const alreadyBox = document.getElementById('alreadyCheckedBox');
+      const btnConfirm = document.getElementById('btnConfirmCheckin');
+
+      if (alreadyCheckedThisBatch) {
+        alreadyBox.classList.remove('hidden');
+        document.getElementById('alreadyCheckedTime').textContent = `เช็คชื่อในรุ่นนี้ไปแล้วเมื่อ: ${alreadyCheckedThisBatch.timestamp || 'เรียบร้อย'} (${alreadyCheckedThisBatch.batch || effectiveBatch})`;
+        btnConfirm.disabled = true;
+        btnConfirm.className = 'w-full py-4 bg-slate-200 text-slate-400 font-bold text-base rounded-2xl cursor-not-allowed';
+        btnConfirm.innerHTML = '<span>✓ เช็คชื่อเข้าอบรมแล้ว</span>';
+      } else if (alreadyCheckedAny && isCurrentAll) {
+        alreadyBox.classList.remove('hidden');
+        document.getElementById('alreadyCheckedTime').textContent = `เช็คชื่อไปแล้วเมื่อ: ${alreadyCheckedAny.timestamp || 'เรียบร้อย'} (${alreadyCheckedAny.batch || '-'})`;
+        btnConfirm.disabled = true;
+        btnConfirm.className = 'w-full py-4 bg-slate-200 text-slate-400 font-bold text-base rounded-2xl cursor-not-allowed';
+        btnConfirm.innerHTML = '<span>✓ เช็คชื่อเข้าอบรมแล้ว</span>';
+      } else if (alreadyCheckedAny) {
+        alreadyBox.classList.remove('hidden');
+        document.getElementById('alreadyCheckedTime').textContent = `* หมายเหตุ: เคยเช็คชื่อใน ${alreadyCheckedAny.batch || '-'} เมื่อ ${alreadyCheckedAny.timestamp || '-'} (สามารถกดยืนยันเพื่อเช็คชื่อเข้า ${effectiveBatch} เพิ่มได้)`;
+        btnConfirm.disabled = false;
+        btnConfirm.className = 'w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-[0.99] text-white font-black text-lg rounded-2xl shadow-xl shadow-emerald-600/25 transition-all flex items-center justify-center space-x-2 cursor-pointer';
+        btnConfirm.innerHTML = '<span>✅</span><span>ยืนยันการลงชื่อเข้าอบรม (' + effectiveBatch + ')</span>';
+      } else {
+        alreadyBox.classList.add('hidden');
+        btnConfirm.disabled = false;
+        btnConfirm.className = 'w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-[0.99] text-white font-black text-lg rounded-2xl shadow-xl shadow-emerald-600/25 transition-all flex items-center justify-center space-x-2 cursor-pointer';
+        btnConfirm.innerHTML = '<span>✅</span><span>ยืนยันการลงชื่อเข้าอบรม</span>';
+      }
+    }
+
+    function resetSelectedEmployee() {
+      selectedEmployee = null;
+      document.getElementById('empCardEmpty').classList.remove('hidden');
+      document.getElementById('empCardActive').classList.add('hidden');
+      clearSearchInput();
+    }
+
+    // ============================================================================
+    // EXECUTE ATTENDANCE CHECK-IN & BACKEND SYNC
+    // ============================================================================
+    async function executeCheckin() {
+      if (!selectedEmployee) return;
+
+      const emp = selectedEmployee;
+      const bSelect = document.getElementById('checkinBatchSelect');
+      let batchName = bSelect ? bSelect.value : 'รุ่นที่ 1';
+      if (batchName === 'all') {
+        const booked = attendeesList.find(a => String(a.id) === String(emp.id));
+        batchName = booked ? (booked.batch || 'รุ่นที่ 1') : (currentCourse && currentCourse.batches && currentCourse.batches[0] ? currentCourse.batches[0] : 'รุ่นที่ 1');
+      }
+
+      const now = new Date();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ' น.';
+      const dateStr = now.toLocaleDateString('th-TH');
+      const timestampFull = `${dateStr} ${timeStr}`;
+
+      const booked = attendeesList.find(a => String(a.id) === String(emp.id));
+      const regType = booked ? 'จองล่วงหน้า' : 'ลงทะเบียนหน้างาน (Walk-in)';
+
+      const checkinRecord = {
+        employeeId: emp.id,
+        title: emp.title || '',
+        firstName: emp.firstName || '',
+        lastName: emp.lastName || '',
+        position: emp.position || '',
+        department: emp.department || '',
+        batch: batchName,
+        regType: regType,
+        status: 'เข้าอบรมแล้ว',
+        courseId: currentCourse ? currentCourse.id : '',
+        timestamp: timeStr,
+        fullTimestamp: timestampFull,
+        isNew: true,
+        localCreatedAt: Date.now(),
+        isPendingSync: true
+      };
+
+      // Play success chime
+      playBeep(1046.5, 'triangle', 0.2);
+
+      // Remove previous checkin for the same batch if any, and unshift newest to index 0
+      checkinsList = checkinsList.filter(c => !(String(c.employeeId) === String(emp.id) && isMatchingBatch(c.batch, batchName)));
+      checkinsList.unshift(checkinRecord);
+
+      try {
+        localStorage.setItem('hrd_checkins_' + (currentCourse ? currentCourse.id : 'default'), JSON.stringify(checkinsList));
+      } catch(e) {}
+
+      // Update counters & render list
+      renderRecentCheckins();
+
+      // Show confirmation toast
+      showCheckinToast(emp, timeStr, batchName);
+
+      // Async Send to Google Apps Script (บันทึกเข้าแท็บ "เช็คชื่อเข้าอบรม" แยกจากแท็บปริ้นท์)
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      const payload = {
+        action: 'checkin',
+        courseId: currentCourse ? currentCourse.id : '',
+        sheetId: currentCourse ? (currentCourse.sheetId || '') : '',
+        employeeId: emp.id,
+        title: emp.title || '',
+        firstName: emp.firstName || '',
+        lastName: emp.lastName || '',
+        position: emp.position || '',
+        department: emp.department || '',
+        batch: batchName,
+        timestamp: timestampFull
+      };
+
+      try {
+        fetch(gasUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        }).catch(err => console.warn('GAS checkin sync notice:', err));
+      } catch(e) {}
+    }
+
+    function showCheckinToast(emp, timeStr, batchName) {
+      // 1. Sleek non-blocking notification toast (Auto-dismisses in 2.5s, no clicking OK required!)
+      if (typeof HrdModal !== 'undefined' && HrdModal.toast) {
+        const fullName = `${emp.title || ''}${emp.firstName} ${emp.lastName}`;
+        HrdModal.toast(`✅ ลงชื่อเข้าอบรมสำเร็จ: ${fullName} (${emp.id}) • ${timeStr}`, 'success');
+      }
+
+      // 2. Instantly reset card & refocus input ready for the next person (0s delay!)
+      resetSelectedEmployee();
+      const inp = document.getElementById('empSearchInput');
+      if (inp) {
+        inp.value = '';
+        inp.focus();
+      }
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('checkinSuccessToast');
+      if (modal) modal.classList.add('hidden');
+      resetSelectedEmployee();
+      const inp = document.getElementById('empSearchInput');
+      if (inp) {
+        inp.value = '';
+        inp.focus();
+      }
+    }
+
+    // ============================================================================
+    // 3. แสดงรายชื่อล่าสุดอยู่บนสุด (RENDER CHECK-IN LIST WITH BATCH FILTER)
+    // ============================================================================
+    function renderRecentCheckins() {
+      const listEl = document.getElementById('recentCheckinsList');
+      const headerCount = document.getElementById('headerCheckinCount');
+      const feedCount = document.getElementById('feedCheckinCount');
+      const badgeInFeed = document.getElementById('currentBatchBadgeInFeed');
+
+      const bSelect = document.getElementById('checkinBatchSelect');
+      const currentSelectedBatch = bSelect ? bSelect.value : 'all';
+
+      if (badgeInFeed) {
+        badgeInFeed.textContent = (currentSelectedBatch === 'all') ? 'แสดงทุกรุ่น' : currentSelectedBatch;
+      }
+
+      // กรองรายชื่อตามรุ่นที่เลือก (ถ้าเลือก "all" หรือไม่มีค่าจะแสดงทุกรุ่น)
+      const filteredCheckins = (currentSelectedBatch === 'all' || !currentSelectedBatch)
+        ? checkinsList
+        : checkinsList.filter(item => isMatchingBatch(item.batch, currentSelectedBatch));
+
+      const totalCount = checkinsList.length;
+      const filteredCount = filteredCheckins.length;
+
+      if (headerCount) {
+        if (currentSelectedBatch === 'all' || currentSelectedBatch === '') {
+          headerCount.textContent = totalCount;
+        } else {
+          headerCount.textContent = `${filteredCount} (รวม ${totalCount})`;
+        }
+      }
+      if (feedCount) {
+        feedCount.textContent = filteredCount;
+      }
+
+      if (!listEl) return;
+
+      if (filteredCount === 0) {
+        const batchDisplay = (currentSelectedBatch === 'all' || !currentSelectedBatch) ? 'ขณะนี้' : `ใน${currentSelectedBatch}`;
+        listEl.innerHTML = `
+          <div class="py-16 text-center text-xs text-slate-400 font-light space-y-2">
+            <div class="text-3xl">⏳</div>
+            <p class="font-medium text-slate-600">ยังไม่มีการเช็คชื่อเข้าห้องอบรม${batchDisplay}</p>
+            ${totalCount > 0 && currentSelectedBatch !== 'all' ? `
+              <p class="text-[11px] text-slate-400 pt-1">
+                (มีผู้เช็คชื่อในรุ่นอื่นแล้ว ${totalCount} ท่าน • <button type="button" onclick="selectBatchFilter('all')" class="text-emerald-700 underline font-semibold cursor-pointer">คลิกเพื่อแสดงทุกรุ่น</button>)
+              </p>
+            ` : ''}
+          </div>
+        `;
+        return;
+      }
+
+      // แสดงรายชื่อโดยเรียงคนล่าสุดไว้บนสุด (index 0 is the newest)
+      listEl.innerHTML = filteredCheckins.map((item, index) => {
+        const isLatest = (index === 0 && item.isNew);
+        const timeDisplay = item.timestamp || '-';
+        const isWalkin = (item.regType && item.regType.includes('Walk-in'));
+
+        return `
+          <div class="p-4 rounded-2xl border transition-all flex items-center justify-between ${isLatest ? 'bg-emerald-50/70 border-emerald-300 shadow-md animate-highlight' : 'bg-white hover:bg-slate-50 border-slate-200/90 shadow-2xs'}">
+            
+            <div class="flex items-center space-x-3.5 min-w-0">
+              <!-- Ranking or Checkmark Badge -->
+              <div class="w-10 h-10 rounded-xl ${isLatest ? 'bg-emerald-500 text-white shadow-xs' : 'bg-slate-100 text-slate-600'} flex items-center justify-center font-bold text-sm shrink-0">
+                ${isLatest ? '✓' : '#' + (index + 1)}
+              </div>
+
+              <div class="min-w-0 space-y-1">
+                <div class="flex items-center space-x-2 flex-wrap gap-y-0.5">
+                  <span class="font-bold text-sm text-slate-900 truncate">
+                    ${escapeHtml(item.title || '')}${escapeHtml(item.firstName || '')} ${escapeHtml(item.lastName || '')}
+                  </span>
+                  <span class="font-mono text-[11px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md font-semibold">
+                    ${escapeHtml(item.employeeId || '-')}
+                  </span>
+                  ${isWalkin ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">Walk-in</span>' : '<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">จองล่วงหน้า</span>'}
+                  ${isLatest ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 animate-pulse">ล่าสุด</span>' : ''}
+                </div>
+                <p class="text-xs text-slate-500 font-light truncate">
+                  ${escapeHtml(item.position || '-')} • ${escapeHtml(item.department || '-')}
+                </p>
+              </div>
+            </div>
+
+            <!-- Time & Batch Stamp -->
+            <div class="text-right shrink-0 pl-3">
+              <span class="text-sm font-bold text-emerald-700 block">
+                ${escapeHtml(timeDisplay)}
+              </span>
+              <span class="text-[10px] text-slate-600 font-semibold bg-slate-100 px-2.5 py-0.5 rounded-md inline-block mt-0.5 border border-slate-200/80">
+                ${escapeHtml(item.batch || 'รุ่นที่ 1')}
+              </span>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    function printOfflineBackupRoster() {
+      if (!currentCourse) {
+        if (typeof HrdModal !== 'undefined' && HrdModal.warning) {
+          HrdModal.warning('ไม่พบข้อมูลหลักสูตรที่กำลังเปิดอยู่ค่ะ', 'ไม่พบข้อมูล');
+        } else {
+          alert('ไม่พบข้อมูลหลักสูตรที่กำลังเปิดอยู่ค่ะ');
+        }
+        return;
+      }
+
+      const bSelect = document.getElementById('checkinBatchSelect');
+      const selectedBatch = bSelect ? bSelect.value : 'all';
+      const batchLabel = selectedBatch === 'all' ? 'ทุกรุ่นการอบรม' : selectedBatch;
+
+      // Filter attendees from attendeesList
+      let filtered = [];
+      if (Array.isArray(attendeesList) && attendeesList.length > 0) {
+        filtered = attendeesList.filter(a => {
+          if (selectedBatch === 'all') return true;
+          return isMatchingBatch(a.batch, selectedBatch);
+        });
+      }
+
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        alert('กรุณาอนุญาตให้เบราว์เซอร์เปิดหน้าต่างพิมพ์ (Pop-up) นะคะ');
+        return;
+      }
+
+      // Generate pre-registered rows
+      const preRegisteredRowsHtml = filtered.map((a, idx) => {
+        const empId = a.id || a.empId || '-';
+        const fullName = (a.title || '') + (a.name || ((a.firstName || '') + ' ' + (a.lastName || '')));
+        const pos = a.position || '-';
+        const dept = a.department || a.dept || '-';
+
+        return `
+          <tr style="height: 36px;">
+            <td style="border: 1px solid #333; text-align: center; font-size: 11px;">${idx + 1}</td>
+            <td style="border: 1px solid #333; text-align: center; font-size: 11px; font-family: monospace; font-weight: bold;">${escapeHtml(empId)}</td>
+            <td style="border: 1px solid #333; padding-left: 8px; font-size: 11px; font-weight: bold;">${escapeHtml(fullName)}</td>
+            <td style="border: 1px solid #333; padding-left: 6px; font-size: 10px;">${escapeHtml(pos)}</td>
+            <td style="border: 1px solid #333; padding-left: 6px; font-size: 10px;">${escapeHtml(dept)}</td>
+            <td style="border: 1px solid #333; text-align: center; font-size: 10px; background: #f0fdf4; color: #166534; font-weight: bold;">✓ จองล่วงหน้า</td>
+            <td style="border: 1px solid #333; width: 130px; text-align: center; font-size: 9px; color: #999;">____________________</td>
+            <td style="border: 1px solid #333; width: 65px; text-align: center; font-size: 10px;"></td>
+            <td style="border: 1px solid #333; width: 70px; text-align: center; font-size: 10px;"></td>
+          </tr>
+        `;
+      }).join('');
+
+      // Generate 15 Walk-in blank rows
+      const startWalkinNo = filtered.length + 1;
+      let walkinRowsHtml = '';
+      for (let w = 0; w < 15; w++) {
+        const no = startWalkinNo + w;
+        walkinRowsHtml += `
+          <tr style="height: 36px; background: #fffbeb;">
+            <td style="border: 1px solid #333; text-align: center; font-size: 11px; color: #b45309; font-weight: bold;">${no}</td>
+            <td style="border: 1px solid #333; text-align: center; font-size: 11px;"></td>
+            <td style="border: 1px solid #333; padding-left: 8px; font-size: 11px;"></td>
+            <td style="border: 1px solid #333; padding-left: 6px; font-size: 10px;"></td>
+            <td style="border: 1px solid #333; padding-left: 6px; font-size: 10px;"></td>
+            <td style="border: 1px solid #333; text-align: center; font-size: 10px; color: #b45309; font-weight: bold;">Walk-in หน้างาน</td>
+            <td style="border: 1px solid #333; width: 130px; text-align: center; font-size: 9px; color: #999;">____________________</td>
+            <td style="border: 1px solid #333; width: 65px; text-align: center; font-size: 10px;"></td>
+            <td style="border: 1px solid #333; width: 70px; text-align: center; font-size: 10px;"></td>
+          </tr>
+        `;
+      }
+
+      const docHtml = `
+        <!DOCTYPE html>
+        <html lang="th">
+        <head>
+          <meta charset="utf-8">
+          <title>ใบลงทะเบียนหน้างาน (Offline Backup) - ${escapeHtml(currentCourse.title)}</title>
+          <style>
+            @page { size: A4 portrait; margin: 10mm 12mm; }
+            body { font-family: 'Sarabun', 'Prompt', -apple-system, sans-serif; color: #000; margin: 0; padding: 0; }
+            .header-bar { text-align: center; margin-bottom: 12px; border-bottom: 2px solid #000; padding-bottom: 6px; }
+            .logo-text { font-size: 15px; font-weight: bold; color: #1e5387; }
+            .sub-logo { font-size: 12px; color: #475569; }
+            .doc-title { font-size: 16px; font-weight: bold; margin-top: 4px; color: #0f172a; }
+            .offline-badge { display: inline-block; padding: 2px 8px; background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; border-radius: 4px; font-size: 10px; font-weight: bold; margin-top: 2px; }
+            .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; font-size: 11px; margin-bottom: 10px; line-height: 1.4; background: #f8fafc; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+            th { border: 1px solid #333; background: #f1f5f9; padding: 6px 3px; font-size: 10px; font-weight: bold; text-align: center; }
+            .footer-sign { margin-top: 24px; display: flex; justify-content: space-between; font-size: 11px; page-break-inside: avoid; }
+            .sign-box { text-align: center; width: 260px; line-height: 1.6; }
+            .notice-box { margin-top: 10px; font-size: 10px; color: #64748b; font-style: italic; }
+            @media print {
+              .no-print { display: none !important; }
+              body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="no-print" style="background: #e0f2fe; padding: 12px 18px; margin-bottom: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #bae6fd;">
+            <div>
+              <strong style="font-size: 13px; color: #0369a1;">🖨️ ระบบพิมพ์ใบลงทะเบียนหน้างานแบบ Offline Backup</strong>
+              <div style="font-size: 11px; color: #475569;">ใช้สำหรับให้ผู้เข้าอบรมเซ็นชื่อกรณีอินเทอร์เน็ตขัดข้อง มีช่องว่างสำหรับ Walk-in 15 แถว</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="window.print()" style="padding: 8px 20px; background: #0284c7; color: #fff; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🖨️ สั่งพิมพ์ (Print A4)</button>
+              <button onclick="window.close()" style="padding: 8px 14px; background: #fff; color: #475569; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 12px;">ปิด</button>
+            </div>
+          </div>
+
+          <div class="header-bar">
+            <div class="logo-text">โรงพยาบาลพิษณุเวช พิจิตร</div>
+            <div class="sub-logo">ฝ่ายพัฒนาทรัพยากรบุคคล (HRD) • Phitsanuvej Phichit Hospital</div>
+            <div class="doc-title">แบบลงทะเบียนและเซ็นชื่อเข้าร่วมการฝึกอบรม</div>
+            <div class="offline-badge">เอกสารสำรองหน้างาน (OFFLINE BACKUP ATTENDANCE ROSTER)</div>
+          </div>
+
+          <div class="meta-grid">
+            <div><strong>หลักสูตร:</strong> ${escapeHtml(currentCourse.title)}</div>
+            <div><strong>รุ่นการอบรม:</strong> ${escapeHtml(batchLabel)}</div>
+            <div><strong>วันที่จัดอบรม:</strong> ${escapeHtml(currentCourse.date || '-')}</div>
+            <div><strong>เวลาจัดอบรม:</strong> ${escapeHtml(currentCourse.time || '-')}</div>
+            <div><strong>วิทยากร:</strong> ${escapeHtml(currentCourse.speaker || 'HRD')}</div>
+            <div><strong>สถานที่จัดอบรม:</strong> ${escapeHtml(currentCourse.location || 'ห้องประชุมโรงพยาบาลพิษณุเวช')}</div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 32px;">ลำดับ</th>
+                <th style="width: 65px;">รหัสพนักงาน</th>
+                <th style="min-width: 140px;">ชื่อ - นามสกุล</th>
+                <th style="min-width: 110px;">ตำแหน่ง</th>
+                <th style="min-width: 100px;">แผนก / ฝ่าย</th>
+                <th style="width: 85px;">สถานะ</th>
+                <th style="width: 130px;">ลายมือชื่อผู้เข้าอบรม</th>
+                <th style="width: 65px;">เวลา</th>
+                <th style="width: 70px;">หมายเหตุ</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${preRegisteredRowsHtml}
+              ${walkinRowsHtml}
+            </tbody>
+          </table>
+
+          <div class="notice-box">
+            * หมายเหตุ: กรณีอินเทอร์เน็ตขัดข้อง ให้ใช้เอกสารนี้ให้ผู้เข้าอบรมเซ็นชื่อจริง จากนั้นเจ้าหน้าที่ HRD นำรหัสพนักงานมาบันทึกเข้าระบบดิจิทัลภายหลัง
+          </div>
+
+          <div class="footer-sign">
+            <div class="sign-box">
+              <br><br>
+              <div>ลงชื่อ ................................................................</div>
+              <div>( ................................................................ )</div>
+              <div style="font-weight: bold; margin-top: 3px;">วิทยากร / ผู้ควบคุมการฝึกอบรม</div>
+              <div>วันที่ ........ / ........ / ................</div>
+            </div>
+
+            <div class="sign-box">
+              <br><br>
+              <div>ลงชื่อ ................................................................</div>
+              <div>( ................................................................ )</div>
+              <div style="font-weight: bold; margin-top: 3px;">เจ้าหน้าที่พัฒนาทรัพยากรบุคคล (HRD) ผู้ตรวจรับรอง</div>
+              <div>วันที่ ........ / ........ / ................</div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      printWindow.document.open();
+      printWindow.document.write(docHtml);
+      printWindow.document.close();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+
+</body>
+</html>
