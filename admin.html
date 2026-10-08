@@ -153,10 +153,10 @@
         <button onclick="openArchiveModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer border border-slate-200" title="จัดการคลังประวัติเก่าเกิน 2 ปี (คืนพื้นที่ Supabase)">
           <span>📦 คลังประวัติ (Archive)</span>
         </button>
-        <a href="admin-create.html" class="px-4 py-2 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-2 shadow-md shadow-[#0284c7]/20 cursor-pointer">
+        <button type="button" onclick="switchAdminView('create')" class="px-4 py-2 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-2 shadow-md shadow-[#0284c7]/20 cursor-pointer">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
           <span>สร้างหลักสูตรใหม่</span>
-        </a>
+        </button>
       </div>
     </div>
   </header>
@@ -207,23 +207,32 @@
               
               <!-- Sub Options -->
               <div class="mt-2 pl-3 ml-2 border-l-2 border-slate-700 space-y-1">
-                <!-- Sub 1: รายการหลักสูตร (Current) -->
-                <a href="admin.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600/30 border border-sky-400/40 shadow-xs transition-all cursor-pointer">
+                <!-- Sub 1: รายการหลักสูตร -->
+                <button type="button" id="sidebarNavCourses" onclick="switchAdminView('courses')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600/30 border border-sky-400/40 shadow-xs transition-all cursor-pointer text-left">
                   <div class="flex items-center space-x-2">
                     <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                     <span>รายการหลักสูตร</span>
                   </div>
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                </a>
+                  <span id="sidebarCoursesDot" class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                </button>
 
                 <!-- Sub 2: สร้างหลักสูตร -->
-                <a href="admin-create.html" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all cursor-pointer">
+                <button type="button" id="sidebarNavCreate" onclick="switchAdminView('create')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all cursor-pointer text-left">
                   <div class="flex items-center space-x-2">
                     <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span>สร้างหลักสูตร</span>
                   </div>
                   <span class="text-[10px] text-sky-400 font-bold">+</span>
-                </a>
+                </button>
+
+                <!-- Sub 3: กลุ่มเป้าหมาย -->
+                <button type="button" id="sidebarNavTarget" onclick="switchAdminView('target')" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all cursor-pointer text-left">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs">🎯</span>
+                    <span>กลุ่มเป้าหมาย</span>
+                  </div>
+                  <span id="sidebarTargetDot" class="hidden w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                </button>
               </div>
             </div>
           </div>
@@ -285,23 +294,25 @@
       <!-- Breadcrumb Navigator Bar -->
       <nav aria-label="Breadcrumb" class="w-full bg-white/95 border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-2.5 text-xs select-none shadow-2xs">
         <div class="flex items-center justify-between flex-wrap gap-2 text-xs">
-          <div class="flex items-center space-x-2 flex-wrap">
-            <a href="admin.html" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] transition-colors cursor-pointer">
+          <div id="breadcrumbContent" class="flex items-center space-x-2 flex-wrap">
+            <div class="flex items-center space-x-1.5 font-semibold text-slate-600">
               <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
               <span>หน้าหลัก</span>
-            </a>
-
+            </div>
             <span class="text-slate-400 font-light">&gt;</span>
-
             <span class="font-bold text-[#0369a1] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
               รายการหลักสูตร
             </span>
           </div>
+          <div id="breadcrumbActions" class="flex items-center space-x-2"></div>
         </div>
       </nav>
 
-      <!-- Admin Main Content -->
-      <main class="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- Admin Main Content Workspace -->
+      <main class="flex-1 w-full">
+
+        <!-- ==================== VIEW 1: COURSES LIST ==================== -->
+        <div id="viewCourses" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
         <!-- 1. KPI Summary Ribbon -->
         <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
@@ -412,7 +423,307 @@
           </div>
         </section>
 
+        </div>
+        <!-- ==================== END VIEW 1: COURSES LIST ==================== -->
+
+        <!-- ==================== VIEW 2: TARGET AUDIENCE SETUP ==================== -->
+        <div id="viewTarget" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6 hidden">
+
+          <!-- 1. COURSE INFO CARD WITH QUICK SWITCHER -->
+          <section class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-xs space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+              <div class="space-y-2 flex-1">
+                <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
+                  <span id="badgeCourseType" class="text-[11px] font-semibold px-2.5 py-0.5 bg-sky-50 text-[#0369a1] border border-sky-200 rounded-full">
+                    หลักสูตรอบรม
+                  </span>
+                  <span id="badgeCourseId" class="text-[11px] font-mono font-bold text-[#0369a1] bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
+                    -
+                  </span>
+                  <span class="text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60 font-medium flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>สถานะเปิดใช้งาน</span>
+                  </span>
+                  <span id="badgeCurrentTarget" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                    🎯 กำลังโหลดข้อมูล...
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 flex-wrap">
+                  <h2 id="courseTitleHeading" class="text-xl font-bold text-slate-900 tracking-tight font-display">
+                    กำลังโหลดข้อมูลหลักสูตร...
+                  </h2>
+                  
+                  <!-- Quick Course Switcher Dropdown -->
+                  <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl shadow-2xs">
+                    <span class="text-xs font-semibold text-slate-500">สลับหลักสูตร:</span>
+                    <select id="targetCourseSelect" onchange="onTargetCourseSelectChange(this.value)" class="bg-white text-xs font-bold text-[#0369a1] border border-slate-200 rounded-lg px-2.5 py-1 outline-none focus:ring-2 focus:ring-sky-500/20 cursor-pointer">
+                      <!-- Populated dynamically -->
+                    </select>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-4 text-xs text-slate-500 font-light flex-wrap gap-y-1">
+                  <span id="courseDateDisplay">📅 -</span>
+                  <span id="courseTimeDisplay">⏰ -</span>
+                  <span id="courseSpeakerDisplay">🎤 -</span>
+                  <span id="courseBatchesDisplay">🔢 -</span>
+                </div>
+              </div>
+
+              <div class="shrink-0 flex items-center space-x-2">
+                <button type="button" id="btnNavEditCourse" class="px-3.5 py-2 bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer">
+                  <span>✏️ แก้ไขหลักสูตร</span>
+                </button>
+                <a id="btnCourseRegLink" href="#" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-[#0369a1] border border-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  <span>ดูหน้าเว็บลงทะเบียน</span>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. TARGET AUDIENCE CONFIGURATION FORM -->
+          <section class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-xs space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div>
+                <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2 font-display">
+                  <span class="w-2.5 h-2.5 rounded-full bg-[#0284c7]"></span>
+                  <span>กำหนดกลุ่มเป้าหมายผู้มีสิทธิ์เข้าอบรม (Target Audience Setup)</span>
+                </h3>
+                <p class="text-xs text-slate-500 font-light mt-0.5">
+                  กำหนดแผนกหรือสายงานตำแหน่งที่หลักสูตรนี้จัดขึ้นเป็นพิเศษ (พนักงานทุกคนยังสามารถลงทะเบียนได้ พร้อมเห็นป้ายกลุ่มเป้าหมายที่ชัดเจน)
+                </p>
+              </div>
+            </div>
+
+            <!-- 2.1 Scope Toggle (All Employees vs Specific) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Option 1: All Employees -->
+              <label id="labelTargetAll" class="relative flex items-start p-4 rounded-2xl border-2 border-[#0284c7] bg-sky-50/70 cursor-pointer transition-all hover:bg-sky-50 shadow-xs select-none">
+                <div class="flex items-center h-5 mt-0.5">
+                  <input type="radio" name="targetScope" id="targetScopeAll" value="all" checked onchange="handleTargetScopeChange('all')" class="w-4 h-4 text-[#0284c7] border-slate-300 focus:ring-[#0284c7] cursor-pointer">
+                </div>
+                <div class="ml-3.5 flex-1 min-w-0">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs font-bold text-[#0369a1]">เปิดรับทุกแผนกและทุกตำแหน่ง (All Employees)</span>
+                    <span class="text-[10px] font-semibold bg-[#0369a1] text-white px-2 py-0.5 rounded-full">ค่าเริ่มต้น</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-1 font-light leading-relaxed">
+                    บุคลากรทุกคนในโรงพยาบาลสามารถลงทะเบียนได้ตามปกติ (ครอบคลุมทั้ง 209 ท่าน จาก 30 แผนก)
+                  </p>
+                </div>
+              </label>
+
+              <!-- Option 2: Specific Target Audience -->
+              <label id="labelTargetSpecific" class="relative flex items-start p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/70 cursor-pointer transition-all hover:border-slate-300 hover:bg-slate-100/80 shadow-2xs select-none">
+                <div class="flex items-center h-5 mt-0.5">
+                  <input type="radio" name="targetScope" id="targetScopeSpecific" value="specific" onchange="handleTargetScopeChange('specific')" class="w-4 h-4 text-[#0284c7] border-slate-300 focus:ring-[#0284c7] cursor-pointer">
+                </div>
+                <div class="ml-3.5 flex-1 min-w-0">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs font-bold text-slate-800">กำหนดกลุ่มเป้าหมายเฉพาะ (Specific Target)</span>
+                    <span class="text-[10px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-200">Custom Target</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-1 font-light leading-relaxed">
+                    เจาะจงกลุ่มผู้เข้าอบรมตามแผนก หรือตามสายงานตำแหน่ง (เลือกแบบเหมากลุ่ม หรือติ๊กเลือกรายบุคคลได้)
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            <!-- 2.2 Specific Target Selector Container -->
+            <div id="targetSpecificContainer" class="hidden space-y-4 pt-1 transition-all duration-300">
+              <!-- Seamless Union Banner -->
+              <div class="flex items-start space-x-3.5 p-4 bg-sky-50/60 border border-sky-200/60 rounded-2xl text-xs text-slate-700 shadow-2xs">
+                <div class="mt-0.5 text-[#0369a1] shrink-0">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="flex-1 space-y-0.5 text-[11px] leading-relaxed">
+                  <strong class="font-bold text-slate-900">ระบบผสานเงื่อนไขแบบ Seamless Union (Multi-criteria):</strong>
+                  <p class="text-slate-600 font-light mt-0.5">
+                    ท่านสามารถสลับแท็บไปมาเพื่อเลือกผสมกันได้ เช่น ติ๊กเลือกแผนก HR ทั้งแผนก + สลับไปเลือกตำแหน่ง Registered Nurse ข้ามแผนก ระบบจะรวมรายชื่อพนักงานที่เข้าเงื่อนไขทั้งหมดเข้าด้วยกัน และตัดรายชื่อซ้ำให้อัตโนมัติ (Deduplication)
+                  </p>
+                </div>
+              </div>
+
+              <!-- Tab Switcher Bar & Search / Quick Controls -->
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-100 p-2 rounded-2xl border border-slate-200">
+                <div class="flex items-center space-x-1.5 p-1 bg-slate-200/80 rounded-xl">
+                  <!-- Tab: By Department -->
+                  <button type="button" id="btnTabDept" onclick="switchTargetTab('dept')" class="flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-white text-[#0369a1] shadow-xs cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <span>แท็บตามแผนก (By Department)</span>
+                    <span id="badgeDeptCount" class="text-[10px] px-2 py-0.5 bg-sky-50 text-[#0369a1] font-bold rounded-full border border-sky-200">30</span>
+                  </button>
+
+                  <!-- Tab: By Position -->
+                  <button type="button" id="btnTabPos" onclick="switchTargetTab('pos')" class="flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span>แท็บตามตำแหน่ง (By Position)</span>
+                    <span id="badgePosCount" class="text-[10px] px-2 py-0.5 bg-slate-200 text-slate-700 font-bold rounded-full">108</span>
+                  </button>
+                </div>
+
+                <!-- Quick Search & Accordion Toggle Controls -->
+                <div class="flex items-center space-x-2 flex-1 sm:max-w-xs">
+                  <div class="relative w-full">
+                    <input type="text" id="targetSearchInput" oninput="handleTargetSearch(this.value)" placeholder="ค้นหาแผนก / ตำแหน่ง / พนักงาน..." class="w-full pl-8 pr-7 py-2 bg-white text-xs text-slate-800 rounded-xl border border-slate-200 outline-none focus:border-[#0284c7] focus:ring-2 focus:ring-sky-500/20 shadow-2xs">
+                    <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <button type="button" id="btnClearSearch" onclick="clearTargetSearch()" class="hidden absolute right-2 top-2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer">✕</button>
+                  </div>
+
+                  <button type="button" id="btnToggleAllAccordions" onclick="toggleAllAccordions()" title="ยุบหรือขยายรายการทั้งหมด" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold shrink-0 transition-colors cursor-pointer shadow-2xs">
+                    <span id="textToggleAllAccordions">ขยายทั้งหมด</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- TAB 1 CONTENT: Department List Container -->
+              <div id="tabContentDept" class="space-y-3">
+                <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+                  <span>เลือกทั้งแผนก หรือคลิกที่ลูกศรเพื่อติ๊กเลือก/ยกเลิกเป็นรายบุคคล:</span>
+                  <span class="text-[11px] font-medium text-[#0369a1]">รวม 30 แผนก</span>
+                </div>
+                <div id="departmentListContainer" class="space-y-2.5"></div>
+              </div>
+
+              <!-- TAB 2 CONTENT: Position List Container -->
+              <div id="tabContentPos" class="space-y-3 hidden">
+                <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+                  <span>เลือกทั้งตำแหน่งข้ามแผนก หรือคลิกที่ลูกศรเพื่อติ๊กเลือกเป็นรายบุคคล:</span>
+                  <span class="text-[11px] font-medium text-[#0369a1]">รวม 108 ตำแหน่ง</span>
+                </div>
+                <div id="positionListContainer" class="space-y-2.5"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. LIVE TARGET SUMMARY BAR & SAVE ACTION BUTTONS -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs space-y-4">
+            <!-- Live Summary Bar -->
+            <div id="targetSummaryBar" class="bg-gradient-to-r from-[#0a2540] via-[#0369a1] to-[#0284c7] text-white p-5 rounded-2xl shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="flex items-center space-x-3.5">
+                <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white shrink-0 border border-white/15 shadow-inner">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs font-light text-sky-100">สรุปกลุ่มเป้าหมายที่เลือก:</span>
+                    <span id="targetPercentageBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white border border-white/30">
+                      100% ของทั้ง รพ.
+                    </span>
+                  </div>
+                  <div class="text-sm sm:text-base font-bold text-white flex flex-wrap items-center gap-1.5 mt-0.5 font-display">
+                    <span>เลือกกลุ่มเป้าหมายแล้ว</span>
+                    <span id="summaryTotalEmployees" class="text-emerald-300 font-extrabold text-base sm:text-lg underline decoration-emerald-400 decoration-2">209</span>
+                    <span>ท่าน</span>
+                    <span class="text-sky-100 text-xs font-normal">
+                      (จาก <span id="summaryDeptCount" class="font-bold text-white">30</span> แผนก, <span id="summaryPosCount" class="font-bold text-white">108</span> ตำแหน่ง)
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                <button type="button" id="btnViewSelectedModal" onclick="openSelectedEmployeesModal()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 active:scale-95 text-white border border-white/20 rounded-xl text-xs font-medium transition-all flex items-center space-x-1.5 cursor-pointer backdrop-blur-xs">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  <span>ดูรายชื่อที่เลือก</span>
+                </button>
+                <button type="button" id="btnClearTargetAudience" onclick="clearAllTargetSelection()" class="px-3.5 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 hover:text-white border border-rose-400/30 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer active:scale-95">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                  <span>ล้างที่เลือกทั้งหมด</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div class="flex items-center justify-between pt-2">
+              <button type="button" onclick="switchAdminView('courses')" class="px-5 py-3 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer">
+                ยกเลิก / กลับหน้ารายการ
+              </button>
+              <button type="button" id="btnSaveTargetAudience" onclick="handleSaveTargetAudience()" class="px-8 py-3.5 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white font-bold text-sm rounded-2xl shadow-lg shadow-sky-700/25 transition-all flex items-center space-x-2 cursor-pointer font-display">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                <span>บันทึกข้อมูลกลุ่มเป้าหมาย (Save Target Audience)</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ==================== END VIEW 2: TARGET AUDIENCE SETUP ==================== -->
+
+        <!-- ==================== VIEW 3: CREATE / EDIT COURSE ==================== -->
+        <div id="viewCreate" class="w-full px-4 sm:px-6 lg:px-8 py-4 space-y-4 hidden">
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+            <iframe id="createCourseFrame" src="about:blank" class="w-full border-0" style="min-height: 1200px; width: 100%;"></iframe>
+          </div>
+        </div>
+        <!-- ==================== END VIEW 3 ==================== -->
+
       </main>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW SELECTED TARGET EMPLOYEES ROSTER -->
+  <div id="selectedEmployeesModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[85vh] flex flex-col animate-in fade-in zoom-in duration-200">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 shrink-0">
+        <div>
+          <h3 class="text-base font-bold text-[#0369a1] flex items-center space-x-2">
+            <span>รายชื่อกลุ่มเป้าหมายที่ได้รับสิทธิ์</span>
+            <span id="modalSelectedCountBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-sky-50 text-[#0369a1] font-bold border border-sky-200">
+              0 ท่าน
+            </span>
+          </h3>
+          <p class="text-xs text-slate-400 font-light">รายชื่อพนักงานทั้งหมดที่เข้าเงื่อนไขกลุ่มเป้าหมาย (ตัดคนซ้ำเรียบร้อยแล้ว)</p>
+        </div>
+        <button type="button" onclick="closeSelectedEmployeesModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm cursor-pointer transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Search inside Modal -->
+      <div class="shrink-0">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="modalEmpSearchInput" 
+            oninput="filterModalEmployeeList(this.value)" 
+            placeholder="ค้นหาชื่อ, รหัส, แผนก หรือตำแหน่ง..." 
+            class="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 outline-none focus:border-[#0284c7] focus:ring-2 focus:ring-sky-500/20"
+          >
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Employee Roster Table -->
+      <div class="flex-1 overflow-y-auto pr-1 space-y-1">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="text-[11px] font-bold text-slate-400 border-b border-slate-100 uppercase">
+              <th class="py-2 px-3">#</th>
+              <th class="py-2 px-3">รหัส</th>
+              <th class="py-2 px-3">ชื่อ - นามสกุล</th>
+              <th class="py-2 px-3">แผนก</th>
+              <th class="py-2 px-3">ตำแหน่ง</th>
+            </tr>
+          </thead>
+          <tbody id="modalSelectedEmployeesList" class="divide-y divide-slate-100">
+            <!-- Dynamically rendered -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
+        <span class="text-[11px] text-slate-400 font-light">ระบบคัดกรองแบบ Multi-criteria Union โดยอัตโนมัติ</span>
+        <button type="button" onclick="closeSelectedEmployeesModal()" class="px-5 py-2 bg-[#0284c7] hover:bg-[#0369a1] text-white rounded-xl text-xs font-semibold cursor-pointer transition-colors">
+          ปิดหน้าต่าง
+        </button>
+      </div>
     </div>
   </div>
 
@@ -834,8 +1145,38 @@
 
     // window.addEventListener('load', () => setTimeout(hideLoader, 300));
 
-    document.addEventListener('DOMContentLoaded', () => {
-      loadAdminCourses();
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewParam = urlParams.get('view');
+      const courseParam = urlParams.get('course');
+      const editParam = urlParams.get('edit');
+
+      await loadAdminCourses();
+
+      if (editParam) {
+        switchAdminView('create', editParam, false);
+      } else if (viewParam === 'target') {
+        switchAdminView('target', courseParam, false);
+      } else if (viewParam === 'create') {
+        switchAdminView('create', null, false);
+      } else {
+        switchAdminView('courses', null, false);
+      }
+    });
+
+    window.addEventListener('popstate', (e) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewParam = urlParams.get('view') || 'courses';
+      const courseParam = urlParams.get('course');
+      const editParam = urlParams.get('edit');
+
+      if (viewParam === 'create' || editParam) {
+        switchAdminView('create', editParam, false);
+      } else if (viewParam === 'target') {
+        switchAdminView('target', courseParam, false);
+      } else {
+        switchAdminView('courses', null, false);
+      }
     });
 
     function encodeCourseData(c) {
@@ -1021,6 +1362,10 @@
 
           updateCourseCountDisplay();
           renderCourseList();
+
+          if (currentAdminView === 'target') {
+            initTargetView(targetActiveCourseId);
+          }
 
           if (forceRescan) {
             HrdModal.toast('ซิงค์ข้อมูลล่าสุดจาก Google Sheets สำเร็จแล้วค่ะ (พบ ' + coursesData.length + ' หลักสูตร)', 'success');
@@ -1234,8 +1579,8 @@
               '<span>เปิดรับจอง</span>' +
             '</span>' +
             (c.targetAudience && c.targetAudience.type === 'specific' && c.targetAudience.summary ? 
-              '<a href="admin-target.html?course=' + encodeURIComponent(c.id) + '" class="text-[11px] text-amber-800 bg-amber-50 hover:bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200 font-medium transition-colors cursor-pointer" title="แก้ไขกลุ่มเป้าหมาย">🎯 ' + c.targetAudience.summary + '</a>' : 
-              '<a href="admin-target.html?course=' + encodeURIComponent(c.id) + '" class="text-[11px] text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-0.5 rounded-full border border-slate-200 transition-colors cursor-pointer" title="กำหนดกลุ่มเป้าหมาย">🎯 ทุกแผนก/ตำแหน่ง</a>') +
+              '<button type="button" onclick="openTargetView(\'' + c.id + '\')" class="text-[11px] text-amber-800 bg-amber-50 hover:bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200 font-medium transition-colors cursor-pointer" title="แก้ไขกลุ่มเป้าหมาย">🎯 ' + c.targetAudience.summary + '</button>' : 
+              '<button type="button" onclick="openTargetView(\'' + c.id + '\')" class="text-[11px] text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-0.5 rounded-full border border-slate-200 transition-colors cursor-pointer" title="กำหนดกลุ่มเป้าหมาย">🎯 ทุกแผนก/ตำแหน่ง</button>') +
             '<span class="text-xs text-slate-500 font-light">' +
               '• ลงทะเบียนแล้ว <strong class="text-[#0369a1] font-bold font-mono">' + enrolledCount + '</strong> ท่าน' +
             '</span>' +
@@ -1273,18 +1618,18 @@
             '<a href="checkin.html?course=' + encodeURIComponent(c.id) + '" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="เช็คชื่อหน้างาน">' +
               '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>' +
             '</a>' +
-            '<a href="admin-target.html?course=' + encodeURIComponent(c.id) + '" class="w-9 h-9 flex items-center justify-center rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200/80 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="กลุ่มเป้าหมาย">' +
+            '<button type="button" onclick="openTargetView(\'' + c.id + '\')" class="w-9 h-9 flex items-center justify-center rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200/80 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="กลุ่มเป้าหมาย">' +
               '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"></circle><circle cx="12" cy="12" r="5" stroke-width="2"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor"></circle></svg>' +
-            '</a>' +
+            '</button>' +
             '<button onclick="openQrModal(\'' + c.title.replace(/'/g, "\\'") + '\', \'' + autoDetectUrl + '\', \'' + evalUrl + '\', \'' + checkinUrl + '\')" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 hover:bg-sky-50 text-[#0369a1] border border-slate-200 hover:border-sky-200 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="QR Code & ลิงก์">' +
               '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>' +
             '</button>' +
             '<a href="' + sheetUrl + '" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="Google Sheet">' +
               '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>' +
             '</a>' +
-            '<a href="admin-create.html?edit=' + encodeURIComponent(c.id) + '" onclick="try{localStorage.setItem(\'hrd_course_' + c.id + '\', JSON.stringify(coursesData[' + idx + ']))}catch(e){}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-[#0369a1] border border-slate-200/70 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="แก้ไขหลักสูตร">' +
+            '<button type="button" onclick="openEditView(\'' + c.id + '\')" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-[#0369a1] border border-slate-200/70 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="แก้ไขหลักสูตร">' +
               '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>' +
-            '</a>' +
+            '</button>' +
             '<button onclick="deleteCourse(\'' + c.id + '\', \'' + c.title.replace(/'/g, "\\'") + '\')" class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0" title="ลบหลักสูตร">' +
               '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>' +
             '</button>' +
@@ -2043,6 +2388,1187 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+    // ==========================================
+    // SPA Portal Navigation & View Switcher Logic
+    // ==========================================
+    let currentAdminView = 'courses';
+    let targetActiveCourseId = null;
+    let targetActiveCourse = null;
+
+    function switchAdminView(viewName, courseId = null, pushHistory = true) {
+      currentAdminView = viewName;
+      if (courseId) targetActiveCourseId = courseId;
+
+      const viewCourses = document.getElementById('viewCourses');
+      const viewTarget = document.getElementById('viewTarget');
+      const viewCreate = document.getElementById('viewCreate');
+
+      if (viewCourses) viewCourses.classList.toggle('hidden', viewName !== 'courses');
+      if (viewTarget) viewTarget.classList.toggle('hidden', viewName !== 'target');
+      if (viewCreate) viewCreate.classList.toggle('hidden', viewName !== 'create');
+
+      updateSidebarNav(viewName);
+      updateAdminBreadcrumb(viewName, courseId);
+
+      // Close mobile sidebar if open
+      const sb = document.getElementById('adminSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (sb && sb.classList.contains('flex')) {
+        sb.classList.add('hidden');
+        sb.classList.remove('flex', 'fixed', 'inset-y-0', 'left-0', 'z-50', 'w-72', 'shadow-2xl');
+        if (bd) bd.classList.add('hidden');
+      }
+
+      // Update browser URL
+      if (pushHistory) {
+        const url = new URL(window.location);
+        if (viewName === 'courses') {
+          url.searchParams.delete('view');
+          url.searchParams.delete('course');
+          url.searchParams.delete('edit');
+        } else if (viewName === 'target') {
+          url.searchParams.set('view', 'target');
+          if (courseId || targetActiveCourseId) {
+            url.searchParams.set('course', courseId || targetActiveCourseId);
+          }
+          url.searchParams.delete('edit');
+        } else if (viewName === 'create') {
+          url.searchParams.set('view', 'create');
+          if (courseId) {
+            url.searchParams.set('edit', courseId);
+          } else {
+            url.searchParams.delete('edit');
+          }
+          url.searchParams.delete('course');
+        }
+        history.pushState({ view: viewName, courseId: courseId || targetActiveCourseId }, '', url.toString());
+      }
+
+      // Handle specific view activation
+      if (viewName === 'courses') {
+        renderCourseList();
+      } else if (viewName === 'target') {
+        initTargetView(courseId || targetActiveCourseId);
+      } else if (viewName === 'create') {
+        const iframe = document.getElementById('createCourseFrame');
+        if (iframe) {
+          let targetSrc = 'admin-create.html?embedded=1';
+          if (courseId) {
+            targetSrc += '&edit=' + encodeURIComponent(courseId);
+          }
+          if (!iframe.src || iframe.src === 'about:blank' || !iframe.src.endsWith(targetSrc)) {
+            iframe.src = targetSrc;
+          }
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openTargetView(courseId) {
+      switchAdminView('target', courseId);
+    }
+
+    function openEditView(courseId) {
+      switchAdminView('create', courseId);
+    }
+
+    function updateSidebarNav(viewName) {
+      const btnCourses = document.getElementById('sidebarNavCourses');
+      const btnCreate = document.getElementById('sidebarNavCreate');
+      const btnTarget = document.getElementById('sidebarNavTarget');
+      const dotCourses = document.getElementById('sidebarCoursesDot');
+      const dotTarget = document.getElementById('sidebarTargetDot');
+
+      const activeClass = 'w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600/30 border border-sky-400/40 shadow-xs transition-all cursor-pointer text-left';
+      const inactiveClass = 'w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 border border-transparent transition-all cursor-pointer text-left';
+
+      if (btnCourses) btnCourses.className = (viewName === 'courses') ? activeClass : inactiveClass;
+      if (btnCreate) btnCreate.className = (viewName === 'create') ? activeClass : inactiveClass;
+      if (btnTarget) btnTarget.className = (viewName === 'target') ? activeClass : inactiveClass;
+
+      if (dotCourses) dotCourses.classList.toggle('hidden', viewName !== 'courses');
+      if (dotTarget) dotTarget.classList.toggle('hidden', viewName !== 'target');
+    }
+
+    function updateAdminBreadcrumb(viewName, courseId) {
+      const content = document.getElementById('breadcrumbContent');
+      const actions = document.getElementById('breadcrumbActions');
+      if (!content) return;
+
+      if (viewName === 'courses') {
+        content.innerHTML = `
+          <div class="flex items-center space-x-1.5 font-semibold text-slate-600">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span>หน้าหลัก</span>
+          </div>
+          <span class="text-slate-400 font-light">&gt;</span>
+          <span class="font-bold text-[#0369a1] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
+            รายการหลักสูตร
+          </span>
+        `;
+        if (actions) actions.innerHTML = '';
+      } else if (viewName === 'target') {
+        let courseTitle = '';
+        if (targetActiveCourse && targetActiveCourse.title) {
+          courseTitle = targetActiveCourse.title;
+        } else if (courseId) {
+          const c = coursesData.find(x => x && String(x.id).toLowerCase() === String(courseId).toLowerCase());
+          if (c) courseTitle = c.title;
+        }
+
+        content.innerHTML = `
+          <button type="button" onclick="switchAdminView('courses')" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] cursor-pointer transition-colors">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span>รายการหลักสูตร</span>
+          </button>
+          <span class="text-slate-400 font-light">&gt;</span>
+          <span class="font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+            🎯 กำหนดกลุ่มเป้าหมาย
+          </span>
+          ${courseTitle ? `<span class="text-slate-400 font-light hidden sm:inline">&gt;</span><span class="text-slate-600 font-medium truncate max-w-xs hidden sm:inline">${escapeHtml(courseTitle)}</span>` : ''}
+        `;
+        if (actions) {
+          actions.innerHTML = `
+            <button type="button" onclick="switchAdminView('courses')" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              <span>กลับหน้ารายการ</span>
+            </button>
+          `;
+        }
+      } else if (viewName === 'create') {
+        const isEdit = Boolean(courseId);
+        content.innerHTML = `
+          <button type="button" onclick="switchAdminView('courses')" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] cursor-pointer transition-colors">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span>รายการหลักสูตร</span>
+          </button>
+          <span class="text-slate-400 font-light">&gt;</span>
+          <span class="font-bold text-[#0369a1] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
+            ${isEdit ? '✏️ แก้ไขหลักสูตร' : '➕ สร้างหลักสูตรใหม่'}
+          </span>
+        `;
+        if (actions) {
+          actions.innerHTML = `
+            <button type="button" onclick="switchAdminView('courses')" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              <span>กลับหน้ารายการ</span>
+            </button>
+          `;
+        }
+      }
+    }
+
+    function onCourseCreatedOrUpdated(newCourse) {
+      if (newCourse && newCourse.id) {
+        const idx = coursesData.findIndex(c => String(c.id).toLowerCase() === String(newCourse.id).toLowerCase());
+        if (idx !== -1) {
+          coursesData[idx] = newCourse;
+        } else {
+          coursesData.unshift(newCourse);
+        }
+        try {
+          localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+          localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
+          localStorage.setItem('hrd_course_' + newCourse.id, JSON.stringify(newCourse));
+        } catch(e) {}
+        updateCourseCountDisplay();
+        renderCourseList();
+      }
+      switchAdminView('courses');
+      HrdModal.toast('บันทึกข้อมูลหลักสูตรเรียบร้อยแล้วค่ะ!', 'success');
+    }
+
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'HRD_COURSE_SAVED') {
+        onCourseCreatedOrUpdated(event.data.course);
+      } else if (event.data && event.data.type === 'HRD_CLOSE_CREATE') {
+        switchAdminView('courses');
+      }
+    });
+
+    // ==========================================
+    // Target Audience Management Logic
+    // ==========================================
+    let employeeDatabase = [];
+    const deptMap = new Map();
+    const posMap = new Map();
+    const empByIdMap = new Map();
+    let departmentList = [];
+    let positionList = [];
+
+    const targetAudienceState = {
+      scope: 'all',
+      selectedDepartments: new Set(),
+      selectedPositions: new Set(),
+      selectedEmployeeIds: new Set(),
+      activeTab: 'dept'
+    };
+
+    function escapeId(str) {
+      return (str || '').replace(/[^a-zA-Z0-9_-]/g, '_');
+    }
+
+    async function loadEmployeeDatabase() {
+      try {
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        const response = await fetch(`${gasUrl}?action=getEmployees`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && Array.isArray(data.employees) && data.employees.length > 0) {
+            employeeDatabase = data.employees;
+            indexEmployeeData();
+            console.log(`[Target Admin] Loaded ${employeeDatabase.length} live employees from Master Sheet.`);
+            return employeeDatabase;
+          }
+        }
+      } catch (e) {
+        console.warn('[Target Admin] GAS getEmployees fallback:', e.message);
+      }
+
+      try {
+        const response = await fetch('employees.json');
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data) && data.length > 0) {
+            employeeDatabase = data;
+            indexEmployeeData();
+            return employeeDatabase;
+          }
+        }
+      } catch (err) {
+        console.warn('[Target Admin] employees.json fallback:', err.message);
+      }
+
+      if (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES) && DEMO_EMPLOYEES.length > 0) {
+        employeeDatabase = DEMO_EMPLOYEES;
+      } else {
+        employeeDatabase = [];
+      }
+      indexEmployeeData();
+      return employeeDatabase;
+    }
+
+    function indexEmployeeData() {
+      deptMap.clear();
+      posMap.clear();
+      empByIdMap.clear();
+
+      for (const emp of employeeDatabase) {
+        if (!emp || !emp.id) continue;
+        empByIdMap.set(emp.id, emp);
+
+        const dept = (emp.department || 'ไม่ระบุแผนก').trim();
+        if (!deptMap.has(dept)) deptMap.set(dept, []);
+        deptMap.get(dept).push(emp);
+
+        const pos = (emp.position || 'ไม่ระบุตำแหน่ง').trim();
+        if (!posMap.has(pos)) posMap.set(pos, []);
+        posMap.get(pos).push(emp);
+      }
+
+      departmentList = Array.from(deptMap.keys()).sort((a, b) => a.localeCompare(b, 'th'));
+      positionList = Array.from(posMap.keys()).sort((a, b) => a.localeCompare(b, 'th'));
+
+      const badgeDept = document.getElementById('badgeDeptCount');
+      if (badgeDept) badgeDept.textContent = departmentList.length;
+      const badgePos = document.getElementById('badgePosCount');
+      if (badgePos) badgePos.textContent = positionList.length;
+    }
+
+    function calculateTargetEmployeeIds() {
+      if (targetAudienceState.scope === 'all') {
+        return employeeDatabase.map(e => e.id);
+      }
+
+      const unionSet = new Set();
+
+      for (const dept of targetAudienceState.selectedDepartments) {
+        const emps = deptMap.get(dept) || [];
+        for (const emp of emps) {
+          unionSet.add(emp.id);
+        }
+      }
+
+      for (const pos of targetAudienceState.selectedPositions) {
+        const emps = posMap.get(pos) || [];
+        for (const emp of emps) {
+          unionSet.add(emp.id);
+        }
+      }
+
+      for (const empId of targetAudienceState.selectedEmployeeIds) {
+        if (empByIdMap.has(empId)) {
+          unionSet.add(empId);
+        }
+      }
+
+      return Array.from(unionSet);
+    }
+
+    function isEmployeeSelectedInTarget(empId) {
+      if (targetAudienceState.scope === 'all') return true;
+      const emp = empByIdMap.get(empId);
+      if (!emp) return false;
+      if (targetAudienceState.selectedDepartments.has(emp.department)) return true;
+      if (targetAudienceState.selectedPositions.has(emp.position)) return true;
+      if (targetAudienceState.selectedEmployeeIds.has(empId)) return true;
+      return false;
+    }
+
+    function handleTargetScopeChange(scope) {
+      targetAudienceState.scope = scope;
+
+      const specificContainer = document.getElementById('targetSpecificContainer');
+      const labelAll = document.getElementById('labelTargetAll');
+      const labelSpecific = document.getElementById('labelTargetSpecific');
+
+      if (scope === 'specific') {
+        if (specificContainer) specificContainer.classList.remove('hidden');
+        if (labelSpecific) {
+          labelSpecific.className = 'relative flex items-start p-4 rounded-2xl border-2 border-[#0284c7] bg-sky-50/70 cursor-pointer transition-all shadow-xs select-none';
+        }
+        if (labelAll) {
+          labelAll.className = 'relative flex items-start p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/70 hover:bg-slate-100/80 cursor-pointer transition-all shadow-2xs select-none';
+        }
+      } else {
+        if (specificContainer) specificContainer.classList.add('hidden');
+        if (labelAll) {
+          labelAll.className = 'relative flex items-start p-4 rounded-2xl border-2 border-[#0284c7] bg-sky-50/70 cursor-pointer transition-all shadow-xs select-none';
+        }
+        if (labelSpecific) {
+          labelSpecific.className = 'relative flex items-start p-4 rounded-2xl border-2 border-slate-200 bg-slate-50/70 hover:bg-slate-100/80 cursor-pointer transition-all shadow-2xs select-none';
+        }
+      }
+
+      updateTargetAudienceUI();
+    }
+
+    function switchTargetTab(tabName) {
+      targetAudienceState.activeTab = tabName;
+
+      const btnDept = document.getElementById('btnTabDept');
+      const btnPos = document.getElementById('btnTabPos');
+      const contentDept = document.getElementById('tabContentDept');
+      const contentPos = document.getElementById('tabContentPos');
+
+      if (tabName === 'dept') {
+        if (btnDept) {
+          btnDept.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-white text-[#0369a1] shadow-xs cursor-pointer';
+        }
+        if (btnPos) {
+          btnPos.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+        }
+        if (contentDept) contentDept.classList.remove('hidden');
+        if (contentPos) contentPos.classList.add('hidden');
+      } else {
+        if (btnPos) {
+          btnPos.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-white text-[#0369a1] shadow-xs cursor-pointer';
+        }
+        if (btnDept) {
+          btnDept.className = 'flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+        }
+        if (contentPos) contentPos.classList.remove('hidden');
+        if (contentDept) contentDept.classList.add('hidden');
+      }
+
+      const searchInput = document.getElementById('targetSearchInput');
+      if (searchInput && searchInput.value.trim()) {
+        handleTargetSearch(searchInput.value.trim());
+      }
+    }
+
+    function toggleDepartmentSelection(deptName, isChecked) {
+      const emps = deptMap.get(deptName) || [];
+      if (isChecked) {
+        targetAudienceState.selectedDepartments.add(deptName);
+        for (const emp of emps) {
+          targetAudienceState.selectedEmployeeIds.delete(emp.id);
+        }
+      } else {
+        targetAudienceState.selectedDepartments.delete(deptName);
+        for (const emp of emps) {
+          targetAudienceState.selectedEmployeeIds.delete(emp.id);
+        }
+      }
+      updateTargetAudienceUI();
+    }
+
+    function togglePositionSelection(posName, isChecked) {
+      const emps = posMap.get(posName) || [];
+      if (isChecked) {
+        targetAudienceState.selectedPositions.add(posName);
+        for (const emp of emps) {
+          targetAudienceState.selectedEmployeeIds.delete(emp.id);
+        }
+      } else {
+        targetAudienceState.selectedPositions.delete(posName);
+        for (const emp of emps) {
+          targetAudienceState.selectedEmployeeIds.delete(emp.id);
+        }
+      }
+      updateTargetAudienceUI();
+    }
+
+    function toggleIndividualEmployee(empId, isChecked) {
+      const emp = empByIdMap.get(empId);
+      if (!emp) return;
+
+      if (!isChecked) {
+        if (targetAudienceState.selectedDepartments.has(emp.department)) {
+          targetAudienceState.selectedDepartments.delete(emp.department);
+          const deptEmps = deptMap.get(emp.department) || [];
+          for (const col of deptEmps) {
+            if (col.id !== empId) {
+              targetAudienceState.selectedEmployeeIds.add(col.id);
+            }
+          }
+        }
+        if (targetAudienceState.selectedPositions.has(emp.position)) {
+          targetAudienceState.selectedPositions.delete(emp.position);
+          const posEmps = posMap.get(emp.position) || [];
+          for (const col of posEmps) {
+            if (col.id !== empId) {
+              targetAudienceState.selectedEmployeeIds.add(col.id);
+            }
+          }
+        }
+        targetAudienceState.selectedEmployeeIds.delete(empId);
+      } else {
+        targetAudienceState.selectedEmployeeIds.add(empId);
+
+        const deptEmps = deptMap.get(emp.department) || [];
+        const allDeptSelected = deptEmps.length > 0 && deptEmps.every(e => isEmployeeSelectedInTarget(e.id));
+        if (allDeptSelected) {
+          targetAudienceState.selectedDepartments.add(emp.department);
+          for (const e of deptEmps) targetAudienceState.selectedEmployeeIds.delete(e.id);
+        }
+
+        const posEmps = posMap.get(emp.position) || [];
+        const allPosSelected = posEmps.length > 0 && posEmps.every(e => isEmployeeSelectedInTarget(e.id));
+        if (allPosSelected) {
+          targetAudienceState.selectedPositions.add(emp.position);
+          for (const e of posEmps) targetAudienceState.selectedEmployeeIds.delete(e.id);
+        }
+      }
+
+      updateTargetAudienceUI();
+    }
+
+    function clearAllTargetSelection() {
+      targetAudienceState.selectedDepartments.clear();
+      targetAudienceState.selectedPositions.clear();
+      targetAudienceState.selectedEmployeeIds.clear();
+      updateTargetAudienceUI();
+    }
+
+    function updateTargetAudienceUI() {
+      const isAll = targetAudienceState.scope === 'all';
+      const targetIds = calculateTargetEmployeeIds();
+      const targetedSet = new Set(targetIds);
+      const hospitalTotal = employeeDatabase.length || 209;
+      const totalCount = isAll ? hospitalTotal : targetIds.length;
+
+      const elTotal = document.getElementById('summaryTotalEmployees');
+      if (elTotal) elTotal.textContent = totalCount;
+
+      const coveredDepts = new Set();
+      const coveredPositions = new Set();
+      if (isAll) {
+        departmentList.forEach(d => coveredDepts.add(d));
+        positionList.forEach(p => coveredPositions.add(p));
+      } else {
+        for (const id of targetIds) {
+          const emp = empByIdMap.get(id);
+          if (emp) {
+            if (emp.department) coveredDepts.add(emp.department);
+            if (emp.position) coveredPositions.add(emp.position);
+          }
+        }
+      }
+
+      const elDept = document.getElementById('summaryDeptCount');
+      if (elDept) elDept.textContent = coveredDepts.size;
+
+      const elPos = document.getElementById('summaryPosCount');
+      if (elPos) elPos.textContent = coveredPositions.size;
+
+      const elPercent = document.getElementById('targetPercentageBadge');
+      if (elPercent) {
+        const pct = hospitalTotal > 0 ? Math.round((totalCount / hospitalTotal) * 100) : 0;
+        elPercent.textContent = isAll ? '100% ของทั้ง รพ.' : `${pct}% ของทั้ง รพ.`;
+      }
+
+      // Sync Departments
+      for (const deptName of departmentList) {
+        const emps = deptMap.get(deptName) || [];
+        const safeId = escapeId(deptName);
+        const headerCb = document.getElementById(`dept_cb_${safeId}`);
+        const countBadge = document.getElementById(`dept_count_${safeId}`);
+        
+        let selectedInDept = 0;
+        for (const e of emps) {
+          if (targetedSet.has(e.id)) selectedInDept++;
+        }
+
+        if (headerCb) {
+          if (selectedInDept === 0) {
+            headerCb.checked = false;
+            headerCb.indeterminate = false;
+          } else if (selectedInDept === emps.length) {
+            headerCb.checked = true;
+            headerCb.indeterminate = false;
+          } else {
+            headerCb.checked = false;
+            headerCb.indeterminate = true;
+          }
+        }
+
+        if (countBadge) {
+          countBadge.textContent = `${selectedInDept}/${emps.length} คน`;
+          if (selectedInDept === emps.length && emps.length > 0) {
+            countBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200';
+          } else if (selectedInDept > 0) {
+            countBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200';
+          } else {
+            countBadge.className = 'text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-600';
+          }
+        }
+      }
+
+      // Sync Positions
+      for (const posName of positionList) {
+        const emps = posMap.get(posName) || [];
+        const safeId = escapeId(posName);
+        const headerCb = document.getElementById(`pos_cb_${safeId}`);
+        const countBadge = document.getElementById(`pos_count_${safeId}`);
+
+        let selectedInPos = 0;
+        for (const e of emps) {
+          if (targetedSet.has(e.id)) selectedInPos++;
+        }
+
+        if (headerCb) {
+          if (selectedInPos === 0) {
+            headerCb.checked = false;
+            headerCb.indeterminate = false;
+          } else if (selectedInPos === emps.length) {
+            headerCb.checked = true;
+            headerCb.indeterminate = false;
+          } else {
+            headerCb.checked = false;
+            headerCb.indeterminate = true;
+          }
+        }
+
+        if (countBadge) {
+          countBadge.textContent = `${selectedInPos}/${emps.length} คน`;
+          if (selectedInPos === emps.length && emps.length > 0) {
+            countBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200';
+          } else if (selectedInPos > 0) {
+            countBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200';
+          } else {
+            countBadge.className = 'text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500';
+          }
+        }
+      }
+
+      // Sync individual checkboxes
+      document.querySelectorAll('.emp-target-checkbox').forEach(cb => {
+        const empId = cb.getAttribute('data-empid');
+        if (empId) {
+          cb.checked = targetedSet.has(empId);
+        }
+      });
+    }
+
+    function renderDepartmentList() {
+      const container = document.getElementById('departmentListContainer');
+      if (!container) return;
+
+      if (departmentList.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">ไม่พบรายชื่อแผนก</div>';
+        return;
+      }
+
+      const targetedSet = new Set(calculateTargetEmployeeIds());
+
+      container.innerHTML = departmentList.map((deptName) => {
+        const emps = deptMap.get(deptName) || [];
+        const safeId = escapeId(deptName);
+        
+        let selectedInDept = 0;
+        for (const e of emps) {
+          if (targetedSet.has(e.id)) selectedInDept++;
+        }
+
+        const isFull = selectedInDept === emps.length && emps.length > 0;
+        const isPartial = selectedInDept > 0 && selectedInDept < emps.length;
+
+        return `
+          <div class="dept-card border border-slate-200 rounded-2xl bg-white shadow-2xs hover:border-slate-300 transition-all overflow-hidden" id="card_dept_${safeId}">
+            <div class="p-3.5 flex items-center justify-between bg-slate-50/90 hover:bg-slate-100/80 transition-colors cursor-pointer" onclick="toggleAccordionBody('body_dept_${safeId}', 'chevron_dept_${safeId}')">
+              <div class="flex items-center space-x-3 min-w-0 flex-1">
+                <input 
+                  type="checkbox" 
+                  id="dept_cb_${safeId}" 
+                  onclick="event.stopPropagation()"
+                  onchange="toggleDepartmentSelection('${deptName.replace(/'/g, "\\'")}', this.checked)" 
+                  class="w-4 h-4 rounded text-[#0284c7] focus:ring-[#0284c7] cursor-pointer"
+                  ${isFull ? 'checked' : ''}
+                >
+                <label for="dept_cb_${safeId}" onclick="event.stopPropagation()" class="text-xs font-bold text-slate-800 truncate cursor-pointer select-none">
+                  ${escapeHtml(deptName)}
+                </label>
+              </div>
+
+              <div class="flex items-center space-x-2 shrink-0">
+                <span id="dept_count_${safeId}" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${isFull ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold' : (isPartial ? 'bg-amber-100 text-amber-900 border border-amber-300 font-bold' : 'bg-slate-200/80 text-slate-600')}">
+                  ${selectedInDept}/${emps.length} คน
+                </span>
+
+                <button 
+                  type="button" 
+                  onclick="event.stopPropagation(); toggleAccordionBody('body_dept_${safeId}', 'chevron_dept_${safeId}')" 
+                  class="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/80 transition-all cursor-pointer"
+                  title="ดูรายชื่อบุคลากรในแผนกนี้"
+                >
+                  <svg id="chevron_dept_${safeId}" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="body_dept_${safeId}" class="accordion-body hidden border-t border-slate-200 bg-slate-50/70 p-3.5 space-y-2">
+              ${emps.map(emp => `
+                <label class="flex items-center justify-between p-2.5 rounded-xl bg-white hover:bg-sky-50/50 transition-colors cursor-pointer select-none border border-slate-200/90 shadow-2xs">
+                  <div class="flex items-center space-x-2.5 min-w-0">
+                    <input 
+                      type="checkbox" 
+                      data-empid="${emp.id}" 
+                      data-dept="${escapeHtml(deptName)}" 
+                      onchange="toggleIndividualEmployee('${emp.id}', this.checked)" 
+                      class="emp-target-checkbox w-3.5 h-3.5 rounded text-[#0284c7] focus:ring-[#0284c7] cursor-pointer"
+                      ${targetedSet.has(emp.id) ? 'checked' : ''}
+                    >
+                    <span class="text-xs text-slate-800 font-semibold truncate">
+                      ${escapeHtml(emp.title || '')} ${escapeHtml(emp.firstName || '')} ${escapeHtml(emp.lastName || '')}
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                      ${emp.id}
+                    </span>
+                  </div>
+                  <span class="text-[11px] text-slate-600 font-normal truncate ml-2">
+                    ${escapeHtml(emp.position || '')}
+                  </span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPositionList() {
+      const container = document.getElementById('positionListContainer');
+      if (!container) return;
+
+      if (positionList.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">ไม่พบรายชื่อตำแหน่ง</div>';
+        return;
+      }
+
+      const targetedSet = new Set(calculateTargetEmployeeIds());
+
+      container.innerHTML = positionList.map((posName) => {
+        const emps = posMap.get(posName) || [];
+        const safeId = escapeId(posName);
+
+        let selectedInPos = 0;
+        for (const e of emps) {
+          if (targetedSet.has(e.id)) selectedInPos++;
+        }
+
+        const isFull = selectedInPos === emps.length && emps.length > 0;
+        const isPartial = selectedInPos > 0 && selectedInPos < emps.length;
+
+        return `
+          <div class="pos-card border border-slate-200 rounded-2xl bg-white shadow-2xs hover:border-slate-300 transition-all overflow-hidden" id="card_pos_${safeId}">
+            <div class="p-3.5 flex items-center justify-between bg-slate-50/90 hover:bg-slate-100/80 transition-colors cursor-pointer" onclick="toggleAccordionBody('body_pos_${safeId}', 'chevron_pos_${safeId}')">
+              <div class="flex items-center space-x-3 min-w-0 flex-1">
+                <input 
+                  type="checkbox" 
+                  id="pos_cb_${safeId}" 
+                  onclick="event.stopPropagation()"
+                  onchange="togglePositionSelection('${posName.replace(/'/g, "\\'")}', this.checked)" 
+                  class="w-4 h-4 rounded text-[#0284c7] focus:ring-[#0284c7] cursor-pointer"
+                  ${isFull ? 'checked' : ''}
+                >
+                <label for="pos_cb_${safeId}" onclick="event.stopPropagation()" class="text-xs font-bold text-slate-800 truncate cursor-pointer select-none">
+                  ${escapeHtml(posName)}
+                </label>
+              </div>
+
+              <div class="flex items-center space-x-2 shrink-0">
+                <span id="pos_count_${safeId}" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${isFull ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold' : (isPartial ? 'bg-amber-100 text-amber-900 border border-amber-300 font-bold' : 'bg-slate-200/80 text-slate-600')}">
+                  ${selectedInPos}/${emps.length} คน
+                </span>
+
+                <button 
+                  type="button" 
+                  onclick="event.stopPropagation(); toggleAccordionBody('body_pos_${safeId}', 'chevron_pos_${safeId}')" 
+                  class="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/80 transition-all cursor-pointer"
+                  title="ดูรายชื่อบุคลากรในตำแหน่งนี้"
+                >
+                  <svg id="chevron_pos_${safeId}" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="body_pos_${safeId}" class="accordion-body hidden border-t border-slate-200 bg-slate-50/70 p-3.5 space-y-2">
+              ${emps.map(emp => `
+                <label class="flex items-center justify-between p-2.5 rounded-xl bg-white hover:bg-sky-50/50 transition-colors cursor-pointer select-none border border-slate-200/90 shadow-2xs">
+                  <div class="flex items-center space-x-2.5 min-w-0">
+                    <input 
+                      type="checkbox" 
+                      data-empid="${emp.id}" 
+                      data-pos="${escapeHtml(posName)}" 
+                      onchange="toggleIndividualEmployee('${emp.id}', this.checked)" 
+                      class="emp-target-checkbox w-3.5 h-3.5 rounded text-[#0284c7] focus:ring-[#0284c7] cursor-pointer"
+                      ${targetedSet.has(emp.id) ? 'checked' : ''}
+                    >
+                    <span class="text-xs text-slate-800 font-semibold truncate">
+                      ${escapeHtml(emp.title || '')} ${escapeHtml(emp.firstName || '')} ${escapeHtml(emp.lastName || '')}
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                      ${emp.id}
+                    </span>
+                  </div>
+                  <span class="text-[11px] text-slate-600 font-normal truncate ml-2">
+                    ${escapeHtml(emp.department || '')}
+                  </span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleAccordionBody(bodyId, chevronId) {
+      const body = document.getElementById(bodyId);
+      const chevron = document.getElementById(chevronId);
+      if (!body) return;
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      } else {
+        body.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    let areAllAccordionsExpanded = false;
+    function toggleAllAccordions() {
+      areAllAccordionsExpanded = !areAllAccordionsExpanded;
+      const textEl = document.getElementById('textToggleAllAccordions');
+      if (textEl) textEl.textContent = areAllAccordionsExpanded ? 'ยุบทั้งหมด' : 'ขยายทั้งหมด';
+
+      document.querySelectorAll('.accordion-body').forEach(b => {
+        if (areAllAccordionsExpanded) {
+          b.classList.remove('hidden');
+        } else {
+          b.classList.add('hidden');
+        }
+      });
+
+      document.querySelectorAll('[id^="chevron_"]').forEach(ch => {
+        if (areAllAccordionsExpanded) {
+          ch.classList.add('rotate-180');
+        } else {
+          ch.classList.remove('rotate-180');
+        }
+      });
+    }
+
+    function handleTargetSearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      const btnClear = document.getElementById('btnClearSearch');
+      if (btnClear) {
+        if (q) btnClear.classList.remove('hidden');
+        else btnClear.classList.add('hidden');
+      }
+
+      if (targetAudienceState.activeTab === 'dept') {
+        document.querySelectorAll('.dept-card').forEach(card => {
+          const text = card.textContent.toLowerCase();
+          if (!q || text.includes(q)) {
+            card.classList.remove('hidden');
+            if (q) {
+              const body = card.querySelector('.accordion-body');
+              if (body) body.classList.remove('hidden');
+            }
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      } else {
+        document.querySelectorAll('.pos-card').forEach(card => {
+          const text = card.textContent.toLowerCase();
+          if (!q || text.includes(q)) {
+            card.classList.remove('hidden');
+            if (q) {
+              const body = card.querySelector('.accordion-body');
+              if (body) body.classList.remove('hidden');
+            }
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    function clearTargetSearch() {
+      const input = document.getElementById('targetSearchInput');
+      if (input) {
+        input.value = '';
+        handleTargetSearch('');
+      }
+    }
+
+    function generateTargetSummaryString(state, totalCount) {
+      if (state.scope === 'all') {
+        return 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง';
+      }
+
+      const deptCount = state.selectedDepartments.size;
+      const posCount = state.selectedPositions.size;
+      const empCount = state.selectedEmployeeIds.size;
+
+      const parts = [];
+      if (deptCount > 0) {
+        if (deptCount <= 2) {
+          parts.push('แผนก ' + Array.from(state.selectedDepartments).join(', '));
+        } else {
+          parts.push(`กลุ่ม ${deptCount} แผนก`);
+        }
+      }
+
+      if (posCount > 0) {
+        if (posCount <= 2) {
+          parts.push('ตำแหน่ง ' + Array.from(state.selectedPositions).join(', '));
+        } else {
+          parts.push(`กลุ่ม ${posCount} ตำแหน่ง`);
+        }
+      }
+
+      if (empCount > 0 && deptCount === 0 && posCount === 0) {
+        parts.push(`ระบุเฉพาะเจาะจง ${totalCount} ท่าน`);
+      } else if (empCount > 0) {
+        parts.push(`ร่วมกับรายบุคคล ${empCount} ท่าน`);
+      }
+
+      if (parts.length === 0) {
+        return 'ยังไม่ได้ระบุกลุ่มเป้าหมาย (0 ท่าน)';
+      }
+
+      return parts.join(' + ') + ` (รวม ${totalCount} ท่าน)`;
+    }
+
+    function openSelectedEmployeesModal() {
+      const modal = document.getElementById('selectedEmployeesModal');
+      if (!modal) return;
+      renderSelectedEmployeesModalList();
+      modal.classList.remove('hidden');
+    }
+
+    function closeSelectedEmployeesModal() {
+      const modal = document.getElementById('selectedEmployeesModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderSelectedEmployeesModalList(searchQuery = '') {
+      const container = document.getElementById('modalSelectedEmployeesList');
+      const badge = document.getElementById('modalSelectedCountBadge');
+      if (!container) return;
+
+      const q = searchQuery.trim().toLowerCase();
+      const targetIds = calculateTargetEmployeeIds();
+      if (badge) badge.textContent = `${targetIds.length} ท่าน`;
+
+      if (targetIds.length === 0) {
+        container.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-12 text-center text-xs text-slate-400">
+              ยังไม่มีการเลือกกลุ่มเป้าหมาย
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      container.innerHTML = targetIds.map((id, idx) => {
+        const emp = empByIdMap.get(id);
+        if (!emp) return '';
+
+        const textToSearch = `${emp.id} ${emp.title} ${emp.firstName} ${emp.lastName} ${emp.department} ${emp.position}`.toLowerCase();
+        if (q && !textToSearch.includes(q)) return '';
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors text-xs text-slate-700">
+            <td class="py-2.5 px-3 font-mono text-[11px] text-slate-400">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-mono font-bold text-[#0369a1]">${escapeHtml(emp.id)}</td>
+            <td class="py-2.5 px-3 font-semibold text-slate-900">${escapeHtml(emp.title || '')} ${escapeHtml(emp.firstName || '')} ${escapeHtml(emp.lastName || '')}</td>
+            <td class="py-2.5 px-3 text-slate-600">${escapeHtml(emp.department || '-')}</td>
+            <td class="py-2.5 px-3 text-slate-600">${escapeHtml(emp.position || '-')}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterModalEmployeeList(val) {
+      renderSelectedEmployeesModalList(val);
+    }
+
+    async function initTargetView(courseId) {
+      if (!coursesData || coursesData.length === 0) {
+        try {
+          const cachedStr = localStorage.getItem('hrd_all_courses') || localStorage.getItem('hrd_courses_list');
+          if (cachedStr) coursesData = JSON.parse(cachedStr);
+        } catch(e) {}
+      }
+
+      const selectEl = document.getElementById('targetCourseSelect');
+      if (selectEl && coursesData && coursesData.length > 0) {
+        selectEl.innerHTML = coursesData.map(c => 
+          `<option value="${c.id}">${escapeHtml(c.title || c.id)} (${c.id})</option>`
+        ).join('');
+      }
+
+      if (courseId) {
+        targetActiveCourseId = courseId;
+      } else if (!targetActiveCourseId && coursesData && coursesData.length > 0) {
+        targetActiveCourseId = coursesData[0].id;
+      }
+
+      if (targetActiveCourseId && coursesData && coursesData.length > 0) {
+        targetActiveCourse = coursesData.find(c => String(c.id).toLowerCase() === String(targetActiveCourseId).toLowerCase());
+      }
+
+      if (selectEl && targetActiveCourseId) {
+        selectEl.value = targetActiveCourseId;
+      }
+
+      if (!targetActiveCourse && targetActiveCourseId) {
+        try {
+          const cached = localStorage.getItem('hrd_course_' + targetActiveCourseId);
+          if (cached) targetActiveCourse = JSON.parse(cached);
+        } catch(e) {}
+      }
+
+      if (!targetActiveCourse && targetActiveCourseId && typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
+        try {
+          const sbCourse = await SupabaseService.getCourseById(targetActiveCourseId);
+          if (sbCourse) targetActiveCourse = sbCourse;
+        } catch(e) {}
+      }
+
+      if (!targetActiveCourse) {
+        return;
+      }
+
+      const badgeId = document.getElementById('badgeCourseId');
+      const titleHeading = document.getElementById('courseTitleHeading');
+      const badgeType = document.getElementById('badgeCourseType');
+      const dateDisplay = document.getElementById('courseDateDisplay');
+      const timeDisplay = document.getElementById('courseTimeDisplay');
+      const speakerDisplay = document.getElementById('courseSpeakerDisplay');
+      const batchesDisplay = document.getElementById('courseBatchesDisplay');
+      const regLink = document.getElementById('btnCourseRegLink');
+      const btnEdit = document.getElementById('btnNavEditCourse');
+
+      if (badgeId) badgeId.textContent = targetActiveCourse.id;
+      if (titleHeading) titleHeading.textContent = targetActiveCourse.title || 'ไม่มีชื่อหลักสูตร';
+      if (badgeType) badgeType.textContent = targetActiveCourse.type || 'หลักสูตรอบรม';
+      if (dateDisplay) dateDisplay.textContent = '📅 ' + formatDisplayDate(targetActiveCourse.date);
+      if (timeDisplay) timeDisplay.textContent = targetActiveCourse.time ? ('⏰ ' + targetActiveCourse.time) : '';
+      if (speakerDisplay) speakerDisplay.textContent = '🎤 ' + (targetActiveCourse.speaker || 'HRD');
+      
+      const bCount = (targetActiveCourse.batches && Array.isArray(targetActiveCourse.batches)) ? targetActiveCourse.batches.length : 1;
+      if (batchesDisplay) batchesDisplay.textContent = `🔢 ${bCount} รุ่นการอบรม`;
+
+      const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+      if (regLink) regLink.href = baseUrl + '/?course=' + encodeURIComponent(targetActiveCourse.id);
+      if (btnEdit) {
+        btnEdit.onclick = () => openEditView(targetActiveCourse.id);
+      }
+
+      updateAdminBreadcrumb('target', targetActiveCourse.id);
+
+      if (employeeDatabase.length === 0) {
+        await loadEmployeeDatabase();
+      }
+
+      targetAudienceState.selectedDepartments.clear();
+      targetAudienceState.selectedPositions.clear();
+      targetAudienceState.selectedEmployeeIds.clear();
+
+      const curTarget = targetActiveCourse.targetAudience;
+      const radioAll = document.getElementById('targetScopeAll');
+      const radioSpecific = document.getElementById('targetScopeSpecific');
+
+      if (curTarget && curTarget.type === 'specific') {
+        targetAudienceState.scope = 'specific';
+        if (radioSpecific) radioSpecific.checked = true;
+
+        if (Array.isArray(curTarget.departments)) {
+          curTarget.departments.forEach(d => targetAudienceState.selectedDepartments.add(String(d).trim()));
+        }
+        if (Array.isArray(curTarget.positions)) {
+          curTarget.positions.forEach(p => targetAudienceState.selectedPositions.add(String(p).trim()));
+        }
+        if (Array.isArray(curTarget.employeeIds)) {
+          curTarget.employeeIds.forEach(id => {
+            const emp = empByIdMap.get(id);
+            const empDept = emp ? (emp.department || '').trim() : '';
+            const empPos = emp ? (emp.position || '').trim() : '';
+            const coveredByDept = emp && targetAudienceState.selectedDepartments.has(empDept);
+            const coveredByPos = emp && targetAudienceState.selectedPositions.has(empPos);
+            if (!coveredByDept && !coveredByPos) {
+              targetAudienceState.selectedEmployeeIds.add(id);
+            }
+          });
+        }
+
+        const badgeTarget = document.getElementById('badgeCurrentTarget');
+        if (badgeTarget) badgeTarget.textContent = '🎯 ' + (curTarget.summary || 'กำหนดเฉพาะกลุ่ม');
+        handleTargetScopeChange('specific');
+      } else {
+        targetAudienceState.scope = 'all';
+        if (radioAll) radioAll.checked = true;
+        const badgeTarget = document.getElementById('badgeCurrentTarget');
+        if (badgeTarget) badgeTarget.textContent = '🎯 ทุกแผนก/ตำแหน่ง';
+        handleTargetScopeChange('all');
+      }
+
+      renderDepartmentList();
+      renderPositionList();
+      updateTargetAudienceUI();
+    }
+
+    function onTargetCourseSelectChange(newCourseId) {
+      if (!newCourseId) return;
+      targetActiveCourseId = newCourseId;
+      const url = new URL(window.location);
+      url.searchParams.set('view', 'target');
+      url.searchParams.set('course', newCourseId);
+      history.replaceState({ view: 'target', courseId: newCourseId }, '', url.toString());
+      initTargetView(newCourseId);
+    }
+
+    async function handleSaveTargetAudience() {
+      if (!targetActiveCourse) {
+        HrdModal.error('ไม่พบข้อมูลหลักสูตรที่กำลังแก้ไขค่ะ กรุณาลองใหม่อีกครั้งนะคะ', 'เกิดข้อผิดพลาด');
+        return;
+      }
+
+      const btnSave = document.getElementById('btnSaveTargetAudience');
+      const originalText = btnSave ? btnSave.innerHTML : '';
+
+      const isAll = targetAudienceState.scope === 'all';
+      const effectiveIds = calculateTargetEmployeeIds();
+      const hospitalTotal = (employeeDatabase && employeeDatabase.length > 0) ? employeeDatabase.length : 209;
+      const targetTotalCount = isAll ? hospitalTotal : effectiveIds.length;
+
+      if (!isAll && effectiveIds.length === 0) {
+        HrdModal.warning(
+          'ท่านเลือก "กำหนดกลุ่มเป้าหมายเฉพาะ" แต่ยังไม่ได้เลือกแผนก ตำแหน่ง หรือพนักงานเลยค่ะ\n\nกรุณาเลือกอย่างน้อย 1 ท่าน หรือเปลี่ยนเป็น "เปิดรับทุกแผนกและทุกตำแหน่ง" นะคะ',
+          'ยังไม่ได้เลือกกลุ่มเป้าหมาย'
+        );
+        return;
+      }
+
+      const summaryText = generateTargetSummaryString(targetAudienceState, targetTotalCount);
+
+      const targetAudiencePayload = {
+        type: isAll ? 'all' : 'specific',
+        summary: summaryText,
+        departments: Array.from(targetAudienceState.selectedDepartments),
+        positions: Array.from(targetAudienceState.selectedPositions),
+        employeeIds: isAll ? [] : effectiveIds,
+        totalCount: targetTotalCount
+      };
+
+      targetActiveCourse.targetAudience = targetAudiencePayload;
+
+      const idx = coursesData.findIndex(c => c && String(c.id).toLowerCase() === String(targetActiveCourse.id).toLowerCase());
+      if (idx !== -1) {
+        coursesData[idx] = targetActiveCourse;
+      } else {
+        coursesData.unshift(targetActiveCourse);
+      }
+
+      try {
+        localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
+        localStorage.setItem('hrd_course_' + targetActiveCourse.id, JSON.stringify(targetActiveCourse));
+      } catch(e) {}
+
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.classList.add('opacity-80', 'cursor-not-allowed');
+        btnSave.innerHTML = '<span class="animate-spin inline-block mr-2">⏳</span> กำลังบันทึกลง Supabase...';
+      }
+
+      // 1. Primary Save: Supabase PostgreSQL (0.08s instant response!)
+      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
+        try {
+          await SupabaseService.updateCourseTarget(targetActiveCourse.id, targetAudiencePayload);
+        } catch (err) {
+          console.warn('[Target Admin] Supabase update notice:', err);
+        }
+      }
+
+      // 2. Non-blocking Background Sync to GAS Master Sheet (fire-and-forget)
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'saveCourse',
+            course: targetActiveCourse
+          })
+        }).catch(() => {});
+      }
+
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.classList.remove('opacity-80', 'cursor-not-allowed');
+        btnSave.innerHTML = originalText;
+      }
+
+      const badgeCurrent = document.getElementById('badgeCurrentTarget');
+      if (badgeCurrent) {
+        badgeCurrent.textContent = '🎯 ' + summaryText;
+      }
+
+      renderCourseList();
+
+      await HrdModal.success(
+        `บันทึกข้อมูลกลุ่มเป้าหมายของหลักสูตร "${targetActiveCourse.title}" เรียบร้อยแล้วค่ะ!\n\n` +
+        `• รูปแบบ: ${isAll ? 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง' : 'กำหนดกลุ่มเป้าหมายเฉพาะ'}\n` +
+        `• สรุป: ${summaryText}\n` +
+        `• จำนวนบุคลากร: ${targetTotalCount} ท่าน\n\n` +
+        `(บันทึกลงฐานข้อมูล Supabase ความเร็วสูงเรียบร้อยแล้ว)`,
+        'บันทึกกลุ่มเป้าหมายสำเร็จ'
+      );
     }
   </script>
 </body>

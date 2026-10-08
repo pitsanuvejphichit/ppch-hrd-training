@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>กำหนดกลุ่มเป้าหมายผู้เข้าอบรม (Target Audience) | รพ.พิษณุเวช พิจิตร</title>
+  <script>
+    (function() {
+      const p = new URLSearchParams(window.location.search);
+      const c = p.get('course') || '';
+      window.location.replace('admin.html?view=target' + (c ? ('&course=' + encodeURIComponent(c)) : ''));
+    })();
+  </script>
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
