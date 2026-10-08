@@ -524,21 +524,59 @@
       return false;
     }
 
-    function isSameTopic(batchA, batchB) {
-      if (!batchA || !batchB) return false;
-      if (batchA === batchB) return true;
-      var numA = (batchA.match(/^(\d+)[\.\-]/) || [])[1];
-      var numB = (batchB.match(/^(\d+)[\.\-]/) || [])[1];
-      if (numA && numB && numA === numB) return true;
-      return String(batchA).trim().toLowerCase() === String(batchB).trim().toLowerCase();
+    function isSameTopic(topicA, topicB) {
+      if (!topicA || !topicB) return false;
+      var strA = String(topicA).trim().toLowerCase();
+      var strB = String(topicB).trim().toLowerCase();
+      if (strA === strB) return true;
+
+      // Match by station numbers: e.g. "1." or "01." or "1-" or "1 "
+      var numA = (strA.match(/^(\d+)[\.\-\s]/) || [])[1];
+      var numB = (strB.match(/^(\d+)[\.\-\s]/) || [])[1];
+      if (numA && numB && parseInt(numA, 10) === parseInt(numB, 10)) return true;
+
+      // Clean titles by removing leading numbers/dots/spaces
+      var cleanA = strA.replace(/^\d+[\.\-\s]*/, '').trim();
+      var cleanB = strB.replace(/^\d+[\.\-\s]*/, '').trim();
+      if (cleanA && cleanB && cleanA === cleanB) return true;
+
+      // Substring match
+      if (cleanA && cleanB && (cleanA.includes(cleanB) || cleanB.includes(cleanA))) return true;
+
+      return false;
+    }
+
+    function attendeeMatchesTopic(a, topic) {
+      if (!a || !topic) return false;
+      // 1. Direct match on a.batch (e.g. Google Sheet tab name "1. Ice Breaking")
+      if (isSameTopic(a.batch, topic)) return true;
+      // 2. Check if a.selectedTopics contains this topic
+      if (Array.isArray(a.selectedTopics) && a.selectedTopics.length > 0) {
+        if (a.selectedTopics.some(t => isSameTopic(t, topic))) return true;
+      }
+      // 3. For multi-topic orientation courses with topicMode === 'all', every registered person attends all topics!
+      if (currentCourse && currentCourse.hasSubTopics && currentCourse.topicMode === 'all') {
+        return true;
+      }
+      return false;
     }
 
     function getMobileCourseTopicsList() {
       if (!currentCourse || !currentCourse.hasSubTopics) return [];
-      
+
+      // 1. Prefer defined course topics from metadata (always clean & numbered)
+      if (Array.isArray(currentCourse.topics) && currentCourse.topics.length > 0) {
+        return currentCourse.topics.map(function(t, idx) {
+          var prefix = (idx + 1) + '. ';
+          var tTitle = t.title || ('หัวข้อที่ ' + (idx + 1));
+          return tTitle.startsWith(prefix) ? tTitle : (prefix + tTitle);
+        });
+      }
+
+      // 2. Fallback to tabs discovered from attendees (excluding standard batch names)
       var tabsFound = [];
       allAttendees.forEach(function(a) {
-        if (a && a.batch && !tabsFound.includes(a.batch)) {
+        if (a && a.batch && !tabsFound.includes(a.batch) && !a.batch.startsWith('รุ่นที่')) {
           tabsFound.push(a.batch);
         }
       });
@@ -550,14 +588,6 @@
           return numA - numB;
         });
         return tabsFound;
-      }
-
-      if (Array.isArray(currentCourse.topics) && currentCourse.topics.length > 0) {
-        return currentCourse.topics.map(function(t, idx) {
-          var prefix = (idx + 1) + '. ';
-          var tTitle = t.title || ('หัวข้อที่ ' + (idx + 1));
-          return tTitle.startsWith(prefix) ? tTitle : (prefix + tTitle);
-        });
       }
 
       return [];
@@ -647,41 +677,95 @@
       }
     }
 
+    function mergeAttendeesLists(primaryList, secondaryList) {
+      if (typeof SupabaseService !== 'undefined' && typeof SupabaseService.mergeAttendees === 'function') {
+        return SupabaseService.mergeAttendees(primaryList, secondaryList);
+      }
+      const map = new Map();
+      (secondaryList || []).forEach(item => {
+        if (item && item.id) map.set(String(item.id).trim(), Object.assign({}, item));
+      });
+      (primaryList || []).forEach(item => {
+        if (item && item.id) {
+          const key = String(item.id).trim();
+          const existing = map.get(key);
+          map.set(key, existing ? Object.assign({}, existing, item) : Object.assign({}, item));
+        }
+      });
+      return Array.from(map.values()).map((item, idx) => {
+        item.no = idx + 1;
+        return item;
+      });
+    }
+
     async function syncMobileAttendeesFromSheet(isManual) {
-      var sheetId = getMobileCourseSheetId();
-      if (!sheetId) return null;
-
-      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (!gasUrl) return null;
-
       var syncIcon = document.getElementById('mSyncIcon');
       var statusEl = document.getElementById('mRosterSyncStatus');
       if (syncIcon) syncIcon.classList.add('animate-spin');
-      if (statusEl) statusEl.textContent = 'กำลังซิงค์ Google Sheet...';
+      if (statusEl) statusEl.textContent = 'กำลังโหลดข้อมูลล่าสุด...';
 
-      try {
-        const res = await fetchWithTimeout(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(sheetId), {}, 40000).then(r => r.json());
-        if (syncIcon) syncIcon.classList.remove('animate-spin');
-        if (res && res.success && Array.isArray(res.attendees)) {
-          allAttendees = res.attendees;
-          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
-          updateMobileStats();
-          renderMobileBatches();
-          renderMobileBatchFilterDropdown();
-          renderMobileAttendees();
-          if (statusEl) statusEl.textContent = 'ซิงค์สด (' + new Date().toLocaleTimeString('th-TH') + ')';
-          if (isManual) {
-            HrdModal.toast('ซิงค์ข้อมูลจาก Google Sheet สำเร็จ (' + allAttendees.length + ' ท่าน)', 'success');
+      let hadUpdate = false;
+
+      // สเต็ปที่ 1: ดึงสดจาก Supabase Primary Database ทันที (สปีด 0.05 - 0.15 วิ)
+      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled() && currentCourse && currentCourse.id) {
+        try {
+          const sbAttendees = await SupabaseService.getAttendeesByCourse(currentCourse.id);
+          if (Array.isArray(sbAttendees) && sbAttendees.length > 0) {
+            allAttendees = mergeAttendeesLists(sbAttendees, allAttendees);
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+            updateMobileStats();
+            renderMobileBatches();
+            renderMobileBatchFilterDropdown();
+            renderMobileAttendees();
+            hadUpdate = true;
+            if (statusEl) statusEl.textContent = 'ซิงค์ข้อมูลเรียบร้อย (' + new Date().toLocaleTimeString('th-TH') + ')';
+            console.log('[Dual-Tier Mobile] Supabase roster loaded immediately: ' + sbAttendees.length + ' attendees');
           }
-          return res.attendees;
-        } else {
-          if (statusEl) statusEl.textContent = 'แสดงข้อมูลจากความจำเครื่อง';
+        } catch(sbErr) {
+          console.warn('[Dual-Tier Mobile] Supabase roster fetch error:', sbErr);
         }
-      } catch(e) {
-        if (syncIcon) syncIcon.classList.remove('animate-spin');
-        if (statusEl) statusEl.textContent = 'การเชื่อมต่อขัดข้อง แสดงข้อมูลจากความจำเครื่อง';
-        console.warn('Sync attendees failed:', e);
       }
+
+      // สเต็ปที่ 2: ดึงจาก Google Sheet เพื่อรวบรวมรายชื่อเก่า/สำรอง และอัปเดตสถานะ (Dual-Tier Sync)
+      var sheetId = getMobileCourseSheetId();
+      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      if (sheetId && gasUrl) {
+        try {
+          const res = await fetchWithTimeout(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(sheetId), {}, 25000).then(r => r.json());
+          if (syncIcon) syncIcon.classList.remove('animate-spin');
+          if (res && res.success && Array.isArray(res.attendees)) {
+            allAttendees = mergeAttendeesLists(allAttendees, res.attendees);
+            localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+            updateMobileStats();
+            renderMobileBatches();
+            renderMobileBatchFilterDropdown();
+            renderMobileAttendees();
+            hadUpdate = true;
+            if (statusEl) statusEl.textContent = 'ซิงค์สด (' + new Date().toLocaleTimeString('th-TH') + ')';
+            if (isManual) {
+              HrdModal.toast('ซิงค์ข้อมูลล่าสุดสำเร็จแล้วค่ะ (' + allAttendees.length + ' ท่าน)', 'success');
+            }
+            return allAttendees;
+          } else {
+            if (!hadUpdate && statusEl) statusEl.textContent = 'แสดงข้อมูลจากความจำเครื่อง';
+            if (isManual && !hadUpdate) HrdModal.toast('ไม่สามารถดึงข้อมูลจากชีตได้ในขณะนี้ค่ะ', 'error');
+          }
+        } catch(e) {
+          if (syncIcon) syncIcon.classList.remove('animate-spin');
+          if (!hadUpdate && statusEl) statusEl.textContent = 'การเชื่อมต่อขัดข้อง แสดงข้อมูลจากความจำเครื่อง';
+          console.warn('Sync attendees failed:', e);
+          if (isManual && !hadUpdate) HrdModal.toast('เกิดข้อผิดพลาดในการเชื่อมต่อ Google Sheet ค่ะ', 'error');
+        }
+      } else {
+        if (syncIcon) syncIcon.classList.remove('animate-spin');
+      }
+
+      if (isManual && hadUpdate) {
+        HrdModal.toast('ข้อมูลผู้ลงทะเบียนเป็นปัจจุบันแล้วค่ะ (' + allAttendees.length + ' ท่าน)', 'success');
+      }
+
+      return allAttendees;
     }
     let employeeDatabase = (typeof DEMO_EMPLOYEES !== "undefined" && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
     let currentCourse = null;
@@ -1096,17 +1180,18 @@
       const container = document.getElementById('mAttendeeListContainer');
       if (!container) return;
 
+      const filterSelect = document.getElementById('mBatchFilterSelect');
+      const selectedBatch = filterSelect ? filterSelect.value : '';
+
       let data = list;
       if (!data) {
-        const filterSelect = document.getElementById('mBatchFilterSelect');
         const searchInput = document.getElementById('mListSearch');
-        const selectedBatch = filterSelect ? filterSelect.value : '';
         const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
         data = allAttendees.slice();
         if (selectedBatch) {
           if (currentCourse && currentCourse.hasSubTopics) {
-            data = data.filter(a => isSameTopic(a.batch, selectedBatch));
+            data = data.filter(a => attendeeMatchesTopic(a, selectedBatch));
           } else {
             data = data.filter(a => isSameBatch(a.batch, selectedBatch));
           }
@@ -1128,10 +1213,12 @@
 
       container.innerHTML = data.map((att, idx) => {
         let topicsHtml = '';
-        if (att.selectedTopics && att.selectedTopics.length > 0) {
+        if (currentCourse && currentCourse.hasSubTopics && currentCourse.topicMode === 'selective' && att.selectedTopics && att.selectedTopics.length > 0) {
           const tList = Array.isArray(att.selectedTopics) ? att.selectedTopics : [att.selectedTopics];
           topicsHtml = '<div class="mt-1 flex flex-wrap gap-1">' + tList.map(t => '<span class="text-[9px] bg-sky-50 text-sky-800 border border-sky-200 px-1.5 py-0.5 rounded font-medium">' + escapeHtml(t) + '</span>').join('') + '</div>';
         }
+
+        let displayBadge = (currentCourse && currentCourse.hasSubTopics) ? (selectedBatch || att.batch) : (att.batch || '-');
 
         return '<div class="p-3.5 bg-slate-50 border border-slate-200/70 rounded-2xl space-y-1 text-xs shadow-xs">' +
           '<div class="flex items-center justify-between">' +
@@ -1146,7 +1233,7 @@
           '<div class="text-[11px] text-slate-500 font-light">' + (att.position || '-') + ' • ' + (att.department || '-') + '</div>' +
           topicsHtml +
           '<div class="pt-1 flex items-center justify-between">' +
-            '<span class="text-[10px] text-blue-800 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 font-medium">' + (att.batch || '-') + '</span>' +
+            '<span class="text-[10px] text-blue-800 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 font-medium">' + displayBadge + '</span>' +
             '<span class="text-[10px] text-emerald-600 font-medium">' + (att.timestamp || 'บันทึกสำเร็จ') + '</span>' +
           '</div>' +
         '</div>';
@@ -1188,24 +1275,26 @@
         return;
       }
 
-      // Proceed with deletion
       showLoader('กำลังลบข้อมูลผู้ลงทะเบียน...', 'กำลังนำข้อมูลออกจากระบบและอัปเดต Google Sheet ประจำวิชา');
 
       const originalAttendees = allAttendees.slice();
 
-      // Optimistically update local view
       allAttendees = allAttendees.filter(a => a && a.id.toString().trim() !== empId.toString().trim());
       localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
       updateMobileStats();
       renderMobileBatches();
       renderMobileAttendees();
 
-      // Sync delete to Google Sheet
+      // Sync delete to Supabase Primary Database
+      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled() && currentCourse) {
+        SupabaseService.deleteAttendee(currentCourse.id, empId).catch(e => console.warn('Supabase delete error:', e));
+      }
+
       try {
         const res = await deleteMobileAttendeeFromSheet(empId, enteredPassword.trim(), attendee.batch);
         if (res && res.success) {
           if (Array.isArray(res.attendees)) {
-            allAttendees = res.attendees;
+            allAttendees = mergeAttendeesLists(allAttendees, res.attendees);
             localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
             updateMobileStats();
             renderMobileBatches();
@@ -1249,7 +1338,7 @@
 
       if (selectedBatch) {
         if (currentCourse && currentCourse.hasSubTopics) {
-          filtered = filtered.filter(a => isSameTopic(a.batch, selectedBatch));
+          filtered = filtered.filter(a => attendeeMatchesTopic(a, selectedBatch));
         } else {
           filtered = filtered.filter(a => isSameBatch(a.batch, selectedBatch));
         }

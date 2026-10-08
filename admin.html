@@ -1676,15 +1676,30 @@
 
       renderRosterAttendees();
 
-      // Background sync from Google Sheet if sheetId exists
+      // 1. Instant fetch from Supabase (0.05s)
+      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
+        SupabaseService.getAttendeesByCourse(course.id).then(sbList => {
+          if (Array.isArray(sbList) && sbList.length > 0) {
+            currentRosterAttendees = SupabaseService.mergeAttendees(sbList, currentRosterAttendees);
+            try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(currentRosterAttendees)); } catch(e) {}
+            renderRosterAttendees();
+          }
+        }).catch(err => console.warn('Supabase admin roster fetch error:', err));
+      }
+
+      // 2. Background sync from Google Sheet if sheetId exists
       const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
       if (course.sheetId && gasUrl) {
         fetch(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(course.sheetId))
           .then(r => r.json())
           .then(res => {
             if (res && res.success && Array.isArray(res.attendees)) {
-              currentRosterAttendees = res.attendees;
-              try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(res.attendees)); } catch(e) {}
+              if (typeof SupabaseService !== 'undefined' && typeof SupabaseService.mergeAttendees === 'function') {
+                currentRosterAttendees = SupabaseService.mergeAttendees(currentRosterAttendees, res.attendees);
+              } else {
+                currentRosterAttendees = res.attendees;
+              }
+              try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(currentRosterAttendees)); } catch(e) {}
               renderRosterAttendees();
             }
           })

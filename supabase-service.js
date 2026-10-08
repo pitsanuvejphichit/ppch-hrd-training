@@ -111,7 +111,7 @@ const SupabaseService = (() => {
         department: row.department,
         batch: row.batch,
         selectedTopics: row.selected_topics || [],
-        timestamp: row.registered_at ? new Date(row.registered_at).toLocaleTimeString('th-TH') : '',
+        timestamp: row.registered_at ? (new Date(row.registered_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.') : '',
         transactionId: row.id,
         syncedToSheet: row.synced_to_sheet
       }));
@@ -119,6 +119,59 @@ const SupabaseService = (() => {
       console.warn('[SupabaseService] Fetch failed:', err);
       return null;
     }
+  }
+
+  /**
+   * ลบข้อมูลผู้ลงทะเบียนจาก Supabase
+   */
+  async function deleteAttendee(courseId, empId) {
+    const sb = getClient();
+    if (!sb || !courseId || !empId) return false;
+
+    try {
+      const { error } = await sb
+        .from('registrations')
+        .delete()
+        .eq('course_id', String(courseId))
+        .eq('emp_id', String(empId));
+
+      if (error) {
+        console.warn('[SupabaseService] Delete attendee error:', error);
+        return false;
+      }
+      return true;
+    } catch(err) {
+      console.warn('[SupabaseService] Delete failed:', err);
+      return false;
+    }
+  }
+
+  /**
+   * รวมรายชื่อผู้ลงทะเบียน (Primary Supabase + Secondary Sheet/Cache)
+   * ป้องกันข้อมูลใหม่หาย และรักษาแถวที่มีอยู่เดิมจาก Sheet
+   */
+  function mergeAttendees(primaryList, secondaryList) {
+    const map = new Map();
+    (secondaryList || []).forEach(item => {
+      if (item && item.id) {
+        map.set(String(item.id).trim(), Object.assign({}, item));
+      }
+    });
+    (primaryList || []).forEach(item => {
+      if (item && item.id) {
+        const key = String(item.id).trim();
+        const existing = map.get(key);
+        if (existing) {
+          map.set(key, Object.assign({}, existing, item));
+        } else {
+          map.set(key, Object.assign({}, item));
+        }
+      }
+    });
+    return Array.from(map.values()).map((item, idx) => {
+      item.no = idx + 1;
+      return item;
+    });
   }
 
   /**
@@ -172,6 +225,8 @@ const SupabaseService = (() => {
     isEnabled,
     registerAttendee,
     getAttendeesByCourse,
+    deleteAttendee,
+    mergeAttendees,
     markSynced,
     archiveOldRegistrations,
     DEFAULT_SUPABASE_URL,
