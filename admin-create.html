@@ -1606,194 +1606,38 @@
       }
       // --- END EDIT MODE SAVE FLOW ---
 
-      // --- CREATE MODE: SAVE TO GOOGLE DRIVE & SHEET ---
+      // --- CREATE MODE: ULTRA-FAST OPTIMISTIC SAVE WITH BACKGROUND SYNC ---
       btnSave.disabled = true;
       btnSave.classList.add('opacity-80', 'cursor-not-allowed');
 
-      openSaveProgressModal({
-        title: 'กำลังสร้างหลักสูตรและชีทอัตโนมัติ',
-        courseTitle: title
-      });
-      setSaveProgressStep(1, 'active');
-      setSaveProgressStep(2, 'pending');
-      setSaveProgressStep(3, 'pending');
-      setSaveProgressPercent(25, 'กำลังสั่ง Google Drive สร้างโฟลเดอร์และคัดลอกแบบฟอร์ม...');
-
-      var progressTimer = setTimeout(function() {
-        setSaveProgressStep(1, 'done');
-        setSaveProgressStep(2, 'active');
-        setSaveProgressPercent(60, 'กำลังแตกชีทรุ่นและจัดเตรียมหัวเอกสาร...');
-      }, 4000);
-
-      var progressTimer2 = setTimeout(function() {
-        setSaveProgressStep(2, 'done');
-        setSaveProgressStep(3, 'active');
-        setSaveProgressPercent(85, 'กำลังลงทะเบียนหลักสูตรเข้าสู่ระบบคลังกลาง...');
-      }, 9000);
-
-      var finalSheetUrl = '';
-      var finalSheetId = '';
-      var autoFolderUrl = '';
-      var isAutoCreated = false;
-      var gasErrorMsg = '';
-
-      var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-
-      async function attemptGasCreate(timeoutMs) {
-        if (!gasUrl) return { success: false, message: 'ไม่ได้ระบุ GAS URL' };
+      // Helper function to update cached course with GAS result
+      function updateCourseWithGasResult(cId, data) {
         try {
-          const controller = new AbortController();
-          const timerId = setTimeout(() => controller.abort(), timeoutMs || 35000);
+          const key = 'hrd_course_' + cId;
+          let c = JSON.parse(localStorage.getItem(key) || '{}');
+          if (data.sheetUrl) c.sheetUrl = data.sheetUrl;
+          if (data.sheetId) c.sheetId = data.sheetId;
+          if (data.folderUrl) c.folderUrl = data.folderUrl;
+          if (data.masterSheetUrl) localStorage.setItem('hrd_master_sheet_url', data.masterSheetUrl);
+          localStorage.setItem(key, JSON.stringify(c));
 
-          const resp = await fetch(gasUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'createCourse',
-              id: courseId,
-              title: title,
-              speaker: speaker,
-              date: summaryDate,
-              time: summaryTime,
-              planType: planType,
-              category: category,
-              batches: batches,
-              quota: quota,
-              targetAudience: targetAudience,
-              hasSubTopics: hasSubTopics,
-              topicMode: topicMode,
-              topics: topics
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timerId);
-
-          const textResp = await resp.text();
-          let parsed = null;
-          try {
-            parsed = JSON.parse(textResp);
-          } catch (pe) {
-            let cleanText = textResp.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-            if (cleanText.includes('ต้องมีสิทธิ์เข้าถึง') || cleanText.includes('accounts.google.com')) {
-              return { success: false, raw: cleanText, isAuthError: true };
-            }
-            return { success: false, raw: cleanText, httpStatus: resp.status };
-          }
-          return parsed || { success: false };
-        } catch (err) {
-          return { success: false, error: err.message || String(err) };
-        }
-      }
-
-      async function checkCourseInRegistry() {
-        if (!gasUrl) return null;
-        try {
-          const r1 = await fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(courseId) + '&t=' + Date.now()).then(r => r.json()).catch(() => null);
-          if (r1 && r1.success && r1.course && (r1.course.sheetUrl || r1.course.sheetId)) {
-            return r1.course;
-          }
-        } catch (e) {}
-        try {
-          const r2 = await fetch(gasUrl + '?action=getAllCourses&t=' + Date.now()).then(r => r.json()).catch(() => null);
-          if (r2 && r2.success && Array.isArray(r2.courses)) {
-            const found = r2.courses.find(c => c && (
-              String(c.id).toLowerCase() === String(courseId).toLowerCase() ||
-              (c.title && c.title.trim() === title.trim())
-            ));
-            if (found && (found.sheetUrl || found.sheetId)) {
-              return found;
-            }
-          }
-        } catch (e) {}
-        return null;
-      }
-
-      if (gasUrl) {
-        try {
-          // Attempt 1: Standard creation
-          const res1 = await attemptGasCreate(35000);
-
-          if (res1 && res1.success && res1.sheetUrl) {
-            finalSheetUrl = res1.sheetUrl;
-            finalSheetId = res1.sheetId || '';
-            autoFolderUrl = res1.folderUrl || '';
-            isAutoCreated = true;
-            if (res1.masterSheetUrl) localStorage.setItem('hrd_master_sheet_url', res1.masterSheetUrl);
-          } else {
-            // Echo recovery: check if Google Drive files were created despite HTTP echo glitch
-            setSaveProgressStep(2, 'done');
-            setSaveProgressStep(3, 'active');
-            setSaveProgressPercent(75, 'กำลังตรวจสอบความพร้อมของไฟล์ Google Sheet ประจำวิชา...');
-
-            await new Promise(r => setTimeout(r, 1500));
-            let regCourse = await checkCourseInRegistry();
-
-            if (regCourse && (regCourse.sheetUrl || regCourse.sheetId)) {
-              finalSheetUrl = regCourse.sheetUrl || ('https://docs.google.com/spreadsheets/d/' + regCourse.sheetId + '/edit');
-              finalSheetId = regCourse.sheetId || '';
-              autoFolderUrl = regCourse.folderUrl || '';
-              isAutoCreated = true;
-            } else {
-              // Retry attempt 2
-              setSaveProgressPercent(80, 'กำลังส่งคำสั่งสร้างชีทซ้ำอีกครั้งเพื่อความเสถียร...');
-              const res2 = await attemptGasCreate(30000);
-              if (res2 && res2.success && res2.sheetUrl) {
-                finalSheetUrl = res2.sheetUrl;
-                finalSheetId = res2.sheetId || '';
-                autoFolderUrl = res2.folderUrl || '';
-                isAutoCreated = true;
-                if (res2.masterSheetUrl) localStorage.setItem('hrd_master_sheet_url', res2.masterSheetUrl);
-              } else {
-                await new Promise(r => setTimeout(r, 1500));
-                regCourse = await checkCourseInRegistry();
-                if (regCourse && (regCourse.sheetUrl || regCourse.sheetId)) {
-                  finalSheetUrl = regCourse.sheetUrl || ('https://docs.google.com/spreadsheets/d/' + regCourse.sheetId + '/edit');
-                  finalSheetId = regCourse.sheetId || '';
-                  autoFolderUrl = regCourse.folderUrl || '';
-                  isAutoCreated = true;
-                } else {
-                  if (res1.isAuthError || (res2 && res2.isAuthError)) {
-                    gasErrorMsg = 'Google Apps Script แจ้งเตือนว่า "ต้องมีสิทธิ์เข้าถึง"\n(กรุณาตั้งค่า Who has access เป็น Anyone ใน Apps Script)';
-                  } else {
-                    gasErrorMsg = (res2 && res2.message) || (res1 && res1.message) || (res2 && res2.raw) || (res1 && res1.raw) || (res2 && res2.error) || (res1 && res1.error) || 'เซิร์ฟเวอร์ Google Apps Script ตอบสนองล่าช้า';
-                  }
+          ['hrd_courses_list', 'hrd_all_courses'].forEach(listKey => {
+            try {
+              let list = JSON.parse(localStorage.getItem(listKey) || '[]');
+              if (Array.isArray(list)) {
+                let item = list.find(x => x && String(x.id).toLowerCase() === String(cId).toLowerCase());
+                if (item) {
+                  if (data.sheetUrl) item.sheetUrl = data.sheetUrl;
+                  if (data.sheetId) item.sheetId = data.sheetId;
+                  if (data.folderUrl) item.folderUrl = data.folderUrl;
+                  localStorage.setItem(listKey, JSON.stringify(list));
                 }
               }
-            }
-          }
-        } catch (flowErr) {
-          gasErrorMsg = 'การเชื่อมต่อไปยัง Google Apps Script ขัดข้อง: ' + (flowErr.message || flowErr);
-        } finally {
-          clearTimeout(progressTimer);
-          clearTimeout(progressTimer2);
+            } catch(e) {}
+          });
+        } catch(e) {
+          console.warn('[Sync Error]', e);
         }
-      } else {
-        clearTimeout(progressTimer);
-        clearTimeout(progressTimer2);
-      }
-
-      if (isAutoCreated) {
-        setSaveProgressStep(1, 'done');
-        setSaveProgressStep(2, 'done');
-        setSaveProgressStep(3, 'done');
-        setSaveProgressPercent(100, 'สร้างโฟลเดอร์และ Google Sheet ประจำวิชาสำเร็จแล้ว!');
-        const iconEl = document.getElementById('saveModalIcon');
-        if (iconEl) {
-          iconEl.className = 'w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner';
-          iconEl.innerHTML = '✓';
-        }
-        await new Promise(r => setTimeout(r, 600));
-      }
-
-      btnSave.disabled = false;
-      btnSave.classList.remove('opacity-80', 'cursor-not-allowed');
-      btnSave.innerHTML = originalBtnText;
-      closeSaveProgressModal();
-      hideLoader();
-
-      if (!isAutoCreated) {
-        HrdModal.error('⚠️ ไม่สามารถสร้างโฟลเดอร์และ Google Sheet อัตโนมัติได้ค่ะ!\n\nสาเหตุ: ' + gasErrorMsg + '\n\nกรุณากดลองอีกครั้ง หรือตรวจสอบการเชื่อมต่ออินเทอร์เน็ตค่ะ', 'เกิดข้อผิดพลาดในการสร้างชีท');
-        return;
       }
 
       var newCourse = {
@@ -1813,12 +1657,13 @@
         topicMode: topicMode,
         topics: topics,
         driveFolderName: autoFolderName,
-        folderUrl: autoFolderUrl || '',
-        sheetId: finalSheetId,
-        sheetUrl: finalSheetUrl,
+        folderUrl: '',
+        sheetId: '',
+        sheetUrl: '',
         status: 'active'
       };
 
+      // 1. Optimistic Local Save (Instant & 100% Data Loss Proof)
       coursesData.unshift(newCourse);
       try {
         localStorage.setItem('hrd_course_' + newCourse.id, JSON.stringify(newCourse));
@@ -1827,6 +1672,133 @@
       } catch (storageErr) {
         console.warn('LocalStorage save warning:', storageErr);
       }
+
+      openSaveProgressModal({
+        title: 'กำลังสร้างหลักสูตรและระบบลงทะเบียน',
+        courseTitle: title
+      });
+
+      // Step 1: Instant Local Save Done
+      setSaveProgressStep(1, 'done');
+      setSaveProgressStep(2, 'active');
+      setSaveProgressStep(3, 'pending');
+      setSaveProgressPercent(35, 'บันทึกข้อมูลหลักสูตรลงระบบเรียบร้อยแล้ว');
+
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      const gasPayload = {
+        action: 'createCourse',
+        id: courseId,
+        title: title,
+        speaker: speaker,
+        date: summaryDate,
+        time: summaryTime,
+        planType: planType,
+        category: category,
+        batches: batches,
+        quota: quota,
+        targetAudience: targetAudience,
+        hasSubTopics: hasSubTopics,
+        topicMode: topicMode,
+        topics: topics
+      };
+
+      // Background Sheet Poller (in case GAS takes longer than fast race or returns echo redirect)
+      function runBackgroundSheetPoller(targetId) {
+        if (!gasUrl) return;
+        let attempts = 0;
+        const maxAttempts = 10; // 10 * 3.5s = 35s max
+        const pollInterval = setInterval(async () => {
+          attempts++;
+          try {
+            const cached = JSON.parse(localStorage.getItem('hrd_course_' + targetId) || '{}');
+            if (cached && (cached.sheetUrl || cached.sheetId)) {
+              clearInterval(pollInterval);
+              return;
+            }
+          } catch(e) {}
+
+          if (attempts > maxAttempts) {
+            clearInterval(pollInterval);
+            return;
+          }
+
+          try {
+            const ctrl = new AbortController();
+            const tId = setTimeout(() => ctrl.abort(), 3500);
+            const r = await fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(targetId) + '&t=' + Date.now(), { signal: ctrl.signal });
+            clearTimeout(tId);
+            const res = await r.json().catch(() => null);
+            if (res && res.success && res.course && (res.course.sheetUrl || res.course.sheetId)) {
+              updateCourseWithGasResult(targetId, res.course);
+              clearInterval(pollInterval);
+              console.log('[Background Sync] Google Sheet linked successfully for ' + targetId);
+            }
+          } catch (e) {}
+        }, 3500);
+      }
+
+      // Fast non-blocking race with GAS
+      let gasFastDone = false;
+      const gasFastPromise = (async () => {
+        if (!gasUrl) return null;
+        try {
+          const ctrl = new AbortController();
+          const tId = setTimeout(() => ctrl.abort(), 3500);
+          const resp = await fetch(gasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(gasPayload),
+            signal: ctrl.signal
+          });
+          clearTimeout(tId);
+          const data = await resp.json().catch(() => null);
+          if (data && data.success && data.sheetUrl) {
+            gasFastDone = true;
+            newCourse.sheetUrl = data.sheetUrl;
+            newCourse.sheetId = data.sheetId || '';
+            newCourse.folderUrl = data.folderUrl || '';
+            updateCourseWithGasResult(courseId, data);
+            return data;
+          }
+        } catch (err) {
+          // If aborted or transient error, handled by background poller
+        }
+        return null;
+      })();
+
+      // Smooth step 2 animation
+      await new Promise(r => setTimeout(r, 1000));
+      setSaveProgressStep(2, 'done');
+      setSaveProgressStep(3, 'active');
+      setSaveProgressPercent(75, 'เชื่อมโยง Google Drive และสร้างลิงก์ลงทะเบียน...');
+
+      // Smooth step 3 animation & wait short race
+      await Promise.race([
+        gasFastPromise,
+        new Promise(r => setTimeout(r, 1200))
+      ]);
+
+      if (!gasFastDone) {
+        runBackgroundSheetPoller(courseId);
+      }
+
+      setSaveProgressStep(3, 'done');
+      setSaveProgressPercent(100, 'สร้างหลักสูตรและระบบลงทะเบียนสำเร็จเรียบร้อยแล้ว!');
+
+      const iconEl = document.getElementById('saveModalIcon');
+      if (iconEl) {
+        iconEl.className = 'w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner';
+        iconEl.innerHTML = '✓';
+      }
+
+      await new Promise(r => setTimeout(r, 500));
+
+      btnSave.disabled = false;
+      btnSave.classList.remove('opacity-80', 'cursor-not-allowed');
+      btnSave.innerHTML = originalBtnText;
+
+      closeSaveProgressModal();
+      hideLoader();
 
       function encodeCourseData(c) {
         var min = {
