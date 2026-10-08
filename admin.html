@@ -878,7 +878,7 @@
       // 1. Tier 1: Stale-While-Revalidate from localStorage (Instant 0ms display!)
       if (!forceRescan) {
         try {
-          const cachedStr = localStorage.getItem('hrd_all_courses');
+          const cachedStr = localStorage.getItem('hrd_all_courses') || localStorage.getItem('hrd_courses_list');
           if (cachedStr) {
             const cachedList = JSON.parse(cachedStr);
             if (Array.isArray(cachedList) && cachedList.length > 0) {
@@ -990,6 +990,7 @@
           coursesData = freshCourses;
           try {
             localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+            localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
           } catch(e) {}
 
           if (res.masterSheetUrl) {
@@ -1455,6 +1456,7 @@
       try { 
         localStorage.removeItem('hrd_attendees_' + id); 
         localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
       } catch(e) {}
       updateCourseCountDisplay();
       renderCourseList();
