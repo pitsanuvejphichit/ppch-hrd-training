@@ -1152,6 +1152,7 @@
       const editParam = urlParams.get('edit');
 
       await loadAdminCourses();
+      loadEmployeeDatabase().catch(() => {});
 
       if (editParam) {
         switchAdminView('create', editParam, false);
@@ -2612,24 +2613,18 @@
     }
 
     async function loadEmployeeDatabase() {
-      try {
-        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-        const response = await fetch(`${gasUrl}?action=getEmployees`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && Array.isArray(data.employees) && data.employees.length > 0) {
-            employeeDatabase = data.employees;
-            indexEmployeeData();
-            console.log(`[Target Admin] Loaded ${employeeDatabase.length} live employees from Master Sheet.`);
-            return employeeDatabase;
-          }
-        }
-      } catch (e) {
-        console.warn('[Target Admin] GAS getEmployees fallback:', e.message);
+      // 1. Instant Memory Lookup from demo_data.js (0ms)
+      if (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES) && DEMO_EMPLOYEES.length > 0) {
+        employeeDatabase = DEMO_EMPLOYEES;
+        indexEmployeeData();
+      } else if (typeof window.DEMO_EMPLOYEES !== 'undefined' && Array.isArray(window.DEMO_EMPLOYEES) && window.DEMO_EMPLOYEES.length > 0) {
+        employeeDatabase = window.DEMO_EMPLOYEES;
+        indexEmployeeData();
       }
 
+      // 2. Instant Local File Lookup (employees.json)
       try {
-        const response = await fetch('employees.json');
+        const response = await fetch('employees.json?t=' + Date.now());
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -2638,16 +2633,28 @@
             return employeeDatabase;
           }
         }
-      } catch (err) {
-        console.warn('[Target Admin] employees.json fallback:', err.message);
+      } catch (err) {}
+
+      if (employeeDatabase.length > 0) {
+        return employeeDatabase;
       }
 
-      if (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES) && DEMO_EMPLOYEES.length > 0) {
-        employeeDatabase = DEMO_EMPLOYEES;
-      } else {
-        employeeDatabase = [];
+      // 3. Fallback to GAS getEmployees
+      try {
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        const response = await fetchWithTimeout(`${gasUrl}?action=getEmployees`, {}, 5000);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && Array.isArray(data.employees) && data.employees.length > 0) {
+            employeeDatabase = data.employees;
+            indexEmployeeData();
+            return employeeDatabase;
+          }
+        }
+      } catch (e) {
+        console.warn('[Target Admin] GAS getEmployees fallback:', e.message);
       }
-      indexEmployeeData();
+
       return employeeDatabase;
     }
 
