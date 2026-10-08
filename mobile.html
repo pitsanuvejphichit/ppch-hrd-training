@@ -12,6 +12,8 @@
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
   <script src="target-modal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-service.js"></script>
   <style>
     * { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; }
     .active-scale:active { transform: scale(0.97); }
@@ -1855,9 +1857,56 @@
       };
 
       // 1. แสดงหน้าโหลดทันที เพื่อซ่อนการอัปเดตข้อมูลเบื้องหลัง
-      showLoader('กำลังลงทะเบียน...', 'กำลังบันทึกลง Google Sheet และอัปเดตข้อมูลให้เป็นปัจจุบัน กรุณารอสักครู่นะคะ');
+      showLoader('กำลังลงทะเบียน...', 'กำลังส่งข้อมูลบันทึกเข้าฐานข้อมูลหลักและยืนยันสิทธิ์ กรุณารอสักครู่นะคะ');
 
       try {
+        let sbRecord = null;
+        let isSavedPrimary = false;
+
+        // สเต็ปที่ 1: บันทึกลง Supabase Primary DB ทันที (สปีด 0.08 - 0.15 วิ)
+        if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
+          try {
+            sbRecord = await SupabaseService.registerAttendee(newAtt, currentCourse.id, getMobileCourseSheetId());
+            if (sbRecord && sbRecord.transactionId) {
+              isSavedPrimary = true;
+              console.log('[Dual-Tier Mobile] Saved to Supabase in ~0.1s:', sbRecord);
+            }
+          } catch(sbErr) {
+            console.warn('[Dual-Tier Mobile] Supabase write failed, falling back to Google Sheet:', sbErr);
+          }
+        }
+
+        if (isSavedPrimary && sbRecord) {
+          // สเต็ปที่ 2: สั่งซิงค์เข้า Google Sheet ในเบื้องหลัง (Background Sync)
+          syncMobileAttendeeToSheet(newAtt).then(sheetRes => {
+            if (sheetRes && sheetRes.success) {
+              SupabaseService.markSynced(sbRecord.transactionId);
+              console.log('[Dual-Tier Mobile] Background sync to Google Sheet completed.');
+            }
+          }).catch(e => console.warn('[Dual-Tier Mobile] Background sync to Sheet will retry:', e));
+
+          allAttendees.push(newAtt);
+          localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
+
+          updateMobileStats();
+          renderMobileBatches();
+          renderMobileAttendees();
+          clearMobileSearch();
+          switchMobileTab('list', true);
+          hideLoader();
+
+          const shortRef = sbRecord.transactionId.substring(0, 8).toUpperCase();
+          HrdModal.success('ลงทะเบียนจองที่นั่งสำเร็จ!\n\n' +
+                'รหัสอ้างอิง: ' + shortRef + '\n' +
+                'ผู้เข้าอบรม: ' + (newAtt.title ? newAtt.title + ' ' : '') + newAtt.firstName + ' ' + newAtt.lastName + '\n' +
+                'หลักสูตร: ' + currentCourse.title + '\n' +
+                'รุ่น: ' + normalizeBatchName(batch) + '\n' +
+                'เวลาที่บันทึก: ' + timeStr + '\n\n' +
+                '✓ ข้อมูลบันทึกเข้าฐานข้อมูลหลักเรียบร้อยและกำลังส่งต่อเข้า Google Sheet ค่ะ', 'ลงทะเบียนสำเร็จ 🎉');
+          return;
+        }
+
+        // กรณีสำรอง (Fallback): หากไม่ได้ต่อ Supabase ให้รอ Google Sheet ตอบกลับโดยตรง
         const res = await syncMobileAttendeeToSheet(newAtt);
         if (res && res.success) {
           if (Array.isArray(res.attendees)) {
@@ -1867,17 +1916,13 @@
           }
           localStorage.setItem(getStorageKey(), JSON.stringify(allAttendees));
 
-          // 2. อัปเดต DOM ทั้งหมดให้เสร็จสมบูรณ์ 100% ขณะอยู่ใต้หน้าโหลด
           updateMobileStats();
           renderMobileBatches();
           renderMobileAttendees();
           clearMobileSearch();
           switchMobileTab('list', true);
-
-          // 3. ปิดหน้าโหลดเมื่อข้อมูลแสดงผลสมบูรณ์แล้วเท่านั้น
           hideLoader();
 
-          // 4. แสดงหน้าต่างยืนยันความสำเร็จ
           HrdModal.success('ลงทะเบียนจองที่นั่งสำเร็จ!\n\n' +
                 'ผู้เข้าอบรม: ' + (newAtt.title ? newAtt.title + ' ' : '') + newAtt.firstName + ' ' + newAtt.lastName + '\n' +
                 'หลักสูตร: ' + currentCourse.title + '\n' +
@@ -1889,7 +1934,7 @@
       } catch (err) {
         hideLoader();
         console.warn('Sync attendee error:', err);
-        await HrdModal.error('ไม่สามารถเชื่อมต่อ Google Sheet เพื่อบันทึกข้อมูลได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้งนะคะ', 'การเชื่อมต่อล้มเหลว');
+        await HrdModal.error('ไม่สามารถเชื่อมต่อฐานข้อมูลเพื่อบันทึกข้อมูลได้ค่ะ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้งนะคะ', 'การเชื่อมต่อล้มเหลว');
       }
     }
 

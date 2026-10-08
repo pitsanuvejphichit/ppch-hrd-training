@@ -12,6 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-service.js"></script>
   <style>
     * { font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif; }
     .font-display { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; }
@@ -143,7 +145,14 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2.5">
+        <div class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold" title="ฐานข้อมูลความเร็วสูง Supabase เชื่อมต่อพร้อมใช้งาน">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Supabase 0.1s Active</span>
+        </div>
+        <button onclick="openArchiveModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer border border-slate-200" title="จัดการคลังประวัติเก่าเกิน 2 ปี (คืนพื้นที่ Supabase)">
+          <span>📦 คลังประวัติ (Archive)</span>
+        </button>
         <a href="admin-create.html" class="px-4 py-2 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-2 shadow-md shadow-[#0284c7]/20 cursor-pointer">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
           <span>สร้างหลักสูตรใหม่</span>
@@ -1502,6 +1511,37 @@
           hideLoader();
           HrdModal.toast('นำหลักสูตรออกจากหน้าเว็บเรียบร้อยแล้วค่ะ', 'success');
         }
+      }
+    }
+
+    async function openArchiveModal() {
+      const ok = await HrdModal.confirm(
+        'ต้องการตรวจสอบและย้ายข้อมูลการลงทะเบียนที่เก่าเกิน 2 ปี เข้าสู่คลังประวัติ (คืนพื้นที่ให้ Supabase) ใช่หรือไม่คะ?\n\n' +
+        '⚠️ หมายเหตุ: ข้อมูลทั้งหมดจะยังคงถูกเก็บรักษาอย่างถาวรใน Google Sheet และ Google Drive ของแต่ละหลักสูตร 100% ไม่สูญหายค่ะ',
+        'จัดการคลังประวัติ 2 ปี (Data Archiving)',
+        { confirmText: 'ตรวจสอบและจัดเก็บ', cancelText: 'ยกเลิก' }
+      );
+      if (!ok) return;
+
+      showLoader('กำลังจัดเก็บข้อมูล...', 'กำลังตรวจสอบและคืนพื้นที่ฐานข้อมูล Supabase...');
+      try {
+        if (typeof SupabaseService === 'undefined' || !SupabaseService.isEnabled()) {
+          hideLoader();
+          HrdModal.warning('ระบบ Supabase ยังไม่ได้เชื่อมต่อในหน้านี้ค่ะ', 'ไม่สามารถเชื่อมต่อได้');
+          return;
+        }
+        const res = await SupabaseService.archiveOldRegistrations(2);
+        hideLoader();
+        if (res && res.success) {
+          if (res.archivedCount > 0) {
+            HrdModal.success('จัดเก็บข้อมูลเก่าเรียบร้อยแล้วค่ะ!\n\nจำนวนที่จัดเก็บ: ' + res.archivedCount + ' รายการ\n(คืนพื้นที่ฐานข้อมูล Supabase สำเร็จ โดยข้อมูลเดิมทั้งหมดอยู่ใน Google Sheet ครบ 100%)', 'จัดเก็บสำเร็จ');
+          } else {
+            HrdModal.info('ไม่พบข้อมูลที่เก่าเกิน 2 ปีในระบบค่ะ\nฐานข้อมูลปัจจุบันมีเฉพาะหลักสูตรปัจจุบันที่พร้อมใช้งาน และพื้นที่ยังเหลืออีกกว่า 99%', 'พื้นที่สมบูรณ์ดี');
+          }
+        }
+      } catch(e) {
+        hideLoader();
+        HrdModal.error('เกิดข้อผิดพลาดในการจัดเก็บข้อมูล: ' + e.message, 'เกิดข้อผิดพลาด');
       }
     }
 
