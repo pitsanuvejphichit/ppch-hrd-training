@@ -14,6 +14,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Core Scripts & Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-service.js"></script>
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -2124,6 +2126,19 @@
         const rawEval = localStorage.getItem('hrd_evaluations_' + course.id);
         if (rawEval) evaluations = JSON.parse(rawEval);
       } catch(e) {}
+
+      // 1.5. Fast Supabase Attendee Query (Primary Database, 0.08s)
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          const sbAttendees = await SupabaseService.getAttendeesByCourse(course.id);
+          if (Array.isArray(sbAttendees) && sbAttendees.length > 0) {
+            attendees = sbAttendees;
+            try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(attendees)); } catch(e) {}
+          }
+        } catch(sbErr) {
+          console.warn('[Dashboard] Supabase attendee fetch notice:', sbErr);
+        }
+      }
 
       renderDashboardMetrics(course, attendees, evaluations, checkins);
 

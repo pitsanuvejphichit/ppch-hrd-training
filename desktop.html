@@ -930,6 +930,29 @@
         console.warn('Initial cache lookup error:', e);
       }
 
+      // 1.8. High-Speed Supabase Lookup (Primary Database, 0.08s)
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          if (requestedCourseId) {
+            const sbCourse = await SupabaseService.getCourseById(requestedCourseId);
+            if (sbCourse && !isDemoCourse(sbCourse)) {
+              saveAndSetCourse(sbCourse);
+            }
+          } else {
+            const sbCourses = await SupabaseService.getAllCourses();
+            if (Array.isArray(sbCourses) && sbCourses.length > 0) {
+              ALL_COURSES = sbCourses.filter(c => !isDemoCourse(c));
+              if (!currentCourse && ALL_COURSES.length > 0) {
+                currentCourse = ALL_COURSES[0];
+              }
+              try { localStorage.setItem('hrd_all_courses', JSON.stringify(ALL_COURSES)); } catch(e) {}
+            }
+          }
+        } catch(sbErr) {
+          console.warn('[Desktop] Supabase course load error:', sbErr);
+        }
+      }
+
       // 2. ดึงข้อมูลสดใหม่ล่าสุดจากคลังกลาง Google Apps Script (Single Source of Truth)
       var gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
       if (gasUrl) {

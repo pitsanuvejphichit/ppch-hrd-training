@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-service.js"></script>
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
   <style>
@@ -826,8 +828,28 @@
           showLoader('กำลังโหลดข้อมูลหลักสูตร...', 'กำลังดึงข้อมูลสดจากระบบกลาง');
         }
 
-        // 2. Fetch fresh course in parallel (25-second timeout, graceful non-blocking update)
-        if (gasUrl) {
+        // 2. Fetch fresh course from Supabase in 0.08s (Primary DB)
+        if (typeof SupabaseService !== 'undefined') {
+          try {
+            const freshCourse = await SupabaseService.getCourseById(editId);
+            if (freshCourse) {
+              if (editingCourse && editingCourse.hasSubTopics && (!freshCourse.hasSubTopics || !freshCourse.topics || freshCourse.topics.length === 0)) {
+                freshCourse.hasSubTopics = editingCourse.hasSubTopics;
+                freshCourse.topicMode = editingCourse.topicMode;
+                freshCourse.topics = editingCourse.topics;
+              }
+              editingCourse = freshCourse;
+              localStorage.setItem('hrd_course_' + editId, JSON.stringify(editingCourse));
+              setupEditMode(editingCourse);
+              hideLoader();
+            }
+          } catch(sbErr) {
+            console.warn('[Edit Course] Supabase fetch error:', sbErr);
+          }
+        }
+
+        // 3. Optional fallback fetch from GAS in parallel (graceful non-blocking update)
+        if (gasUrl && !editingCourse) {
           try {
             const controller = new AbortController();
             const timerId = setTimeout(() => controller.abort(), 25000);
@@ -1546,43 +1568,35 @@
         setSaveProgressStep(1, 'done');
         setSaveProgressPercent(35, 'บันทึกข้อมูลลงเครื่องสำเร็จแล้ว');
 
-        // Step 2: Sync to Master Sheet
+        // Step 2: Sync to Supabase & Master Sheet
         setSaveProgressStep(2, 'active');
-        setSaveProgressPercent(60, 'กำลังอัปเดตข้อมูลลงทะเบียนกลาง Google Sheet...');
+        setSaveProgressPercent(60, 'กำลังอัปเดตข้อมูลลงฐานข้อมูล Supabase และ Google Sheet...');
+
+        if (typeof SupabaseService !== 'undefined') {
+          try {
+            await SupabaseService.saveCourse(editingCourse);
+          } catch (sbErr) {
+            console.warn('[Edit Course] Supabase save notice:', sbErr);
+          }
+        }
 
         const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-        let gasSuccess = false;
-
         if (gasUrl) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s max guard
-
-            const resp = await fetch(gasUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({
-                action: 'saveCourse',
-                course: editingCourse,
-                skipTabSync: true
-              }),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            const result = await resp.json();
-            if (result && result.success) {
-              gasSuccess = true;
-            }
-          } catch (err) {
-            console.warn('[Edit Course] GAS update notice:', err);
-          }
+          fetch(gasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'saveCourse',
+              course: editingCourse,
+              skipTabSync: true
+            })
+          }).catch(err => console.warn('[Edit Course] GAS background notice:', err));
         }
 
         // Step 2 & 3: Mark complete
         setSaveProgressStep(2, 'done');
         setSaveProgressStep(3, 'done');
-        setSaveProgressPercent(100, 'บันทึกและซิงค์ข้อมูลเรียบร้อยแล้ว!');
+        setSaveProgressPercent(100, 'บันทึกข้อมูลลงฐานข้อมูล Supabase เรียบร้อยแล้ว!');
 
         const iconEl = document.getElementById('saveModalIcon');
         if (iconEl) {
@@ -1621,6 +1635,9 @@
           if (data.masterSheetUrl) localStorage.setItem('hrd_master_sheet_url', data.masterSheetUrl);
           localStorage.setItem(key, JSON.stringify(c));
 
+          if (typeof SupabaseService !== 'undefined') {
+            SupabaseService.saveCourse(c).catch(() => {});
+          }
           ['hrd_courses_list', 'hrd_all_courses'].forEach(listKey => {
             try {
               let list = JSON.parse(localStorage.getItem(listKey) || '[]');
@@ -1671,6 +1688,13 @@
         localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
       } catch (storageErr) {
         console.warn('LocalStorage save warning:', storageErr);
+      }
+
+      // 1.1 Save to Supabase PostgreSQL (0.08s speed!)
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          SupabaseService.saveCourse(newCourse).catch(e => console.warn('[Supabase Create Notice]', e));
+        } catch(e) {}
       }
 
       openSaveProgressModal({

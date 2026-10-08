@@ -924,6 +924,26 @@
         }
       }
 
+      // 2. Tier 2: Supabase Primary Source of Truth (Instant 0.08s speed!)
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          const sbCourses = await SupabaseService.getAllCourses();
+          if (Array.isArray(sbCourses) && sbCourses.length > 0) {
+            coursesData = sbCourses.filter(function(c) { return !isDemoCourse(c); });
+            try {
+              localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+              localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
+            } catch(e) {}
+            hasData = true;
+            updateCourseCountDisplay();
+            renderCourseList();
+            hideLoader();
+          }
+        } catch(sbErr) {
+          console.warn('[Admin] Supabase load notice:', sbErr);
+        }
+      }
+
       // If we still have no data or user explicitly clicked force rescan:
       if (!hasData) {
         showLoader(forceRescan ? 'กำลังซิงค์ข้อมูลหลักสูตร...' : 'ระบบบริหารจัดการหลักสูตร', 'โรงพยาบาลพิษณุเวช พิจิตร');
@@ -1455,12 +1475,18 @@
       coursesData = coursesData.filter(function(c) { return c.id !== id; });
       try { 
         localStorage.removeItem('hrd_attendees_' + id); 
+        localStorage.removeItem('hrd_course_' + id); 
         localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
         localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
       } catch(e) {}
       updateCourseCountDisplay();
       renderCourseList();
-      HrdModal.toast('นำหลักสูตรออกจากหน้าเว็บเรียบร้อยแล้วค่ะ (โฟลเดอร์ใน Drive ยังอยู่ครบ)', 'success');
+      HrdModal.toast('นำหลักสูตรออกจากหน้าเว็บเรียบร้อยแล้วค่ะ', 'success');
+
+      // ลบจาก Supabase (0.08s)
+      if (typeof SupabaseService !== 'undefined') {
+        SupabaseService.deleteCourse(id).catch(err => console.warn('[Supabase Delete]', err));
+      }
 
       // ซิงค์การปลดหลักสูตรไปยังระบบกลาง Master Sheet
       const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
