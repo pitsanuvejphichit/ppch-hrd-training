@@ -14,121 +14,175 @@
     "quota": {
       "รุ่นที่ 1 (1-2 ตุลาคม 2569 เวลา 08.00 - 17.00 น.)": 40
     },
-    "sheetId": "1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg",
-    "sheetUrl": "https://docs.google.com/spreadsheets/d/1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg/edit?usp=drivesdk",
-    "folderId": "1GTcRvwzWr95JdHXW0ezSvDbixZ1qtDvD",
-    "folderUrl": "https://drive.google.com/drive/folders/1GTcRvwzWr95JdHXW0ezSvDbixZ1qtDvD",
-    "status": "active",
+    "batchDetails": [],
+    "targetAudience": {
+      "type": "all",
+      "summary": "เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง",
+      "positions": [],
+      "totalCount": 177,
+      "departments": [],
+      "employeeIds": []
+    },
     "hasSubTopics": true,
     "topicMode": "all",
     "topics": [
       {
         "id": "t-1",
-        "title": "Ice Breaking",
         "date": "2026-10-01",
         "time": "08.00 - 08.30 น.",
+        "title": "Ice Breaking",
         "speaker": "ฝ่ายทรัพยากรบุคคล (HR)"
       },
       {
         "id": "t-2",
-        "title": "- คลิป Co – CEO ต้อนรับพนักงานใหม่, - คลิป Introduction to PRINC",
         "date": "2026-10-01",
         "time": "08.30 - 09.00 น.",
+        "title": "- คลิป Co – CEO ต้อนรับพนักงานใหม่, - คลิป Introduction to PRINC",
         "speaker": "ฝ่ายทรัพยากรบุคคล (HR)"
       },
       {
         "id": "t-3",
-        "title": "ผู้อำนวยการโรงพยาบาลพบพนักงานใหม่",
         "date": "2026-10-01",
         "time": "09.00 - 09.30 น.",
+        "title": "ผู้อำนวยการโรงพยาบาลพบพนักงานใหม่",
         "speaker": "แพทย์หญิงวิลาสินี รัตนชัยวงศ์ (ผู้อำนวยการโรงพยาบาลพิษณุเวช พิจิตร)"
       },
       {
         "id": "t-4",
-        "title": "กฎระเบียบ สวัสดิการ และวัฒนธรรมองค์กร PRINC (Purpose/Mission/Vision/Core Value, โครงสร้างองค์กร, ประเมินผล, กฎระเบียบ, สวัสดิการ, การลา)",
         "date": "2026-10-01",
         "time": "09.30 - 11.00 น.",
+        "title": "กฎระเบียบ สวัสดิการ และวัฒนธรรมองค์กร PRINC (Purpose/Mission/Vision/Core Value, โครงสร้างองค์กร, ประเมินผล, กฎระเบียบ, สวัสดิการ, การลา)",
         "speaker": "ฝ่ายทรัพยากรบุคคล (HR)"
       },
       {
         "id": "t-5",
-        "title": "การใช้งานเครื่องมือแพทย์ในโรงพยาบาล",
         "date": "2026-10-01",
         "time": "11.00 - 11.20 น.",
+        "title": "การใช้งานเครื่องมือแพทย์ในโรงพยาบาล",
         "speaker": "คุณอาภากร บุญเกตกูล (เจ้าหน้าที่เครื่องมือแพทย์)"
       },
       {
         "id": "t-6",
-        "title": "มาตรฐานพฤติกรรมการบริการ (Service Behavior Standard)",
         "date": "2026-10-01",
         "time": "11.20 - 12.00 น.",
+        "title": "มาตรฐานพฤติกรรมการบริการ (Service Behavior Standard)",
         "speaker": "คุณวิไลรัตน์ ประสาทสีดา (ผู้ช่วยผู้จัดการฝ่ายปฏิบัติการคลินิก)"
       },
       {
         "id": "t-7",
-        "title": "มาตรฐานงานคุณภาพของโรงพยาบาล HA และความเสี่ยง และการรายงานความเสี่ยง (RM)",
         "date": "2026-10-01",
         "time": "13.00 - 13.30 น.",
+        "title": "มาตรฐานงานคุณภาพของโรงพยาบาล HA และความเสี่ยง และการรายงานความเสี่ยง (RM)",
         "speaker": "คุณเพริศพักตร์ ศรีวุฒิพงษ์ (หัวหน้าแผนก ศูนย์บริหารคุณภาพ & ควบคุมเอกสาร)"
       },
       {
         "id": "t-8",
-        "title": "มาตรฐานการบริการพยาบาลป้องกันและควบคุมการติดเชื้อในโรงพยาบาล (IC)",
         "date": "2026-10-01",
         "time": "13.30 - 15.30 น.",
+        "title": "มาตรฐานการบริการพยาบาลป้องกันและควบคุมการติดเชื้อในโรงพยาบาล (IC)",
         "speaker": "คุณเพริศพักตร์ ศรีวุฒิพงษ์ (หัวหน้าแผนก ศูนย์บริหารคุณภาพ & ควบคุมเอกสาร) / ทีมพยาบาล IC"
       },
       {
         "id": "t-9",
-        "title": "ความปลอดภัยอาชีวอนามัยและสภาพแวดล้อมในการทำงาน พ.ศ.2554 (Safety)",
         "date": "2026-10-01",
         "time": "15.30 - 16.00 น.",
+        "title": "ความปลอดภัยอาชีวอนามัยและสภาพแวดล้อมในการทำงาน พ.ศ.2554 (Safety)",
         "speaker": "คุณอภิณภัสฌาย์ วงศ์ธนัชนันท์ (ผู้ช่วยหัวหน้างานอาคารและสถานที่)"
       },
       {
         "id": "t-10",
-        "title": "การจัดการและนโยบายสารสนเทศ (MOI)",
         "date": "2026-10-01",
         "time": "16.00 - 16.20 น.",
+        "title": "การจัดการและนโยบายสารสนเทศ (MOI)",
         "speaker": "แผนกเทคโนโลยีสารสนเทศ (IT)"
       },
       {
         "id": "t-11",
-        "title": "แนะนำการใช้ PRINC Academy",
         "date": "2026-10-01",
         "time": "16.20 - 16.40 น.",
+        "title": "แนะนำการใช้ PRINC Academy",
         "speaker": "ฝ่ายทรัพยากรบุคคล (HR)"
       },
       {
         "id": "t-12",
-        "title": "กิจกรรมทัวร์โรงพยาบาล (Hospital Tour)",
         "date": "2026-10-01",
         "time": "16.40 - 17.00 น.",
+        "title": "กิจกรรมทัวร์โรงพยาบาล (Hospital Tour)",
         "speaker": "ฝ่ายทรัพยากรบุคคล (HR)"
       },
       {
         "id": "t-13",
-        "title": "Basic Life Support (BLS)",
         "date": "2026-10-02",
         "time": "08.00 - 09.00 น.",
+        "title": "Basic Life Support (BLS)",
         "speaker": "แผนกห้องฉุกเฉิน (Emergency Department)"
       },
       {
         "id": "t-14",
-        "title": "ฝ่ายการพยาบาลพบพนักงานใหม่",
         "date": "2026-10-02",
         "time": "09.00 - 10.00 น.",
+        "title": "ฝ่ายการพยาบาลพบพนักงานใหม่",
         "speaker": "ผู้จัดการฝ่ายปฏิบัติการคลินิก, ผู้ช่วยผู้จัดการฝ่ายปฏิบัติการคลินิก"
+      }
+    ],
+    "driveFolderName": "",
+    "folderUrl": "https://drive.google.com/drive/folders/1GTcRvwzWr95JdHXW0ezSvDbixZ1qtDvD",
+    "sheetId": "1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg",
+    "sheetUrl": "https://docs.google.com/spreadsheets/d/1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg/edit?usp=drivesdk",
+    "masterSheetUrl": "",
+    "status": "active",
+    "createdAt": "2026-10-08T12:25:34.077571+00:00",
+    "updatedAt": "2026-10-08T12:25:58.407827+00:00"
+  },
+  {
+    "id": "c-2026-r5cm",
+    "title": "ทดสอบ",
+    "speaker": "HR Team",
+    "date": "15 ตุลาคม 2569",
+    "time": "09:00 - 12:00 น.",
+    "planType": "ในแผน",
+    "category": "Mandatory Course",
+    "type": "ในแผน • Mandatory Course",
+    "batches": [
+      "รุ่นที่ 1 (15 ตุลาคม 2569 เวลา 09:00 - 12:00 น.)",
+      "รุ่นที่ 2 (15 ตุลาคม 2569 เวลา 09:00 - 12:00 น.)"
+    ],
+    "quota": {
+      "รุ่นที่ 1 (15 ตุลาคม 2569 เวลา 09:00 - 12:00 น.)": 40,
+      "รุ่นที่ 2 (15 ตุลาคม 2569 เวลา 09:00 - 12:00 น.)": 40
+    },
+    "batchDetails": [
+      {
+        "name": "รุ่นที่ 1",
+        "quota": 40,
+        "dateIso": "2026-10-15",
+        "display": "รุ่นที่ 1 (15 ตุลาคม 2569 เวลา 09:00 - 12:00 น.)",
+        "thaiDate": "15 ตุลาคม 2569",
+        "timeRange": "09:00 - 12:00 น."
+      },
+      {
+        "name": "รุ่นที่ 2",
+        "quota": 40,
+        "dateIso": "2026-10-15",
+        "display": "รุ่นที่ 2 (15 ตุลาคม 2569 เวลา 09:00 - 12:00 น.)",
+        "thaiDate": "15 ตุลาคม 2569",
+        "timeRange": "09:00 - 12:00 น."
       }
     ],
     "targetAudience": {
       "type": "all",
-      "summary": "เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง",
-      "departments": [],
-      "positions": [],
-      "employeeIds": [],
-      "totalCount": 177
+      "summary": "เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง"
     },
-    "createdAt": "2026-10-01T07:00:00.000Z"
+    "hasSubTopics": false,
+    "topicMode": "all",
+    "topics": [],
+    "driveFolderName": "ทดสอบ",
+    "folderUrl": "",
+    "sheetId": "",
+    "sheetUrl": "",
+    "masterSheetUrl": "",
+    "status": "active",
+    "createdAt": "2026-10-08T12:25:34.118653+00:00",
+    "updatedAt": "2026-10-08T15:20:27.571+00:00"
   }
 ]

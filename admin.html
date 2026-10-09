@@ -360,21 +360,36 @@
             </div>
           </div>
 
-          <!-- Category Filter Pills -->
-          <div class="pt-2 border-t border-slate-100 flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs">
-            <span class="text-xs font-bold text-slate-400 mr-1 shrink-0">หมวดหมู่:</span>
-            <button type="button" onclick="setAdminCategoryFilter('all')" id="catFilterAll" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer bg-[#0284c7] text-white shadow-2xs">
-              ทั้งหมด
-            </button>
-            <button type="button" onclick="setAdminCategoryFilter('Mandatory')" id="catFilterMandatory" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer">
-              Mandatory
-            </button>
-            <button type="button" onclick="setAdminCategoryFilter('Functional')" id="catFilterFunctional" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer">
-              Functional
-            </button>
-            <button type="button" onclick="setAdminCategoryFilter('Quality')" id="catFilterQuality" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer">
-              Quality & Safety
-            </button>
+          <!-- Category Filter Pills & Sort Selector -->
+          <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs">
+              <span class="text-xs font-bold text-slate-400 mr-1 shrink-0">หมวดหมู่:</span>
+              <button type="button" onclick="setAdminCategoryFilter('all')" id="catFilterAll" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer bg-[#0284c7] text-white shadow-2xs">
+                ทั้งหมด
+              </button>
+              <button type="button" onclick="setAdminCategoryFilter('Mandatory')" id="catFilterMandatory" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer">
+                Mandatory
+              </button>
+              <button type="button" onclick="setAdminCategoryFilter('Functional')" id="catFilterFunctional" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer">
+                Functional
+              </button>
+              <button type="button" onclick="setAdminCategoryFilter('Quality')" id="catFilterQuality" class="cat-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer">
+                Quality & Safety
+              </button>
+            </div>
+
+            <!-- Sort Selector -->
+            <div class="flex items-center space-x-2 text-xs text-slate-500 shrink-0 self-end sm:self-auto">
+              <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path></svg>
+                <span>เรียงตาม:</span>
+              </span>
+              <select id="adminSortSelect" onchange="setAdminSortOrder(this.value)" class="text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700 outline-none cursor-pointer transition-colors shadow-2xs">
+                <option value="date_asc">📅 วันที่อบรม (เร็วสุดไปช้าสุด)</option>
+                <option value="date_desc">📅 วันที่อบรม (ช้าสุดไปเร็วสุด)</option>
+                <option value="created_desc">✨ หลักสูตรที่สร้างล่าสุด</option>
+              </select>
+            </div>
           </div>
         </section>
 
@@ -1297,6 +1312,132 @@
       return Array.from(months);
     }
 
+    function extractCourseStartDate(c) {
+      if (!c) return '9999-99-99';
+      
+      // 1. Check batchDetails if has dateIso (e.g. '2026-10-01')
+      if (Array.isArray(c.batchDetails) && c.batchDetails.length > 0) {
+        for (const b of c.batchDetails) {
+          if (b && b.dateIso && /^\d{4}-\d{2}-\d{2}$/.test(b.dateIso)) return b.dateIso;
+        }
+      }
+
+      // 2. Check topics if has date (e.g. '2026-10-01')
+      if (Array.isArray(c.topics) && c.topics.length > 0) {
+        for (const t of c.topics) {
+          if (t && t.date && /^\d{4}-\d{2}-\d{2}$/.test(t.date)) return t.date;
+        }
+      }
+
+      const raw = [c.date, c.title, ...(c.batches || [])].filter(Boolean).join(' ');
+
+      // 3. ISO YYYY-MM-DD
+      const isoMatch = raw.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
+      if (isoMatch) {
+        let y = parseInt(isoMatch[1], 10);
+        if (y > 2400) y -= 543;
+        const m = String(parseInt(isoMatch[2], 10)).padStart(2, '0');
+        const d = String(parseInt(isoMatch[3], 10)).padStart(2, '0');
+        return y + '-' + m + '-' + d;
+      }
+
+      // 4. GMT string e.g. Sun Oct 15 2569 ...
+      const gmtMatch = raw.match(/([A-Za-z]{3})\s+([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})/);
+      if (gmtMatch) {
+        const mMap = { 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };
+        let y = parseInt(gmtMatch[4], 10);
+        if (y > 2400) y -= 543;
+        const m = mMap[gmtMatch[2]] || '01';
+        const d = String(parseInt(gmtMatch[3], 10)).padStart(2, '0');
+        return y + '-' + m + '-' + d;
+      }
+
+      // 5. Thai date format e.g. '1-2 ตุลาคม 2569' or '15 ตุลาคม 2569' or '15 ต.ค. 2569'
+      const thaiMonths = {
+        'มกราคม': '01', 'ม.ค.': '01', 'ม.ค': '01',
+        'กุมภาพันธ์': '02', 'ก.พ.': '02', 'ก.พ': '02',
+        'มีนาคม': '03', 'มี.ค.': '03', 'มี.ค': '03',
+        'เมษายน': '04', 'เม.ย.': '04', 'เม.ย': '04',
+        'พฤษภาคม': '05', 'พ.ค.': '05', 'พ.ค': '05',
+        'มิถุนายน': '06', 'มิ.ย.': '06', 'มิ.ย': '06',
+        'กรกฎาคม': '07', 'ก.ค.': '07', 'ก.ค': '07',
+        'สิงหาคม': '08', 'ส.ค.': '08', 'ส.ค': '08',
+        'กันยายน': '09', 'ก.ย.': '09', 'ก.ย': '09',
+        'ตุลาคม': '10', 'ต.ค.': '10', 'ต.ค': '10',
+        'พฤศจิกายน': '11', 'พ.ย.': '11', 'พ.ย': '11',
+        'ธันวาคม': '12', 'ธ.ค.': '12', 'ธ.ค': '12'
+      };
+
+      for (const [moName, moNum] of Object.entries(thaiMonths)) {
+        if (raw.includes(moName)) {
+          const pattern = new RegExp('(\\d{1,2})(?:\\s*-\\s*\\d{1,2})?\\s*' + moName.replace('.', '\\.') + '(?:\\s*(\\d{4}))?', 'i');
+          const m = raw.match(pattern);
+          if (m) {
+            const d = String(parseInt(m[1], 10)).padStart(2, '0');
+            let y = m[2] ? parseInt(m[2], 10) : currentAdminYear;
+            if (y > 2400) y -= 543;
+            return y + '-' + moNum + '-' + d;
+          }
+        }
+      }
+
+      // 6. Slash format DD/MM/YYYY
+      const slashMatch = raw.match(/\b(\d{1,2})[\/\.](\d{1,2})[\/\.](\d{2,4})\b/);
+      if (slashMatch) {
+        const d = String(parseInt(slashMatch[1], 10)).padStart(2, '0');
+        const m = String(parseInt(slashMatch[2], 10)).padStart(2, '0');
+        let y = parseInt(slashMatch[3], 10);
+        if (y < 100) y += 2000;
+        if (y > 2400) y -= 543;
+        return y + '-' + m + '-' + d;
+      }
+
+      return '9999-99-99';
+    }
+
+    let adminSortOrder = localStorage.getItem('hrd_admin_sort_order') || 'date_asc';
+
+    function sortCourses(list, sortMode = adminSortOrder) {
+      if (!Array.isArray(list)) return [];
+      const cloned = [...list];
+      return cloned.sort((a, b) => {
+        if (!a && !b) return 0;
+        if (!a) return 1;
+        if (!b) return -1;
+
+        if (sortMode === 'created_desc') {
+          const timeA = new Date(a.createdAt || a.created_at || 0).getTime();
+          const timeB = new Date(b.createdAt || b.created_at || 0).getTime();
+          if (timeB !== timeA) return timeB - timeA;
+          return String(a.id || '').localeCompare(String(b.id || ''));
+        }
+
+        // Default: 'date_asc' or 'date_desc'
+        const dateA = extractCourseStartDate(a);
+        const dateB = extractCourseStartDate(b);
+        if (dateA !== dateB) {
+          if (sortMode === 'date_desc') return dateB.localeCompare(dateA);
+          return dateA.localeCompare(dateB);
+        }
+
+        // Tie-breaker: newer created first, then course ID
+        const timeA = new Date(a.createdAt || a.created_at || 0).getTime();
+        const timeB = new Date(b.createdAt || b.created_at || 0).getTime();
+        if (timeB !== timeA) return timeB - timeA;
+
+        return String(a.id || '').localeCompare(String(b.id || ''));
+      });
+    }
+
+    function setAdminSortOrder(val) {
+      adminSortOrder = val || 'date_asc';
+      try { localStorage.setItem('hrd_admin_sort_order', adminSortOrder); } catch(e) {}
+      const sortSelect = document.getElementById('adminSortSelect');
+      if (sortSelect) sortSelect.value = adminSortOrder;
+      coursesData = sortCourses(coursesData, adminSortOrder);
+      renderCourseList(true);
+    }
+
     function formatMonthHeader(key) {
       if (!key || key === 'all') return 'ทุกเดือน';
       const parts = key.split('-');
@@ -1507,6 +1648,10 @@
       const courseParam = urlParams.get('course');
       const editParam = urlParams.get('edit');
 
+      // Initialize sort select UI
+      const sortSelect = document.getElementById('adminSortSelect');
+      if (sortSelect) sortSelect.value = adminSortOrder;
+
       await loadAdminCourses();
       loadEmployeeDatabase().catch(() => {});
 
@@ -1580,9 +1725,10 @@
           if (cachedStr) {
             const cachedList = JSON.parse(cachedStr);
             if (Array.isArray(cachedList) && cachedList.length > 0) {
-              coursesData = cachedList.filter(function(c) {
+              const valid = cachedList.filter(function(c) {
                 return !isDemoCourse(c);
               });
+              coursesData = sortCourses(valid, adminSortOrder);
               if (coursesData.length !== cachedList.length) {
                 try { localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData)); } catch(e) {}
               }
@@ -1603,9 +1749,10 @@
           try {
             const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
             if (Array.isArray(resStatic) && resStatic.length > 0) {
-              coursesData = resStatic.filter(function(c) {
+              const valid = resStatic.filter(function(c) {
                 return !isDemoCourse(c);
               });
+              coursesData = sortCourses(valid, adminSortOrder);
               if (coursesData.length > 0) {
                 hasData = true;
                 try {
@@ -1627,7 +1774,8 @@
         try {
           const sbCourses = await SupabaseService.getAllCourses();
           if (Array.isArray(sbCourses) && sbCourses.length > 0) {
-            coursesData = sbCourses.filter(function(c) { return !isDemoCourse(c); });
+            const valid = sbCourses.filter(function(c) { return !isDemoCourse(c); });
+            coursesData = sortCourses(valid, adminSortOrder);
             try {
               localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
               localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
@@ -1651,7 +1799,7 @@
         hideLoader();
       }
 
-      // 3. Tier 3: Sync fresh from Google Apps Script central registry in background (Single Source of Truth)
+      // 3. Tier 3: Sync fresh from Google Apps Script central registry in background (Non-destructive merge)
       syncFromGas(forceRescan, hasData);
     }
 
@@ -1691,21 +1839,47 @@
         const res = await fetchWithTimeout(url, {}, 25000).then(r => r.json());
 
         if (res && res.success && Array.isArray(res.courses)) {
-          const freshCourses = res.courses.filter(function(c) {
+          const gasCourses = res.courses.filter(function(c) {
             return !isDemoCourse(c);
-          }).map(function(fresh) {
-            const existing = coursesData.find(old => old && String(old.id).toLowerCase() === String(fresh.id).toLowerCase());
-            const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === String(fresh.id).toLowerCase());
-            const subSource = (existing && existing.hasSubTopics) ? existing : (staticMatch && staticMatch.hasSubTopics ? staticMatch : null);
-
-            if (subSource && (!fresh.hasSubTopics || !fresh.topics || fresh.topics.length === 0)) {
-              fresh.hasSubTopics = subSource.hasSubTopics;
-              fresh.topicMode = subSource.topicMode || 'all';
-              fresh.topics = subSource.topics || [];
-            }
-            return fresh;
           });
-          coursesData = freshCourses;
+
+          // Non-destructive merge: preserve Supabase high-fidelity data, clean dates and target configs
+          const existingMap = new Map();
+          coursesData.forEach(c => {
+            if (c && c.id) existingMap.set(String(c.id).toLowerCase(), c);
+          });
+
+          gasCourses.forEach(fresh => {
+            if (!fresh || !fresh.id) return;
+            const key = String(fresh.id).toLowerCase();
+            const existing = existingMap.get(key);
+            const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === key);
+
+            if (existing) {
+              // Only enrich missing sheet links or drive folders
+              if (!existing.sheetUrl && fresh.sheetUrl) existing.sheetUrl = fresh.sheetUrl;
+              if (!existing.sheetId && fresh.sheetId) existing.sheetId = fresh.sheetId;
+              if (!existing.folderUrl && fresh.folderUrl) existing.folderUrl = fresh.folderUrl;
+              if ((!existing.topics || existing.topics.length === 0) && fresh.topics && fresh.topics.length > 0) {
+                existing.topics = fresh.topics;
+                existing.hasSubTopics = true;
+              }
+            } else {
+              // Brand new course present only in Google Sheets
+              const subSource = staticMatch && staticMatch.hasSubTopics ? staticMatch : null;
+              if (subSource && (!fresh.hasSubTopics || !fresh.topics || fresh.topics.length === 0)) {
+                fresh.hasSubTopics = subSource.hasSubTopics;
+                fresh.topicMode = subSource.topicMode || 'all';
+                fresh.topics = subSource.topics || [];
+              }
+              coursesData.push(fresh);
+              existingMap.set(key, fresh);
+            }
+          });
+
+          // Always enforce canonical sorting so list never swaps order!
+          coursesData = sortCourses(coursesData, adminSortOrder);
+
           try {
             localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
             localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
@@ -1802,9 +1976,10 @@
       return str;
     }
 
-    function renderCourseList() {
+    function renderCourseList(forceRedraw = false) {
       const container = document.getElementById('courseListStack');
       if (!coursesData || coursesData.length === 0) {
+        container.removeAttribute('data-rendered-key');
         container.innerHTML = '<div class="bg-white rounded-3xl p-12 text-center text-slate-400 border border-slate-200/80 space-y-3 shadow-xs">' +
           '<div class="text-3xl">📋</div>' +
           '<div class="text-sm font-bold text-slate-700">ยังไม่มีหลักสูตรในระบบ</div>' +
@@ -1842,8 +2017,27 @@
         return true;
       });
 
+      // Always enforce canonical sort order
+      filtered = sortCourses(filtered, adminSortOrder);
+
       const badgeEl = document.getElementById('statCourseCountBadge');
       if (badgeEl) badgeEl.textContent = filtered.length + ' หลักสูตร';
+
+      // Smart Render Key: Prevents unnecessary DOM re-creation if contents & order haven't changed
+      const renderedKey = adminSortOrder + '::' + currentAdminMonth + '::' + currentAdminCategoryFilter + '::' + adminSearchQuery + '::' + filtered.map(c => {
+        let attCount = 0;
+        try {
+          const a = localStorage.getItem('hrd_attendees_' + c.id);
+          if (a) attCount = JSON.parse(a).length;
+        } catch(e) {}
+        return c.id + '|' + (c.date || '') + '|' + (c.title || '') + '|' + attCount;
+      }).join(';;');
+
+      if (!forceRedraw && container.getAttribute('data-rendered-key') === renderedKey) {
+        hideLoader();
+        return;
+      }
+      container.setAttribute('data-rendered-key', renderedKey);
 
       if (filtered.length === 0) {
         const isMonthFiltered = (currentAdminMonth && currentAdminMonth !== 'all');
@@ -2919,13 +3113,14 @@
         } else {
           coursesData.unshift(newCourse);
         }
+        coursesData = sortCourses(coursesData, adminSortOrder);
         try {
           localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
           localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
           localStorage.setItem('hrd_course_' + newCourse.id, JSON.stringify(newCourse));
         } catch(e) {}
         updateCourseCountDisplay();
-        renderCourseList();
+        renderCourseList(true);
       }
       switchAdminView('courses');
       HrdModal.toast('บันทึกข้อมูลหลักสูตรเรียบร้อยแล้วค่ะ!', 'success');
@@ -3877,6 +4072,7 @@
       } else {
         coursesData.unshift(coursePayload);
       }
+      coursesData = sortCourses(coursesData, adminSortOrder);
 
       try {
         localStorage.setItem('hrd_course_' + courseId, JSON.stringify(coursePayload));
@@ -3975,7 +4171,7 @@
       }
 
       updateCourseCountDisplay();
-      renderCourseList();
+      renderCourseList(true);
 
       if (isEditMode) {
         await HrdModal.success(
