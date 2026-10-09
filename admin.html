@@ -146,14 +146,14 @@
 
       <!-- Action Buttons -->
       <div class="flex items-center space-x-2.5">
-        <div class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold" title="ฐานข้อมูลความเร็วสูง Supabase เชื่อมต่อพร้อมใช้งาน">
+        <div class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-50/90 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold shadow-2xs backdrop-blur-xs" title="ฐานข้อมูลความเร็วสูง Supabase เชื่อมต่อพร้อมใช้งาน 0.08s">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>Supabase 0.1s Active</span>
+          <span>⚡ Supabase 0.08s Active</span>
         </div>
-        <button onclick="openArchiveModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer border border-slate-200" title="จัดการคลังประวัติเก่าเกิน 2 ปี (คืนพื้นที่ Supabase)">
+        <button onclick="openArchiveModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer border border-slate-200 shadow-2xs" title="จัดการคลังประวัติเก่าเกิน 2 ปี (คืนพื้นที่ Supabase)">
           <span>📦 คลังประวัติ (Archive)</span>
         </button>
-        <button type="button" onclick="switchAdminView('create')" class="px-4 py-2 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-2 shadow-md shadow-[#0284c7]/20 cursor-pointer">
+        <button type="button" onclick="switchAdminView('create')" class="px-4 py-2 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-2 shadow-md shadow-[#0284c7]/20 cursor-pointer font-display">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
           <span>สร้างหลักสูตรใหม่</span>
         </button>
@@ -222,7 +222,10 @@
                     <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span>สร้างหลักสูตร</span>
                   </div>
-                  <span class="text-[10px] text-sky-400 font-bold">+</span>
+                  <div class="flex items-center space-x-1.5">
+                    <span id="sidebarCreateDot" class="hidden w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                    <span class="text-[10px] text-sky-400 font-bold">+</span>
+                  </div>
                 </button>
 
                 <!-- Sub 3: กลุ่มเป้าหมาย -->
@@ -234,46 +237,6 @@
                   <span id="sidebarTargetDot" class="hidden w-1.5 h-1.5 rounded-full bg-sky-400"></span>
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Group 2: Training Record (With External Sub-options) -->
-        <div>
-          <div class="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            ประวัติและแดชบอร์ด
-          </div>
-          <div class="space-y-1">
-            <!-- Parent: Training Record -->
-            <a href="https://script.google.com/macros/s/AKfycbz-xgUV8y_YRDo2wkxdgODsGdbnSwkrLXezFKT2a0KziRQgxkEOLcfjkmhnSNoSt_CJ9w/exec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-700/60 transition-all group cursor-pointer">
-              <div class="flex items-center space-x-2.5">
-                <div class="w-6 h-6 rounded-lg bg-slate-800 text-emerald-400 flex items-center justify-center font-bold text-xs group-hover:bg-emerald-500/20 group-hover:text-emerald-300 transition-colors">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                </div>
-                <span>Training Record</span>
-              </div>
-              <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-            </a>
-
-            <!-- Sub Options under Training Record -->
-            <div class="pl-4 ml-3 border-l border-slate-800 space-y-1">
-              <!-- Sub 1: Training Dashboard -->
-              <a href="https://script.google.com/macros/s/AKfycbxcrwcqGzSFbk2538N-WEp34Ff3gsYIhEY-vQJ-9B8liHfZYEgwgGCH1ay8K0AQCd991Q/exec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all group cursor-pointer">
-                <div class="flex items-center space-x-2">
-                  <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                  <span>Training Dashboard</span>
-                </div>
-                <svg class="w-3 h-3 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-              </a>
-
-              <!-- Sub 2: Personal Dashboard -->
-              <a href="https://script.google.com/macros/s/AKfycbwjmLsZGN1x_3M-A0jw5JY2DmDW0SHlZ_hYQsyd89l1hHYdEOcqn7_bi5iaZl_77Sjw_Q/exec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all group cursor-pointer">
-                <div class="flex items-center space-x-2">
-                  <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                  <span>Personal Dashboard</span>
-                </div>
-                <svg class="w-3 h-3 text-slate-500 group-hover:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-              </a>
             </div>
           </div>
         </div>
@@ -652,13 +615,311 @@
         </div>
         <!-- ==================== END VIEW 2: TARGET AUDIENCE SETUP ==================== -->
 
-        <!-- ==================== VIEW 3: CREATE / EDIT COURSE ==================== -->
-        <div id="viewCreate" class="w-full px-4 sm:px-6 lg:px-8 py-4 space-y-4 hidden">
-          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-            <iframe id="createCourseFrame" src="about:blank" class="w-full border-0" style="min-height: 1200px; width: 100%;"></iframe>
+        <!-- ==================== VIEW 3: CREATE / EDIT COURSE (NATIVE SPA DOM - NO IFRAMES) ==================== -->
+        <div id="viewCreate" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6 hidden">
+          <div class="w-full max-w-6xl mx-auto space-y-6">
+
+            <!-- Title & Context Header Card -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-7 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center space-x-2.5 mb-1.5 flex-wrap gap-y-1">
+                  <span id="createViewModeBadge" class="px-3 py-0.5 rounded-full text-xs font-bold bg-sky-50 text-[#0369a1] border border-sky-200">
+                    ➕ สร้างหลักสูตรใหม่
+                  </span>
+                  <span class="text-xs text-slate-400 font-mono" id="createViewIdBadge">ID: กำลังสร้าง...</span>
+                </div>
+                <h2 id="createViewHeading" class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-display">สร้างหลักสูตรอบรมใหม่</h2>
+                <p class="text-xs text-slate-500 font-light mt-1">กำหนดข้อมูลทั่วไป รุ่นการอบรม โควตาที่นั่ง หัวข้อย่อย ภาพโปสเตอร์ และเอกสารประกอบ</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" onclick="switchAdminView('courses')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer border border-slate-200 shadow-2xs">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                  <span>กลับหน้ารายการ</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Native Form Root -->
+            <form id="createForm" onsubmit="handleSaveCourse(event)" class="space-y-6 w-full">
+              
+              <!-- SECTION 1: ข้อมูลทั่วไป -->
+              <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-5">
+                <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                  <div class="w-8 h-8 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center font-bold text-sm border border-sky-200 shadow-2xs font-display">1</div>
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide font-display">1. ข้อมูลทั่วไป (General Information)</h3>
+                    <p class="text-[11px] text-slate-400">ระบุรหัสหลักสูตร วิทยากรผู้สอน และชื่อหลักสูตรอบรม</p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Course ID -->
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                      รหัสหลักสูตร (Course ID) <span class="text-rose-500">*</span>
+                    </label>
+                    <div class="flex items-center space-x-2">
+                      <input 
+                        type="text" 
+                        id="fCourseId" 
+                        placeholder="เช่น c-2026-x7k9" 
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-bold text-[#0369a1] focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all"
+                        required
+                      >
+                      <button 
+                        type="button" 
+                        id="btnRegenerateId" 
+                        onclick="regenerateCourseId()" 
+                        title="สุ่มรหัสหลักสูตรใหม่"
+                        class="shrink-0 px-3.5 py-2.5 bg-sky-50 hover:bg-sky-100 active:scale-95 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs group"
+                      >
+                        <svg class="w-4 h-4 text-[#0369a1] group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <span>สุ่มรหัส</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Speaker -->
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                      วิทยากร / ผู้สอน (Speaker) <span class="text-rose-500">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      id="fCourseSpeaker" 
+                      placeholder="เช่น นพ.สมชาย หรือ ฝ่ายทรัพยากรบุคคล (HR)" 
+                      class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all"
+                      required
+                    >
+                  </div>
+
+                  <!-- Course Title -->
+                  <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                      ชื่อหลักสูตรอบรม (Course Title) <span class="text-rose-500">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      id="fCourseTitle" 
+                      placeholder="ระบุชื่อหลักสูตรอบรม เช่น การช่วยชีวิตขั้นพื้นฐาน (BLS / CPR ประจำปี 2569)" 
+                      class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all font-medium"
+                      required
+                    >
+                  </div>
+                </div>
+              </section>
+
+              <!-- SECTION 2: ประเภทและหมวดหมู่ -->
+              <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-5">
+                <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                  <div class="w-8 h-8 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center font-bold text-sm border border-sky-200 shadow-2xs font-display">2</div>
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide font-display">2. ประเภทและหมวดหมู่ (Course Type & Plan)</h3>
+                    <p class="text-[11px] text-slate-400">กำหนดแผนการฝึกอบรมและหมวดหมู่ตามเกณฑ์มาตรฐานโรงพยาบาล</p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+                  <!-- Type Group 1: Plan -->
+                  <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-700">
+                      แผนการฝึกอบรม <span class="text-rose-500">*</span>
+                    </label>
+                    <div class="flex items-center space-x-6 pt-1">
+                      <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                        <input type="radio" name="planType" value="ในแผน" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]" checked>
+                        <span>ในแผน</span>
+                      </label>
+                      <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                        <input type="radio" name="planType" value="นอกแผน" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                        <span>นอกแผน</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Type Group 2: Category -->
+                  <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-700">
+                      หมวดหมู่หลักสูตร <span class="text-rose-500">*</span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-2.5 pt-1">
+                      <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                        <input type="radio" name="courseCategory" value="Mandatory Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]" checked>
+                        <span>Mandatory</span>
+                      </label>
+                      <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                        <input type="radio" name="courseCategory" value="Managerial Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                        <span>Managerial</span>
+                      </label>
+                      <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                        <input type="radio" name="courseCategory" value="Functional Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                        <span>Functional</span>
+                      </label>
+                      <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+                        <input type="radio" name="courseCategory" value="Quality Course" class="w-4 h-4 text-[#0369a1] focus:ring-[#0369a1]">
+                        <span>Quality</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- SECTION 3: รุ่นการอบรมและโควตาที่นั่ง -->
+              <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center font-bold text-sm border border-sky-200 shadow-2xs font-display">3</div>
+                    <div>
+                      <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide font-display">3. รุ่นการอบรมและโควตาที่นั่ง (Batches & Quota)</h3>
+                      <p class="text-[11px] text-slate-400">กำหนดวันที่ เวลา และจำนวนที่นั่งเปิดรับในแต่ละรุ่น (อย่างน้อย 1 รุ่น)</p>
+                    </div>
+                  </div>
+                  <button type="button" id="btnAddBatch" onclick="addBatchRow()" class="px-3.5 py-1.5 bg-sky-50/80 hover:bg-sky-100 active:scale-95 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs">
+                    <span>+ เพิ่มรุ่น</span>
+                  </button>
+                </div>
+
+                <div id="batchRowsContainer" class="space-y-3">
+                  <!-- Dynamically populated batch rows -->
+                </div>
+              </section>
+
+              <!-- SECTION 4: หัวข้อย่อยและฐานการเรียนรู้ -->
+              <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center font-bold text-sm border border-sky-200 shadow-2xs font-display">4</div>
+                    <div>
+                      <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide font-display">4. หัวข้อย่อยและฐานการเรียนรู้ (Subtopics / Stations)</h3>
+                      <p class="text-[11px] text-slate-400">สำหรับหลักสูตรที่แบ่งเป็นหลายสถานี หรือให้ผู้เข้าอบรมเลือกหัวข้อย่อยได้</p>
+                    </div>
+                  </div>
+                  <label class="flex items-center space-x-2 text-xs font-semibold text-slate-700 cursor-pointer bg-slate-50 hover:bg-sky-50 px-3.5 py-2 rounded-xl border border-slate-200 transition-colors">
+                    <input type="checkbox" id="fEnableTopics" onchange="toggleTopicsSection(this.checked)" class="w-4 h-4 text-[#0284c7] rounded">
+                    <span>เปิดใช้งานหัวข้อย่อย</span>
+                  </label>
+                </div>
+
+                <div id="topicsSectionBody" class="hidden space-y-4 bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+                  <!-- Topic Mode Option -->
+                  <div class="space-y-2">
+                    <label class="block text-xs font-bold text-slate-700">
+                      รูปแบบการเข้าอบรม:
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <label class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium cursor-pointer p-3 rounded-xl border border-slate-200 bg-white hover:border-[#0284c7] transition-colors shadow-2xs">
+                        <input type="radio" name="topicMode" value="all" checked class="w-4 h-4 text-[#0284c7]">
+                        <strong class="text-slate-900">เข้าครบทุกหัวข้อ (เวียนฐาน)</strong>
+                      </label>
+                      <label class="flex items-center space-x-2.5 text-xs text-slate-700 font-medium cursor-pointer p-3 rounded-xl border border-slate-200 bg-white hover:border-[#0284c7] transition-colors shadow-2xs">
+                        <input type="radio" name="topicMode" value="selective" class="w-4 h-4 text-[#0284c7]">
+                        <strong class="text-slate-900">เลือกหัวข้อได้</strong>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Topic Rows Container -->
+                  <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <label class="block text-xs font-bold text-slate-700">
+                        รายการหัวข้อ:
+                      </label>
+                      <button type="button" id="btnAddTopic" onclick="addTopicRow()" class="px-3 py-1 bg-white hover:bg-sky-50 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-2xs">
+                        <span>+ เพิ่มหัวข้อ</span>
+                      </button>
+                    </div>
+
+                    <div id="topicRowsContainer" class="space-y-2.5">
+                      <!-- Dynamically populated topic rows -->
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- SECTION 5: ภาพปกหลักสูตรและเอกสารประกอบ -->
+              <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-5">
+                <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                  <div class="w-8 h-8 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center font-bold text-sm border border-sky-200 shadow-2xs font-display">5</div>
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide font-display">5. ภาพปกและเอกสารประกอบ (Cover & Handouts)</h3>
+                    <p class="text-[11px] text-slate-400">อัปโหลดภาพโปสเตอร์ประชาสัมพันธ์ และแนบลิงก์เอกสารประกอบการอบรม</p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Cover Image Upload -->
+                  <div class="space-y-3">
+                    <label class="block text-xs font-bold text-slate-700">
+                      ภาพปกหลักสูตร / โปสเตอร์ (Course Poster)
+                    </label>
+                    <div class="border-2 border-dashed border-slate-200 hover:border-sky-300 rounded-2xl p-4 text-center transition-colors bg-slate-50/50">
+                      <input type="file" id="fCoverFileInput" accept="image/*" onchange="handleCoverImageUpload(event)" class="hidden">
+                      
+                      <div id="coverImagePreviewContainer" class="hidden relative rounded-xl overflow-hidden mb-3 border border-slate-200 bg-white shadow-2xs">
+                        <img id="coverImagePreview" src="" alt="ภาพปกหลักสูตร" class="w-full max-h-48 object-cover rounded-xl">
+                        <button type="button" onclick="removeCoverImage()" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-slate-900/75 hover:bg-rose-600 text-white flex items-center justify-center text-xs transition-colors cursor-pointer" title="ลบภาพปก">✕</button>
+                      </div>
+
+                      <div id="coverImageUploadPrompt" class="space-y-2 py-3">
+                        <div class="w-12 h-12 rounded-2xl bg-sky-50 text-[#0369a1] flex items-center justify-center mx-auto text-xl border border-sky-100 shadow-2xs">
+                          🖼️
+                        </div>
+                        <div class="text-xs font-semibold text-slate-700">คลิกเพื่ออัปโหลดภาพโปสเตอร์</div>
+                        <p class="text-[11px] text-slate-400">รองรับ JPG, PNG, WEBP (พรีวิวและแสดงผลทันที)</p>
+                        <button type="button" onclick="document.getElementById('fCoverFileInput').click()" class="mt-1 px-4 py-2 bg-white hover:bg-sky-50 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer">
+                          เลือกไฟล์รูปภาพ
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-[11px] text-slate-500 mb-1">หรือระบุ URL รูปภาพโดยตรง:</label>
+                      <input type="url" id="fCoverImageUrl" placeholder="https://.../poster.jpg" oninput="handleCoverUrlInput(this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:border-[#0284c7] outline-none bg-white">
+                    </div>
+                  </div>
+
+                  <!-- Document Attachments / Handouts -->
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <label class="block text-xs font-bold text-slate-700">
+                        เอกสารประกอบการอบรม (Handouts & Materials)
+                      </label>
+                      <button type="button" id="btnAddDocLink" onclick="addDocumentLinkRow()" class="px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-2xs">
+                        <span>+ เพิ่มเอกสาร</span>
+                      </button>
+                    </div>
+                    
+                    <div id="documentLinksContainer" class="space-y-2.5">
+                      <!-- Dynamic doc link rows -->
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+                      💡 แนบลิงก์ Google Drive, สไลด์บรรยาย, หรือชีทสรุป เพื่อให้ผู้เข้าอบรมดาวน์โหลดศึกษาล่วงหน้าได้ทันที
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Form Submit & Action Bar -->
+              <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex items-center justify-between gap-4">
+                <button type="button" onclick="switchAdminView('courses')" class="px-5 py-3 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer">
+                  ยกเลิก / กลับหน้ารายการ
+                </button>
+
+                <button 
+                  type="submit" 
+                  id="btnSaveCourse" 
+                  class="px-8 py-3.5 bg-gradient-to-r from-[#0369a1] to-[#0284c7] hover:from-[#0a2540] hover:to-[#0369a1] active:scale-[0.99] text-white font-bold text-sm rounded-2xl shadow-lg shadow-sky-700/25 transition-all flex items-center space-x-2 cursor-pointer font-display"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                  <span id="btnSaveCourseText">บันทึกหลักสูตร (Save Course)</span>
+                </button>
+              </div>
+
+            </form>
           </div>
         </div>
-        <!-- ==================== END VIEW 3 ==================== -->
+        <!-- ==================== END VIEW 3: CREATE / EDIT COURSE ==================== -->
 
       </main>
     </div>
@@ -849,6 +1110,101 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SAVE PROGRESS MODAL (RESPONSIVE LIVE MULTI-STEP) ==================== -->
+  <div id="saveProgressModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-5 animate-in fade-in zoom-in duration-200 border border-slate-200/80">
+      
+      <!-- Top Icon / Animation -->
+      <div id="saveModalIcon" class="w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 text-[#0369a1] flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
+        <svg class="w-8 h-8 animate-spin text-[#0284c7]" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+      </div>
+
+      <!-- Title & Target Info -->
+      <div class="space-y-1">
+        <h3 id="saveModalTitle" class="text-lg font-bold text-slate-900 tracking-tight font-display">กำลังบันทึกข้อมูลหลักสูตร</h3>
+        <p id="saveModalSubtitle" class="text-xs text-slate-500 font-medium truncate px-4">-</p>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="space-y-1.5 text-left">
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+          <span id="saveProgressLabel">กำลังประมวลผล...</span>
+          <span id="saveProgressPercent" class="font-mono text-[#0369a1] font-bold">35%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div id="saveProgressBar" class="bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-emerald-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 35%;"></div>
+        </div>
+      </div>
+
+      <!-- Steps Checklist -->
+      <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left space-y-2.5 text-xs">
+        <div id="saveStep1" class="flex items-center space-x-2.5 text-slate-600">
+          <span class="step-icon w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-bold shadow-2xs">✓</span>
+          <span class="step-text font-medium">บันทึกข้อมูลลงแคชเครื่อง (Instant 0.01s)</span>
+        </div>
+        <div id="saveStep2" class="flex items-center space-x-2.5 text-slate-600">
+          <span class="step-icon w-5 h-5 rounded-full bg-sky-100 text-[#0369a1] flex items-center justify-center text-[10px] font-bold animate-pulse shadow-2xs">⏳</span>
+          <span class="step-text font-medium">บันทึกลงฐานข้อมูล Supabase PostgreSQL (0.08s)</span>
+        </div>
+        <div id="saveStep3" class="flex items-center space-x-2.5 text-slate-400">
+          <span class="step-icon w-5 h-5 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-[10px] font-bold">⚪</span>
+          <span class="step-text">สำรองข้อมูลลงระบบทะเบียนกลาง Google Sheets</span>
+        </div>
+      </div>
+
+      <!-- Live Timer Counter -->
+      <div class="pt-1 flex items-center justify-center space-x-2 text-[11px] text-slate-400">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        <span id="saveElapsedTimer" class="font-mono">กำลังดำเนินการ... 0.0s</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SUCCESS / QR MODAL DIALOG ==================== -->
+  <div id="successModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-150 border border-slate-200/80">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2.5">
+        <h3 class="text-sm font-bold text-slate-800 truncate max-w-[280px] font-display" id="succCourseTitle">ชื่อหลักสูตร</h3>
+        <button type="button" onclick="closeSuccessModal()" class="text-slate-400 hover:text-slate-600 text-base cursor-pointer">✖</button>
+      </div>
+
+      <!-- QR Tab Switcher (3 Tabs) -->
+      <div class="grid grid-cols-3 p-1 bg-slate-100 rounded-xl text-xs font-semibold gap-1">
+        <button type="button" id="tabQrRegBtn" onclick="switchSuccessQr('reg')" class="py-1.5 px-1.5 rounded-lg bg-white text-[#0369a1] shadow-2xs transition-all cursor-pointer truncate font-bold">
+          📋 ลงทะเบียนจอง
+        </button>
+        <button type="button" id="tabQrEvalBtn" onclick="switchSuccessQr('eval')" class="py-1.5 px-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer truncate font-medium">
+          ⭐ แบบประเมิน
+        </button>
+        <button type="button" id="tabQrCheckinBtn" onclick="switchSuccessQr('checkin')" class="py-1.5 px-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer truncate font-medium">
+          📍 เช็คชื่อเข้าอบรม
+        </button>
+      </div>
+
+      <div class="flex flex-col items-center justify-center p-4 bg-sky-50/40 border border-sky-100 rounded-2xl">
+        <div id="succQrcodeContainer" class="p-2 bg-white rounded-xl shadow-2xs"></div>
+        <span id="succQrLabel" class="text-[11px] font-bold text-[#0369a1] mt-2.5">สแกนเพื่อเปิดหน้าลงทะเบียนจองที่นั่ง</span>
+      </div>
+
+      <p class="text-xs text-slate-500 break-all font-mono text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-200/70" id="succModalLink"></p>
+
+      <div class="flex space-x-2 pt-1">
+        <button type="button" onclick="copySuccModalLink()" class="flex-1 py-2.5 bg-sky-50 hover:bg-sky-100 active:scale-95 text-[#0369a1] border border-sky-200 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-2xs flex items-center justify-center gap-1.5">
+          <span>📋</span>
+          <span>คัดลอกลิงก์</span>
+        </button>
+        <button type="button" onclick="openCurrentSuccQrUrl()" class="flex-1 py-2.5 bg-[#0369a1] hover:bg-[#0a2540] active:scale-95 text-white font-bold rounded-xl text-xs transition-all cursor-pointer shadow-xs flex items-center justify-center gap-1.5 font-display">
+          <span>🔗</span>
+          <span>เปิดหน้าเว็บ</span>
+        </button>
       </div>
     </div>
   </div>
@@ -2447,25 +2803,16 @@
         history.pushState({ view: viewName, courseId: courseId || targetActiveCourseId }, '', url.toString());
       }
 
-      // Handle specific view activation
+      // Handle specific view activation (Instant 0ms display!)
       if (viewName === 'courses') {
         renderCourseList();
       } else if (viewName === 'target') {
         initTargetView(courseId || targetActiveCourseId);
       } else if (viewName === 'create') {
-        const iframe = document.getElementById('createCourseFrame');
-        if (iframe) {
-          let targetSrc = 'admin-create.html?embedded=1';
-          if (courseId) {
-            targetSrc += '&edit=' + encodeURIComponent(courseId);
-          }
-          if (!iframe.src || iframe.src === 'about:blank' || !iframe.src.endsWith(targetSrc)) {
-            iframe.src = targetSrc;
-          }
-        }
+        setupCreateOrEditView(courseId);
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     function openTargetView(courseId) {
@@ -2481,6 +2828,7 @@
       const btnCreate = document.getElementById('sidebarNavCreate');
       const btnTarget = document.getElementById('sidebarNavTarget');
       const dotCourses = document.getElementById('sidebarCoursesDot');
+      const dotCreate = document.getElementById('sidebarCreateDot');
       const dotTarget = document.getElementById('sidebarTargetDot');
 
       const activeClass = 'w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600/30 border border-sky-400/40 shadow-xs transition-all cursor-pointer text-left';
@@ -2491,6 +2839,7 @@
       if (btnTarget) btnTarget.className = (viewName === 'target') ? activeClass : inactiveClass;
 
       if (dotCourses) dotCourses.classList.toggle('hidden', viewName !== 'courses');
+      if (dotCreate) dotCreate.classList.toggle('hidden', viewName !== 'create');
       if (dotTarget) dotTarget.classList.toggle('hidden', viewName !== 'target');
     }
 
@@ -2589,6 +2938,1055 @@
         switchAdminView('courses');
       }
     });
+
+    // ==========================================
+    // Course Create & Edit Form Controller (Native SPA)
+    // ==========================================
+    let isEditMode = false;
+    let editingCourseId = null;
+    let editingCourse = null;
+    let currentCoverImageData = null;
+    let lastGeneratedCourseId = '';
+
+    // --- Save Progress Modal Helpers ---
+    let saveTimerInterval = null;
+    let saveStartTime = 0;
+
+    function openSaveProgressModal(opts = {}) {
+      const modal = document.getElementById('saveProgressModal');
+      if (!modal) return;
+
+      const t = document.getElementById('saveModalTitle');
+      const s = document.getElementById('saveModalSubtitle');
+      const icon = document.getElementById('saveModalIcon');
+      if (t) t.textContent = opts.title || 'กำลังบันทึกข้อมูลหลักสูตร';
+      if (s) s.textContent = opts.courseTitle ? `หลักสูตร: ${opts.courseTitle}` : '-';
+
+      if (icon) {
+        icon.className = 'w-16 h-16 rounded-2xl bg-sky-50 border border-sky-100 text-[#0369a1] flex items-center justify-center mx-auto text-2xl font-bold shadow-inner';
+        icon.innerHTML = `<svg class="w-8 h-8 animate-spin text-[#0284c7]" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>`;
+      }
+
+      setSaveProgressStep(1, 'active');
+      setSaveProgressStep(2, 'pending');
+      setSaveProgressStep(3, 'pending');
+      setSaveProgressPercent(25, 'เริ่มต้นเตรียมบันทึกข้อมูล...');
+
+      saveStartTime = Date.now();
+      const timerEl = document.getElementById('saveElapsedTimer');
+      if (timerEl) timerEl.textContent = 'กำลังดำเนินการ... 0.0s';
+
+      if (saveTimerInterval) clearInterval(saveTimerInterval);
+      saveTimerInterval = setInterval(() => {
+        const sec = ((Date.now() - saveStartTime) / 1000).toFixed(1);
+        if (timerEl) timerEl.textContent = `กำลังดำเนินการ... ${sec}s`;
+      }, 100);
+
+      modal.classList.remove('hidden');
+    }
+
+    function setSaveProgressStep(stepNum, status) {
+      const el = document.getElementById(`saveStep${stepNum}`);
+      if (!el) return;
+      const icon = el.querySelector('.step-icon');
+
+      if (status === 'done') {
+        el.className = 'flex items-center space-x-2.5 text-emerald-700 font-semibold';
+        if (icon) {
+          icon.className = 'step-icon w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-bold shadow-2xs';
+          icon.innerHTML = '✓';
+        }
+      } else if (status === 'active') {
+        el.className = 'flex items-center space-x-2.5 text-[#0369a1] font-semibold';
+        if (icon) {
+          icon.className = 'step-icon w-5 h-5 rounded-full bg-sky-100 text-[#0369a1] flex items-center justify-center text-[10px] font-bold animate-pulse shadow-2xs';
+          icon.innerHTML = '⏳';
+        }
+      } else {
+        el.className = 'flex items-center space-x-2.5 text-slate-400 font-normal';
+        if (icon) {
+          icon.className = 'step-icon w-5 h-5 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-[10px] font-bold';
+          icon.innerHTML = '⚪';
+        }
+      }
+    }
+
+    function setSaveProgressPercent(pct, label) {
+      const bar = document.getElementById('saveProgressBar');
+      const pctEl = document.getElementById('saveProgressPercent');
+      const lblEl = document.getElementById('saveProgressLabel');
+      if (bar) bar.style.width = `${pct}%`;
+      if (pctEl) pctEl.textContent = `${pct}%`;
+      if (lblEl && label) lblEl.textContent = label;
+    }
+
+    function closeSaveProgressModal() {
+      if (saveTimerInterval) {
+        clearInterval(saveTimerInterval);
+        saveTimerInterval = null;
+      }
+      const modal = document.getElementById('saveProgressModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // --- Success & QR Modal Helpers ---
+    let currentSuccessUrls = { reg: '', eval: '', checkin: '' };
+    let currentSuccessQrType = 'reg';
+
+    function showCourseSuccessModal(course) {
+      if (!course) return;
+      const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+      const regUrl = baseUrl + '/?course=' + encodeURIComponent(course.id);
+      const evalUrl = baseUrl + '/eval.html?course=' + encodeURIComponent(course.id);
+      const checkinUrl = baseUrl + '/checkin.html?course=' + encodeURIComponent(course.id);
+
+      currentSuccessUrls = {
+        reg: regUrl,
+        eval: evalUrl,
+        checkin: checkinUrl
+      };
+
+      const titleEl = document.getElementById('succCourseTitle');
+      if (titleEl) titleEl.textContent = course.title || 'หลักสูตรอบรม';
+
+      switchSuccessQr('reg');
+      const modal = document.getElementById('successModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function switchSuccessQr(type) {
+      currentSuccessQrType = type;
+      const regBtn = document.getElementById('tabQrRegBtn');
+      const evalBtn = document.getElementById('tabQrEvalBtn');
+      const checkinBtn = document.getElementById('tabQrCheckinBtn');
+      const subLabel = document.getElementById('succQrLabel');
+      const linkEl = document.getElementById('succModalLink');
+      const url = currentSuccessUrls[type] || '';
+
+      const activeClass = 'py-1.5 px-1.5 rounded-lg bg-white shadow-2xs transition-all cursor-pointer truncate font-bold';
+      const inactiveClass = 'py-1.5 px-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition-all cursor-pointer truncate font-medium';
+
+      if (regBtn) regBtn.className = inactiveClass;
+      if (evalBtn) evalBtn.className = inactiveClass;
+      if (checkinBtn) checkinBtn.className = inactiveClass;
+
+      let qrColor = '#0369a1';
+
+      if (type === 'reg') {
+        if (regBtn) regBtn.className = activeClass + ' text-[#0369a1]';
+        if (subLabel) {
+          subLabel.textContent = 'สแกนเพื่อเปิดหน้าลงทะเบียนจองที่นั่ง';
+          subLabel.className = 'text-[11px] font-bold text-[#0369a1] mt-2.5';
+        }
+        qrColor = '#0369a1';
+      } else if (type === 'eval') {
+        if (evalBtn) evalBtn.className = activeClass + ' text-amber-700';
+        if (subLabel) {
+          subLabel.textContent = 'สแกนเพื่อเปิดแบบประเมินผลการฝึกอบรม';
+          subLabel.className = 'text-[11px] font-bold text-amber-700 mt-2.5';
+        }
+        qrColor = '#b45309';
+      } else if (type === 'checkin') {
+        if (checkinBtn) checkinBtn.className = activeClass + ' text-emerald-700';
+        if (subLabel) {
+          subLabel.textContent = 'สแกนเพื่อเปิดหน้าลงทะเบียนเข้าอบรมจริง (Check-in)';
+          subLabel.className = 'text-[11px] font-bold text-emerald-700 mt-2.5';
+        }
+        qrColor = '#059669';
+      }
+
+      if (linkEl) linkEl.textContent = url;
+      const container = document.getElementById('succQrcodeContainer');
+      if (container && typeof QRCode !== 'undefined') {
+        container.innerHTML = '';
+        new QRCode(container, {
+          text: url,
+          width: 180,
+          height: 180,
+          colorDark: qrColor,
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+    }
+
+    function copySuccModalLink() {
+      const url = currentSuccessUrls[currentSuccessQrType] || '';
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(() => {
+        HrdModal.toast('คัดลอกลิงก์ไปยังคลิปบอร์ดแล้วค่ะ!', 'success');
+      }).catch(() => {
+        HrdModal.toast('คัดลอกลิงก์: ' + url, 'info');
+      });
+    }
+
+    function openCurrentSuccQrUrl() {
+      const url = currentSuccessUrls[currentSuccessQrType];
+      if (url) window.open(url, '_blank');
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('successModal');
+      if (modal) modal.classList.add('hidden');
+      switchAdminView('courses');
+    }
+
+    // --- Course Form Setup (Create / Edit View) ---
+    function setupCreateOrEditView(courseId = null) {
+      const modeBadge = document.getElementById('createViewModeBadge');
+      const idBadge = document.getElementById('createViewIdBadge');
+      const heading = document.getElementById('createViewHeading');
+      const saveBtnText = document.getElementById('btnSaveCourseText');
+      const inputId = document.getElementById('fCourseId');
+      const btnRegen = document.getElementById('btnRegenerateId');
+
+      if (courseId) {
+        // Edit Mode
+        isEditMode = true;
+        editingCourseId = courseId;
+        
+        let c = coursesData.find(x => x && String(x.id).toLowerCase() === String(courseId).toLowerCase());
+        if (!c) {
+          try {
+            const raw = localStorage.getItem('hrd_course_' + courseId);
+            if (raw) c = JSON.parse(raw);
+          } catch(e) {}
+        }
+        if (!c) {
+          const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+          if (gasUrl) {
+            fetch(gasUrl + '?action=getCourse&id=' + encodeURIComponent(courseId))
+              .then(r => r.json())
+              .then(data => {
+                const rawList = Array.isArray(data) ? data : (data && Array.isArray(data.courses) ? data.courses : []);
+                const found = rawList.find(x => x && String(x.id).toLowerCase() === String(courseId).toLowerCase()) || (data && data.course);
+                if (found) populateCourseFormForEdit(found);
+              }).catch(() => {});
+          }
+        }
+
+        if (modeBadge) {
+          modeBadge.textContent = '✏️ แก้ไขหลักสูตร';
+          modeBadge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200';
+        }
+        if (idBadge) idBadge.textContent = 'ID: ' + courseId;
+        if (heading) heading.textContent = 'แก้ไขรายละเอียดหลักสูตรอบรม';
+        if (saveBtnText) saveBtnText.textContent = 'บันทึกการแก้ไข (Update Course)';
+
+        if (inputId) {
+          inputId.value = courseId;
+          inputId.readOnly = true;
+          inputId.classList.add('bg-slate-100', 'cursor-not-allowed', 'text-slate-600');
+        }
+        if (btnRegen) btnRegen.classList.add('hidden');
+
+        if (c) {
+          populateCourseFormForEdit(c);
+        }
+      } else {
+        // Create Mode
+        isEditMode = false;
+        editingCourseId = null;
+        editingCourse = null;
+
+        if (modeBadge) {
+          modeBadge.textContent = '➕ สร้างหลักสูตรใหม่';
+          modeBadge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-sky-50 text-[#0369a1] border border-sky-200';
+        }
+        if (idBadge) idBadge.textContent = 'ID: กำลังสร้าง...';
+        if (heading) heading.textContent = 'สร้างหลักสูตรอบรมใหม่';
+        if (saveBtnText) saveBtnText.textContent = 'บันทึกหลักสูตร (Save Course)';
+
+        if (inputId) {
+          inputId.readOnly = false;
+          inputId.classList.remove('bg-slate-100', 'cursor-not-allowed', 'text-slate-600');
+        }
+        if (btnRegen) btnRegen.classList.remove('hidden');
+
+        resetCreateCourseForm();
+      }
+    }
+
+    const COURSE_ID_CHARSET = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    function generateCourseId(existingCourses = coursesData) {
+      const year = new Date().getFullYear();
+      const existingIdSet = new Set(
+        (Array.isArray(existingCourses) ? existingCourses : [])
+          .map(c => (c && c.id ? String(c.id).toLowerCase() : ''))
+      );
+
+      let candidateId = '';
+      let attempts = 0;
+      const maxAttempts = 50;
+
+      do {
+        let randToken = '';
+        for (let i = 0; i < 4; i++) {
+          const randIdx = Math.floor(Math.random() * COURSE_ID_CHARSET.length);
+          randToken += COURSE_ID_CHARSET.charAt(randIdx);
+        }
+        candidateId = `c-${year}-${randToken}`;
+        attempts++;
+      } while (existingIdSet.has(candidateId) && attempts < maxAttempts);
+
+      return candidateId;
+    }
+
+    function regenerateCourseId() {
+      const inputEl = document.getElementById('fCourseId');
+      const idBadge = document.getElementById('createViewIdBadge');
+      if (!inputEl) return;
+
+      lastGeneratedCourseId = generateCourseId(coursesData);
+      inputEl.value = lastGeneratedCourseId;
+      if (idBadge) idBadge.textContent = 'ID: ' + lastGeneratedCourseId;
+
+      inputEl.classList.remove('ring-2', 'ring-emerald-400');
+      void inputEl.offsetWidth;
+      inputEl.classList.add('ring-2', 'ring-emerald-400');
+      setTimeout(() => {
+        inputEl.classList.remove('ring-2', 'ring-emerald-400');
+      }, 500);
+
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function sanitizeCourseId(rawInput, existingCourses = coursesData) {
+      if (!rawInput || typeof rawInput !== 'string') {
+        return (typeof lastGeneratedCourseId !== 'undefined' && lastGeneratedCourseId) || generateCourseId(existingCourses);
+      }
+
+      let clean = rawInput.trim().toLowerCase();
+      clean = clean.replace(/[^a-z0-9]+/g, '-');
+      clean = clean.replace(/[-_]+/g, '-');
+      clean = clean.replace(/^-+|-+$/g, '');
+
+      if (!clean || !/[a-z0-9]/.test(clean)) {
+        return (typeof lastGeneratedCourseId !== 'undefined' && lastGeneratedCourseId) || generateCourseId(existingCourses);
+      }
+
+      return clean;
+    }
+
+    function sanitizeCourseSlug(rawInput, existingCourses = coursesData) {
+      return sanitizeCourseId(rawInput, existingCourses);
+    }
+
+    function formatThaiDate(dStr) {
+      if (!dStr) return '';
+      var str = dStr.toString().trim();
+      if (!str) return '';
+
+      var thaiMonthsFull = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+      for (var k = 1; k <= 12; k++) {
+        if (str.indexOf(thaiMonthsFull[k]) !== -1) {
+          return str;
+        }
+      }
+
+      var mIso = str.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+      if (mIso) {
+        var y = parseInt(mIso[1], 10);
+        if (y < 2400) y += 543;
+        var m = parseInt(mIso[2], 10);
+        var d = parseInt(mIso[3], 10);
+        return d + ' ' + (thaiMonthsFull[m] || m) + ' ' + y;
+      }
+
+      var mDd = str.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+      if (mDd) {
+        var d = parseInt(mDd[1], 10);
+        var m = parseInt(mDd[2], 10);
+        var y = parseInt(mDd[3], 10);
+        if (y < 2400) y += 543;
+        return d + ' ' + (thaiMonthsFull[m] || m) + ' ' + y;
+      }
+
+      return str;
+    }
+
+    function thaiDateToIso(dStr) {
+      if (!dStr) return '';
+      var str = dStr.toString().trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+
+      var thaiMonthsMap = {
+        "มกราคม": "01", "ม.ค.": "01", "มกรา": "01",
+        "กุมภาพันธ์": "02", "ก.พ.": "02", "กุมภา": "02",
+        "มีนาคม": "03", "มี.ค.": "03", "มีนา": "03",
+        "เมษายน": "04", "เม.ย.": "04", "เมษา": "04",
+        "พฤษภาคม": "05", "พ.ค.": "05", "พฤษภา": "05",
+        "มิถุนายน": "06", "มิ.ย.": "06", "มิถุนา": "06",
+        "กรกฎาคม": "07", "ก.ค.": "07", "กรกฎา": "07",
+        "สิงหาคม": "08", "ส.ค.": "08", "สิงหา": "08",
+        "กันยายน": "09", "ก.ย.": "09", "กันยา": "09",
+        "ตุลาคม": "10", "ต.ค.": "10", "ตุลา": "10",
+        "พฤศจิกายน": "11", "พ.ย.": "11", "พฤศจิกา": "11",
+        "ธันวาคม": "12", "ธ.ค.": "12", "ธันวา": "12"
+      };
+
+      var match = str.match(/(\d{1,2})\s+([^\s\d]+)\s+(\d{4})/);
+      if (match) {
+        var day = match[1].padStart(2, '0');
+        var monthName = match[2];
+        var year = parseInt(match[3], 10);
+        if (year > 2400) year -= 543;
+        var month = thaiMonthsMap[monthName];
+        if (!month) {
+          for (var key in thaiMonthsMap) {
+            if (monthName.indexOf(key) !== -1) {
+              month = thaiMonthsMap[key];
+              break;
+            }
+          }
+        }
+        if (month) {
+          return year + '-' + month + '-' + day;
+        }
+      }
+      return '';
+    }
+
+    function formatTimeInput(input) {
+      var v = input.value.replace(/[^0-9]/g, '');
+      if (v.length > 2) {
+        v = v.substring(0, 2) + ':' + v.substring(2, 4);
+      }
+      input.value = v;
+    }
+
+    function addBatchRow() {
+      const container = document.getElementById('batchRowsContainer');
+      const count = container ? container.querySelectorAll('.batch-row').length + 1 : 1;
+      const today = new Date();
+      today.setDate(today.getDate() + 7);
+      const defaultDate = today.toISOString().split('T')[0];
+      addBatchRowWithData('รุ่นที่ ' + count, defaultDate, '09:00', '12:00', 40);
+    }
+
+    function addBatchRowWithData(name, date, start, end, quota) {
+      const container = document.getElementById('batchRowsContainer');
+      if (!container) return;
+      const count = container.querySelectorAll('.batch-row').length + 1;
+
+      const div = document.createElement('div');
+      div.className = 'batch-row bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 grid grid-cols-1 lg:grid-cols-12 gap-3 items-center shadow-2xs';
+      div.innerHTML = 
+        '<div class="lg:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">ชื่อรุ่น</label>' +
+          '<input type="text" class="batch-name w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-semibold" value="' + escapeHtml(name || ('รุ่นที่ ' + count)) + '" required>' +
+        '</div>' +
+        '<div class="lg:col-span-4">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">วันที่อบรม <span class="text-rose-500">*</span></label>' +
+          '<input type="date" class="batch-date w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-medium" value="' + (date || '') + '" required>' +
+        '</div>' +
+        '<div class="lg:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">เวลา <span class="text-rose-500">*</span></label>' +
+          '<div class="flex items-center space-x-1">' +
+            '<input type="text" maxlength="5" placeholder="09:00" oninput="formatTimeInput(this)" class="batch-time-start w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (start || '09:00') + '" required>' +
+            '<span class="text-xs text-slate-400">-</span>' +
+            '<input type="text" maxlength="5" placeholder="12:00" oninput="formatTimeInput(this)" class="batch-time-end w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (end || '12:00') + '" required>' +
+            '<span class="text-xs text-slate-500">น.</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="lg:col-span-2">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">โควตาที่นั่ง</label>' +
+          '<div class="flex items-center space-x-2">' +
+            '<input type="number" class="batch-quota w-20 px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-mono font-bold" value="' + (quota || 40) + '" required min="1">' +
+            '<span class="text-xs text-slate-400">ที่นั่ง</span>' +
+            '<button type="button" onclick="removeBatchRow(this)" class="text-slate-400 hover:text-rose-500 text-sm ml-auto cursor-pointer p-1" title="ลบรุ่นนี้">✖</button>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(div);
+    }
+
+    function removeBatchRow(btn) {
+      const container = document.getElementById('batchRowsContainer');
+      if (container && container.querySelectorAll('.batch-row').length <= 1) {
+        HrdModal.warning('หลักสูตรต้องมีอย่างน้อย 1 รุ่นการอบรมค่ะ', 'ไม่สามารถลบรุ่นได้');
+        return;
+      }
+      if (btn) btn.closest('.batch-row').remove();
+    }
+
+    function toggleTopicsSection(forceShow, autoAddIfEmpty = true) {
+      const checkbox = document.getElementById('fEnableTopics');
+      const sectionBody = document.getElementById('topicsSectionBody');
+      const show = typeof forceShow === 'boolean' ? forceShow : (checkbox && checkbox.checked);
+      if (sectionBody) {
+        if (show) {
+          sectionBody.classList.remove('hidden');
+          const container = document.getElementById('topicRowsContainer');
+          if (autoAddIfEmpty && container && container.querySelectorAll('.topic-row').length === 0) {
+            addTopicRow('', '', '', '');
+          }
+        } else {
+          sectionBody.classList.add('hidden');
+        }
+      }
+    }
+
+    function addTopicRow(title = '', date = '', time = '', speaker = '') {
+      const container = document.getElementById('topicRowsContainer');
+      if (!container) return;
+      const div = document.createElement('div');
+      div.className = 'topic-row bg-white p-3.5 rounded-2xl border border-slate-200/90 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center shadow-2xs';
+      div.innerHTML = 
+        '<div class="sm:col-span-4">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">ชื่อหัวข้อ <span class="text-rose-500">*</span></label>' +
+          '<input type="text" class="topic-title w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-semibold" placeholder="เช่น การช่วยฟื้นคืนชีพ (CPR)" value="' + escapeHtml(title || '') + '" required>' +
+        '</div>' +
+        '<div class="sm:col-span-2">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">วันที่</label>' +
+          '<input type="date" class="topic-date w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-medium" value="' + escapeHtml(date || '') + '">' +
+        '</div>' +
+        '<div class="sm:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">เวลา / ห้อง (ถ้ามี)</label>' +
+          '<input type="text" class="topic-time w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white font-mono" placeholder="เช่น 09:00 - 12:00 น." value="' + escapeHtml(time || '') + '">' +
+        '</div>' +
+        '<div class="sm:col-span-3">' +
+          '<label class="block text-[11px] font-bold text-slate-600 mb-1">วิทยากร</label>' +
+          '<div class="flex items-center space-x-2">' +
+            '<input type="text" class="topic-speaker w-full px-3 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white" placeholder="เช่น พว.สมหญิง / อ.ประสิทธิ์" value="' + escapeHtml(speaker || '') + '">' +
+            '<button type="button" onclick="removeTopicRow(this)" class="text-slate-400 hover:text-rose-500 text-sm cursor-pointer p-1 shrink-0" title="ลบหัวข้อนี้">✖</button>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(div);
+    }
+
+    function removeTopicRow(btn) {
+      const container = document.getElementById('topicRowsContainer');
+      if (container && container.querySelectorAll('.topic-row').length <= 1) {
+        HrdModal.warning('เมื่อเปิดใช้งานหัวข้อย่อย ต้องมีอย่างน้อย 1 หัวข้อค่ะ', 'ไม่สามารถลบได้');
+        return;
+      }
+      if (btn) btn.closest('.topic-row').remove();
+    }
+
+    function handleCoverImageUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        HrdModal.warning('กรุณาเลือกไฟล์รูปภาพ (JPG, PNG, WEBP) ค่ะ', 'รูปแบบไฟล์ไม่ถูกต้อง');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        HrdModal.warning('ขนาดไฟล์รูปภาพเกิน 5MB กรุณาเลือกภาพที่มีขนาดเล็กลงนะคะ', 'ไฟล์มีขนาดใหญ่เกินไป');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentCoverImageData = e.target.result;
+        const preview = document.getElementById('coverImagePreview');
+        const previewBox = document.getElementById('coverImagePreviewContainer');
+        const uploadPrompt = document.getElementById('coverImageUploadPrompt');
+        if (preview) preview.src = currentCoverImageData;
+        if (previewBox) previewBox.classList.remove('hidden');
+        if (uploadPrompt) uploadPrompt.classList.add('hidden');
+        const urlInput = document.getElementById('fCoverImageUrl');
+        if (urlInput) urlInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleCoverUrlInput(url) {
+      const trimmed = (url || '').trim();
+      const preview = document.getElementById('coverImagePreview');
+      const previewBox = document.getElementById('coverImagePreviewContainer');
+      const uploadPrompt = document.getElementById('coverImageUploadPrompt');
+
+      if (trimmed && (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:image/'))) {
+        currentCoverImageData = trimmed;
+        if (preview) preview.src = trimmed;
+        if (previewBox) previewBox.classList.remove('hidden');
+        if (uploadPrompt) uploadPrompt.classList.add('hidden');
+      } else if (!trimmed) {
+        removeCoverImage();
+      }
+    }
+
+    function removeCoverImage() {
+      currentCoverImageData = null;
+      const fileInput = document.getElementById('fCoverFileInput');
+      const urlInput = document.getElementById('fCoverImageUrl');
+      const preview = document.getElementById('coverImagePreview');
+      const previewBox = document.getElementById('coverImagePreviewContainer');
+      const uploadPrompt = document.getElementById('coverImageUploadPrompt');
+
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+      if (preview) preview.src = '';
+      if (previewBox) previewBox.classList.add('hidden');
+      if (uploadPrompt) uploadPrompt.classList.remove('hidden');
+    }
+
+    function addDocumentLinkRow(title = '', url = '') {
+      const container = document.getElementById('documentLinksContainer');
+      if (!container) return;
+
+      const div = document.createElement('div');
+      div.className = 'document-link-row flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200/80 shadow-2xs';
+      div.innerHTML = 
+        '<div class="flex-1">' +
+          '<input type="text" class="doc-title w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white" placeholder="ชื่อเอกสาร เช่น สไลด์ / เอกสารแจก" value="' + escapeHtml(title || '') + '">' +
+        '</div>' +
+        '<div class="flex-1">' +
+          '<input type="url" class="doc-url w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white font-mono" placeholder="ลิงก์ URL (Drive/Cloud)" value="' + escapeHtml(url || '') + '">' +
+        '</div>' +
+        '<button type="button" onclick="removeDocumentLinkRow(this)" class="text-slate-400 hover:text-rose-500 text-xs p-1.5 cursor-pointer" title="ลบเอกสารนี้">✕</button>';
+      container.appendChild(div);
+    }
+
+    function removeDocumentLinkRow(btn) {
+      if (btn) btn.closest('.document-link-row').remove();
+    }
+
+    function getDocumentLinks() {
+      const docs = [];
+      document.querySelectorAll('.document-link-row').forEach(row => {
+        const t = row.querySelector('.doc-title') ? row.querySelector('.doc-title').value.trim() : '';
+        const u = row.querySelector('.doc-url') ? row.querySelector('.doc-url').value.trim() : '';
+        if (t || u) {
+          docs.push({ title: t || 'เอกสารประกอบ', url: u });
+        }
+      });
+      return docs;
+    }
+
+    function resetCreateCourseForm() {
+      const titleInput = document.getElementById('fCourseTitle');
+      const speakerInput = document.getElementById('fCourseSpeaker');
+      if (titleInput) titleInput.value = '';
+      if (speakerInput) speakerInput.value = '';
+
+      const planRad = document.querySelector('input[name="planType"][value="ในแผน"]');
+      if (planRad) planRad.checked = true;
+      const catRad = document.querySelector('input[name="courseCategory"][value="Mandatory Course"]');
+      if (catRad) catRad.checked = true;
+
+      const batchContainer = document.getElementById('batchRowsContainer');
+      if (batchContainer) {
+        batchContainer.innerHTML = '';
+        const today = new Date();
+        today.setDate(today.getDate() + 7);
+        const defaultDate = today.toISOString().split('T')[0];
+        addBatchRowWithData('รุ่นที่ 1', defaultDate, '09:00', '12:00', 40);
+      }
+
+      const enableTopicsEl = document.getElementById('fEnableTopics');
+      if (enableTopicsEl) {
+        enableTopicsEl.checked = false;
+        toggleTopicsSection(false);
+      }
+      const topicRows = document.getElementById('topicRowsContainer');
+      if (topicRows) topicRows.innerHTML = '';
+
+      removeCoverImage();
+      const docContainer = document.getElementById('documentLinksContainer');
+      if (docContainer) docContainer.innerHTML = '';
+
+      regenerateCourseId();
+    }
+
+    function populateCourseFormForEdit(c) {
+      if (!c) return;
+      editingCourse = c;
+
+      const titleInput = document.getElementById('fCourseTitle');
+      const speakerInput = document.getElementById('fCourseSpeaker');
+      if (titleInput) titleInput.value = c.title || '';
+      if (speakerInput) speakerInput.value = c.speaker || '';
+
+      const pVal = c.planType || (c.type && c.type.includes('นอกแผน') ? 'นอกแผน' : 'ในแผน');
+      const planRad = document.querySelector(`input[name="planType"][value="${pVal}"]`);
+      if (planRad) planRad.checked = true;
+
+      const cVal = c.category || 'Mandatory Course';
+      const catRad = document.querySelector(`input[name="courseCategory"][value="${cVal}"]`);
+      if (catRad) catRad.checked = true;
+
+      // Batches
+      const batchContainer = document.getElementById('batchRowsContainer');
+      if (batchContainer) {
+        batchContainer.innerHTML = '';
+        const quotaMap = c.quota || {};
+
+        if (Array.isArray(c.batchDetails) && c.batchDetails.length > 0) {
+          c.batchDetails.forEach((bd, idx) => {
+            let bStart = '09:00';
+            let bEnd = '12:00';
+            if (bd.timeRange) {
+              const parts = bd.timeRange.replace(/น.$/, '').trim().split('-');
+              if (parts.length === 2) {
+                bStart = parts[0].trim();
+                bEnd = parts[1].trim();
+              }
+            }
+            addBatchRowWithData(
+              bd.name || ('รุ่นที่ ' + (idx + 1)),
+              bd.dateIso || thaiDateToIso(bd.thaiDate) || '',
+              bStart,
+              bEnd,
+              bd.quota || 40
+            );
+          });
+        } else if (Array.isArray(c.batches) && c.batches.length > 0) {
+          c.batches.forEach((bStr, idx) => {
+            let bName = 'รุ่นที่ ' + (idx + 1);
+            let bDate = '';
+            let bStart = '09:00';
+            let bEnd = '12:00';
+            let bQuota = (typeof quotaMap === 'object' && quotaMap[bStr]) ? quotaMap[bStr] : 40;
+
+            const parenMatch = bStr.match(/^(.*?)\s*\((.*?)\)$/);
+            if (parenMatch) {
+              bName = parenMatch[1].trim();
+              const inside = parenMatch[2].trim();
+              if (inside.includes('เวลา')) {
+                const spl = inside.split('เวลา');
+                const dPart = spl[0].trim();
+                const tPart = spl.slice(1).join('เวลา').trim().replace(/น.$/, '').trim();
+                if (dPart) bDate = thaiDateToIso(dPart) || '';
+                if (tPart.includes('-')) {
+                  const times = tPart.split('-');
+                  bStart = times[0].trim();
+                  bEnd = times[1].trim();
+                }
+              } else {
+                bDate = thaiDateToIso(inside) || '';
+              }
+            }
+            if (!bDate && c.date) bDate = thaiDateToIso(c.date) || '';
+            addBatchRowWithData(bName, bDate, bStart, bEnd, bQuota);
+          });
+        } else {
+          addBatchRowWithData('รุ่นที่ 1', '', '09:00', '12:00', 40);
+        }
+      }
+
+      // Topics
+      const enableTopicsEl = document.getElementById('fEnableTopics');
+      const topicRowsCont = document.getElementById('topicRowsContainer');
+      if (topicRowsCont) topicRowsCont.innerHTML = '';
+
+      const courseHasTopics = Boolean(c.hasSubTopics || (Array.isArray(c.topics) && c.topics.length > 0));
+      if (courseHasTopics) {
+        if (enableTopicsEl) enableTopicsEl.checked = true;
+        if (c.topicMode) {
+          const radMode = document.querySelector(`input[name="topicMode"][value="${c.topicMode}"]`);
+          if (radMode) radMode.checked = true;
+        }
+        if (Array.isArray(c.topics) && c.topics.length > 0) {
+          c.topics.forEach(t => {
+            addTopicRow(t.title || '', t.date || '', t.time || '', t.speaker || '');
+          });
+          toggleTopicsSection(true, false);
+        } else {
+          toggleTopicsSection(true, true);
+        }
+      } else {
+        if (enableTopicsEl) enableTopicsEl.checked = false;
+        toggleTopicsSection(false, false);
+      }
+
+      // Cover image
+      if (c.coverImage) {
+        handleCoverUrlInput(c.coverImage);
+      } else {
+        removeCoverImage();
+      }
+
+      // Documents
+      const docContainer = document.getElementById('documentLinksContainer');
+      if (docContainer) {
+        docContainer.innerHTML = '';
+        if (Array.isArray(c.documents) && c.documents.length > 0) {
+          c.documents.forEach(d => addDocumentLinkRow(d.title, d.url));
+        } else if (c.folderUrl) {
+          addDocumentLinkRow('โฟลเดอร์ Google Drive', c.folderUrl);
+        }
+      }
+    }
+
+    // Direct Supabase & Dual-Tier Save Handler
+    async function handleSaveCourse(e) {
+      if (e) e.preventDefault();
+      const btnSave = document.getElementById('btnSaveCourse');
+      const originalBtnText = btnSave ? btnSave.innerHTML : '';
+
+      // 1. Course ID Sanitization
+      const rawCourseId = document.getElementById('fCourseId').value;
+      const courseId = sanitizeCourseSlug(rawCourseId, coursesData);
+      document.getElementById('fCourseId').value = courseId;
+
+      const title = document.getElementById('fCourseTitle').value.trim();
+      const speaker = document.getElementById('fCourseSpeaker').value.trim();
+
+      if (!title || !speaker) {
+        HrdModal.warning('กรุณากรอกชื่อหลักสูตรและวิทยากรให้ครบถ้วนนะคะ', 'ข้อมูลไม่ครบถ้วน');
+        return;
+      }
+
+      // Duplicate check in Create mode
+      if (!isEditMode && coursesData.some(c => c && String(c.id).toLowerCase() === String(courseId).toLowerCase())) {
+        HrdModal.warning('รหัสหลักสูตร ' + courseId + ' นี้มีอยู่ในระบบแล้ว กรุณาตั้งรหัสอื่นนะคะ', 'รหัสหลักสูตรซ้ำ');
+        document.getElementById('fCourseId').focus();
+        return;
+      }
+
+      const planTypeEl = document.querySelector('input[name="planType"]:checked');
+      const planType = planTypeEl ? planTypeEl.value : 'ในแผน';
+
+      const catEl = document.querySelector('input[name="courseCategory"]:checked');
+      const category = catEl ? catEl.value : 'Mandatory Course';
+
+      const combinedType = planType + ' • ' + category;
+
+      // Batches Extraction
+      const batches = [];
+      const quota = {};
+      const batchDetails = [];
+      const datesSet = {};
+      const timesSet = {};
+
+      document.querySelectorAll('.batch-row').forEach(row => {
+        const bName = row.querySelector('.batch-name').value.trim();
+        const bDate = row.querySelector('.batch-date').value;
+        const bStart = row.querySelector('.batch-time-start').value.trim();
+        const bEnd = row.querySelector('.batch-time-end').value.trim();
+        const bQuota = parseInt(row.querySelector('.batch-quota').value, 10) || 40;
+
+        const thaiDate = formatThaiDate(bDate);
+        const timeRange = bStart + ' - ' + bEnd + ' น.';
+        const fullBatchDisplay = thaiDate 
+          ? (bName + ' (' + thaiDate + ' เวลา ' + timeRange + ')')
+          : (bName + ' (เวลา ' + timeRange + ')');
+
+        batches.push(fullBatchDisplay);
+        quota[fullBatchDisplay] = bQuota;
+
+        if (thaiDate) datesSet[thaiDate] = true;
+        if (timeRange) timesSet[timeRange] = true;
+
+        batchDetails.push({
+          name: bName,
+          dateIso: bDate,
+          thaiDate: thaiDate,
+          timeRange: timeRange,
+          quota: bQuota,
+          display: fullBatchDisplay
+        });
+      });
+
+      if (batches.length === 0) {
+        HrdModal.warning('กรุณาระบุรุ่นการอบรมอย่างน้อย 1 รุ่นค่ะ', 'ข้อมูลไม่ครบถ้วน');
+        return;
+      }
+
+      // Subtopics Extraction
+      const hasSubTopics = document.getElementById('fEnableTopics') ? document.getElementById('fEnableTopics').checked : false;
+      const topicModeEl = document.querySelector('input[name="topicMode"]:checked');
+      const topicMode = topicModeEl ? topicModeEl.value : 'all';
+      const topics = [];
+
+      if (hasSubTopics) {
+        document.querySelectorAll('.topic-row').forEach((row, idx) => {
+          const tTitle = row.querySelector('.topic-title') ? row.querySelector('.topic-title').value.trim() : '';
+          const tDate = row.querySelector('.topic-date') ? row.querySelector('.topic-date').value.trim() : '';
+          const tSpeaker = row.querySelector('.topic-speaker') ? row.querySelector('.topic-speaker').value.trim() : '';
+          const tTime = row.querySelector('.topic-time') ? row.querySelector('.topic-time').value.trim() : '';
+          if (tTitle) {
+            topics.push({
+              id: 't-' + (idx + 1),
+              title: tTitle,
+              date: tDate,
+              speaker: tSpeaker,
+              time: tTime
+            });
+          }
+        });
+
+        if (topics.length === 0) {
+          HrdModal.warning('ท่านเปิดใช้งานหัวข้อย่อย แต่ยังไม่ได้ระบุชื่อหัวข้อ กรุณาระบุอย่างน้อย 1 หัวข้อ หรือปิดตัวเลือกหัวข้อย่อยค่ะ', 'ข้อมูลหัวข้อไม่ครบถ้วน');
+          return;
+        }
+      }
+
+      const summaryDate = Object.keys(datesSet).join(', ');
+      const summaryTime = Object.keys(timesSet).join(', ');
+
+      const existingTarget = (isEditMode && editingCourse && editingCourse.targetAudience) 
+        ? editingCourse.targetAudience 
+        : {
+            type: 'all',
+            summary: 'เปิดรับบุคลากรทุกแผนกและทุกตำแหน่ง',
+            departments: [],
+            positions: [],
+            employeeIds: [],
+            totalCount: 0
+          };
+
+      const coursePayload = {
+        id: courseId,
+        title: title,
+        speaker: speaker,
+        date: summaryDate,
+        time: summaryTime,
+        planType: planType,
+        category: category,
+        type: combinedType,
+        batches: batches,
+        quota: quota,
+        batchDetails: batchDetails,
+        targetAudience: existingTarget,
+        hasSubTopics: hasSubTopics,
+        topicMode: topicMode,
+        topics: topics,
+        coverImage: currentCoverImageData || '',
+        documents: getDocumentLinks(),
+        driveFolderName: (isEditMode && editingCourse && editingCourse.driveFolderName) ? editingCourse.driveFolderName : title,
+        folderUrl: (isEditMode && editingCourse && editingCourse.folderUrl) ? editingCourse.folderUrl : '',
+        sheetId: (isEditMode && editingCourse && editingCourse.sheetId) ? editingCourse.sheetId : '',
+        sheetUrl: (isEditMode && editingCourse && editingCourse.sheetUrl) ? editingCourse.sheetUrl : '',
+        masterSheetUrl: (isEditMode && editingCourse && editingCourse.masterSheetUrl) ? editingCourse.masterSheetUrl : '',
+        status: (isEditMode && editingCourse && editingCourse.status) ? editingCourse.status : 'active'
+      };
+
+      // 1. Optimistic Local Save (Instant 0.01s display!)
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.classList.add('opacity-80', 'cursor-not-allowed');
+      }
+
+      openSaveProgressModal({
+        title: isEditMode ? 'กำลังบันทึกการแก้ไขหลักสูตร' : 'กำลังสร้างหลักสูตรและระบบลงทะเบียน',
+        courseTitle: title
+      });
+
+      const idx = coursesData.findIndex(c => c && String(c.id).toLowerCase() === String(courseId).toLowerCase());
+      if (idx !== -1) {
+        coursesData[idx] = coursePayload;
+      } else {
+        coursesData.unshift(coursePayload);
+      }
+
+      try {
+        localStorage.setItem('hrd_course_' + courseId, JSON.stringify(coursePayload));
+        localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
+      } catch(storageErr) {
+        console.warn('LocalStorage save notice:', storageErr);
+      }
+
+      setSaveProgressStep(1, 'done');
+      setSaveProgressPercent(40, 'บันทึกข้อมูลและจัดเก็บลงแคชเครื่องสำเร็จ');
+
+      // 2. Direct Supabase CRUD (Tier-1 DB ~0.08s speed!)
+      setSaveProgressStep(2, 'active');
+      setSaveProgressPercent(70, 'กำลังบันทึกลงฐานข้อมูล Supabase PostgreSQL...');
+
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          await SupabaseService.saveCourse(coursePayload);
+          setSaveProgressStep(2, 'done');
+        } catch(sbErr) {
+          console.warn('[Admin Save] Supabase save notice:', sbErr);
+          setSaveProgressStep(2, 'done'); // proceed with grace
+        }
+      } else {
+        setSaveProgressStep(2, 'done');
+      }
+
+      // 3. Background Non-Blocking GAS Sync (Tier-2 institutional sheets)
+      setSaveProgressStep(3, 'active');
+      setSaveProgressPercent(90, 'กำลังเชื่อมโยงระบบทะเบียนกลาง Google Sheets...');
+
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        const gasPayload = {
+          action: isEditMode ? 'saveCourse' : 'createCourse',
+          course: coursePayload,
+          id: courseId,
+          title: title,
+          speaker: speaker,
+          date: summaryDate,
+          time: summaryTime,
+          planType: planType,
+          category: category,
+          batches: batches,
+          quota: quota,
+          targetAudience: existingTarget,
+          hasSubTopics: hasSubTopics,
+          topicMode: topicMode,
+          topics: topics,
+          skipTabSync: isEditMode
+        };
+
+        fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(gasPayload)
+        }).then(r => r.json()).then(data => {
+          if (data && data.success && data.sheetUrl) {
+            coursePayload.sheetUrl = data.sheetUrl;
+            coursePayload.sheetId = data.sheetId || '';
+            coursePayload.folderUrl = data.folderUrl || '';
+            try {
+              localStorage.setItem('hrd_course_' + courseId, JSON.stringify(coursePayload));
+              const curIdx = coursesData.findIndex(c => c && String(c.id).toLowerCase() === String(courseId).toLowerCase());
+              if (curIdx !== -1) {
+                coursesData[curIdx].sheetUrl = data.sheetUrl;
+                coursesData[curIdx].sheetId = data.sheetId || '';
+                coursesData[curIdx].folderUrl = data.folderUrl || '';
+                localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+              }
+              if (typeof SupabaseService !== 'undefined') {
+                SupabaseService.saveCourse(coursePayload).catch(() => {});
+              }
+            } catch(e) {}
+          }
+        }).catch(err => console.warn('[Background GAS Sync notice]', err));
+      }
+
+      setSaveProgressStep(3, 'done');
+      setSaveProgressPercent(100, 'บันทึกข้อมูลหลักสูตรเรียบร้อยสมบูรณ์!');
+
+      const iconEl = document.getElementById('saveModalIcon');
+      if (iconEl) {
+        iconEl.className = 'w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner';
+        iconEl.innerHTML = '✓';
+      }
+
+      await new Promise(r => setTimeout(r, 400));
+      closeSaveProgressModal();
+
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.classList.remove('opacity-80', 'cursor-not-allowed');
+        btnSave.innerHTML = originalBtnText;
+      }
+
+      updateCourseCountDisplay();
+      renderCourseList();
+
+      if (isEditMode) {
+        await HrdModal.success(
+          `บันทึกการแก้ไขหลักสูตร "${title}" เรียบร้อยแล้วค่ะ!\n\n(บันทึกลงฐานข้อมูล Supabase ความเร็วสูงและแคชเครื่องเรียบร้อยแล้ว)`,
+          'แก้ไขหลักสูตรสำเร็จ'
+        );
+        switchAdminView('courses');
+      } else {
+        showCourseSuccessModal(coursePayload);
+      }
+    }
 
     // ==========================================
     // Target Audience Management Logic

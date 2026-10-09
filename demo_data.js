@@ -1,3 +1,1427 @@
+/**
+ * HRD Training Admin Portal - Master Demo Employees Dataset
+ * Pre-bundled 177 Hospital Employees for instant 0ms memory lookup & offline resilience.
+ * Generated from employees.json / 01_employees_standard_latest.xlsx
+ */
+const DEMO_EMPLOYEES = [
+  {
+    "id": "000023",
+    "title": "นางสาว",
+    "firstName": "กมลชนก",
+    "lastName": "แก้วคำฟู",
+    "position": "HoD Human Resource",
+    "department": "Human Resource Department"
+  },
+  {
+    "id": "000456",
+    "title": "นางสาว",
+    "firstName": "ศิริพร",
+    "lastName": "สิทธิการ",
+    "position": "Officer Procurement",
+    "department": "Procurement Department"
+  },
+  {
+    "id": "000462",
+    "title": "นางสาว",
+    "firstName": "สุมิตรา",
+    "lastName": "สาทอง",
+    "position": "Officer Accounting",
+    "department": "Accounting Department"
+  },
+  {
+    "id": "000467",
+    "title": "นาย",
+    "firstName": "ดนุพล",
+    "lastName": "ทองดอนอินทร์",
+    "position": "Officer Information Technology",
+    "department": "Information Technology Departm"
+  },
+  {
+    "id": "000541",
+    "title": "นางสาว",
+    "firstName": "เขมิกา",
+    "lastName": "แก้วนรา",
+    "position": "Staff Patient Assistant-OR",
+    "department": "Operating Room Department"
+  },
+  {
+    "id": "000543",
+    "title": "นางสาว",
+    "firstName": "อัญชรีย์",
+    "lastName": "ยังเพ็ง",
+    "position": "Staff Practical Nurse-OR",
+    "department": "Operating Room Department"
+  },
+  {
+    "id": "000544",
+    "title": "นางสาว",
+    "firstName": "นุสรา",
+    "lastName": "มามี",
+    "position": "Staff Patient Assistant-OR",
+    "department": "Operating Room Department"
+  },
+  {
+    "id": "000545",
+    "title": "นางสาว",
+    "firstName": "วรรณิษา",
+    "lastName": "สุขสัจจี",
+    "position": "Staff Laundry",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000554",
+    "title": "นาง",
+    "firstName": "มลฑา",
+    "lastName": "อ้นนาค",
+    "position": "Staff Practical Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000555",
+    "title": "นาง",
+    "firstName": "พิกุล",
+    "lastName": "ทิพยเนตร",
+    "position": "Staff Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "000559",
+    "title": "นาย",
+    "firstName": "ฉลาด",
+    "lastName": "สร้อยวิชา",
+    "position": "Staff General Service Transportation",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000560",
+    "title": "นาย",
+    "firstName": "วิเชียร",
+    "lastName": "ภู่คง",
+    "position": "Staff General Service Transportation",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000561",
+    "title": "นาย",
+    "firstName": "ชัยณรงค์",
+    "lastName": "ทองใบ",
+    "position": "Staff Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "000563",
+    "title": "นางสาว",
+    "firstName": "น้ำอ้อย",
+    "lastName": "เวชพร",
+    "position": "Staff Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "000564",
+    "title": "นางสาว",
+    "firstName": "คนึงนุช",
+    "lastName": "ทิมทอง",
+    "position": "Staff Practical Nurse-LR",
+    "department": "Labour Room & Nursery Departme"
+  },
+  {
+    "id": "000569",
+    "title": "นางสาว",
+    "firstName": "บุศยา",
+    "lastName": "แบ่งสันเทียะ",
+    "position": "Staff Med Distribution-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000570",
+    "title": "นางสาว",
+    "firstName": "อารยา",
+    "lastName": "หมอยาดี",
+    "position": "Staff Practical Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "000573",
+    "title": "นางสาว",
+    "firstName": "เกศนี",
+    "lastName": "ยาทา",
+    "position": "Staff Practical Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "000574",
+    "title": "นาง",
+    "firstName": "นภัสสร",
+    "lastName": "ปลื้มจิตต์",
+    "position": "Staff Practical Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000575",
+    "title": "นาย",
+    "firstName": "ศักดิ์สิทธิ์",
+    "lastName": "ปิ่นแก้ว",
+    "position": "Staff Transportation",
+    "department": "Transportation Department"
+  },
+  {
+    "id": "000578",
+    "title": "นาย",
+    "firstName": "จรุญ",
+    "lastName": "ผิวอ่อนดี",
+    "position": "Staff Transportation",
+    "department": "Transportation Department"
+  },
+  {
+    "id": "000579",
+    "title": "นางสาว",
+    "firstName": "ธนาธรณ์",
+    "lastName": "กฤษนั่น",
+    "position": "Staff Administration",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000581",
+    "title": "นาง",
+    "firstName": "นิชนิภา",
+    "lastName": "เพ็ญโพธิ์",
+    "position": "Staff Practical Nurse-OPD 2",
+    "department": "Outpatient 2 Department"
+  },
+  {
+    "id": "000582",
+    "title": "นางสาว",
+    "firstName": "บุญเกื้อ",
+    "lastName": "กล่อมอิ่ม",
+    "position": "Staff Practical Nurse-OPD 2",
+    "department": "Outpatient 2 Department"
+  },
+  {
+    "id": "000584",
+    "title": "นางสาว",
+    "firstName": "กัญญภัทร",
+    "lastName": "เอี่ยมวิไล",
+    "position": "Staff Patient Assistant-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000588",
+    "title": "นางสาว",
+    "firstName": "เบ็ญจมาศ",
+    "lastName": "พงษ์หนู",
+    "position": "Officer Call Center",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "000589",
+    "title": "นางสาว",
+    "firstName": "สุภาภรณ์",
+    "lastName": "อยู่ศิลปไชย",
+    "position": "Staff Patient Assistant-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000590",
+    "title": "นาง",
+    "firstName": "จุไรรัตน์",
+    "lastName": "แก้วขาว",
+    "position": "Staff Practical Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000597",
+    "title": "นางสาว",
+    "firstName": "ธาริกา",
+    "lastName": "อัมพร",
+    "position": "Staff Practical Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000599",
+    "title": "นางสาว",
+    "firstName": "วัชรี",
+    "lastName": "วรนุช",
+    "position": "Staff Practical Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000600",
+    "title": "นางสาว",
+    "firstName": "ศุภลักษณ์",
+    "lastName": "ศรีอาวุธ",
+    "position": "Staff Patient Assistant-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000601",
+    "title": "นางสาว",
+    "firstName": "หนึ่งฤทัย",
+    "lastName": "วัฒนชัย",
+    "position": "Officer Call Center",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "000604",
+    "title": "นาง",
+    "firstName": "เรียมรำพึง",
+    "lastName": "พฤกษะวัน",
+    "position": "Officer Registered Nurse W2-3 40W",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000605",
+    "title": "นางสาว",
+    "firstName": "พรทิพย์",
+    "lastName": "แย้มยิ้ม",
+    "position": "Officer Registered Nurse -UR",
+    "department": "Utilization Review Department"
+  },
+  {
+    "id": "000607",
+    "title": "นาง",
+    "firstName": "สุกัญญา",
+    "lastName": "ทองขาว",
+    "position": "Staff Practical Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "000610",
+    "title": "นางสาว",
+    "firstName": "ราตรี",
+    "lastName": "สุขเกษม",
+    "position": "Staff Practical Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000612",
+    "title": "นางสาว",
+    "firstName": "ยิสัน",
+    "lastName": "มั่นเขตกร",
+    "position": "Staff Practical Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000614",
+    "title": "นางสาว",
+    "firstName": "เพ็ญนภา",
+    "lastName": "ใบปกทอง",
+    "position": "Staff Patient Assistant-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000626",
+    "title": "นางสาว",
+    "firstName": "สุรัสวดี",
+    "lastName": "วงศ์ไม้เงิน",
+    "position": "HoD Front Service",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "000627",
+    "title": "นางสาว",
+    "firstName": "บัวทิพย์",
+    "lastName": "ประสิทธิ์วิเศษ",
+    "position": "Staff Practical Nurse-OR",
+    "department": "Operating Room Department"
+  },
+  {
+    "id": "000628",
+    "title": "นาย",
+    "firstName": "สายชน",
+    "lastName": "ปานปั่น",
+    "position": "Staff Technician",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000631",
+    "title": "นางสาว",
+    "firstName": "ประภัทรศร",
+    "lastName": "แก่นเขียว",
+    "position": "Staff Patient Assistant-OR",
+    "department": "Operating Room Department"
+  },
+  {
+    "id": "000635",
+    "title": "นางสาว",
+    "firstName": "สุธิตา",
+    "lastName": "ยาอ่อน",
+    "position": "Staff Radiology Technologist Assistant",
+    "department": "Radiology Department"
+  },
+  {
+    "id": "000636",
+    "title": "นาง",
+    "firstName": "อรทัย",
+    "lastName": "ประทุมมาศ",
+    "position": "Staff Practical Nurse-OPD 2",
+    "department": "Outpatient 2 Department"
+  },
+  {
+    "id": "000638",
+    "title": "นาย",
+    "firstName": "มานิตย์",
+    "lastName": "จันทร์ศรี",
+    "position": "Staff Radiology Technologist Assistant",
+    "department": "Radiology Department"
+  },
+  {
+    "id": "000639",
+    "title": "นาย",
+    "firstName": "จิรกร",
+    "lastName": "ทศไกร",
+    "position": "HoD Radiology",
+    "department": "Radiology Department"
+  },
+  {
+    "id": "000640",
+    "title": "นางสาว",
+    "firstName": "วรรณิกา",
+    "lastName": "ศิริรัตน์",
+    "position": "Staff Practical Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "000649",
+    "title": "นาย",
+    "firstName": "รำพึง",
+    "lastName": "กล่อมรักษา",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "000651",
+    "title": "นางสาว",
+    "firstName": "วิไลรัตน์",
+    "lastName": "ประสาทสีดา",
+    "position": "Assistant Division Manager Clinical Operation",
+    "department": "Nursing Division"
+  },
+  {
+    "id": "000653",
+    "title": "นางสาว",
+    "firstName": "พรรณิภา",
+    "lastName": "จำนงค์ภักดิ์",
+    "position": "Staff Administration",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000655",
+    "title": "นาย",
+    "firstName": "เอกอริยะ",
+    "lastName": "สิทธิวิรัชธรรม",
+    "position": "Division Manager Ancillary",
+    "department": "Ancillary Division"
+  },
+  {
+    "id": "000656",
+    "title": "นาย",
+    "firstName": "ยงยุทธ",
+    "lastName": "สุขพัฒน์",
+    "position": "Staff Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "000659",
+    "title": "นางสาว",
+    "firstName": "ชมัยพร",
+    "lastName": "ศรีทอง",
+    "position": "Staff Medical Technologist Assistant",
+    "department": "Laboratory Department"
+  },
+  {
+    "id": "000660",
+    "title": "นางสาว",
+    "firstName": "ชุลีพร",
+    "lastName": "รีส",
+    "position": "HoD Laboratory",
+    "department": "Laboratory Department"
+  },
+  {
+    "id": "000661",
+    "title": "นาย",
+    "firstName": "สุเชาว์",
+    "lastName": "เต่าเกตุ",
+    "position": "Staff Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "000662",
+    "title": "นางสาว",
+    "firstName": "นิภาพันธ์",
+    "lastName": "กลั่นแสง",
+    "position": "Staff Patient Assistant-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "000664",
+    "title": "นางสาว",
+    "firstName": "สิริทร",
+    "lastName": "ทองย้อย",
+    "position": "Staff Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "000666",
+    "title": "นาง",
+    "firstName": "พิชยาภา",
+    "lastName": "จันทร์ประดิษฐ",
+    "position": "Staff Patient Assistant-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000667",
+    "title": "นางสาว",
+    "firstName": "สมพิศ",
+    "lastName": "สุขเกษม",
+    "position": "Staff Practical Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "000670",
+    "title": "นางสาว",
+    "firstName": "จิรวรรณ",
+    "lastName": "สุขมาก",
+    "position": "Officer Admission",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "000673",
+    "title": "นาย",
+    "firstName": "ดอกรัก",
+    "lastName": "เมฆทวีป",
+    "position": "Staff General Service Transportation",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000674",
+    "title": "นาย",
+    "firstName": "พิศิษฐ์",
+    "lastName": "บุญเหลือ",
+    "position": "Staff Transportation",
+    "department": "Transportation Department"
+  },
+  {
+    "id": "000675",
+    "title": "นาย",
+    "firstName": "บำรุง",
+    "lastName": "ทิพยเนตร",
+    "position": "Staff Technician",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "000677",
+    "title": "นางสาว",
+    "firstName": "วรรณา",
+    "lastName": "สามสี",
+    "position": "Staff Patient Assistant-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "000691",
+    "title": "นางสาว",
+    "firstName": "ศิรินันท์",
+    "lastName": "กุศลธรรมรัตน์",
+    "position": "Officer Registered Nurse -UR",
+    "department": "Utilization Review Department"
+  },
+  {
+    "id": "000694",
+    "title": "นางสาว",
+    "firstName": "วันทนา",
+    "lastName": "อินรันต์",
+    "position": "HoD Cashier",
+    "department": "Cashier Department"
+  },
+  {
+    "id": "000695",
+    "title": "นางสาว",
+    "firstName": "กำไล",
+    "lastName": "ทองมาก",
+    "position": "Staff Cashier",
+    "department": "Cashier Department"
+  },
+  {
+    "id": "000702",
+    "title": "นางสาว",
+    "firstName": "กษมา",
+    "lastName": "สุขหร่อง",
+    "position": "Staff Patient Assistant-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "000703",
+    "title": "นางสาว",
+    "firstName": "ชัญญาทิพย์",
+    "lastName": "จุ้ยวอน",
+    "position": "Officer Customer Service - Customer Care",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "000704",
+    "title": "นางสาว",
+    "firstName": "ฉัตรสุดา",
+    "lastName": "สิงห์สังข์",
+    "position": "Officer Customer Service - Customer Care",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "000717",
+    "title": "นาย",
+    "firstName": "อริย์ธัช",
+    "lastName": "รอดเกิดไพบูลย์",
+    "position": "Staff Transportation",
+    "department": "Transportation Department"
+  },
+  {
+    "id": "000720",
+    "title": "นางสาว",
+    "firstName": "บุศราคัม",
+    "lastName": "สมบัติอยู่",
+    "position": "Staff Practical Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "000726",
+    "title": "นางสาว",
+    "firstName": "วงเดือน",
+    "lastName": "อยู่เย็น",
+    "position": "Officer Safety Support Officer",
+    "department": "Safety Department"
+  },
+  {
+    "id": "000735",
+    "title": "นางสาว",
+    "firstName": "ชานิสา",
+    "lastName": "วงษาบุญโน",
+    "position": "HoD Rehabilitation",
+    "department": "Rehabilitation Department"
+  },
+  {
+    "id": "000738",
+    "title": "นาย",
+    "firstName": "พงษ์พัฒน์",
+    "lastName": "ม่วงเอี่ยม",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "000740",
+    "title": "นาย",
+    "firstName": "อาทิตย์",
+    "lastName": "กุ๋ยเกง",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "000742",
+    "title": "นางสาว",
+    "firstName": "ชัญญานุช",
+    "lastName": "คงเมือง",
+    "position": "Staff Practical Nurse-LR",
+    "department": "Labour Room & Nursery Departme"
+  },
+  {
+    "id": "000748",
+    "title": "นาย",
+    "firstName": "บัญฑิต",
+    "lastName": "สบาย",
+    "position": "Division Manager Clinical Operation",
+    "department": "Nursing Division"
+  },
+  {
+    "id": "000749",
+    "title": "นางสาว",
+    "firstName": "แพรไพลิน",
+    "lastName": "ยอดนุ่ม",
+    "position": "Staff Physical Therapist Assistant",
+    "department": "Rehabilitation Department"
+  },
+  {
+    "id": "000770",
+    "title": "นางสาว",
+    "firstName": "ชญาภา",
+    "lastName": "นามอาษา",
+    "position": "Staff Practical Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "000827",
+    "title": "นางสาว",
+    "firstName": "รวิพร",
+    "lastName": "คัญทับ",
+    "position": "Staff Patient Assistant-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "000902",
+    "title": "นางสาว",
+    "firstName": "กรรณิกา",
+    "lastName": "ศรีผา",
+    "position": "HoD Emergency",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "000907",
+    "title": "นาย",
+    "firstName": "ภัควัช",
+    "lastName": "สรรคพงษ์",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "000921",
+    "title": "นางสาว",
+    "firstName": "อัญชนา",
+    "lastName": "แสงโสภา",
+    "position": "HoD LR",
+    "department": "Labour Room & Nursery Departme"
+  },
+  {
+    "id": "000954",
+    "title": "นางสาว",
+    "firstName": "ตวงพร",
+    "lastName": "ดีบ้านใหม่",
+    "position": "Officer Registered Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "001374",
+    "title": "นางสาว",
+    "firstName": "วรางคณา",
+    "lastName": "แจ่มแจ้ง",
+    "position": "Officer Medical Technologist",
+    "department": "Laboratory Department"
+  },
+  {
+    "id": "001410",
+    "title": "นางสาว",
+    "firstName": "ศศิธร",
+    "lastName": "ถาวรศักดิ์",
+    "position": "HoD IT",
+    "department": "Information Technology Departm"
+  },
+  {
+    "id": "001516",
+    "title": "นางสาว",
+    "firstName": "ชนินาถ",
+    "lastName": "วุ่นดี",
+    "position": "HoD Pharmacy",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "001519",
+    "title": "นาย",
+    "firstName": "ภูวดล",
+    "lastName": "จารุสิทธิ์",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "001523",
+    "title": "นางสาว",
+    "firstName": "ชลิดา",
+    "lastName": "ทาแดง",
+    "position": "Officer Accounting",
+    "department": "Accounting Department"
+  },
+  {
+    "id": "001562",
+    "title": "นางสาว",
+    "firstName": "จันทร์สุดา",
+    "lastName": "สิงหะ",
+    "position": "HoD IPD",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "001625",
+    "title": "นางสาว",
+    "firstName": "ภัทรภร",
+    "lastName": "ฟุ้งมี",
+    "position": "Officer Pharmacist Assistant",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "001719",
+    "title": "นางสาว",
+    "firstName": "ปิ่นปฐวี",
+    "lastName": "สุขมาก",
+    "position": "Officer Inventory Management",
+    "department": "Inventory Department"
+  },
+  {
+    "id": "001825",
+    "title": "นางสาว",
+    "firstName": "มะลิวรรณ",
+    "lastName": "อินทะวงค์",
+    "position": "Staff Practical Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "002468",
+    "title": "นาง",
+    "firstName": "เพริศพักตร์",
+    "lastName": "ศรีวุฒิพงษ์",
+    "position": "HoD Quality Management",
+    "department": "Quality Management Center"
+  },
+  {
+    "id": "002573",
+    "title": "นางสาว",
+    "firstName": "สุพัตรา",
+    "lastName": "ศะศิธร",
+    "position": "Officer Registered Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "002609",
+    "title": "นาง",
+    "firstName": "วาสนา",
+    "lastName": "ชูกลิ่น",
+    "position": "Officer Registered Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "002971",
+    "title": "นางสาว",
+    "firstName": "นิราวรรณ",
+    "lastName": "ม่วงเส็ง",
+    "position": "Staff Customer Service",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "003417",
+    "title": "นาย",
+    "firstName": "นิติพงษ์",
+    "lastName": "พัฒนพฤกษ์สนธ์",
+    "position": "Staff Cashier",
+    "department": "Cashier Department"
+  },
+  {
+    "id": "005451",
+    "title": "นางสาว",
+    "firstName": "ประภาศรี",
+    "lastName": "นันทะสุข",
+    "position": "Officer Registered Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "006797",
+    "title": "นางสาว",
+    "firstName": "ปภาดา",
+    "lastName": "พวงดอกรัก",
+    "position": "Officer Quality Management",
+    "department": "Quality Management Center"
+  },
+  {
+    "id": "006798",
+    "title": "นางสาว",
+    "firstName": "วราภรณ์",
+    "lastName": "ประยูรยิ้ม",
+    "position": "Officer Dietitian",
+    "department": "Nutrition Department"
+  },
+  {
+    "id": "007128",
+    "title": "นางสาว",
+    "firstName": "พิมพ์ประภา",
+    "lastName": "สังข์โชติ",
+    "position": "Officer Registered Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "007130",
+    "title": "นางสาว",
+    "firstName": "ณัฐริกา",
+    "lastName": "แก้วโกษา",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "007397",
+    "title": "นาย",
+    "firstName": "ฐิติกร",
+    "lastName": "ยอดจันทร์",
+    "position": "Officer Medical Technologist",
+    "department": "Laboratory Department"
+  },
+  {
+    "id": "007962",
+    "title": "นาย",
+    "firstName": "ปาราเมศ",
+    "lastName": "แลสันกลาง",
+    "position": "HoD ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "008040",
+    "title": "นางสาว",
+    "firstName": "กัญญาณัฐ",
+    "lastName": "ฟูพงษ์",
+    "position": "Officer Procurement",
+    "department": "Procurement Department"
+  },
+  {
+    "id": "008122",
+    "title": "นางสาว",
+    "firstName": "เกศวิภา",
+    "lastName": "จันทร์ปาน",
+    "position": "Officer Pharmacist",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "008582",
+    "title": "นาย",
+    "firstName": "นิพนธ์",
+    "lastName": "คุ้มจุ้ย",
+    "position": "Staff Transportation",
+    "department": "Transportation Department"
+  },
+  {
+    "id": "008583",
+    "title": "นาย",
+    "firstName": "นัทธวัฒน์",
+    "lastName": "ขจรกลิ่น",
+    "position": "Staff Technician",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "009140",
+    "title": "นางสาว",
+    "firstName": "สุพัตรา",
+    "lastName": "กันยาประสิทธิ์",
+    "position": "HoD - IPD Ward 2-3 Department",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "009141",
+    "title": "นางสาว",
+    "firstName": "กมลชนก",
+    "lastName": "ย่านสากล",
+    "position": "Officer Registered Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "009462",
+    "title": "นาย",
+    "firstName": "เนติพงษ์",
+    "lastName": "สระชุ่ม",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "009472",
+    "title": "นาง",
+    "firstName": "กนกวรรณ",
+    "lastName": "โรจน์ดำรงศักดิ์",
+    "position": "Staff Practical Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "009473",
+    "title": "นาย",
+    "firstName": "สมรัก",
+    "lastName": "เงินประเสริฐ",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "009533",
+    "title": "นางสาว",
+    "firstName": "พิชญา",
+    "lastName": "พลเวช",
+    "position": "Officer Registered Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "009547",
+    "title": "นางสาว",
+    "firstName": "อาภากร",
+    "lastName": "บุญเกตกูล",
+    "position": "Officer Administration - Medical Equipment Inventory Department",
+    "department": "Inventory Department"
+  },
+  {
+    "id": "009815",
+    "title": "นางสาว",
+    "firstName": "ชญานี",
+    "lastName": "ศรีแก้ว",
+    "position": "Assistant HoD OPD",
+    "department": "Outpatient 2 Department"
+  },
+  {
+    "id": "009817",
+    "title": "นางสาว",
+    "firstName": "สิรภัทร",
+    "lastName": "เผ่าสวัสดิ์",
+    "position": "Officer Pharmacist",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "009988",
+    "title": "นาย",
+    "firstName": "สถิตย์",
+    "lastName": "ไชยรักษ์",
+    "position": "Staff Transportation",
+    "department": "Transportation Department"
+  },
+  {
+    "id": "009997",
+    "title": "นางสาว",
+    "firstName": "อภิรดี",
+    "lastName": "พิศมัย",
+    "position": "Officer Registration and MR",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "010077",
+    "title": "นางสาว",
+    "firstName": "ชลธิชา",
+    "lastName": "วงศ์อ่อน",
+    "position": "Staff Practical Nurse-OPD",
+    "department": "Outpatient 2 Department"
+  },
+  {
+    "id": "010196",
+    "title": "นางสาว",
+    "firstName": "ณิชากร",
+    "lastName": "โพธิลิ้มธนา",
+    "position": "Officer Radiology Technologist",
+    "department": "Radiology Department"
+  },
+  {
+    "id": "010319",
+    "title": "นางสาว",
+    "firstName": "วิสสุตา",
+    "lastName": "ชาญณรงค์",
+    "position": "Officer Physical Therapist",
+    "department": "Rehabilitation Department"
+  },
+  {
+    "id": "010327",
+    "title": "นางสาว",
+    "firstName": "จากัณธิฬา",
+    "lastName": "อ่อนอิ่ม",
+    "position": "Officer Physical Therapist",
+    "department": "Rehabilitation Department"
+  },
+  {
+    "id": "010541",
+    "title": "นางสาว",
+    "firstName": "อภิณภัสฌาย์",
+    "lastName": "วงศ์ธนัชนันท์",
+    "position": "Assistant HoD GEM",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "010650",
+    "title": "นางสาว",
+    "firstName": "ขนิษฐา",
+    "lastName": "จำปานา",
+    "position": "Officer Registered Nurse-OPD 2",
+    "department": "Outpatient 2 Department"
+  },
+  {
+    "id": "011153",
+    "title": "นางสาว",
+    "firstName": "ปราณปริยา",
+    "lastName": "อยู่พืช",
+    "position": "Officer Marketing Communication",
+    "department": "Marketing Communication Depart"
+  },
+  {
+    "id": "011201",
+    "title": "นางสาว",
+    "firstName": "วิชชุดา",
+    "lastName": "เหลาแก้ว",
+    "position": "Officer Registered Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "011393",
+    "title": "นางสาว",
+    "firstName": "ณพัฐอร",
+    "lastName": "พรหมสูตร์",
+    "position": "Officer Pharmacist",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "011689",
+    "title": "นางสาว",
+    "firstName": "นภัสรา",
+    "lastName": "สุขพิทักษ์",
+    "position": "Officer Human Resourse",
+    "department": "Human Resource Department"
+  },
+  {
+    "id": "011827",
+    "title": "นาย",
+    "firstName": "ธนดล",
+    "lastName": "โพธิ์สวัสดิ์",
+    "position": "HoD Building Service & Mainte",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "011977",
+    "title": "นางสาว",
+    "firstName": "นุชรินทร์",
+    "lastName": "สถิตย์พงษ์",
+    "position": "Officer Cashier",
+    "department": "Cashier Department"
+  },
+  {
+    "id": "012243",
+    "title": "นางสาว",
+    "firstName": "หัตทยา",
+    "lastName": "จรนามน",
+    "position": "Officer Accounting",
+    "department": "Accounting Department"
+  },
+  {
+    "id": "012272",
+    "title": "นางสาว",
+    "firstName": "ศิริรักษ์",
+    "lastName": "ขาวละมูล",
+    "position": "Staff General Support Services",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "012391",
+    "title": "นางสาว",
+    "firstName": "พัณณิตา",
+    "lastName": "รุ่งแสง",
+    "position": "Officer Customer Service - Customer Care",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "012412",
+    "title": "นางสาว",
+    "firstName": "ณิชาภัทร",
+    "lastName": "นุ่มหนั่น",
+    "position": "Officer Customer Service - Customer Care",
+    "department": "Front Service Department"
+  },
+  {
+    "id": "012459",
+    "title": "นางสาว",
+    "firstName": "วริษา",
+    "lastName": "แก้วศรี",
+    "position": "Officer Registered Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "012591",
+    "title": "นางสาว",
+    "firstName": "พรพิมล",
+    "lastName": "ประโยชน์ดี",
+    "position": "Officer Medical Technologist",
+    "department": "Laboratory Department"
+  },
+  {
+    "id": "012596",
+    "title": "นางสาว",
+    "firstName": "ขวัญใจ",
+    "lastName": "งานดี",
+    "position": "HoD OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "012617",
+    "title": "นางสาว",
+    "firstName": "ยุวดี",
+    "lastName": "อู่เฮ้",
+    "position": "Staff Practical Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "012674",
+    "title": "นางสาว",
+    "firstName": "พัชราพรรณ",
+    "lastName": "สุขนา",
+    "position": "Officer Registered Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "012921",
+    "title": "นางสาว",
+    "firstName": "ชนนิกานต์",
+    "lastName": "แสงบุญ",
+    "position": "Officer Physical Therapist",
+    "department": "Rehabilitation Department"
+  },
+  {
+    "id": "012925",
+    "title": "นาย",
+    "firstName": "กวีวัธน์",
+    "lastName": "เพชรประดิษฐ์",
+    "position": "Staff Porter",
+    "department": "Porter Department"
+  },
+  {
+    "id": "013108",
+    "title": "นางสาว",
+    "firstName": "วราภรณ์",
+    "lastName": "ศรีละคร",
+    "position": "Officer Marketing Communication",
+    "department": "Marketing Communication Depart"
+  },
+  {
+    "id": "013109",
+    "title": "นางสาว",
+    "firstName": "ผกามาศ",
+    "lastName": "สมบรม",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "013114",
+    "title": "นาย",
+    "firstName": "ประกิต",
+    "lastName": "สีลาวุธ",
+    "position": "Staff Maintece",
+    "department": "Facility Management Department"
+  },
+  {
+    "id": "013131",
+    "title": "นางสาว",
+    "firstName": "จุฑามาศ",
+    "lastName": "สิงหขจร",
+    "position": "Staff Practical Nurse-OPD",
+    "department": "Outpatient Department"
+  },
+  {
+    "id": "013162",
+    "title": "นาย",
+    "firstName": "นนนนท์",
+    "lastName": "สุวรรณโคตร",
+    "position": "Officer Pharmacist",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "013164",
+    "title": "นางสาว",
+    "firstName": "สุพิชฌาย์",
+    "lastName": "พรมจีน",
+    "position": "Officer Radiology Technologist",
+    "department": "Radiology Department"
+  },
+  {
+    "id": "013177",
+    "title": "นาย",
+    "firstName": "สัณหณัฐ",
+    "lastName": "ประสิทธิ์",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "013529",
+    "title": "นางสาว",
+    "firstName": "พนิตสุภา",
+    "lastName": "ทรายทอง",
+    "position": "Officer Registered Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "013565",
+    "title": "นาง",
+    "firstName": "ศิวากร",
+    "lastName": "ปกครอง",
+    "position": "Officer Pharmacist",
+    "department": "Pharmacy Department"
+  },
+  {
+    "id": "013678",
+    "title": "นางสาว",
+    "firstName": "รุ่งนภา",
+    "lastName": "มาชมภู",
+    "position": "Officer Registered Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "013724",
+    "title": "นางสาว",
+    "firstName": "มณฑิตา",
+    "lastName": "โมแจ้ง",
+    "position": "Officer Marketing Communication",
+    "department": "Marketing Communication Depart"
+  },
+  {
+    "id": "013795",
+    "title": "นางสาว",
+    "firstName": "ณัฐพร",
+    "lastName": "เชื้อคำฮด",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "013922",
+    "title": "นางสาว",
+    "firstName": "เกศินี",
+    "lastName": "สิงห์วี",
+    "position": "Officer Cashier",
+    "department": "Cashier Department"
+  },
+  {
+    "id": "013924",
+    "title": "นางสาว",
+    "firstName": "พัทธนันต์",
+    "lastName": "ชมเชย",
+    "position": "Staff Practical Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "013925",
+    "title": "นางสาว",
+    "firstName": "กรรณิการ์",
+    "lastName": "สิทธิศาตร์",
+    "position": "Officer Cashier",
+    "department": "Cashier Department"
+  },
+  {
+    "id": "013930",
+    "title": "นาย",
+    "firstName": "พลวัฒน์",
+    "lastName": "บุตรดา",
+    "position": "Staff Practical Nurse",
+    "department": "Operating Room Department"
+  },
+  {
+    "id": "013948",
+    "title": "นางสาว",
+    "firstName": "พรสุนีย์",
+    "lastName": "แสงจันทร์",
+    "position": "Officer Secretary-MSO",
+    "department": "Secretary Office"
+  },
+  {
+    "id": "013960",
+    "title": "นางสาว",
+    "firstName": "วรรณกานต์",
+    "lastName": "หัดขุนทด",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "014088",
+    "title": "นาย",
+    "firstName": "ศุภกิจ",
+    "lastName": "อินประดับ",
+    "position": "Officer Registered Nurse-ER",
+    "department": "Emergency Department"
+  },
+  {
+    "id": "014124",
+    "title": "นางสาว",
+    "firstName": "พิชญาภา",
+    "lastName": "ภูวสรรเพชร",
+    "position": "Officer Medical Technologist",
+    "department": "Laboratory Department"
+  },
+  {
+    "id": "014125",
+    "title": "นาย",
+    "firstName": "ศรายุทธ",
+    "lastName": "ม่วงประเสริฐ",
+    "position": "Officer HR-Training",
+    "department": "Human Resource Department"
+  },
+  {
+    "id": "014848",
+    "title": "นางสาว",
+    "firstName": "ปาณิศา",
+    "lastName": "จันทคราม",
+    "position": "Officer Secretary",
+    "department": "Secretary Office"
+  },
+  {
+    "id": "014871",
+    "title": "นางสาว",
+    "firstName": "กฤติญา",
+    "lastName": "งามสม",
+    "position": "Officer Registered Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "014882",
+    "title": "นางสาว",
+    "firstName": "ชุดานันท์",
+    "lastName": "พิลาแหวน",
+    "position": "Officer Registered Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "014929",
+    "title": "นางสาว",
+    "firstName": "อจิมา",
+    "lastName": "ดีภู่",
+    "position": "Officer Registered Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "014930",
+    "title": "นาย",
+    "firstName": "อนุพร",
+    "lastName": "นาพะพล",
+    "position": "Officer Registered Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "014931",
+    "title": "นางสาว",
+    "firstName": "วาสนา",
+    "lastName": "ไตยนำ",
+    "position": "Officer Registered Nurse-Ward 2-3",
+    "department": "Ward 2-3 Department"
+  },
+  {
+    "id": "014932",
+    "title": "นางสาว",
+    "firstName": "ศิวพรรณ",
+    "lastName": "ปัญญาสงค์",
+    "position": "Officer Registered Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "014941",
+    "title": "นางสาว",
+    "firstName": "อาจริณี",
+    "lastName": "ศิลลา",
+    "position": "Staff Practical Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "014973",
+    "title": "นางสาว",
+    "firstName": "นัฐกานต์",
+    "lastName": "นามสี",
+    "position": "Staff Practical Nurse-Ward 4-5",
+    "department": "Ward 4-5 Department"
+  },
+  {
+    "id": "014975",
+    "title": "นางสาว",
+    "firstName": "อริสา",
+    "lastName": "มีแดน",
+    "position": "Staff Practical Nurse-ICU",
+    "department": "Intensive Care Unit"
+  },
+  {
+    "id": "015152",
+    "title": "นาย",
+    "firstName": "กรรณวรท",
+    "lastName": "แสงกระจ่าง",
+    "position": "HoD Marketing Communication",
+    "department": "Marketing Communication Depart"
+  },
+  {
+    "id": "015372",
+    "title": "นาย",
+    "firstName": "สุวัฒน์ชัย",
+    "lastName": "จันทร์หมื่น",
+    "position": "Officer Registered Nurse-ICU",
+    "department": "Intensive Care Unit"
+  }
+];
+
 if (typeof window !== 'undefined') {
   window.DEMO_EMPLOYEES = DEMO_EMPLOYEES;
 }
