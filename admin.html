@@ -345,18 +345,20 @@
             </div>
           </div>
 
-          <!-- Month Filter Bar (แบ่งตามเดือน) -->
-          <div class="pt-2.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex items-center space-x-2 shrink-0">
+          <!-- Month & Year Filter Bar -->
+          <div class="pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
+            <div class="flex items-center space-x-2 flex-wrap gap-y-2">
               <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <span>📅</span>
-                <span>ประจำเดือน:</span>
+                <span>ประจำปี / เดือน:</span>
               </span>
-              <select id="adminYearSelect" onchange="setAdminYear(this.value)" class="text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 font-semibold text-slate-700 outline-none cursor-pointer">
+              <!-- Year Dropdown -->
+              <select id="adminYearSelect" onchange="setAdminYear(this.value)" class="text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700 outline-none cursor-pointer transition-colors shadow-2xs">
               </select>
-            </div>
-            <div id="monthFilterContainer" class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs flex-1">
-              <!-- Dynamically populated month pills -->
+              <!-- Month Dropdown (Replaces horizontal pills) -->
+              <select id="adminMonthSelect" onchange="setAdminMonthFilter(this.value)" class="text-xs bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700 outline-none cursor-pointer transition-colors shadow-2xs min-w-[190px]">
+                <!-- Dynamically populated by renderMonthFilters() -->
+              </select>
             </div>
           </div>
 
@@ -1470,51 +1472,39 @@
         }).join('');
       }
 
-      const container = document.getElementById('monthFilterContainer');
-      if (!container) return;
+      const monthSelect = document.getElementById('adminMonthSelect');
+      if (!monthSelect) return;
 
       const monthCounts = {};
       for (let m = 1; m <= 12; m++) {
         const key = currentAdminYear + '-' + String(m).padStart(2, '0');
-        monthCounts[m] = coursesData.filter(c => getCourseMonths(c).includes(key)).length;
+        monthCounts[m] = coursesData.filter(course => getCourseMonths(course).includes(key)).length;
       }
 
-      let html = '';
-
-      // All button
+      let optionsHtml = '';
       const isAllActive = (currentAdminMonth === 'all');
-      html += '<button type="button" onclick="setAdminMonthFilter(\'all\')" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ' +
-        (isAllActive ? 'bg-[#0284c7] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100') + '">' +
-        'ทั้งหมด' +
-      '</button>';
+      optionsHtml += '<option value="all"' + (isAllActive ? ' selected' : '') + '>ทุกเดือน (' + coursesData.length + ' หลักสูตร)</option>';
 
-      // Month buttons 1..12
       for (let m = 1; m <= 12; m++) {
         const key = currentAdminYear + '-' + String(m).padStart(2, '0');
         const count = monthCounts[m];
-        const isActive = (currentAdminMonth === key);
-        const label = THAI_MONTH_SHORT[m];
-
-        let btnClass = '';
-        if (isActive) {
-          btnClass = 'bg-[#0284c7] text-white font-bold shadow-2xs';
-        } else if (count > 0) {
-          btnClass = 'bg-sky-50 text-[#0369a1] border border-sky-200/80 font-bold hover:bg-sky-100';
-        } else {
-          btnClass = 'text-slate-400 hover:text-slate-700 hover:bg-slate-100 font-medium';
-        }
-
-        html += '<button type="button" onclick="setAdminMonthFilter(\'' + key + '\')" class="px-2 py-1 rounded-lg text-xs transition-all cursor-pointer whitespace-nowrap ' + btnClass + '" title="' + THAI_MONTH_FULL[m] + '">' +
-          label + (count > 0 ? ' (' + count + ')' : '') +
-        '</button>';
+        const isSelected = (currentAdminMonth === key);
+        const fullName = THAI_MONTH_FULL[m];
+        const countSuffix = count > 0 ? ' (' + count + ' หลักสูตร)' : ' (0)';
+        optionsHtml += '<option value="' + key + '"' + (isSelected ? ' selected' : '') + '>' +
+          fullName + countSuffix +
+        '</option>';
       }
 
-      container.innerHTML = html;
+      monthSelect.innerHTML = optionsHtml;
     }
 
     function setAdminMonthFilter(monthKey) {
       currentAdminMonth = monthKey;
-      renderMonthFilters();
+      const monthSelect = document.getElementById('adminMonthSelect');
+      if (monthSelect && monthSelect.value !== monthKey) {
+        monthSelect.value = monthKey;
+      }
       renderCourseList();
     }
 
@@ -1664,20 +1654,31 @@
       } else {
         switchAdminView('courses', null, false);
       }
+
+      // Ensure address bar cleanly shows admin.html (One unified link for the entire portal)
+      try {
+        if (window.location.search && (viewParam || editParam || courseParam)) {
+          history.replaceState({ view: currentAdminView, courseId: editParam || courseParam }, '', 'admin.html');
+        }
+      } catch(e) {}
     });
 
     window.addEventListener('popstate', (e) => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const viewParam = urlParams.get('view') || 'courses';
-      const courseParam = urlParams.get('course');
-      const editParam = urlParams.get('edit');
-
-      if (viewParam === 'create' || editParam) {
-        switchAdminView('create', editParam, false);
-      } else if (viewParam === 'target') {
-        switchAdminView('target', courseParam, false);
+      if (e.state && e.state.view) {
+        switchAdminView(e.state.view, e.state.courseId, false);
       } else {
-        switchAdminView('courses', null, false);
+        const urlParams = new URLSearchParams(window.location.search);
+        const viewParam = urlParams.get('view') || 'courses';
+        const courseParam = urlParams.get('course');
+        const editParam = urlParams.get('edit');
+
+        if (viewParam === 'create' || editParam) {
+          switchAdminView('create', editParam, false);
+        } else if (viewParam === 'target') {
+          switchAdminView('target', courseParam, false);
+        } else {
+          switchAdminView('courses', null, false);
+        }
       }
     });
 
@@ -2972,29 +2973,11 @@
         if (bd) bd.classList.add('hidden');
       }
 
-      // Update browser URL
+      // Keep browser address cleanly on admin.html (Single unified URL for the entire SPA)
       if (pushHistory) {
-        const url = new URL(window.location);
-        if (viewName === 'courses') {
-          url.searchParams.delete('view');
-          url.searchParams.delete('course');
-          url.searchParams.delete('edit');
-        } else if (viewName === 'target') {
-          url.searchParams.set('view', 'target');
-          if (courseId || targetActiveCourseId) {
-            url.searchParams.set('course', courseId || targetActiveCourseId);
-          }
-          url.searchParams.delete('edit');
-        } else if (viewName === 'create') {
-          url.searchParams.set('view', 'create');
-          if (courseId) {
-            url.searchParams.set('edit', courseId);
-          } else {
-            url.searchParams.delete('edit');
-          }
-          url.searchParams.delete('course');
-        }
-        history.pushState({ view: viewName, courseId: courseId || targetActiveCourseId }, '', url.toString());
+        try {
+          history.pushState({ view: viewName, courseId: courseId || targetActiveCourseId }, '', 'admin.html');
+        } catch(e) {}
       }
 
       // Handle specific view activation (Instant 0ms display!)
