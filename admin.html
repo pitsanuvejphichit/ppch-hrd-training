@@ -92,9 +92,48 @@
       0% { transform: scale(0.9); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    /* Fixed Layout & Locked Sidebar */
+    html, body {
+      height: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    /* Clean custom scrollbar for main workspace */
+    #adminMainContent::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    #adminMainContent::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    #adminMainContent::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    #adminMainContent::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Clean custom scrollbar for sidebar (if ever overflows) */
+    .sidebar-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sidebar-scroll::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
   </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-[#0284c7] selection:text-white">
+<body class="bg-[#f8fafc] text-slate-800 antialiased h-screen h-[100dvh] overflow-hidden flex flex-col selection:bg-[#0284c7] selection:text-white">
 
   <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) -->
   <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
@@ -125,7 +164,7 @@
   </div>
 
   <!-- Header with Brand Logo (Full Width) -->
-  <header class="bg-white border-b border-slate-200 shadow-xs w-full sticky top-0 z-40">
+  <header class="bg-white border-b border-slate-200 shadow-xs w-full shrink-0 z-40">
     <div class="h-1 bg-gradient-to-r from-[#0a2540] via-[#0284c7] to-[#0284c7] w-full"></div>
     <div class="w-full px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
       
@@ -162,13 +201,13 @@
   </header>
 
   <!-- Main Container: Left Sidebar + Right Workspace Area -->
-  <div class="flex-1 flex w-full relative">
+  <div class="flex-1 flex w-full min-h-0 overflow-hidden relative">
 
     <!-- Mobile Backdrop Overlay -->
     <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 hidden md:hidden"></div>
 
     <!-- LEFT SIDEBAR -->
-    <aside id="adminSidebar" class="hidden md:flex flex-col w-64 lg:w-72 bg-slate-900 border-r border-slate-800 shrink-0 select-none shadow-xl sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto z-30 transition-all text-slate-300">
+    <aside id="adminSidebar" class="hidden md:flex flex-col w-64 lg:w-72 bg-slate-900 border-r border-slate-800 shrink-0 select-none shadow-xl h-full overflow-hidden z-30 transition-all text-slate-300">
       
       <!-- Sidebar Brand Banner -->
       <div class="p-4 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between">
@@ -187,7 +226,7 @@
       </div>
 
       <!-- Navigation Links -->
-      <div class="flex-1 p-3 space-y-4 overflow-y-auto">
+      <div class="flex-1 p-3 space-y-4 overflow-y-auto sidebar-scroll">
         
         <!-- Group 1: Training System (Active Project) -->
         <div>
@@ -253,9 +292,9 @@
     </aside>
 
     <!-- RIGHT WORKSPACE AREA -->
-    <div class="flex-1 min-w-0 flex flex-col">
+    <div class="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
       <!-- Breadcrumb Navigator Bar -->
-      <nav aria-label="Breadcrumb" class="w-full bg-white/95 border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-2.5 text-xs select-none shadow-2xs">
+      <nav aria-label="Breadcrumb" class="shrink-0 w-full bg-white/95 border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-2.5 text-xs select-none shadow-2xs z-20">
         <div class="flex items-center justify-between flex-wrap gap-2 text-xs">
           <div id="breadcrumbContent" class="flex items-center space-x-2 flex-wrap">
             <div class="flex items-center space-x-1.5 font-semibold text-slate-600">
@@ -272,7 +311,7 @@
       </nav>
 
       <!-- Admin Main Content Workspace -->
-      <main class="flex-1 w-full">
+      <main id="adminMainContent" class="flex-1 w-full overflow-y-auto">
 
         <!-- ==================== VIEW 1: COURSES LIST ==================== -->
         <div id="viewCourses" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -2990,6 +3029,8 @@
       }
 
       window.scrollTo({ top: 0, behavior: 'instant' });
+      const mainEl = document.getElementById('adminMainContent');
+      if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     function openTargetView(courseId) {
