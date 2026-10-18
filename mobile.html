@@ -8,14 +8,151 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
   <script src="target-modal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-service.js"></script>
   <style>
-    * { font-family: 'Prompt', sans-serif; -webkit-tap-highlight-color: transparent; }
+    /* ==================== PPCH DEEP ROYAL BLUE & CRISP WHITE THEME (PROJECT 12 REFERENCE) ==================== */
+    :root {
+      --royal-dark: #002e6e;
+      --royal-blue: #004b93;
+      --royal-hover: #003a73;
+      --royal-light: #0284c7;
+      --royal-subtle: #f0f7ff;
+      --royal-glow: rgba(0, 75, 147, 0.16);
+
+      --canvas-bg: #f4f7fb;
+      --surface-white: #ffffff;
+      --border-main: #e2e8f0;
+      --border-subtle: #edf2f7;
+      --border-focus: #004b93;
+      --border-blue-soft: #bfdbfe;
+
+      --text-main: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      --green-ready: #059669;
+      --green-bg: #ecfdf5;
+      --green-border: #a7f3d0;
+
+      --amber-pending: #d97706;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+
+      --red-abnormal: #dc2626;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+
+      --font-sans: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Inter', monospace;
+      color-scheme: light;
+      accent-color: #004b93;
+    }
+
+    * { font-family: var(--font-sans); }
+    .font-mono { font-family: var(--font-mono); }
+
+    ::selection {
+      background-color: var(--royal-blue);
+      color: #ffffff;
+    }
+
+    body {
+      background-color: var(--canvas-bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+    }
+
+    /* 56px Sticky Topbar */
+    .app-topbar {
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 2px solid var(--royal-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 46, 110, 0.05);
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-main);
+    }
+
+    .brand-badge-pill {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--royal-blue);
+      background: var(--royal-subtle);
+      border: 1px solid var(--border-blue-soft);
+      padding: 2px 6px;
+      border-radius: 5px;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-realtime-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--royal-blue);
+      background: var(--royal-subtle);
+      border: 1px solid var(--border-blue-soft);
+      padding: 3px 8px;
+      border-radius: 9999px;
+    }
+
+    .pulse-indicator-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-ready);
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
+      animation: pulseIndicator 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseIndicator {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.7; }
+    }
+
     .active-scale:active { transform: scale(0.97); }
 
     /* CSS Medical Cross Loader (Phitsanuvej Style) */
@@ -159,21 +296,27 @@
     </div>
   </div>
 
-  <!-- Mobile App Bar -->
-  <header class="bg-white border-b border-slate-200/80 px-4 py-3 flex items-center justify-between shadow-xs sticky top-0 z-30">
-    <div class="flex items-center space-x-2.5">
-      <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-9 w-auto object-contain">
-      <div class="border-l border-slate-200 pl-2">
-        <h1 class="text-xs font-bold text-[#0369a1] leading-tight">ระบบลงทะเบียนเข้าอบรม</h1>
-        <p class="text-[10px] text-slate-400 font-light">รพ.พิษณุเวช พิจิตร • Clinical Sanctuary</p>
-      </div>
+  <!-- Mobile App Bar (56px Sticky - Clinical Royal Blue) -->
+  <header class="app-topbar px-4 py-2 flex items-center justify-between sticky top-0 z-30">
+    <div class="topbar-left">
+      <a href="mobile.html" class="topbar-brand flex items-center gap-2">
+        <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="brand-logo-img h-8 w-auto">
+        <div class="brand-divider"></div>
+        <span class="brand-badge-pill text-[10px]">HRD MOBILE</span>
+      </a>
     </div>
     
-    <div class="flex items-center space-x-2">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
-        เปิดรับจอง
-      </span>
+    <div class="topbar-right flex items-center gap-2">
+      <div class="status-realtime-badge text-[10px] py-1 px-2.5">
+        <span class="pulse-indicator-dot"></span>
+        <span>⚡ 0.08s</span>
+      </div>
+      <a href="desktop.html" class="p-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1 active:scale-95" title="สลับไปโหมด Desktop Workstation">
+        <span class="material-icons-round text-base text-slate-600">desktop_windows</span>
+      </a>
+      <a href="admin.html" class="p-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1 active:scale-95" title="Admin Portal">
+        <span class="material-icons-round text-base text-slate-600">admin_panel_settings</span>
+      </a>
     </div>
   </header>
 
@@ -201,7 +344,7 @@
     </div>
 
     <!-- Course Card (Collapsible Header) - Clinical Sanctuary Theme -->
-    <div id="mHeroCard" class="bg-gradient-to-br from-[#0a2540] via-[#0369a1] to-[#0284c7] rounded-3xl p-5 text-white shadow-lg shadow-sky-950/15 relative overflow-hidden">
+    <div id="mHeroCard" class="bg-gradient-to-br from-[#002e6e] via-[#004b93] to-[#0284c7] rounded-3xl p-5 text-white shadow-lg shadow-sky-950/15 relative overflow-hidden">
       <div class="flex items-center justify-between text-[11px] mb-2">
         <span id="mCourseTypeBadge" class="bg-white/15 px-2.5 py-0.5 rounded-full text-sky-100 font-medium border border-white/10">
           หลักสูตรอบรม
@@ -1704,8 +1847,11 @@
       btnClear.classList.remove('hidden');
 
       const q = query.toLowerCase().trim();
+      const isDigits = /^\d+$/.test(q);
+      const qPad = isDigits ? q.padStart(6, '0') : '';
       const matches = employeeDatabase.filter(emp => {
         const empId = (emp.id || '').toString().toLowerCase();
+        const empIdPadded = empId.padStart(6, '0');
         const first = (emp.firstName || '').toLowerCase();
         const last = (emp.lastName || '').toLowerCase();
         const full = ((emp.title || '') + first + last).toLowerCase();
@@ -1713,7 +1859,11 @@
         const pos = (emp.position || '').toLowerCase();
         const dept = (emp.department || '').toLowerCase();
 
-        return empId.includes(q) || first.includes(q) || last.includes(q) || full.includes(q) || fullSpace.includes(q) || pos.includes(q) || dept.includes(q);
+        return (
+          empId.includes(q) ||
+          (isDigits && empIdPadded.includes(qPad)) ||
+          first.includes(q) || last.includes(q) || full.includes(q) || fullSpace.includes(q) || pos.includes(q) || dept.includes(q)
+        );
       }).slice(0, 6);
 
       if (matches.length === 0) {

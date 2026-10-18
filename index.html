@@ -122,7 +122,7 @@
     (function() {
       const urlParams = new URLSearchParams(window.location.search);
       const viewParam = urlParams.get('view');
-      const savedView = localStorage.getItem('preferred_view');
+      const savedView = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('preferred_view') : null;
       
       const isMobileDevice = /Android|webOS|iPhone|iPad|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth < 768);
 

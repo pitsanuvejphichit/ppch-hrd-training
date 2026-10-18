@@ -13,12 +13,289 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
   <!-- Core Scripts -->
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
 
   <style>
+    /* ==================== PPCH DEEP ROYAL BLUE & CRISP WHITE THEME (PROJECT 12 REFERENCE) ==================== */
+    :root {
+      --royal-dark: #002e6e;
+      --royal-blue: #004b93;
+      --royal-hover: #003a73;
+      --royal-light: #0284c7;
+      --royal-subtle: #f0f7ff;
+      --royal-glow: rgba(0, 75, 147, 0.16);
+
+      --canvas-bg: #f4f7fb;
+      --surface-white: #ffffff;
+      --border-main: #e2e8f0;
+      --border-subtle: #edf2f7;
+      --border-focus: #004b93;
+      --border-blue-soft: #bfdbfe;
+
+      --text-main: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      --green-ready: #059669;
+      --green-bg: #ecfdf5;
+      --green-border: #a7f3d0;
+
+      --amber-pending: #d97706;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+
+      --red-abnormal: #dc2626;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+
+      --font-sans: 'Prompt', 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Inter', monospace;
+      color-scheme: light;
+      accent-color: #004b93;
+    }
+
+    * { font-family: var(--font-sans); }
+    .font-mono { font-family: var(--font-mono); }
+
+    ::selection {
+      background-color: var(--royal-blue);
+      color: #ffffff;
+    }
+
+    body {
+      background-color: var(--canvas-bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+    }
+
+    /* 56px Sticky Topbar */
+    .app-topbar {
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 2px solid var(--royal-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 46, 110, 0.05);
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--border-main);
+    }
+
+    .brand-badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--royal-blue);
+      background: var(--royal-subtle);
+      border: 1px solid var(--border-blue-soft);
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .bread-parent { color: var(--text-muted); font-weight: 500; }
+    .bread-sep { color: var(--text-light); }
+    .bread-current {
+      color: var(--royal-blue);
+      font-weight: 700;
+      background: var(--royal-subtle);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-blue-soft);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-realtime-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--royal-blue);
+      background: var(--royal-subtle);
+      border: 1px solid var(--border-blue-soft);
+      padding: 4px 10px;
+      border-radius: 9999px;
+    }
+
+    .pulse-indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green-ready);
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
+      animation: pulseIndicator 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseIndicator {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.7; }
+    }
+
+    /* Floating Action Speed Dial */
+    .floating-action-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-floating-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      color: var(--royal-blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-floating-toggle:hover {
+      background: var(--royal-subtle);
+      border-color: var(--royal-light);
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(0, 75, 147, 0.18);
+    }
+
+    .floating-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: var(--royal-blue);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 9999px;
+      min-width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+      line-height: 1;
+      border: 1.5px solid #ffffff;
+    }
+
+    .floating-action-tray {
+      position: absolute;
+      top: 50%;
+      right: 44px;
+      transform: translateY(-50%) scale(0.95);
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      padding: 4px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 10px 25px -5px rgba(0, 46, 110, 0.15), 0 0 0 1px rgba(0,0,0,0.04);
+      z-index: 50;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-action-tray.is-open {
+      display: inline-flex;
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+
+    .btn-tray-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--text-body);
+    }
+
+    .btn-tray-action:hover {
+      background: var(--royal-subtle);
+      color: var(--royal-blue);
+    }
+
+    .btn-tray-action .material-icons-round {
+      font-size: 17px;
+    }
+
+    .btn-floating-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-left: 2px;
+    }
+    .btn-floating-close:hover {
+      background: #fee2e2;
+      color: var(--red-abnormal);
+    }
+    .btn-floating-close .material-icons-round {
+      font-size: 16px;
+    }
+
     body {
       font-family: 'Prompt', 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
@@ -115,49 +392,49 @@
     </div>
   </div>
 
-  <!-- TOP APP BAR (FULL WIDTH WIDESCREEN) -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs w-full">
-    <div class="w-full px-4 sm:px-6 lg:px-12 py-3.5 flex items-center justify-between">
-      
-      <!-- Brand & Title -->
-      <div class="flex items-center space-x-3.5">
-        <a href="admin.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="กลับหน้าระบบจัดการ">
-          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          <span class="hidden sm:inline">หน้าหลัก</span>
-        </a>
-
-        <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
-
-        <div class="flex items-center space-x-3">
-          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-9 sm:h-10 w-auto object-contain">
-          <div class="border-l border-slate-200 pl-3">
-            <div class="flex items-center gap-2">
-              <h1 class="text-sm sm:text-base font-bold text-[#1d3c5a] leading-tight">ระบบลงทะเบียนเข้าอบรมจริง (ณ จุดอบรม)</h1>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold hidden sm:inline-block">
-                On-site Attendance
-              </span>
-            </div>
-            <p id="headerCourseSub" class="text-xs text-slate-500 font-light truncate max-w-xs sm:max-w-md">&nbsp;</p>
-          </div>
-        </div>
+  <!-- TOP APP BAR (56px Sticky - Clinical Royal Blue) -->
+  <header class="app-topbar">
+    <div class="topbar-left">
+      <a href="checkin.html" class="topbar-brand">
+        <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="brand-logo-img">
+        <div class="brand-divider"></div>
+        <span class="brand-badge-pill">HRD ATTENDANCE</span>
+      </a>
+      <div class="topbar-breadcrumbs hidden sm:flex">
+        <span class="bread-parent">ระบบลงทะเบียนเข้าอบรม</span>
+        <span class="bread-sep">/</span>
+        <span class="bread-current">เช็คชื่อเข้าอบรมจริง (ณ จุดอบรม)</span>
       </div>
+    </div>
 
-      <!-- Live Counters & Audio Toggle -->
-      <div class="flex items-center space-x-2 text-xs">
-        <button type="button" onclick="printOfflineBackupRoster()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-slate-900 to-[#1d3c5a] hover:from-slate-800 hover:to-[#2e5e8b] text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 text-xs" title="พิมพ์ใบลงทะเบียนและเซ็นชื่อหน้างานแบบกระดาษ (สำหรับกรณีอินเทอร์เน็ตขัดข้อง)">
-          <span>🖨️</span>
-          <span class="hidden md:inline">พิมพ์ใบลงทะเบียนสำรอง (Offline Backup)</span>
-          <span class="md:hidden">พิมพ์ใบสำรอง</span>
-        </button>
-        <div class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>เช็คชื่อแล้ว: <strong id="headerCheckinCount" class="font-mono text-sm">0</strong> ท่าน</span>
-        </div>
-        <button type="button" onclick="toggleAudio()" id="btnAudioToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all cursor-pointer shadow-2xs active:scale-95" title="เปิด/ปิดเสียงแจ้งเตือน">
-          <span id="audioIcon">🔊</span>
-        </button>
+    <div class="topbar-right">
+      <div class="status-realtime-badge">
+        <span class="pulse-indicator-dot"></span>
+        <span>⚡ Supabase 0.08s Active</span>
       </div>
-
+      <button type="button" onclick="printOfflineBackupRoster()" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95" title="พิมพ์ใบลงทะเบียนและเซ็นชื่อสำรอง">
+        <span class="material-icons-round text-base text-white">print</span>
+        <span class="hidden md:inline">ใบเซ็นชื่อสำรอง</span>
+      </button>
+      <div class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold shadow-2xs text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>เช็คชื่อ: <strong id="headerCheckinCount" class="font-mono text-sm">0</strong></span>
+      </div>
+      <button type="button" onclick="toggleAudio()" id="btnAudioToggle" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all cursor-pointer shadow-2xs active:scale-95" title="เปิด/ปิดเสียงแจ้งเตือน">
+        <span id="audioIcon">🔊</span>
+      </button>
+      <a href="desktop.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="ไปหน้าลงทะเบียนบุคลากร">
+        <span class="material-icons-round text-base text-slate-600">how_to_reg</span>
+        <span class="hidden sm:inline">ลงทะเบียน</span>
+      </a>
+      <a href="admin.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="ระบบจัดการหลักสูตร (Admin Portal)">
+        <span class="material-icons-round text-base text-slate-600">admin_panel_settings</span>
+        <span class="hidden sm:inline">Admin</span>
+      </a>
+      <a href="dashboard.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="แดชบอร์ดสรุปผล">
+        <span class="material-icons-round text-base text-slate-600">bar_chart</span>
+        <span class="hidden sm:inline">สถิติ</span>
+      </a>
     </div>
   </header>
 
@@ -165,7 +442,7 @@
   <main class="flex-1 w-full px-4 sm:px-6 lg:px-12 py-6 space-y-6">
 
     <!-- HERO COURSE STRIP (FULL WIDTH) -->
-    <div id="courseHeroCard" class="w-full rounded-3xl bg-gradient-to-r from-[#1d3c5a] via-[#2e5e8b] to-[#3a75aa] p-6 lg:p-7 text-white shadow-xl shadow-[#1d3c5a]/15 relative overflow-hidden">
+    <div id="courseHeroCard" class="w-full rounded-3xl bg-gradient-to-r from-[#002e6e] via-[#004b93] to-[#0284c7] p-6 lg:p-7 text-white shadow-xl shadow-[#1d3c5a]/15 relative overflow-hidden">
       <!-- Glow decoration -->
       <div class="absolute -right-12 -top-12 w-80 h-80 rounded-full bg-[#5facde]/20 blur-3xl pointer-events-none"></div>
 
@@ -361,19 +638,19 @@
 
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
           
-          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
               <div class="flex items-center gap-2 flex-wrap">
-                <h3 class="text-lg lg:text-xl font-bold text-slate-900 flex items-center gap-2">
-                  <span>📋</span>
+                <h3 class="text-base sm:text-lg font-bold text-[#004b93] flex items-center gap-2">
+                  <span class="material-icons-round text-lg text-[#004b93]">how_to_reg</span>
                   <span>3. รายชื่อที่เช็คชื่อเข้าอบรมแล้ววันนี้</span>
                 </h3>
-                <span id="currentBatchBadgeInFeed" class="text-xs px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
+                <span id="currentBatchBadgeInFeed" class="text-xs px-2.5 py-0.5 rounded-lg bg-sky-50 text-[#004b93] border border-sky-200 font-bold">
                   รุ่นที่ 1
                 </span>
               </div>
               <p class="text-xs text-slate-400 font-light pt-0.5">
-                แสดงรายชื่อล่าสุดอยู่บนสุด • กรองตามรุ่นที่เลือก • บันทึกลงแท็บ "เช็คชื่อเข้าอบรม"
+                เรียงคนล่าสุดไว้บนสุด • บันทึกลงแท็บ "เช็คชื่อเข้าอบรม"
               </p>
             </div>
 
@@ -382,15 +659,42 @@
                 type="button" 
                 onclick="syncCheckinsFromBackend(true)" 
                 id="btnSyncCheckins"
-                class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs whitespace-nowrap"
                 title="รีเฟรชข้อมูลจาก Google Sheet"
               >
-                <span id="syncIcon">🔄</span>
+                <span class="material-icons-round text-sm" id="syncIcon">sync</span>
                 <span class="hidden sm:inline">อัปเดตล่าสุด</span>
               </button>
-              <span class="text-xs px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 shadow-2xs">
+
+              <span class="text-xs px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 shadow-2xs whitespace-nowrap">
                 <span id="feedCheckinCount" class="font-mono text-sm">0</span> ท่าน
               </span>
+
+              <!-- Floating Speed Dial for Checkin Export (Golden Rule 3) -->
+              <div class="floating-action-wrapper" id="checkinExportSpeedDial" onmouseenter="handleFloatingEnter('checkinExportSpeedDial')" onmouseleave="handleFloatingLeave('checkinExportSpeedDial')">
+                <button type="button" class="btn-floating-toggle" onclick="toggleFloatingMenu('checkinExportSpeedDial')" title="ส่งออกรายชื่อเช็คชื่อ & พิมพ์">
+                  <span class="material-icons-round text-base">file_download</span>
+                  <span class="floating-badge">3</span>
+                </button>
+                <div class="floating-action-tray">
+                  <button type="button" onclick="exportCheckinExcel()" class="btn-tray-action text-emerald-700" title="ส่งออก Excel (.xls)">
+                    <span class="material-icons-round">table_view</span>
+                    <span class="tray-label">Excel</span>
+                  </button>
+                  <button type="button" onclick="exportCheckinCsv()" class="btn-tray-action text-sky-700" title="ส่งออก CSV (UTF-8 BOM)">
+                    <span class="material-icons-round">description</span>
+                    <span class="tray-label">CSV</span>
+                  </button>
+                  <button type="button" onclick="printOfflineBackupRoster()" class="btn-tray-action text-slate-700" title="พิมพ์ใบเซ็นชื่อ">
+                    <span class="material-icons-round">print</span>
+                    <span class="tray-label">พิมพ์</span>
+                  </button>
+                  <button type="button" class="btn-floating-close" onclick="closeFloatingMenu('checkinExportSpeedDial')" title="ปิดเมนู">
+                    <span class="material-icons-round">close</span>
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -1252,8 +1556,8 @@
                   <span class="font-bold text-sm text-slate-900 truncate">
                     ${escapeHtml(item.title || '')}${escapeHtml(item.firstName || '')} ${escapeHtml(item.lastName || '')}
                   </span>
-                  <span class="font-mono text-[11px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md font-semibold">
-                    ${escapeHtml(item.employeeId || '-')}
+                  <span class="font-mono text-[11px] text-[#004b93] bg-sky-50 px-2 py-0.5 rounded-md font-bold border border-sky-200">
+                    ${escapeHtml(String(item.employeeId || '-').padStart(6, '0'))}
                   </span>
                   ${isWalkin ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200">Walk-in</span>' : '<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">จองล่วงหน้า</span>'}
                   ${isLatest ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 animate-pulse">ล่าสุด</span>' : ''}
@@ -1463,6 +1767,115 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
     }
+
+    // ==================== FLOATING SPEED DIAL (GOLDEN RULE 3) ====================
+    let checkinMenuTimers = {};
+
+    function handleFloatingEnter(wrapperId) {
+      if (checkinMenuTimers[wrapperId]) {
+        clearTimeout(checkinMenuTimers[wrapperId]);
+        delete checkinMenuTimers[wrapperId];
+      }
+      const wrap = document.getElementById(wrapperId);
+      if (wrap) {
+        const tray = wrap.querySelector('.floating-action-tray');
+        if (tray) tray.classList.add('is-open');
+      }
+    }
+
+    function handleFloatingLeave(wrapperId) {
+      if (checkinMenuTimers[wrapperId]) clearTimeout(checkinMenuTimers[wrapperId]);
+      checkinMenuTimers[wrapperId] = setTimeout(() => {
+        closeFloatingMenu(wrapperId);
+      }, 1000);
+    }
+
+    function toggleFloatingMenu(wrapperId) {
+      const wrap = document.getElementById(wrapperId);
+      if (!wrap) return;
+      const tray = wrap.querySelector('.floating-action-tray');
+      if (!tray) return;
+      if (tray.classList.contains('is-open')) {
+        closeFloatingMenu(wrapperId);
+      } else {
+        tray.classList.add('is-open');
+      }
+    }
+
+    function closeFloatingMenu(wrapperId) {
+      const wrap = document.getElementById(wrapperId);
+      if (wrap) {
+        const tray = wrap.querySelector('.floating-action-tray');
+        if (tray) tray.classList.remove('is-open');
+      }
+      if (checkinMenuTimers[wrapperId]) {
+        clearTimeout(checkinMenuTimers[wrapperId]);
+        delete checkinMenuTimers[wrapperId];
+      }
+    }
+
+    // ==================== CHECKIN EXPORT (UTF-8 BOM GOLDEN RULE) ====================
+    function exportCheckinCsv() {
+      if (!checkinsList || checkinsList.length === 0) {
+        if (typeof HrdModal !== 'undefined' && HrdModal.warning) HrdModal.warning('ยังไม่มีรายชื่อผู้เช็คชื่อเข้าอบรมสำหรับส่งออก');
+        return;
+      }
+      let csv = '\uFEFF'; // UTF-8 BOM
+      csv += 'ลำดับ,รหัสพนักงาน,ชื่อจริง,นามสกุล,ตำแหน่ง,แผนก,รุ่นที่เข้าอบรม,เวลาเช็คชื่อ,ประเภทการลงทะเบียน\n';
+      checkinsList.forEach((c, idx) => {
+        const empIdPadded = String(c.employeeId || '').padStart(6, '0');
+        const row = [
+          idx + 1,
+          `"${empIdPadded}"`,
+          `"${(c.firstName || '').replace(/"/g, '""')}"`,
+          `"${(c.lastName || '').replace(/"/g, '""')}"`,
+          `"${(c.position || '').replace(/"/g, '""')}"`,
+          `"${(c.department || '').replace(/"/g, '""')}"`,
+          `"${(c.batch || '').replace(/"/g, '""')}"`,
+          `"${(c.timestamp || '').replace(/"/g, '""')}"`,
+          `"${(c.regType || 'จองล่วงหน้า').replace(/"/g, '""')}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const cId = currentCourse ? currentCourse.id : 'Checkin';
+      link.download = `PPCH_HRD_Checkin_${cId}_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      if (typeof HrdModal !== 'undefined' && HrdModal.success) HrdModal.success('ส่งออกไฟล์ CSV เช็คชื่อ (UTF-8 BOM) สำเร็จเรียบร้อยค่ะ');
+    }
+
+    function exportCheckinExcel() {
+      if (!checkinsList || checkinsList.length === 0) {
+        if (typeof HrdModal !== 'undefined' && HrdModal.warning) HrdModal.warning('ยังไม่มีรายชื่อผู้เช็คชื่อเข้าอบรมสำหรับส่งออก');
+        return;
+      }
+      let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+      html += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Checkins</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
+      html += '<table border="1"><thead><tr style="background:#004b93;color:#ffffff;"><th>ลำดับ</th><th>รหัสพนักงาน</th><th>ชื่อ</th><th>นามสกุล</th><th>ตำแหน่ง</th><th>แผนก</th><th>รุ่นที่เข้าอบรม</th><th>เวลาเช็คชื่อ</th><th>ประเภท</th></tr></thead><tbody>';
+      checkinsList.forEach((c, idx) => {
+        const empIdPadded = String(c.employeeId || '').padStart(6, '0');
+        html += `<tr><td>${idx+1}</td><td style="mso-number-format:\'\\@\'">${empIdPadded}</td><td>${escapeHtml(c.firstName||'')}</td><td>${escapeHtml(c.lastName||'')}</td><td>${escapeHtml(c.position||'')}</td><td>${escapeHtml(c.department||'')}</td><td>${escapeHtml(c.batch||'')}</td><td>${escapeHtml(c.timestamp||'')}</td><td>${escapeHtml(c.regType||'จองล่วงหน้า')}</td></tr>`;
+      });
+      html += '</tbody></table></body></html>';
+      const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const cId = currentCourse ? currentCourse.id : 'Checkin';
+      link.download = `PPCH_HRD_Checkin_${cId}_${new Date().toISOString().slice(0, 10)}.xls`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      if (typeof HrdModal !== 'undefined' && HrdModal.success) HrdModal.success('ส่งออกไฟล์ Excel เช็คชื่อ (UTF-8 BOM) สำเร็จเรียบร้อยค่ะ');
+    }
+
   </script>
 
 </body>

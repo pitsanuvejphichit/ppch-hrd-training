@@ -8,14 +8,309 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <script src="modal.js"></script>
   <script src="demo_data.js"></script>
   <script src="target-modal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-service.js"></script>
   <style>
-    * { font-family: 'Prompt', sans-serif; }
+    /* ==================== PPCH DEEP ROYAL BLUE & CRISP WHITE THEME (PROJECT 12 REFERENCE) ==================== */
+    :root {
+      --royal-dark: #002e6e;
+      --royal-blue: #004b93;
+      --royal-hover: #003a73;
+      --royal-light: #0284c7;
+      --royal-subtle: #f0f7ff;
+      --royal-glow: rgba(0, 75, 147, 0.16);
+
+      --canvas-bg: #f4f7fb;
+      --surface-white: #ffffff;
+      --border-main: #e2e8f0;
+      --border-subtle: #edf2f7;
+      --border-focus: #004b93;
+      --border-blue-soft: #bfdbfe;
+
+      --text-main: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      --green-ready: #059669;
+      --green-bg: #ecfdf5;
+      --green-border: #a7f3d0;
+
+      --amber-pending: #d97706;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+
+      --red-abnormal: #dc2626;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+
+      --font-sans: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Inter', monospace;
+      color-scheme: light;
+      accent-color: #004b93;
+    }
+
+    * { font-family: var(--font-sans); }
+    .font-mono { font-family: var(--font-mono); }
+
+    ::selection {
+      background-color: var(--royal-blue);
+      color: #ffffff;
+    }
+
+    html {
+      scrollbar-color: #94a3b8 #f1f5f9;
+      scrollbar-width: thin;
+    }
+
+    body {
+      background-color: var(--canvas-bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+    }
+
+    /* 56px Sticky Topbar */
+    .app-topbar {
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 2px solid var(--royal-blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 46, 110, 0.05);
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--border-main);
+    }
+
+    .brand-badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--royal-blue);
+      background: var(--royal-subtle);
+      border: 1px solid var(--border-blue-soft);
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .bread-parent { color: var(--text-muted); font-weight: 500; }
+    .bread-sep { color: var(--text-light); }
+    .bread-current {
+      color: var(--royal-blue);
+      font-weight: 700;
+      background: var(--royal-subtle);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-blue-soft);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-realtime-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--royal-blue);
+      background: var(--royal-subtle);
+      border: 1px solid var(--border-blue-soft);
+      padding: 4px 10px;
+      border-radius: 9999px;
+    }
+
+    .pulse-indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green-ready);
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
+      animation: pulseIndicator 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseIndicator {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.7; }
+    }
+
+    /* Floating Action Speed Dial */
+    .floating-action-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-floating-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      color: var(--royal-blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-floating-toggle:hover {
+      background: var(--royal-subtle);
+      border-color: var(--royal-light);
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(0, 75, 147, 0.18);
+    }
+
+    .floating-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: var(--royal-blue);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 9999px;
+      min-width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+      line-height: 1;
+      border: 1.5px solid #ffffff;
+    }
+
+    .floating-action-tray {
+      position: absolute;
+      top: 50%;
+      right: 44px;
+      transform: translateY(-50%) scale(0.95);
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      padding: 4px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 10px 25px -5px rgba(0, 46, 110, 0.15), 0 0 0 1px rgba(0,0,0,0.04);
+      z-index: 50;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-action-tray.is-open {
+      display: inline-flex;
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+
+    .btn-tray-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--text-body);
+    }
+
+    .btn-tray-action:hover {
+      background: var(--royal-subtle);
+      color: var(--royal-blue);
+    }
+
+    .btn-tray-action .material-icons-round {
+      font-size: 17px;
+    }
+
+    .btn-floating-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-left: 2px;
+    }
+    .btn-floating-close:hover {
+      background: #fee2e2;
+      color: var(--red-abnormal);
+    }
+    .btn-floating-close .material-icons-round {
+      font-size: 16px;
+    }
+
+    /* Single-row streamlined filter toolbar */
+    .filter-toolbar-single-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding: 4px 0;
+      scrollbar-width: none;
+    }
+    .filter-toolbar-single-row::-webkit-scrollbar {
+      display: none;
+    }
+
     .custom-scroll::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -173,33 +468,38 @@
     </div>
   </div>
 
-  <!-- Top Global Bar (Full Width) -->
-  <header class="bg-white border-b border-slate-200/80 shadow-xs w-full">
-    <div class="w-full px-6 lg:px-12 py-3 flex items-center justify-between">
-      
-      <!-- Brand & Hospital Identity -->
-      <div class="flex items-center space-x-4">
-        <a href="desktop.html" class="flex items-center space-x-3 group">
-          <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02]">
-          <div class="border-l border-slate-200 pl-3.5 hidden sm:block">
-            <div class="flex items-center space-x-2">
-              <span class="text-sm font-bold text-[#0369a1] tracking-tight">ระบบลงทะเบียนเข้าอบรม</span>
-              <span class="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 bg-sky-50 text-[#0369a1] border border-sky-200 rounded-full">
-                HRD Workstation
-              </span>
-            </div>
-            <p class="text-xs text-slate-400 font-light">ฝ่ายพัฒนาทรัพยากรบุคคล โรงพยาบาลพิษณุเวช พิจิตร</p>
-          </div>
-        </a>
+  <!-- Top Global Bar (56px Sticky - Clinical Royal Blue) -->
+  <header class="app-topbar">
+    <div class="topbar-left">
+      <a href="desktop.html" class="topbar-brand">
+        <img src="logo.png" alt="โรงพยาบาลพิษณุเวช พิจิตร" class="brand-logo-img">
+        <div class="brand-divider"></div>
+        <span class="brand-badge-pill">HRD REGISTRATION</span>
+      </a>
+      <div class="topbar-breadcrumbs hidden sm:flex">
+        <span class="bread-parent">ระบบลงทะเบียนเข้าอบรม</span>
+        <span class="bread-sep">/</span>
+        <span class="bread-current" id="headerCourseTitleShort">ฟอร์มจองที่นั่งบุคลากร</span>
       </div>
+    </div>
 
-      <!-- Header Tools & Navigation -->
-      <div class="flex items-center space-x-2.5">
-        <span class="text-xs px-3.5 py-2 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-200/80 font-medium flex items-center space-x-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>เปิดรับจอง</span>
-        </span>
+    <div class="topbar-right">
+      <div class="status-realtime-badge">
+        <span class="pulse-indicator-dot"></span>
+        <span>⚡ Supabase 0.08s Active</span>
       </div>
+      <a href="admin.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="ระบบจัดการหลักสูตร (Admin Portal)">
+        <span class="material-icons-round text-base text-slate-600">admin_panel_settings</span>
+        <span class="hidden sm:inline">Admin</span>
+      </a>
+      <a href="checkin.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="เช็คชื่อ ณ จุดอบรม (On-site Attendance)">
+        <span class="material-icons-round text-base text-slate-600">how_to_reg</span>
+        <span class="hidden sm:inline">เช็คชื่อ</span>
+      </a>
+      <a href="dashboard.html" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="แดชบอร์ดและสถิติ (Dashboard)">
+        <span class="material-icons-round text-base text-slate-600">bar_chart</span>
+        <span class="hidden sm:inline">สถิติ</span>
+      </a>
     </div>
   </header>
 
@@ -220,7 +520,7 @@
         </p>
       </div>
       <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="admin.html" class="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#0a2540] via-[#0369a1] to-[#0284c7] hover:from-[#00382e] hover:to-[#0369a1] text-white font-semibold text-sm shadow-lg shadow-sky-900/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all">
+        <a href="admin.html" class="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#002e6e] via-[#004b93] to-[#0284c7] hover:from-[#00382e] hover:to-[#0369a1] text-white font-semibold text-sm shadow-lg shadow-sky-900/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all">
           <span>⚙️</span>
           <span>เข้าสู่ระบบจัดการหลักสูตร (Admin Portal)</span>
         </a>
@@ -228,7 +528,7 @@
     </div>
 
     <!-- Top Hero Banner (Full Width) -->
-    <div id="courseHeroBanner" class="w-full rounded-3xl bg-gradient-to-r from-[#0a2540] via-[#0369a1] to-[#0284c7] p-8 text-white shadow-xl shadow-[#0a2540]/15 relative overflow-hidden">
+    <div id="courseHeroBanner" class="w-full rounded-3xl bg-gradient-to-r from-[#002e6e] via-[#004b93] to-[#0284c7] p-8 text-white shadow-xl shadow-[#0a2540]/15 relative overflow-hidden">
       <!-- Background subtle glow graphics -->
       <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-[#0284c7]/20 blur-3xl pointer-events-none"></div>
       <div class="absolute right-1/3 -bottom-20 w-60 h-60 rounded-full bg-[#00a896]/15 blur-2xl pointer-events-none"></div>
@@ -458,16 +758,19 @@
         
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div>
-            <h3 class="text-base font-bold text-[#0369a1] tracking-tight">รายชื่อผู้ลงทะเบียนเข้าอบรมที่ได้รับการยืนยัน</h3>
-            <p class="text-xs text-slate-400 font-light mt-0.5" id="rosterSyncStatus">เชื่อมโยงข้อมูลสดกับ Google Sheet</p>
+            <h3 class="text-base font-bold text-[#004b93] tracking-tight flex items-center gap-2">
+              <span class="material-icons-round text-lg text-[#004b93]">verified</span>
+              <span>รายชื่อผู้ลงทะเบียนเข้าอบรมที่ได้รับการยืนยัน</span>
+            </h3>
+            <p class="text-xs text-slate-400 font-light mt-0.5" id="rosterSyncStatus">เชื่อมโยงข้อมูลสดกับ Supabase & Google Sheet</p>
           </div>
 
-          <div class="flex items-center space-x-3">
-            <button onclick="syncAttendeesFromSheet(true)" id="syncAttendeesBtn" class="flex items-center space-x-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95" title="ดึงข้อมูลล่าสุดจาก Google Sheet ทันที">
-              <svg id="syncAttendeesIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-              <span>ซิงค์จาก Sheet</span>
+          <div class="filter-toolbar-single-row">
+            <button onclick="syncAttendeesFromSheet(true)" id="syncAttendeesBtn" class="flex items-center space-x-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-2xs active:scale-95 whitespace-nowrap" title="ดึงข้อมูลล่าสุดจาก Google Sheet ทันที">
+              <span class="material-icons-round text-sm" id="syncAttendeesIcon">sync</span>
+              <span>ซิงค์ข้อมูล</span>
             </button>
-            <select id="batchFilterSelect" onchange="filterAttendees(this.value)" class="text-xs font-semibold px-3.5 py-2.5 bg-[#f0fdfa] border border-sky-200 rounded-xl outline-none text-[#0369a1] cursor-pointer">
+            <select id="batchFilterSelect" onchange="filterAttendees(this.value)" class="text-xs font-semibold px-3.5 py-2 bg-[#f0f7ff] border border-sky-200 rounded-xl outline-none text-[#004b93] cursor-pointer whitespace-nowrap">
               <option value="">ทุกรุ่นการอบรม</option>
             </select>
             <input 
@@ -475,8 +778,34 @@
               id="rosterSearchInput" 
               oninput="searchRoster(this.value)"
               placeholder="ค้นหารายชื่อในตาราง..." 
-              class="text-xs px-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl outline-none w-48 focus:w-64 transition-all"
+              class="text-xs px-3.5 py-2 bg-slate-100 border border-slate-200 rounded-xl outline-none w-44 focus:w-56 transition-all"
             >
+
+            <!-- Floating Action Speed Dial for Export (Golden Rule 3) -->
+            <div class="floating-action-wrapper" id="desktopExportSpeedDial" onmouseenter="handleFloatingEnter('desktopExportSpeedDial')" onmouseleave="handleFloatingLeave('desktopExportSpeedDial')">
+              <button type="button" class="btn-floating-toggle" onclick="toggleFloatingMenu('desktopExportSpeedDial')" title="ส่งออกข้อมูล & พิมพ์">
+                <span class="material-icons-round text-base">file_download</span>
+                <span class="floating-badge">3</span>
+              </button>
+              <div class="floating-action-tray">
+                <button type="button" onclick="exportAttendeesExcel()" class="btn-tray-action text-emerald-700" title="ส่งออก Excel (.xls)">
+                  <span class="material-icons-round">table_view</span>
+                  <span class="tray-label">Excel</span>
+                </button>
+                <button type="button" onclick="exportAttendeesCsv()" class="btn-tray-action text-sky-700" title="ส่งออก CSV (UTF-8 BOM)">
+                  <span class="material-icons-round">description</span>
+                  <span class="tray-label">CSV</span>
+                </button>
+                <button type="button" onclick="printAttendeesList()" class="btn-tray-action text-slate-700" title="พิมพ์รายชื่อ">
+                  <span class="material-icons-round">print</span>
+                  <span class="tray-label">พิมพ์</span>
+                </button>
+                <button type="button" class="btn-floating-close" onclick="closeFloatingMenu('desktopExportSpeedDial')" title="ปิดเมนู">
+                  <span class="material-icons-round">close</span>
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -1610,12 +1939,19 @@
         return;
       }
       const q = query.trim().toLowerCase();
-      const matches = employeeDatabase.filter(e => 
-        (e.id && e.id.toLowerCase().includes(q)) ||
-        (e.firstName && e.firstName.toLowerCase().includes(q)) ||
-        (e.lastName && e.lastName.toLowerCase().includes(q)) ||
-        (e.department && e.department.toLowerCase().includes(q))
-      ).slice(0, 8);
+      const isDigits = /^\d+$/.test(q);
+      const qPad = isDigits ? q.padStart(6, '0') : '';
+      const matches = employeeDatabase.filter(e => {
+        const empId = String(e.id || '').trim();
+        const empIdPadded = empId.padStart(6, '0');
+        return (
+          empId.toLowerCase().includes(q) ||
+          (isDigits && empIdPadded.includes(qPad)) ||
+          (e.firstName && e.firstName.toLowerCase().includes(q)) ||
+          (e.lastName && e.lastName.toLowerCase().includes(q)) ||
+          (e.department && e.department.toLowerCase().includes(q))
+        );
+      }).slice(0, 8);
 
       if (matches.length === 0) {
         resultsDiv.innerHTML = '<div class="p-4 text-xs text-slate-400 text-center">ไม่พบข้อมูลพนักงานที่ตรงกับคำค้นหา</div>';
@@ -1628,7 +1964,7 @@
 
           return '<div onclick="selectEmployee(\'' + m.id + '\')" class="p-3.5 hover:bg-[#f0fdfa] cursor-pointer flex items-center justify-between transition-colors">' +
             '<div class="flex items-center space-x-3">' +
-              '<span class="font-mono text-xs font-bold text-[#0369a1] bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200">' + m.id + '</span>' +
+              '<span class="font-mono text-xs font-bold text-[#004b93] bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200">' + String(m.id).padStart(6, '0') + '</span>' +
               '<div>' +
                 '<div class="text-xs font-bold text-slate-800">' + (m.title || '') + m.firstName + ' ' + m.lastName + '</div>' +
                 '<div class="text-[11px] text-slate-500 font-light">' + m.position + ' • ' + m.department + '</div>' +
@@ -2009,19 +2345,22 @@
           displayBadge = activeTopicOrBatch || a.batch;
         }
 
-        return '<tr class="hover:bg-[#f0fdfa] transition-colors">' +
+        const empIdPadded = String(a.id || '').padStart(6, '0');
+        return '<tr class="hover:bg-[#f0f7ff] transition-colors">' +
           '<td class="py-3 px-4 text-center font-mono text-slate-400 font-light">' + (idx + 1) + '</td>' +
-          '<td class="py-3 px-4 font-mono font-bold text-[#0369a1]">' + a.id + '</td>' +
+          '<td class="py-3 px-4 font-mono font-bold text-[#004b93]">' + empIdPadded + '</td>' +
           '<td class="py-3 px-4 text-slate-600">' + (a.title || '-') + '</td>' +
           '<td class="py-3 px-4 font-bold text-slate-900">' + a.firstName + ' ' + a.lastName + '</td>' +
           '<td class="py-3 px-4 text-slate-600">' + (a.position || '-') + '</td>' +
           '<td class="py-3 px-4 text-slate-600">' + (a.department || '-') + '</td>' +
-          '<td class="py-3 px-4"><span class="px-2.5 py-1 bg-sky-50 text-[#0369a1] border border-sky-200 rounded-lg text-[11px] font-semibold">' + displayBadge + '</span>' + topicsHtml + '</td>' +
+          '<td class="py-3 px-4"><span class="px-2.5 py-1 bg-sky-50 text-[#004b93] border border-sky-200 rounded-lg text-[11px] font-semibold">' + displayBadge + '</span>' + topicsHtml + '</td>' +
           '<td class="py-3 px-4 text-center font-mono text-slate-500">' + (a.timestamp || '-') + '</td>' +
-          '<td class="py-3 px-4 text-center"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[10px] font-bold">ยืนยันแล้ว</span></td>' +
           '<td class="py-3 px-4 text-center">' +
-            '<button onclick="confirmDeleteAttendee(\'' + a.id + '\')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 inline-flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95 mx-auto group" title="ลบข้อมูลการลงทะเบียนของ ' + a.firstName + ' ' + a.lastName + '">' +
-              '<svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>' +
+            '<button type="button" class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 inline-flex items-center justify-center font-bold text-xs border border-emerald-300 shadow-2xs mx-auto" title="สถานะ: ยืนยันการลงทะเบียนแล้ว"><span class="material-icons-round text-sm">check</span></button>' +
+          '</td>' +
+          '<td class="py-3 px-4 text-center">' +
+            '<button onclick="confirmDeleteAttendee(\'' + a.id + '\')" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 inline-flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95 mx-auto group" title="ลบข้อมูลการลงทะเบียนของ ' + a.firstName + ' ' + a.lastName + '">' +
+              '<span class="material-icons-round text-sm">delete_outline</span>' +
             '</button>' +
           '</td>' +
         '</tr>';
@@ -2164,6 +2503,120 @@
     function searchRoster(query) {
       filterAttendees();
     }
+
+    // ==================== FLOATING SPEED DIAL CONTROLLER (GOLDEN RULE 3) ====================
+    let floatingMenuTimers = {};
+
+    function handleFloatingEnter(wrapperId) {
+      if (floatingMenuTimers[wrapperId]) {
+        clearTimeout(floatingMenuTimers[wrapperId]);
+        delete floatingMenuTimers[wrapperId];
+      }
+      const wrap = document.getElementById(wrapperId);
+      if (wrap) {
+        const tray = wrap.querySelector('.floating-action-tray');
+        if (tray) tray.classList.add('is-open');
+      }
+    }
+
+    function handleFloatingLeave(wrapperId) {
+      if (floatingMenuTimers[wrapperId]) clearTimeout(floatingMenuTimers[wrapperId]);
+      floatingMenuTimers[wrapperId] = setTimeout(() => {
+        closeFloatingMenu(wrapperId);
+      }, 1000);
+    }
+
+    function toggleFloatingMenu(wrapperId) {
+      const wrap = document.getElementById(wrapperId);
+      if (!wrap) return;
+      const tray = wrap.querySelector('.floating-action-tray');
+      if (!tray) return;
+      if (tray.classList.contains('is-open')) {
+        closeFloatingMenu(wrapperId);
+      } else {
+        tray.classList.add('is-open');
+      }
+    }
+
+    function closeFloatingMenu(wrapperId) {
+      const wrap = document.getElementById(wrapperId);
+      if (wrap) {
+        const tray = wrap.querySelector('.floating-action-tray');
+        if (tray) tray.classList.remove('is-open');
+      }
+      if (floatingMenuTimers[wrapperId]) {
+        clearTimeout(floatingMenuTimers[wrapperId]);
+        delete floatingMenuTimers[wrapperId];
+      }
+    }
+
+    // ==================== EXPORT ATTENDEES (UTF-8 BOM GOLDEN RULE) ====================
+    function exportAttendeesCsv() {
+      if (!allAttendees || allAttendees.length === 0) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่พบรายชื่อผู้ลงทะเบียนสำหรับส่งออก');
+        return;
+      }
+      let csv = '\uFEFF'; // UTF-8 BOM
+      csv += 'ลำดับ,รหัสพนักงาน,คำนำหน้า,ชื่อ,นามสกุล,ตำแหน่ง,แผนก,รุ่นที่เข้าอบรม,เวลาลงทะเบียน,สถานะ\n';
+      allAttendees.forEach((a, idx) => {
+        const empIdPadded = String(a.id || '').padStart(6, '0');
+        const row = [
+          idx + 1,
+          `"${empIdPadded}"`,
+          `"${(a.title || '').replace(/"/g, '""')}"`,
+          `"${(a.firstName || '').replace(/"/g, '""')}"`,
+          `"${(a.lastName || '').replace(/"/g, '""')}"`,
+          `"${(a.position || '').replace(/"/g, '""')}"`,
+          `"${(a.department || '').replace(/"/g, '""')}"`,
+          `"${(a.batch || '').replace(/"/g, '""')}"`,
+          `"${(a.timestamp || '').replace(/"/g, '""')}"`,
+          `"ยืนยันแล้ว"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const cId = currentCourse ? currentCourse.id : 'Roster';
+      link.download = `PPCH_HRD_Attendees_${cId}_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      if (typeof HrdModal !== 'undefined') HrdModal.success('ส่งออกไฟล์ CSV (UTF-8 BOM) สำเร็จเรียบร้อยค่ะ');
+    }
+
+    function exportAttendeesExcel() {
+      if (!allAttendees || allAttendees.length === 0) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่พบรายชื่อผู้ลงทะเบียนสำหรับส่งออก');
+        return;
+      }
+      let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+      html += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Attendees</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
+      html += '<table border="1"><thead><tr style="background:#004b93;color:#ffffff;"><th>ลำดับ</th><th>รหัสพนักงาน</th><th>คำนำหน้า</th><th>ชื่อ</th><th>นามสกุล</th><th>ตำแหน่ง</th><th>แผนก</th><th>รุ่นที่เข้าอบรม</th><th>เวลาลงทะเบียน</th><th>สถานะ</th></tr></thead><tbody>';
+      allAttendees.forEach((a, idx) => {
+        const empIdPadded = String(a.id || '').padStart(6, '0');
+        html += `<tr><td>${idx+1}</td><td style="mso-number-format:\'\\@\'">${empIdPadded}</td><td>${escapeHtml(a.title||'')}</td><td>${escapeHtml(a.firstName||'')}</td><td>${escapeHtml(a.lastName||'')}</td><td>${escapeHtml(a.position||'')}</td><td>${escapeHtml(a.department||'')}</td><td>${escapeHtml(a.batch||'')}</td><td>${escapeHtml(a.timestamp||'')}</td><td>ยืนยันแล้ว</td></tr>`;
+      });
+      html += '</tbody></table></body></html>';
+      const blob = new Blob(['\uFEFF' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const cId = currentCourse ? currentCourse.id : 'Roster';
+      link.download = `PPCH_HRD_Attendees_${cId}_${new Date().toISOString().slice(0, 10)}.xls`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      if (typeof HrdModal !== 'undefined') HrdModal.success('ส่งออกไฟล์ Excel (UTF-8 BOM) สำเร็จเรียบร้อยค่ะ');
+    }
+
+    function printAttendeesList() {
+      window.print();
+    }
+
   </script>
 </body>
 </html>
