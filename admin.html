@@ -7435,13 +7435,15 @@
         dates: '1-2 ตุลาคม 2569',
         day1Date: '1 ตุลาคม 2569',
         day2Date: '2 ตุลาคม 2569',
+        sheetId: '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
         sheetUrl: ORIENTATION_TEMPLATE_SHEET_URL,
         status: 'active',
         topics: JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
           t.date = t.day === 1 ? '1 ตุลาคม 2569' : '2 ตุลาคม 2569';
           return t;
         }),
-        attendees: []
+        attendees: [],
+        deletedAttendeeIds: []
       },
       {
         id: 'c-2026-orientation-nov',
@@ -7457,7 +7459,8 @@
           t.date = t.day === 1 ? '5 พฤศจิกายน 2569' : '6 พฤศจิกายน 2569';
           return t;
         }),
-        attendees: []
+        attendees: [],
+        deletedAttendeeIds: []
       },
       {
         id: 'c-2026-orientation-dec',
@@ -7473,7 +7476,8 @@
           t.date = t.day === 1 ? '3 ธันวาคม 2569' : '4 ธันวาคม 2569';
           return t;
         }),
-        attendees: []
+        attendees: [],
+        deletedAttendeeIds: []
       }
     ];
 
@@ -7486,22 +7490,130 @@
       return orientationBatches.find(b => b.id === currentOrientBatchId) || orientationBatches[0];
     }
 
+    function extractGoogleSheetId(url) {
+      if (!url) return '';
+      const match = String(url).match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+      if (match) return match[1];
+      if (/^[a-zA-Z0-9-_]{20,}$/.test(String(url).trim())) return String(url).trim();
+      return '';
+    }
+
+    function aggregateOrientationAttendees(rawAttendees, syllabusTopics) {
+      const map = new Map();
+      const topics = Array.isArray(syllabusTopics) ? syllabusTopics : ORIENTATION_DEFAULT_SYLLABUS;
+      (rawAttendees || []).forEach(a => {
+        const rawId = a.id || a.empId || '';
+        const empId = String(rawId).padStart(6, '0');
+        if (!empId || empId === '000000') return;
+
+        if (!map.has(empId)) {
+          map.set(empId, {
+            id: empId,
+            name: (a.title || '') + (a.name || ((a.firstName || '') + ' ' + (a.lastName || ''))).trim(),
+            position: a.position || '-',
+            department: a.department || '-',
+            completedTopics: Array.isArray(a.completedTopics) ? [...a.completedTopics] : [],
+            enrolledAt: a.timestamp || a.enrolledAt || '1-2 ตุลาคม 2569'
+          });
+        }
+
+        const item = map.get(empId);
+        const batchStr = (a.batch || '').trim();
+        if (batchStr) {
+          const matchNum = batchStr.match(/^(\d+)[\.\s]/);
+          if (matchNum) {
+            const tNum = parseInt(matchNum[1], 10);
+            const targetTopic = topics[tNum - 1];
+            if (targetTopic && !item.completedTopics.includes(targetTopic.id)) {
+              item.completedTopics.push(targetTopic.id);
+            }
+          } else {
+            const found = topics.find(t => batchStr.includes(t.title) || t.title.includes(batchStr));
+            if (found && !item.completedTopics.includes(found.id)) {
+              item.completedTopics.push(found.id);
+            }
+          }
+        }
+      });
+      return Array.from(map.values());
+    }
+
+    async function syncOrientationAttendees(batchId) {
+      const b = batchId ? orientationBatches.find(x => x.id === batchId) : getActiveOrientBatch();
+      if (!b) return;
+
+      const sheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+
+      let fetchedAttendees = [];
+      let sourceFound = false;
+
+      // 1. Fetch from Supabase (Primary Database)
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          const sbList = await SupabaseService.getAttendeesByCourse(b.id);
+          if (Array.isArray(sbList) && sbList.length > 0) {
+            fetchedAttendees = sbList.map(a => ({
+              id: String(a.id || a.empId).padStart(6, '0'),
+              name: (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName)).trim(),
+              position: a.position || '-',
+              department: a.department || '-',
+              completedTopics: Array.isArray(a.selectedTopics) ? a.selectedTopics : (b.topics || []).map(t => t.id),
+              enrolledAt: a.timestamp || b.dates || '1-2 ตุลาคม 2569'
+            }));
+            sourceFound = true;
+          }
+        } catch(e) {
+          console.warn('[Orientation] Supabase getAttendeesByCourse error:', e);
+        }
+      }
+
+      // 2. Fetch from Google Sheet (Live Sheet Sync via GAS)
+      if (sheetId && gasUrl) {
+        try {
+          const res = await fetch(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(sheetId)).then(r => r.json());
+          if (res && res.success && Array.isArray(res.attendees) && res.attendees.length > 0) {
+            const syllabusTopics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+            const sheetMapped = aggregateOrientationAttendees(res.attendees, syllabusTopics);
+            if (sheetMapped.length > 0) {
+              fetchedAttendees = sheetMapped;
+              sourceFound = true;
+            }
+          }
+        } catch(err) {
+          console.warn('[Orientation] Sheet getAttendees error:', err);
+        }
+      }
+
+      // 3. Process and filter out any locally deleted attendees
+      if (sourceFound) {
+        const deletedSet = new Set(b.deletedAttendeeIds || []);
+        b.attendees = fetchedAttendees.filter(a => !deletedSet.has(a.id));
+        renderOrientationBatchDetails();
+        if (currentOrientSubView === 'list') renderOrientationBatchList();
+      }
+    }
+
     // Initialize View: Shows Monthly Batches List first per user request
     function initOrientationView() {
-      // Sync Google Sheet link & sample attendees from coursesData / DEMO_EMPLOYEES
+      // Restore topic customizations from coursesData if available
       const octBatch = orientationBatches.find(b => b.id === 'c-2026-orientation-oct');
-      if (octBatch && octBatch.attendees.length === 0) {
-        const db = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
-        if (db.length > 0) {
-          octBatch.attendees = db.slice(0, 6).map((e, idx) => ({
-            id: String(e.id || '').padStart(6, '0'),
-            name: (e.title || '') + e.firstName + ' ' + e.lastName,
-            position: e.position || '-',
-            department: e.department || '-',
-            completedTopics: idx === 0 ? octBatch.topics.map(t => t.id) : octBatch.topics.slice(0, 10 + (idx % 4)).map(t => t.id),
-            enrolledAt: '1-2 ตุลาคม 2569'
-          }));
+      if (octBatch) {
+        const courseMatch = (typeof coursesData !== 'undefined' && Array.isArray(coursesData))
+          ? coursesData.find(c => c && c.id === octBatch.id)
+          : null;
+        if (courseMatch) {
+          if (Array.isArray(courseMatch.topics) && courseMatch.topics.length > 0) {
+            octBatch.topics = courseMatch.topics;
+          }
+          if (courseMatch.date) octBatch.dates = courseMatch.date;
+          if (courseMatch.day1Date) octBatch.day1Date = courseMatch.day1Date;
+          if (courseMatch.day2Date) octBatch.day2Date = courseMatch.day2Date;
+          if (courseMatch.sheetUrl) octBatch.sheetUrl = courseMatch.sheetUrl;
         }
+
+        // Trigger non-blocking background sync of live attendees from Google Sheet & Supabase
+        syncOrientationAttendees('c-2026-orientation-oct');
       }
 
       // Default to Monthly Batches List first
@@ -7646,6 +7758,7 @@
 
       renderOrientationBatchDetails();
       updateOrientationBreadcrumb();
+      syncOrientationAttendees(batchId);
     }
 
     function renderOrientationBatchDetails() {
@@ -7687,8 +7800,14 @@
       // Update Day 1 & Day 2 labels
       const d1Label = document.getElementById('orientDay1Label');
       const d2Label = document.getElementById('orientDay2Label');
-      if (d1Label) d1Label.textContent = `วันที่ 1 (${b.day1Date || 'วันแรก'}): 12 หัวข้อวิชา`;
-      if (d2Label) d2Label.textContent = `วันที่ 2 (${b.day2Date || 'วันที่สอง'}): 2 หัวข้อวิชา`;
+      const day1Topics = (b.topics || []).filter(t => t.day === 1);
+      const day2Topics = (b.topics || []).filter(t => t.day === 2);
+      const d1Dates = [...new Set(day1Topics.map(t => t.date).filter(Boolean))];
+      const d2Dates = [...new Set(day2Topics.map(t => t.date).filter(Boolean))];
+      const d1Text = d1Dates.length > 0 ? d1Dates.join(', ') : (b.day1Date || 'วันแรก');
+      const d2Text = d2Dates.length > 0 ? d2Dates.join(', ') : (b.day2Date || 'วันที่สอง');
+      if (d1Label) d1Label.textContent = `วันที่ 1 (${d1Text}): ${day1Topics.length} หัวข้อวิชา`;
+      if (d2Label) d2Label.textContent = `วันที่ 2 (${d2Text}): ${day2Topics.length} หัวข้อวิชา`;
 
       renderOrientationSyllabus();
       renderOrientationMatrix();
@@ -7776,55 +7895,77 @@
       const day2Topics = topics.filter(t => t.day === 2);
 
       if (d1Container) {
-        d1Container.innerHTML = day1Topics.map((t, idx) => `
-          <div class="orient-topic-strip">
-            <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-              <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
-                ${String(idx + 1).padStart(2, '0')}
-              </span>
-              <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
-                ${t.time}
-              </span>
-              <span class="text-xs font-bold text-slate-900 truncate">
-                ${escapeHtml(t.title)}
-              </span>
-              <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
-                • ${escapeHtml(t.speaker)}
-              </span>
+        d1Container.innerHTML = day1Topics.map((t, idx) => {
+          const isCustomDate = t.date && t.date !== b.day1Date;
+          const dateBadge = t.date ? `
+            <span class="font-mono text-[11px] font-semibold ${isCustomDate ? 'text-amber-800 bg-amber-50 border border-amber-300 font-bold' : 'text-[#004b93] bg-sky-50 border border-sky-200'} px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
+              <span class="material-icons-round text-xs">event</span>
+              <span>${escapeHtml(t.date)}</span>
+            </span>
+          ` : '';
+
+          return `
+            <div class="orient-topic-strip">
+              <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+                <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
+                  ${String(idx + 1).padStart(2, '0')}
+                </span>
+                ${dateBadge}
+                <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                  ${t.time}
+                </span>
+                <span class="text-xs font-bold text-slate-900 truncate">
+                  ${escapeHtml(t.title)}
+                </span>
+                <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
+                  • ${escapeHtml(t.speaker)}
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
+                  ${escapeHtml(t.venue)}
+                </span>
+              </div>
             </div>
-            <div class="flex items-center space-x-2 shrink-0">
-              <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
-                ${escapeHtml(t.venue)}
-              </span>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
 
       if (d2Container) {
-        d2Container.innerHTML = day2Topics.map((t, idx) => `
-          <div class="orient-topic-strip day2">
-            <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-              <span class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-emerald-200">
-                ${String(idx + 13).padStart(2, '0')}
-              </span>
-              <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
-                ${t.time}
-              </span>
-              <span class="text-xs font-bold text-slate-900 truncate">
-                ${escapeHtml(t.title)}
-              </span>
-              <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
-                • ${escapeHtml(t.speaker)}
-              </span>
+        d2Container.innerHTML = day2Topics.map((t, idx) => {
+          const isCustomDate = t.date && t.date !== b.day2Date;
+          const dateBadge = t.date ? `
+            <span class="font-mono text-[11px] font-semibold ${isCustomDate ? 'text-amber-800 bg-amber-50 border border-amber-300 font-bold' : 'text-emerald-800 bg-emerald-50 border border-emerald-200'} px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
+              <span class="material-icons-round text-xs">event</span>
+              <span>${escapeHtml(t.date)}</span>
+            </span>
+          ` : '';
+
+          return `
+            <div class="orient-topic-strip day2">
+              <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+                <span class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-emerald-200">
+                  ${String(idx + 13).padStart(2, '0')}
+                </span>
+                ${dateBadge}
+                <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                  ${t.time}
+                </span>
+                <span class="text-xs font-bold text-slate-900 truncate">
+                  ${escapeHtml(t.title)}
+                </span>
+                <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
+                  • ${escapeHtml(t.speaker)}
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
+                  ${escapeHtml(t.venue)}
+                </span>
+              </div>
             </div>
-            <div class="flex items-center space-x-2 shrink-0">
-              <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
-                ${escapeHtml(t.venue)}
-              </span>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
     }
 
@@ -8195,11 +8336,53 @@
         const sInp = document.getElementById(`schedSpeaker_${t.id}`);
         const vInp = document.getElementById(`schedVenue_${t.id}`);
 
-        if (dInp) t.date = dInp.value.trim();
+        if (dInp) {
+          const val = dInp.value.trim();
+          if (val) t.date = val;
+        }
         if (tInp) t.time = tInp.value.trim();
         if (sInp) t.speaker = sInp.value.trim();
         if (vInp) t.venue = vInp.value.trim();
       });
+
+      // If dates span across 3 days (e.g. topic 14 is day 3), update batch dates summary
+      const uniqueDates = [...new Set(b.topics.map(t => t.date).filter(Boolean))];
+      if (uniqueDates.length > 2 && b.id === 'c-2026-orientation-oct') {
+        b.dates = '1-3 ตุลาคม 2569';
+      }
+
+      // Persist to coursesData and Supabase
+      if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
+        const courseIdx = coursesData.findIndex(c => c && c.id === b.id);
+        if (courseIdx !== -1) {
+          coursesData[courseIdx].topics = b.topics;
+          coursesData[courseIdx].date = b.dates;
+          coursesData[courseIdx].day1Date = b.day1Date;
+          coursesData[courseIdx].day2Date = b.day2Date;
+        }
+      }
+
+      if (typeof SupabaseService !== 'undefined') {
+        const payload = {
+          id: b.id,
+          title: b.title,
+          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+          date: b.dates,
+          time: '08.00 - 17.00 น.',
+          planType: 'ในแผน',
+          category: 'Mandatory Course',
+          type: 'ในแผน • Mandatory Course',
+          batches: [b.title],
+          quota: { [b.title]: 40 },
+          hasSubTopics: true,
+          topicMode: 'all',
+          topics: b.topics,
+          sheetId: b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
+          sheetUrl: b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
+          status: b.status || 'active'
+        };
+        SupabaseService.saveCourse(payload).catch(e => console.warn('[Orientation] Supabase saveCourse error:', e));
+      }
 
       closeEditBatchScheduleModal();
       renderOrientationBatchDetails();
@@ -8379,12 +8562,52 @@
       const attendee = b.attendees.find(a => a.id === empId);
       if (!attendee) return;
 
-      const ok = await HrdModal.confirm(`ต้องการนำคุณ ${attendee.name} (${attendee.id}) ออกจากรอบปฐมนิเทศนี้หรือไม่?`, 'ยืนยันการนำออก', { danger: true });
+      const ok = await HrdModal.confirm(`ต้องการนำคุณ ${attendee.name} (${attendee.id}) ออกจากรอบปฐมนิเทศนี้หรือไม่?\n(ระบบจะลบข้อมูลออกจาก Google Sheet และฐานข้อมูลทันที)`, 'ยืนยันการนำออก', { danger: true });
       if (!ok) return;
 
+      // 1. Instant local removal (< 100ms)
       b.attendees = b.attendees.filter(a => a.id !== empId);
+      if (!b.deletedAttendeeIds) b.deletedAttendeeIds = [];
+      if (!b.deletedAttendeeIds.includes(empId)) b.deletedAttendeeIds.push(empId);
+
       renderOrientationBatchDetails();
-      if (typeof HrdModal !== 'undefined') HrdModal.success('นำรายชื่อออกจากรอบปฐมนิเทศแล้วค่ะ');
+      if (currentOrientSubView === 'list') renderOrientationBatchList();
+
+      if (typeof HrdModal !== 'undefined') {
+        HrdModal.success(`นำคุณ ${attendee.name} ออกจากระบบแล้ว และกำลังซิงค์ลบข้อมูลจาก Google Sheet...`);
+      }
+
+      // 2. Sync deletion to Google Sheet via GAS deleteAttendee
+      const sheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl && sheetId) {
+        try {
+          fetch(gasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'deleteAttendee',
+              sheetId: sheetId,
+              id: empId,
+              adminPassword: '014125'
+            })
+          })
+          .then(r => r.json())
+          .then(res => {
+            console.log('[Orientation] GAS deleteAttendee response:', res);
+          })
+          .catch(err => console.warn('[Orientation] GAS deleteAttendee error:', err));
+        } catch(e) {
+          console.warn('[Orientation] GAS deleteAttendee exception:', e);
+        }
+      }
+
+      // 3. Sync deletion to Supabase
+      if (typeof SupabaseService !== 'undefined') {
+        SupabaseService.deleteAttendee(b.id, empId).catch(err => {
+          console.warn('[Orientation] Supabase deleteAttendee error:', err);
+        });
+      }
     }
 
     function exportOrientationCsv() {
