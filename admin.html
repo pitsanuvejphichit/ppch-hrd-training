@@ -256,6 +256,9 @@
     .orient-topic-strip.day2 {
       border-left-color: #059669;
     }
+    .orient-topic-strip.day3 {
+      border-left-color: #7c3aed;
+    }
 
     /* ==================== 1. TOP HEADER (56px STICKY) ==================== */
     .app-topbar {
@@ -1799,8 +1802,19 @@
                 </div>
               </div>
 
-              <!-- Right: Open Google Sheet, Edit Schedule, & Export Speed Dial -->
+              <!-- Right: Print Roster A4, Open Google Sheet, Edit Schedule, & Export Speed Dial -->
               <div class="flex items-center space-x-2 shrink-0">
+                <!-- Native A4 Official Registration Print Button (Matching Hospital Form Template) -->
+                <button 
+                  type="button" 
+                  onclick="openOrientationPrintModal('all')" 
+                  class="px-3.5 py-1.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
+                  title="พิมพ์ใบลงทะเบียนเข้าอบรม A4 ทั้ง 14 หัวข้อ (ตามแบบฟอร์มมาตรฐาน รพ.พิษณุเวช พิจิตร)"
+                >
+                  <span class="material-icons-round text-sm">print</span>
+                  <span>พิมพ์ใบรายชื่อ A4 (14 หัวข้อ)</span>
+                </button>
+
                 <!-- Golden Rule: Open Google Sheet Roster Button -->
                 <a 
                   id="btnOrientGoogleSheet" 
@@ -1948,10 +1962,10 @@
                 <div class="flex items-center justify-between border-b border-emerald-200 pb-2">
                   <div class="flex items-center space-x-2">
                     <span class="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[11px] font-bold font-display">DAY 2</span>
-                    <h3 id="orientDay2Label" class="text-xs sm:text-sm font-bold text-emerald-800">วันที่ 2 ของรอบ: 2 หัวข้อวิชา</h3>
+                    <h3 id="orientDay2Label" class="text-xs sm:text-sm font-bold text-emerald-800">วันที่ 2 ของรอบ: 1 หัวข้อวิชา</h3>
                   </div>
                   <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-medium text-slate-500 hidden sm:inline">2 วิชา • Basic Life Support (BLS) &amp; ฝ่ายการพยาบาล</span>
+                    <span class="text-[11px] font-medium text-slate-500 hidden sm:inline">1 วิชา • Basic Life Support (BLS)</span>
                     <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-0.5">
                       <span class="material-icons-round text-xs">edit</span>
                       <span>แก้ไขวัน/เวลา</span>
@@ -1959,6 +1973,26 @@
                   </div>
                 </div>
                 <div id="orientDay2StripContainer" class="space-y-1.5 w-full">
+                  <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
+                </div>
+              </div>
+
+              <!-- Day 3 Strip Header (ฝ่ายการพยาบาลพบพนักงานใหม่) -->
+              <div id="orientDay3Section" class="space-y-2 pt-2">
+                <div class="flex items-center justify-between border-b border-purple-200 pb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 rounded-md bg-purple-700 text-white text-[11px] font-bold font-display">DAY 3</span>
+                    <h3 id="orientDay3Label" class="text-xs sm:text-sm font-bold text-purple-900">วันที่ 3 ของรอบ: 1 หัวข้อวิชา</h3>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-medium text-slate-500 hidden sm:inline">1 วิชา • ฝ่ายการพยาบาลพบพนักงานใหม่</span>
+                    <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-purple-800 hover:underline font-semibold flex items-center gap-0.5">
+                      <span class="material-icons-round text-xs">edit</span>
+                      <span>แก้ไขวัน/เวลา</span>
+                    </button>
+                  </div>
+                </div>
+                <div id="orientDay3StripContainer" class="space-y-1.5 w-full">
                   <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
                 </div>
               </div>
@@ -2405,14 +2439,18 @@
           <input type="text" id="newOrientTitleInput" placeholder="เช่น ปฐมนิเทศพนักงานใหม่ รอบ 5-6 พ.ย. 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-sky-50/60 p-3 rounded-xl border border-sky-200">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-sky-50/60 p-3 rounded-xl border border-sky-200">
           <div>
-            <label class="block font-semibold text-[#004b93] mb-1">วันที่ 1 (Day 1 - 12 หัวข้อ) *</label>
-            <input type="text" id="newOrientDay1DateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-3 py-1.5 bg-white border border-sky-300 rounded-lg outline-none text-xs">
+            <label class="block font-semibold text-[#004b93] mb-1">วันที่ 1 (Day 1 - 12 วิชา) *</label>
+            <input type="text" id="newOrientDay1DateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-sky-300 rounded-lg outline-none text-xs">
           </div>
           <div>
-            <label class="block font-semibold text-emerald-800 mb-1">วันที่ 2 (Day 2 - 2 หัวข้อ) *</label>
-            <input type="text" id="newOrientDay2DateInput" placeholder="เช่น 6 พฤศจิกายน 2569" class="w-full px-3 py-1.5 bg-white border border-emerald-300 rounded-lg outline-none text-xs">
+            <label class="block font-semibold text-emerald-800 mb-1">วันที่ 2 (Day 2 - BLS) *</label>
+            <input type="text" id="newOrientDay2DateInput" placeholder="เช่น 6 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-emerald-300 rounded-lg outline-none text-xs">
+          </div>
+          <div>
+            <label class="block font-semibold text-purple-800 mb-1">วันที่ 3 (Day 3 - พยาบาล)</label>
+            <input type="text" id="newOrientDay3DateInput" placeholder="เช่น 7 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-purple-300 rounded-lg outline-none text-xs">
           </div>
         </div>
 
@@ -2462,21 +2500,30 @@
       </div>
 
       <!-- Quick Batch Day Date Setters -->
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0 text-xs">
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-2.5 shrink-0 text-xs">
         <div class="space-y-1">
-          <label class="block font-semibold text-[#004b93]">วันที่สำหรับ Day 1 (หัวข้อ 1-12):</label>
+          <label class="block font-semibold text-[#004b93]">วันที่ Day 1 (หัวข้อ 1-12):</label>
           <div class="flex items-center gap-1.5">
             <input type="text" id="quickDay1DateInput" placeholder="เช่น 1 ต.ค. 2569" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs">
-            <button type="button" onclick="applyQuickDayDate(1)" class="px-2.5 py-1.5 bg-sky-50 text-[#004b93] hover:bg-sky-100 border border-sky-300 rounded-lg font-semibold whitespace-nowrap text-xs">
+            <button type="button" onclick="applyQuickDayDate(1)" class="px-2 py-1.5 bg-sky-50 text-[#004b93] hover:bg-sky-100 border border-sky-300 rounded-lg font-semibold whitespace-nowrap text-xs cursor-pointer">
               ใช้วันนี้
             </button>
           </div>
         </div>
         <div class="space-y-1">
-          <label class="block font-semibold text-emerald-800">วันที่สำหรับ Day 2 (หัวข้อ 13-14):</label>
+          <label class="block font-semibold text-emerald-800">วันที่ Day 2 (หัวข้อ 13 - BLS):</label>
           <div class="flex items-center gap-1.5">
             <input type="text" id="quickDay2DateInput" placeholder="เช่น 2 ต.ค. 2569" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs">
-            <button type="button" onclick="applyQuickDayDate(2)" class="px-2.5 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-300 rounded-lg font-semibold whitespace-nowrap text-xs">
+            <button type="button" onclick="applyQuickDayDate(2)" class="px-2 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-300 rounded-lg font-semibold whitespace-nowrap text-xs cursor-pointer">
+              ใช้วันนี้
+            </button>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="block font-semibold text-purple-800">วันที่ Day 3 (หัวข้อ 14 - พยาบาล):</label>
+          <div class="flex items-center gap-1.5">
+            <input type="text" id="quickDay3DateInput" placeholder="เช่น 3 ต.ค. 2569" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs">
+            <button type="button" onclick="applyQuickDayDate(3)" class="px-2 py-1.5 bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-300 rounded-lg font-semibold whitespace-nowrap text-xs cursor-pointer">
               ใช้วันนี้
             </button>
           </div>
@@ -2599,6 +2646,58 @@
         <button type="button" onclick="closeOrientationChecklistModal()" class="px-5 py-2.5 rounded-xl bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold transition-all shadow-xs">
           บันทึกและปิด
         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: NATIVE PRINTABLE A4 REGISTRATION ROSTER (OFFICIAL PPCH TEMPLATE) -->
+  <div id="orientationPrintModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col max-h-[96vh] animate-in fade-in zoom-in duration-150 overflow-hidden">
+      
+      <!-- Modal Header / Print Control Toolbar (Hidden during print) -->
+      <div class="orient-print-no-print p-4 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-sky-50 text-[#004b93] flex items-center justify-center border border-sky-200 shadow-2xs">
+            <span class="material-icons-round text-lg">print</span>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-1.5" id="orientPrintModalTitle">
+              ใบลงทะเบียนอบรม / สัมมนาภายใน
+            </h3>
+            <p class="text-xs text-slate-500 font-light" id="orientPrintModalSubtitle">
+              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร • พิมพ์พร้อมตารางรายชื่อและช่องเซ็นชื่อ
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <!-- Topic Selector -->
+          <div class="flex items-center gap-1.5">
+            <label class="text-xs font-semibold text-slate-600 hidden sm:inline">เลือกหัวข้อ:</label>
+            <select id="orientPrintTopicSelect" onchange="onPrintTopicSelectChanged()" class="text-xs font-semibold px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] max-w-[280px]">
+              <!-- Options populated dynamically -->
+            </select>
+          </div>
+
+          <!-- Print Trigger Button -->
+          <button type="button" onclick="printOrientationSheetNow()" class="px-3.5 py-1.5 bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95">
+            <span class="material-icons-round text-sm">print</span>
+            <span>พิมพ์ A4 (Print)</span>
+          </button>
+
+          <!-- Close Modal Button -->
+          <button type="button" onclick="closeOrientationPrintModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs cursor-pointer transition-colors" title="ปิดหน้าต่าง">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Preview Area for A4 Sheets -->
+      <div id="orientPrintPreviewArea" class="orient-print-preview-container flex-1 overflow-y-auto">
+        <div id="orientPrintSheetsContainer" class="flex flex-col items-center">
+          <!-- Rendered dynamically as 1 or 14 A4 Sheets -->
+        </div>
       </div>
 
     </div>
@@ -4403,6 +4502,103 @@
     }
     .orient-topic-strip.day2 {
       border-left-color: #059669;
+    }
+    .orient-topic-strip.day3 {
+      border-left-color: #7c3aed;
+    }
+
+    /* ==================== NATIVE PRINTABLE A4 REGISTRATION SHEET (OFFICIAL PPCH TEMPLATE) ==================== */
+    .orient-print-preview-container {
+      background-color: #475569;
+      padding: 24px 16px;
+      overflow-y: auto;
+    }
+    .orient-a4-sheet {
+      background: #ffffff;
+      width: 210mm;
+      max-width: 100%;
+      min-height: 297mm;
+      margin: 0 auto 24px auto;
+      padding: 12mm 14mm;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+      box-sizing: border-box;
+      color: #000000;
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      position: relative;
+    }
+    .orient-sheet-header-table,
+    .orient-sheet-meta-table,
+    .orient-sheet-attendee-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    @media screen and (max-width: 768px) {
+      .orient-a4-sheet {
+        padding: 8mm;
+        min-height: auto;
+      }
+    }
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 8mm 10mm;
+      }
+      body.printing-orientation > *:not(#orientationPrintModal) {
+        display: none !important;
+      }
+      body.printing-orientation {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+      }
+      body.printing-orientation #orientationPrintModal {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        z-index: auto !important;
+        overflow: visible !important;
+      }
+      body.printing-orientation #orientationPrintModal > div {
+        max-width: 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+      }
+      body.printing-orientation .orient-print-no-print {
+        display: none !important;
+      }
+      body.printing-orientation .orient-print-preview-container {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        max-height: none !important;
+      }
+      body.printing-orientation .orient-a4-sheet {
+        box-shadow: none !important;
+        margin: 0 0 0 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        min-height: auto !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+      }
+      body.printing-orientation .orient-a4-sheet:last-child {
+        page-break-after: auto;
+      }
     }
 
     /* ==================== 1. TOP HEADER (56px STICKY) ==================== */
@@ -7417,9 +7613,10 @@
       { id: 'or-10', day: 1, time: '16.00 - 16.20 น.', title: 'การจัดการและนโยบายสารสนเทศ (MOI)', speaker: 'แผนกเทคโนโลยีสารสนเทศ (IT)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
       { id: 'or-11', day: 1, time: '16.20 - 16.40 น.', title: 'แนะนำการใช้ PRINC Academy', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
       { id: 'or-12', day: 1, time: '16.40 - 17.00 น.', title: 'กิจกรรมทัวร์โรงพยาบาล (Hospital Tour)', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'รอบอาคารโรงพยาบาล' },
-      // Day 2: 2 หัวข้อวิชา
+      // Day 2: 1 หัวข้อวิชา
       { id: 'or-13', day: 2, time: '08.00 - 09.00 น.', title: 'Basic Life Support (BLS)', speaker: 'แผนกห้องฉุกเฉิน (Emergency Department)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-14', day: 2, time: '09.00 - 10.00 น.', title: 'ฝ่ายการพยาบาลพบพนักงานใหม่', speaker: 'ผู้จัดการฝ่ายปฏิบัติการคลินิก, ผู้ช่วยผู้จัดการฯ', venue: 'ห้องประชุมใหญ่ ชั้น 4' }
+      // Day 3: 1 หัวข้อวิชา
+      { id: 'or-14', day: 3, time: '09.00 - 10.00 น.', title: 'ฝ่ายการพยาบาลพบพนักงานใหม่', speaker: 'ผู้จัดการฝ่ายปฏิบัติการคลินิก, ผู้ช่วยผู้จัดการฯ', venue: 'ห้องประชุมใหญ่ ชั้น 4' }
     ];
 
     // Standard Template Google Sheet containing 14 topics in the same file
@@ -7431,15 +7628,16 @@
         id: 'c-2026-orientation-oct',
         month: '2026-10',
         title: 'ปฐมนิเทศพนักงานใหม่ 1-2/10/2569',
-        shortTitle: 'รอบ 1-2 ต.ค. 2569',
-        dates: '1-2 ตุลาคม 2569',
+        shortTitle: 'รอบ 1-3 ต.ค. 2569',
+        dates: '1-3 ตุลาคม 2569',
         day1Date: '1 ตุลาคม 2569',
         day2Date: '2 ตุลาคม 2569',
+        day3Date: '3 ตุลาคม 2569',
         sheetId: '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
         sheetUrl: ORIENTATION_TEMPLATE_SHEET_URL,
         status: 'active',
         topics: JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-          t.date = t.day === 1 ? '1 ตุลาคม 2569' : '2 ตุลาคม 2569';
+          t.date = t.day === 1 ? '1 ตุลาคม 2569' : (t.day === 2 ? '2 ตุลาคม 2569' : '3 ตุลาคม 2569');
           return t;
         }),
         attendees: [],
@@ -7448,15 +7646,16 @@
       {
         id: 'c-2026-orientation-nov',
         month: '2026-11',
-        title: 'ปฐมนิเทศพนักงานใหม่ รอบ 5-6 พ.ย. 2569',
-        shortTitle: 'รอบ 5-6 พ.ย. 2569',
-        dates: '5-6 พฤศจิกายน 2569',
+        title: 'ปฐมนิเทศพนักงานใหม่ รอบ 5-7 พ.ย. 2569',
+        shortTitle: 'รอบ 5-7 พ.ย. 2569',
+        dates: '5-7 พฤศจิกายน 2569',
         day1Date: '5 พฤศจิกายน 2569',
         day2Date: '6 พฤศจิกายน 2569',
+        day3Date: '7 พฤศจิกายน 2569',
         sheetUrl: ORIENTATION_TEMPLATE_SHEET_URL,
         status: 'upcoming',
         topics: JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-          t.date = t.day === 1 ? '5 พฤศจิกายน 2569' : '6 พฤศจิกายน 2569';
+          t.date = t.day === 1 ? '5 พฤศจิกายน 2569' : (t.day === 2 ? '6 พฤศจิกายน 2569' : '7 พฤศจิกายน 2569');
           return t;
         }),
         attendees: [],
@@ -7465,15 +7664,16 @@
       {
         id: 'c-2026-orientation-dec',
         month: '2026-12',
-        title: 'ปฐมนิเทศพนักงานใหม่ รอบ 3-4 ธ.ค. 2569',
-        shortTitle: 'รอบ 3-4 ธ.ค. 2569',
-        dates: '3-4 ธันวาคม 2569',
+        title: 'ปฐมนิเทศพนักงานใหม่ รอบ 3-5 ธ.ค. 2569',
+        shortTitle: 'รอบ 3-5 ธ.ค. 2569',
+        dates: '3-5 ธันวาคม 2569',
         day1Date: '3 ธันวาคม 2569',
         day2Date: '4 ธันวาคม 2569',
+        day3Date: '5 ธันวาคม 2569',
         sheetUrl: ORIENTATION_TEMPLATE_SHEET_URL,
         status: 'upcoming',
         topics: JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-          t.date = t.day === 1 ? '3 ธันวาคม 2569' : '4 ธันวาคม 2569';
+          t.date = t.day === 1 ? '3 ธันวาคม 2569' : (t.day === 2 ? '4 ธันวาคม 2569' : '5 ธันวาคม 2569');
           return t;
         }),
         attendees: [],
@@ -7797,17 +7997,26 @@
       if (kpiRate) kpiRate.textContent = rate + '% สำเร็จ';
       if (badgeCnt) badgeCnt.textContent = total;
 
-      // Update Day 1 & Day 2 labels
+      // Update Day 1, Day 2 & Day 3 labels
       const d1Label = document.getElementById('orientDay1Label');
       const d2Label = document.getElementById('orientDay2Label');
+      const d3Label = document.getElementById('orientDay3Label');
+      const d3Section = document.getElementById('orientDay3Section');
       const day1Topics = (b.topics || []).filter(t => t.day === 1);
       const day2Topics = (b.topics || []).filter(t => t.day === 2);
+      const day3Topics = (b.topics || []).filter(t => t.day >= 3);
       const d1Dates = [...new Set(day1Topics.map(t => t.date).filter(Boolean))];
       const d2Dates = [...new Set(day2Topics.map(t => t.date).filter(Boolean))];
+      const d3Dates = [...new Set(day3Topics.map(t => t.date).filter(Boolean))];
       const d1Text = d1Dates.length > 0 ? d1Dates.join(', ') : (b.day1Date || 'วันแรก');
       const d2Text = d2Dates.length > 0 ? d2Dates.join(', ') : (b.day2Date || 'วันที่สอง');
+      const d3Text = d3Dates.length > 0 ? d3Dates.join(', ') : (b.day3Date || 'วันที่สาม');
       if (d1Label) d1Label.textContent = `วันที่ 1 (${d1Text}): ${day1Topics.length} หัวข้อวิชา`;
       if (d2Label) d2Label.textContent = `วันที่ 2 (${d2Text}): ${day2Topics.length} หัวข้อวิชา`;
+      if (d3Label) d3Label.textContent = `วันที่ 3 (${d3Text}): ${day3Topics.length} หัวข้อวิชา`;
+      if (d3Section) {
+        d3Section.classList.toggle('hidden', day3Topics.length === 0);
+      }
 
       renderOrientationSyllabus();
       renderOrientationMatrix();
@@ -7887,12 +8096,19 @@
     function renderOrientationSyllabus() {
       const d1Container = document.getElementById('orientDay1StripContainer');
       const d2Container = document.getElementById('orientDay2StripContainer');
+      const d3Container = document.getElementById('orientDay3StripContainer');
+      const d3Section = document.getElementById('orientDay3Section');
       const b = getActiveOrientBatch();
       if (!b) return;
 
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
       const day1Topics = topics.filter(t => t.day === 1);
       const day2Topics = topics.filter(t => t.day === 2);
+      const day3Topics = topics.filter(t => t.day >= 3);
+
+      if (d3Section) {
+        d3Section.classList.toggle('hidden', day3Topics.length === 0);
+      }
 
       if (d1Container) {
         d1Container.innerHTML = day1Topics.map((t, idx) => {
@@ -7925,6 +8141,10 @@
                 <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
                   ${escapeHtml(t.venue)}
                 </span>
+                <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-[#004b93] hover:bg-sky-50 border border-transparent hover:border-sky-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
+                  <span class="material-icons-round text-xs">print</span>
+                  <span class="hidden sm:inline">พิมพ์ใบนี้</span>
+                </button>
               </div>
             </div>
           `;
@@ -7945,7 +8165,7 @@
             <div class="orient-topic-strip day2">
               <div class="flex items-center space-x-2.5 min-w-0 flex-1">
                 <span class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-emerald-200">
-                  ${String(idx + 13).padStart(2, '0')}
+                  ${String(day1Topics.length + idx + 1).padStart(2, '0')}
                 </span>
                 ${dateBadge}
                 <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
@@ -7962,6 +8182,51 @@
                 <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
                   ${escapeHtml(t.venue)}
                 </span>
+                <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-emerald-800 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
+                  <span class="material-icons-round text-xs">print</span>
+                  <span class="hidden sm:inline">พิมพ์ใบนี้</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (d3Container && day3Topics.length > 0) {
+        d3Container.innerHTML = day3Topics.map((t, idx) => {
+          const isCustomDate = t.date && t.date !== b.day3Date;
+          const dateBadge = t.date ? `
+            <span class="font-mono text-[11px] font-semibold ${isCustomDate ? 'text-amber-800 bg-amber-50 border border-amber-300 font-bold' : 'text-purple-800 bg-purple-50 border border-purple-200'} px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
+              <span class="material-icons-round text-xs">event</span>
+              <span>${escapeHtml(t.date)}</span>
+            </span>
+          ` : '';
+
+          return `
+            <div class="orient-topic-strip day3">
+              <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+                <span class="w-6 h-6 rounded-md bg-purple-50 text-purple-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-purple-200">
+                  ${String(day1Topics.length + day2Topics.length + idx + 1).padStart(2, '0')}
+                </span>
+                ${dateBadge}
+                <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                  ${t.time}
+                </span>
+                <span class="text-xs font-bold text-slate-900 truncate">
+                  ${escapeHtml(t.title)}
+                </span>
+                <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
+                  • ${escapeHtml(t.speaker)}
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
+                  ${escapeHtml(t.venue)}
+                </span>
+                <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-purple-800 hover:bg-purple-50 border border-transparent hover:border-purple-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
+                  <span class="material-icons-round text-xs">print</span>
+                  <span class="hidden sm:inline">พิมพ์ใบนี้</span>
+                </button>
               </div>
             </div>
           `;
@@ -8192,6 +8457,7 @@
       const datesVal = (document.getElementById('newOrientDatesInput') || {}).value || '';
       const d1Val = (document.getElementById('newOrientDay1DateInput') || {}).value || '';
       const d2Val = (document.getElementById('newOrientDay2DateInput') || {}).value || '';
+      const d3Val = (document.getElementById('newOrientDay3DateInput') || {}).value || '';
       const sheetVal = (document.getElementById('newOrientSheetInput') || {}).value || ORIENTATION_TEMPLATE_SHEET_URL;
 
       if (!titleVal || !datesVal) {
@@ -8201,9 +8467,9 @@
 
       const newId = 'c-orient-' + Date.now();
       
-      // Clone standard 14 topics and inject specific Day 1 & Day 2 dates
+      // Clone standard 14 topics and inject specific Day 1, Day 2 & Day 3 dates
       const topicsClone = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-        t.date = t.day === 1 ? (d1Val || datesVal) : (d2Val || datesVal);
+        t.date = t.day === 1 ? (d1Val || datesVal) : (t.day === 2 ? (d2Val || datesVal) : (d3Val || d2Val || datesVal));
         return t;
       });
 
@@ -8215,6 +8481,7 @@
         dates: datesVal,
         day1Date: d1Val || datesVal,
         day2Date: d2Val || datesVal,
+        day3Date: d3Val || d2Val || datesVal,
         sheetUrl: sheetVal,
         status: 'upcoming',
         topics: topicsClone,
@@ -8247,10 +8514,12 @@
       const container = document.getElementById('scheduleEditorTopicsContainer');
       const qDay1 = document.getElementById('quickDay1DateInput');
       const qDay2 = document.getElementById('quickDay2DateInput');
+      const qDay3 = document.getElementById('quickDay3DateInput');
 
       if (subtitle) subtitle.textContent = `รอบ: ${b.title} (${b.dates || '-'})`;
       if (qDay1) qDay1.value = b.day1Date || '';
       if (qDay2) qDay2.value = b.day2Date || '';
+      if (qDay3) qDay3.value = b.day3Date || '';
 
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
 
@@ -8258,15 +8527,22 @@
         container.innerHTML = topics.map((t, idx) => `
           <div class="py-2.5 space-y-1.5" data-topic-id="${t.id}">
             <div class="flex items-center justify-between">
-              <span class="font-bold text-xs ${t.day === 1 ? 'text-[#004b93]' : 'text-emerald-800'}">
-                หัวข้อที่ ${idx + 1}: ${escapeHtml(t.title)} (Day ${t.day})
-              </span>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs ${t.day === 1 ? 'text-[#004b93]' : (t.day === 2 ? 'text-emerald-800' : 'text-purple-800')}">
+                  หัวข้อที่ ${idx + 1}: ${escapeHtml(t.title)}
+                </span>
+                <select id="schedDay_${t.id}" class="text-[11px] font-bold px-1.5 py-0.5 rounded border border-slate-300 bg-white">
+                  <option value="1" ${t.day === 1 ? 'selected' : ''}>Day 1</option>
+                  <option value="2" ${t.day === 2 ? 'selected' : ''}>Day 2</option>
+                  <option value="3" ${t.day === 3 ? 'selected' : ''}>Day 3</option>
+                </select>
+              </div>
               <span class="text-[10.5px] font-mono text-slate-400">ID: ${t.id}</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
               <div>
                 <label class="block text-[10px] text-slate-500">วันที่จัดอบรม</label>
-                <input type="text" id="schedDate_${t.id}" value="${escapeHtml(t.date || (t.day === 1 ? b.day1Date : b.day2Date) || '')}" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs">
+                <input type="text" id="schedDate_${t.id}" value="${escapeHtml(t.date || (t.day === 1 ? b.day1Date : (t.day === 2 ? b.day2Date : b.day3Date)) || '')}" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs">
               </div>
               <div>
                 <label class="block text-[10px] text-slate-500">ช่วงเวลา</label>
@@ -8298,15 +8574,18 @@
       const b = orientationBatches.find(x => x.id === editingBatchScheduleId);
       if (!b) return;
 
-      const dateVal = dayNum === 1 
-        ? (document.getElementById('quickDay1DateInput') || {}).value 
-        : (document.getElementById('quickDay2DateInput') || {}).value;
+      let dateVal = '';
+      if (dayNum === 1) dateVal = (document.getElementById('quickDay1DateInput') || {}).value;
+      else if (dayNum === 2) dateVal = (document.getElementById('quickDay2DateInput') || {}).value;
+      else if (dayNum === 3) dateVal = (document.getElementById('quickDay3DateInput') || {}).value;
 
       if (!dateVal) return;
 
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
       topics.forEach(t => {
-        if (t.day === dayNum) {
+        const daySelect = document.getElementById(`schedDay_${t.id}`);
+        const currentDay = daySelect ? parseInt(daySelect.value, 10) : t.day;
+        if (currentDay === dayNum) {
           const inp = document.getElementById(`schedDate_${t.id}`);
           if (inp) inp.value = dateVal;
         }
@@ -8323,8 +8602,10 @@
 
       const qDay1 = (document.getElementById('quickDay1DateInput') || {}).value;
       const qDay2 = (document.getElementById('quickDay2DateInput') || {}).value;
+      const qDay3 = (document.getElementById('quickDay3DateInput') || {}).value;
       if (qDay1) b.day1Date = qDay1;
       if (qDay2) b.day2Date = qDay2;
+      if (qDay3) b.day3Date = qDay3;
 
       if (!Array.isArray(b.topics)) {
         b.topics = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS));
@@ -8335,10 +8616,20 @@
         const tInp = document.getElementById(`schedTime_${t.id}`);
         const sInp = document.getElementById(`schedSpeaker_${t.id}`);
         const vInp = document.getElementById(`schedVenue_${t.id}`);
+        const daySelect = document.getElementById(`schedDay_${t.id}`);
 
+        if (daySelect) {
+          t.day = parseInt(daySelect.value, 10) || t.day;
+        }
         if (dInp) {
           const val = dInp.value.trim();
-          if (val) t.date = val;
+          if (val) {
+            t.date = val;
+            // Auto assign Day 3 if date is distinct from Day 1 and Day 2 and not explicitly set
+            if (val !== b.day1Date && val !== b.day2Date && (!daySelect || daySelect.value === '2')) {
+              if (t.id === 'or-14') t.day = 3;
+            }
+          }
         }
         if (tInp) t.time = tInp.value.trim();
         if (sInp) t.speaker = sInp.value.trim();
@@ -8347,8 +8638,14 @@
 
       // If dates span across 3 days (e.g. topic 14 is day 3), update batch dates summary
       const uniqueDates = [...new Set(b.topics.map(t => t.date).filter(Boolean))];
-      if (uniqueDates.length > 2 && b.id === 'c-2026-orientation-oct') {
-        b.dates = '1-3 ตุลาคม 2569';
+      if (uniqueDates.length > 2) {
+        if (b.id === 'c-2026-orientation-oct') {
+          b.dates = '1-3 ตุลาคม 2569';
+        } else if (b.id === 'c-2026-orientation-nov') {
+          b.dates = '5-7 พฤศจิกายน 2569';
+        } else {
+          b.dates = uniqueDates[0] + ' - ' + uniqueDates[uniqueDates.length - 1];
+        }
       }
 
       // Persist to coursesData and Supabase
@@ -8359,6 +8656,7 @@
           coursesData[courseIdx].date = b.dates;
           coursesData[courseIdx].day1Date = b.day1Date;
           coursesData[courseIdx].day2Date = b.day2Date;
+          coursesData[courseIdx].day3Date = b.day3Date;
         }
       }
 
@@ -8671,8 +8969,231 @@
       if (typeof HrdModal !== 'undefined') HrdModal.success('ส่งออกไฟล์ Excel ปฐมนิเทศ (UTF-8 BOM) เรียบร้อยค่ะ');
     }
 
-    function printOrientationChecklist() {
+    // ============================================================================
+    // FEATURE: NATIVE PRINTABLE A4 REGISTRATION ROSTER (EXACT HOSPITAL TEMPLATE)
+    // Matches Google Sheet "แบบลงทะเบียน - ปฐมนิเทศพนักงานใหม่" (14 Topics)
+    // ============================================================================
+    let currentPrintBatch = null;
+
+    function parseEmpNameParts(fullName) {
+      if (!fullName) return { title: '', firstName: '', lastName: '' };
+      let str = String(fullName).trim();
+      const knownTitles = ['นางสาว', 'นาง', 'นาย', 'พญ.', 'นพ.', 'ทพญ.', 'ทพ.', 'ภก.', 'ภญ.', 'ดร.', 'ว่าที่ ร.ต.', 'ร.ต.'];
+      let title = '';
+      for (const t of knownTitles) {
+        if (str.startsWith(t)) {
+          title = t;
+          str = str.substring(t.length).trim();
+          break;
+        }
+      }
+      const parts = str.split(/\s+/).filter(Boolean);
+      const firstName = parts[0] || '';
+      const lastName = parts.slice(1).join(' ') || '';
+      return { title, firstName, lastName };
+    }
+
+    function generateA4SheetHtml(topic, batch, attendees, topicIndex) {
+      const safeTopicTitle = escapeHtml(topic.title || '');
+      const safeTopicSpeaker = escapeHtml(topic.speaker || 'ฝ่ายทรัพยากรบุคคล (HR)');
+      const safeTopicDate = escapeHtml(topic.date || batch.dates || '');
+      const safeTopicTime = escapeHtml(topic.time || '');
+
+      const totalMinRows = Math.max(18, (attendees ? attendees.length : 0) + 3);
+      let rowsHtml = '';
+
+      for (let i = 0; i < totalMinRows; i++) {
+        const a = (attendees && attendees[i]) ? attendees[i] : null;
+        const rowNo = i + 1;
+        if (a) {
+          const parsedName = parseEmpNameParts(a.name);
+          const empIdPadded = String(a.id || '').padStart(6, '0');
+          rowsHtml += `
+            <tr style="height: 25px; border: 1px solid #000;">
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 2px;">${rowNo}</td>
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-weight: bold; font-size: 10px; padding: 2px;">${empIdPadded}</td>
+              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 2px;">${escapeHtml(parsedName.title)}</td>
+              <td style="border: 1px solid #000; font-size: 10px; padding: 2px 4px;">${escapeHtml(parsedName.firstName)}</td>
+              <td style="border: 1px solid #000; font-size: 10px; padding: 2px 4px;">${escapeHtml(parsedName.lastName)}</td>
+              <td style="border: 1px solid #000; font-size: 9.5px; padding: 2px 4px;">${escapeHtml(a.position || '')}</td>
+              <td style="border: 1px solid #000; font-size: 9.5px; padding: 2px 4px;">${escapeHtml(a.department || '')}</td>
+              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 2px;">&nbsp;</td>
+            </tr>
+          `;
+        } else {
+          rowsHtml += `
+            <tr style="height: 25px; border: 1px solid #000;">
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 2px; color: #475569;">${rowNo}</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+            </tr>
+          `;
+        }
+      }
+
+      return `
+        <div class="orient-a4-sheet" data-topic-id="${topic.id}">
+          <!-- HEADER WITH LOGO AND TITLES -->
+          <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; margin-bottom: -1px;">
+            <tr>
+              <td style="width: 25%; padding: 6px 10px; border-right: 1.5px solid #000; vertical-align: middle; text-align: center;">
+                <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 42px; max-width: 140px; object-fit: contain; display: inline-block;">
+              </td>
+              <td style="width: 75%; padding: 6px 10px; text-align: center; vertical-align: middle;">
+                <div style="font-size: 16px; font-weight: bold; color: #000; letter-spacing: 0.3px; line-height: 1.25;">ใบลงทะเบียนอบรม / สัมมนาภายใน</div>
+                <div style="font-size: 11.5px; font-weight: 500; color: #1e293b; line-height: 1.2;">Training Registration Form</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- TOPIC METADATA GRID -->
+          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; font-size: 10px; margin-bottom: -1px;">
+            <tr>
+              <td style="width: 17%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">หลักสูตร / เรื่อง (Topic)</td>
+              <td style="width: 33%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; color: #000;">${safeTopicTitle}</td>
+              <td style="width: 20%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">วันที่อบรม / สัมมนา (Date) :</td>
+              <td style="width: 14%; border: 1px solid #000; padding: 3px 5px; text-align: center;">${safeTopicDate}</td>
+              <td style="width: 8%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">เวลา / Time :</td>
+              <td style="width: 8%; border: 1px solid #000; padding: 3px 5px; font-family: monospace; text-align: center;">${safeTopicTime}</td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc; vertical-align: top;">วิทยากร (Speakers)</td>
+              <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">${safeTopicSpeaker}</td>
+              <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">
+                <div style="font-weight: bold; margin-bottom: 2px;">ประเภทหลักสูตร</div>
+                <div style="display: flex; gap: 10px; margin-top: 3px;">
+                  <span>☑ ในแผน</span>
+                  <span>☐ นอกแผน</span>
+                </div>
+              </td>
+              <td colspan="2" style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 9.5px;">
+                  <span>☑ Mandatory Course</span>
+                  <span>☐ Managerial Course</span>
+                  <span>☐ Functional Course</span>
+                  <span>☐ Quality Course</span>
+                </div>
+              </td>
+              <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top; text-align: center;">
+                <div style="font-weight: bold; font-size: 9.5px;">จำนวนเครดิต</div>
+                <div style="margin-top: 4px; font-weight: bold;">-</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- ATTENDEE TABLE -->
+          <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000;">
+            <thead>
+              <tr style="background: #f1f5f9; text-align: center; font-weight: bold; border: 1px solid #000;">
+                <th colspan="8" style="padding: 4px; font-size: 11px; border: 1px solid #000; color: #000;">รายชื่อผู้เข้าร่วมอบรม</th>
+              </tr>
+              <tr style="background: #f8fafc; text-align: center; font-weight: bold; border: 1px solid #000; line-height: 1.15; font-size: 10px;">
+                <th style="width: 5%; border: 1px solid #000; padding: 3px 2px;">ลำดับ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">No.</span></th>
+                <th style="width: 12%; border: 1px solid #000; padding: 3px 2px;">รหัสพนักงาน<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Em.No.</span></th>
+                <th style="width: 10%; border: 1px solid #000; padding: 3px 2px;">คำนำหน้าชื่อ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Title</span></th>
+                <th style="width: 16%; border: 1px solid #000; padding: 3px 2px;">ชื่อ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Name</span></th>
+                <th style="width: 16%; border: 1px solid #000; padding: 3px 2px;">นามสกุล<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Surname</span></th>
+                <th style="width: 16%; border: 1px solid #000; padding: 3px 2px;">ตำแหน่ง<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Position</span></th>
+                <th style="width: 13%; border: 1px solid #000; padding: 3px 2px;">แผนก<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Department</span></th>
+                <th style="width: 12%; border: 1px solid #000; padding: 3px 2px;">ลายมือชื่อ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Signature</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <!-- FOOTER SIGNATURE BOXES -->
+          <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 10.5px;">
+            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 8px 12px; text-align: center; line-height: 1.5;">
+              <div>ลงชื่อ ................................................................ ผู้บันทึก / เจ้าหน้าที่ HRD</div>
+              <div style="margin-top: 3px; color: #334155;">( ................................................................ )</div>
+              <div style="margin-top: 3px; color: #475569;">วันที่ ........ / ........ / ................</div>
+            </div>
+            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 8px 12px; text-align: center; line-height: 1.5;">
+              <div>ลงชื่อ ................................................................ วิทยากร / ผู้ควบคุมการอบรม</div>
+              <div style="margin-top: 3px; color: #334155;">( ................................................................ )</div>
+              <div style="margin-top: 3px; color: #475569;">วันที่ ........ / ........ / ................</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOrientationPrintSheets(filterTopicId = 'all') {
+      const container = document.getElementById('orientPrintSheetsContainer');
+      if (!container || !currentPrintBatch) return;
+
+      const topics = currentPrintBatch.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const attendees = currentPrintBatch.attendees || [];
+
+      const targets = (filterTopicId === 'all')
+        ? topics
+        : topics.filter(t => t.id === filterTopicId);
+
+      container.innerHTML = targets.map((t, idx) => {
+        const originalIdx = topics.findIndex(x => x.id === t.id);
+        return generateA4SheetHtml(t, currentPrintBatch, attendees, originalIdx >= 0 ? originalIdx : idx);
+      }).join('');
+    }
+
+    function openOrientationPrintModal(topicId = 'all') {
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      currentPrintBatch = b;
+
+      const modal = document.getElementById('orientationPrintModal');
+      const titleEl = document.getElementById('orientPrintModalTitle');
+      const subEl = document.getElementById('orientPrintModalSubtitle');
+      const selectEl = document.getElementById('orientPrintTopicSelect');
+
+      if (titleEl) titleEl.textContent = `แบบลงทะเบียน - ${b.title}`;
+      if (subEl) subEl.textContent = `รอบวันที่: ${b.dates || '-'} • ผู้เข้าร่วม ${b.attendees ? b.attendees.length : 0} ท่าน`;
+
+      const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      if (selectEl) {
+        selectEl.innerHTML = `
+          <option value="all">🖨️ พิมพ์ครบทุกวิชา (14 หัวข้อ • แยก 14 หน้า A4)</option>
+          ${topics.map((t, idx) => `
+            <option value="${t.id}" ${topicId === t.id ? 'selected' : ''}>
+              ${idx + 1}. ${escapeHtml(t.title)} (${t.date || ''} ${t.time || ''})
+            </option>
+          `).join('')}
+        `;
+        if (topicId) selectEl.value = topicId;
+      }
+
+      renderOrientationPrintSheets(selectEl ? selectEl.value : 'all');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeOrientationPrintModal() {
+      const modal = document.getElementById('orientationPrintModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function onPrintTopicSelectChanged() {
+      const selectEl = document.getElementById('orientPrintTopicSelect');
+      if (selectEl) {
+        renderOrientationPrintSheets(selectEl.value);
+      }
+    }
+
+    function printOrientationSheetNow() {
+      document.body.classList.add('printing-orientation');
       window.print();
+      setTimeout(() => {
+        document.body.classList.remove('printing-orientation');
+      }, 1000);
+    }
+
+    function printOrientationChecklist() {
+      openOrientationPrintModal('all');
     }
 
   </script>
