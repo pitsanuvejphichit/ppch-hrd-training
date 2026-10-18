@@ -196,6 +196,67 @@
       outline-offset: 2px;
     }
 
+    
+    /* Orientation KPI Strip (Medical Equipment Archetype) */
+    .orient-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .orient-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    }
+    .orient-kpi-card {
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      border-radius: 9px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.02);
+      transition: all 0.15s ease;
+    }
+    .orient-kpi-card:hover {
+      border-color: var(--border-blue-soft);
+      box-shadow: 0 2px 8px rgba(0, 75, 147, 0.06);
+    }
+    .orient-kpi-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Single-Row Horizontal Strip Cards for 14 Topics (Golden Rule 3) */
+    .orient-topic-strip {
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      border-left: 3.5px solid var(--royal-blue);
+      border-radius: 8px;
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0, 46, 110, 0.02);
+      transition: all 0.15s ease;
+    }
+    .orient-topic-strip:hover {
+      border-color: #93c5fd;
+      background: #fbfdff;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 75, 147, 0.06);
+    }
+    .orient-topic-strip.day2 {
+      border-left-color: #059669;
+    }
+
     /* ==================== 1. TOP HEADER (56px STICKY) ==================== */
     .app-topbar {
       height: 56px;
@@ -647,15 +708,15 @@
     .course-strip-card {
       background: #ffffff;
       border: 1px solid var(--border-main);
-      border-left: 4px solid var(--royal-blue);
-      border-radius: 14px;
-      padding: 12px 18px;
+      border-left: 3.5px solid var(--royal-blue);
+      border-radius: 10px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       width: 100%;
-      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.04);
+      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.03);
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
@@ -683,10 +744,10 @@
       flex-wrap: wrap;
     }
     .strip-title {
-      font-size: 14.5px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text-main);
-      letter-spacing: -0.2px;
+      letter-spacing: -0.15px;
       line-height: 1.35;
       white-space: nowrap;
       overflow: hidden;
@@ -707,11 +768,11 @@
     }
 
     .strip-quota-col {
-      width: 190px;
+      width: 150px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     @media (max-width: 860px) {
       .strip-quota-col { display: none; }
@@ -733,9 +794,9 @@
     }
     .btn-floating-trigger {
       position: relative;
-      width: 34px;
-      height: 34px;
-      min-width: 34px;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
       border-radius: 50%;
       background: #ffffff;
       border: 1.5px solid var(--border-main);
@@ -985,7 +1046,7 @@
       <main id="adminMainContent" class="flex-1 w-full overflow-y-auto">
 
         <!-- ==================== VIEW 1: COURSES LIST ==================== -->
-        <div id="viewCourses" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div id="viewCourses" class="w-full px-3 sm:px-5 py-4 space-y-3.5">
 
         <!-- 1. KPI Summary Ribbon -->
         <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
@@ -1120,7 +1181,7 @@
         <!-- ==================== END VIEW 1: COURSES LIST ==================== -->
 
         <!-- ==================== VIEW 2: TARGET AUDIENCE SETUP ==================== -->
-        <div id="viewTarget" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6 hidden">
+        <div id="viewTarget" class="w-full px-3 sm:px-5 py-4 space-y-3.5 hidden">
 
           <!-- 1. COURSE INFO CARD WITH QUICK SWITCHER -->
           <section class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-xs space-y-4">
@@ -1346,7 +1407,7 @@
         <!-- ==================== END VIEW 2: TARGET AUDIENCE SETUP ==================== -->
 
         <!-- ==================== VIEW 3: CREATE / EDIT COURSE (NATIVE SPA DOM - NO IFRAMES) ==================== -->
-        <div id="viewCreate" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6 hidden">
+        <div id="viewCreate" class="w-full px-3 sm:px-5 py-4 space-y-3.5 hidden">
           <div class="w-full max-w-6xl mx-auto space-y-6">
 
             <!-- Title & Context Header Card -->
@@ -1653,185 +1714,221 @@
 
 
         <!-- ==================== VIEW 4: NEW EMPLOYEE ORIENTATION ==================== -->
-        <div id="viewOrientation" class="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6 hidden">
+        <div id="viewOrientation" class="w-full px-3 sm:px-5 py-4 space-y-3.5 hidden">
           
-          <!-- Orientation Hero Banner -->
-          <div class="w-full rounded-3xl bg-gradient-to-r from-[#002e6e] via-[#004b93] to-[#0284c7] p-6 lg:p-8 text-white shadow-xl shadow-[#002e6e]/15 relative overflow-hidden">
-            <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-sky-400/20 blur-3xl pointer-events-none"></div>
-
-            <div class="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
-              <div class="space-y-3 max-w-4xl">
-                <div class="flex items-center space-x-2.5 flex-wrap gap-y-2">
-                  <span class="text-xs font-bold px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg border border-white/20 text-white flex items-center gap-1.5 shadow-xs">
-                    <span class="material-icons-round text-sm">school</span>
-                    <span>โครงการปฐมนิเทศบุคลากรใหม่ (Orientation Program)</span>
-                  </span>
-                  <span class="text-xs font-mono text-cyan-200 bg-black/25 px-2.5 py-1 rounded-lg">
-                    รอบ 1-2 ตุลาคม 2569
-                  </span>
-                  <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 rounded-lg flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>14 หัวข้อวิชาหลัก (2 วันเต็ม)</span>
-                  </span>
-                </div>
-
-                <h2 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
-                  ระบบปฐมนิเทศพนักงานใหม่ โรงพยาบาลพิษณุเวช พิจิตร
-                </h2>
-                <p class="text-xs text-sky-100 font-light leading-relaxed max-w-3xl">
-                  หลักสูตรเตรียมความพร้อมบุคลากรใหม่ตามมาตรฐาน รพ. ครอบคลุมวัฒนธรรมองค์กร PRINC, กฎระเบียบ สวัสดิการ, เครื่องมือแพทย์, มาตรฐานบริการ, HA & RM, IC, อาชีวอนามัย และการช่วยชีวิตขั้นพื้นฐาน (BLS)
-                </p>
-              </div>
-
-              <!-- Real-time Stats Cards -->
-              <div class="shrink-0 flex items-center justify-end">
-                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-5 flex items-center justify-around shadow-inner min-w-[320px] gap-4">
-                  <div class="text-center pr-4 border-r border-white/15">
-                    <span class="text-[11px] text-cyan-200 block uppercase font-medium">พนักงานในรุ่น</span>
-                    <div id="statOrientTotal" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-0.5 font-display">0</div>
-                    <span class="text-[10px] text-sky-200">ท่าน</span>
-                  </div>
-                  <div class="text-center pr-4 border-r border-white/15">
-                    <span class="text-[11px] text-cyan-200 block uppercase font-medium">หัวข้อทั้งหมด</span>
-                    <div class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-0.5 font-display">14</div>
-                    <span class="text-[10px] text-sky-200">วิชา (2 วัน)</span>
-                  </div>
-                  <div class="text-center">
-                    <span class="text-[11px] text-cyan-200 block uppercase font-medium">ผ่านครบถ้วน</span>
-                    <div id="statOrientCompleted" class="text-2xl sm:text-3xl font-extrabold text-emerald-300 tracking-tight mt-0.5 font-display">0</div>
-                    <span class="text-[10px] text-emerald-200 font-medium" id="statOrientRate">0%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Orientation Toolbar & Tab Bar -->
-          <div class="bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <!-- COMPACT CLINICAL HEADER & BATCH CONTROLS (Zero Explanatory Clutter) -->
+          <div class="bg-white rounded-xl border border-slate-200 p-3 sm:p-3.5 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-3">
             
-            <!-- Navigation Tabs (Syllabus, Matrix, Enroll) -->
-            <div class="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl">
-              <button type="button" id="tabOrientSyllabusBtn" onclick="switchOrientationTab('syllabus')" class="px-4 py-2 rounded-lg font-bold text-xs bg-white text-[#004b93] shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
-                <span class="material-icons-round text-sm">schedule</span>
-                <span>กำหนดการ 14 หัวข้อหลัก</span>
-              </button>
-              <button type="button" id="tabOrientMatrixBtn" onclick="switchOrientationTab('matrix')" class="px-4 py-2 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer">
-                <span class="material-icons-round text-sm">checklist</span>
-                <span>รายชื่อ &amp; การเช็คชื่อ (<span id="orientBadgeCount">0</span>)</span>
-              </button>
-              <button type="button" id="tabOrientEnrollBtn" onclick="switchOrientationTab('enroll')" class="px-4 py-2 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer">
-                <span class="material-icons-round text-sm">person_add</span>
-                <span>เพิ่มพนักงานใหม่</span>
-              </button>
+            <!-- Left: Title & Monthly Batch Selector -->
+            <div class="flex items-center space-x-3 flex-wrap gap-y-2">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#002e6e] to-[#0284c7] text-white flex items-center justify-center font-bold shadow-xs">
+                  <span class="material-icons-round text-lg">school</span>
+                </div>
+                <div>
+                  <h2 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-none font-display">
+                    ปฐมนิเทศพนักงานใหม่
+                  </h2>
+                  <span class="text-[11px] text-slate-500 font-light">
+                    ระบบบริหารโครงการปฐมนิเทศบุคลากร โรงพยาบาลพิษณุเวช พิจิตร
+                  </span>
+                </div>
+              </div>
+
+              <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+
+              <!-- Batch Dropdown & Add Batch -->
+              <div class="flex items-center space-x-1.5">
+                <span class="text-xs font-semibold text-slate-600 whitespace-nowrap">รอบประจำเดือน:</span>
+                <select id="orientBatchSelect" onchange="onSelectOrientBatch(this.value)" class="text-xs font-bold text-[#004b93] bg-sky-50 border border-sky-300 rounded-lg px-2.5 py-1.5 outline-none cursor-pointer focus:bg-white focus:border-[#004b93] transition-all">
+                  <!-- Populated dynamically: Oct 2026, Nov 2026, Dec 2026 etc. -->
+                </select>
+
+                <button type="button" onclick="openNewBatchModal()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-[#004b93] text-slate-700 text-xs font-semibold border border-slate-200 flex items-center gap-1 cursor-pointer transition-all active:scale-95" title="เพิ่มรอบปฐมนิเทศประจำเดือนใหม่">
+                  <span class="material-icons-round text-sm">add_circle_outline</span>
+                  <span class="hidden sm:inline">เพิ่มรอบใหม่</span>
+                </button>
+              </div>
             </div>
 
-            <!-- Single-Row Streamlined Export & Actions -->
-            <div class="flex items-center space-x-2">
-              <button type="button" onclick="printOrientationChecklist()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95" title="พิมพ์เอกสารรับรองและใบเซ็นชื่อปฐมนิเทศ (A4 Official)">
+            <!-- Right: Open Google Sheet & Action Speed Dial -->
+            <div class="flex items-center space-x-2 shrink-0">
+              <!-- Golden Rule: Open Google Sheet Roster Button -->
+              <a 
+                id="btnOrientGoogleSheet" 
+                href="https://docs.google.com/spreadsheets/d/1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg/edit?usp=drivesdk" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 cursor-pointer"
+                title="เปิดใบรายชื่อและข้อมูลการลงทะเบียนบน Google Sheet ของรอบนี้"
+              >
+                <span class="material-icons-round text-sm text-emerald-700">table_chart</span>
+                <span>เปิดใบรายชื่อบน Google Sheet</span>
+              </a>
+
+              <button type="button" onclick="openEditBatchSheetModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm cursor-pointer transition-colors" title="แก้ไขลิงก์ Google Sheet ของรอบนี้">
+                <span class="material-icons-round text-sm">edit_note</span>
+              </button>
+
+              <button type="button" onclick="printOrientationChecklist()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1 cursor-pointer shadow-2xs active:scale-95" title="พิมพ์ใบบันทึกผลและใบเซ็นชื่อ A4">
                 <span class="material-icons-round text-sm text-slate-600">print</span>
-                <span class="hidden sm:inline">พิมพ์ใบเซ็นชื่อ A4</span>
+                <span class="hidden md:inline">พิมพ์ A4</span>
               </button>
 
               <!-- Speed Dial for Export (Golden Rule 3) -->
-              <div class="floating-action-wrapper" id="orientExportSpeedDial" onmouseenter="handleFloatingEnter('orientExportSpeedDial')" onmouseleave="handleFloatingLeave('orientExportSpeedDial')">
-                <button type="button" class="btn-floating-toggle" onclick="toggleFloatingMenu('orientExportSpeedDial')" title="ส่งออกรายงาน">
+              <div class="floating-action-wrapper" id="orientExportSpeedDial" onmouseenter="handleFloatingEnter(this)" onmouseleave="handleFloatingLeave(this)">
+                <button type="button" class="btn-floating-trigger" onclick="toggleFloatingMenu(this, event)" title="ส่งออกข้อมูล">
                   <span class="material-icons-round text-base">file_download</span>
-                  <span class="floating-badge">2</span>
+                  <span class="floating-badge-count">2</span>
                 </button>
                 <div class="floating-action-tray">
                   <button type="button" onclick="exportOrientationExcel()" class="btn-tray-action text-emerald-700" title="ส่งออก Excel (.xls)">
                     <span class="material-icons-round">table_view</span>
-                    <span class="tray-label">Excel</span>
                   </button>
                   <button type="button" onclick="exportOrientationCsv()" class="btn-tray-action text-sky-700" title="ส่งออก CSV (UTF-8 BOM)">
                     <span class="material-icons-round">description</span>
-                    <span class="tray-label">CSV</span>
                   </button>
-                  <button type="button" class="btn-floating-close" onclick="closeFloatingMenu('orientExportSpeedDial')" title="ปิดเมนู">
+                  <button type="button" class="btn-floating-close" onclick="closeFloatingMenu(this, event)" title="ปิดเมนู">
                     <span class="material-icons-round">close</span>
                   </button>
                 </div>
               </div>
+            </div>
 
+          </div>
+
+          <!-- COMPACT 4-CARD KPI STRIP (Medical Equipment Archetype) -->
+          <div class="orient-kpi-grid">
+            <div class="orient-kpi-card">
+              <div class="orient-kpi-icon bg-sky-50 text-[#004b93]">
+                <span class="material-icons-round text-lg">event</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-500 font-medium">รอบปฐมนิเทศ</div>
+                <div id="kpiOrientBatchName" class="text-xs sm:text-sm font-bold text-slate-800 truncate font-display">-</div>
+              </div>
+            </div>
+
+            <div class="orient-kpi-card">
+              <div class="orient-kpi-icon bg-blue-50 text-blue-700">
+                <span class="material-icons-round text-lg">group</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-500 font-medium">พนักงานในรุ่นนี้</div>
+                <div class="flex items-baseline gap-1">
+                  <span id="kpiOrientTotal" class="text-sm sm:text-base font-extrabold text-slate-900 font-display">0</span>
+                  <span class="text-[10px] text-slate-400">ท่าน</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="orient-kpi-card">
+              <div class="orient-kpi-icon bg-emerald-50 text-emerald-700">
+                <span class="material-icons-round text-lg">verified</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-500 font-medium">ผ่านครบ 14 วิชา</div>
+                <div class="flex items-baseline gap-1">
+                  <span id="kpiOrientCompleted" class="text-sm sm:text-base font-extrabold text-emerald-700 font-display">0</span>
+                  <span class="text-[10px] text-slate-400">ท่าน</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="orient-kpi-card">
+              <div class="orient-kpi-icon bg-amber-50 text-amber-700">
+                <span class="material-icons-round text-lg">pie_chart</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-500 font-medium">ความสำเร็จของรุ่น</div>
+                <div id="kpiOrientRate" class="text-xs sm:text-sm font-bold text-amber-800 font-display">0% สำเร็จ</div>
+              </div>
             </div>
           </div>
 
-          <!-- TAB 1: 14 CORE TOPICS SYLLABUS -->
-          <div id="orientTabSyllabus" class="space-y-6">
+          <!-- NAVIGATION TABS: SYLLABUS, MATRIX, ENROLL -->
+          <div class="flex items-center space-x-1.5 bg-slate-200/70 p-1 rounded-xl w-fit">
+            <button type="button" id="tabOrientSyllabusBtn" onclick="switchOrientationTab('syllabus')" class="px-3.5 py-1.5 rounded-lg font-bold text-xs bg-white text-[#004b93] shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-icons-round text-sm">schedule</span>
+              <span>กำหนดการ 14 หัวข้อหลัก</span>
+            </button>
+            <button type="button" id="tabOrientMatrixBtn" onclick="switchOrientationTab('matrix')" class="px-3.5 py-1.5 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-icons-round text-sm">checklist</span>
+              <span>รายชื่อ &amp; เช็คชื่อ (<span id="orientBadgeCount">0</span>)</span>
+            </button>
+            <button type="button" id="tabOrientEnrollBtn" onclick="switchOrientationTab('enroll')" class="px-3.5 py-1.5 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-icons-round text-sm">person_add</span>
+              <span>เพิ่มพนักงานใหม่</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: 14 CORE TOPICS SYLLABUS (SINGLE-ROW HORIZONTAL STRIP CARDS) -->
+          <div id="orientTabSyllabus" class="space-y-4">
             
-            <!-- Day 1 Header -->
-            <div class="bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-200 rounded-2xl p-4 flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <span class="w-9 h-9 rounded-xl bg-[#004b93] text-white flex items-center justify-center font-bold text-sm shadow-xs font-display">D1</span>
-                <div>
-                  <h3 class="text-sm font-bold text-[#004b93]">วันพฤหัสบดีที่ 1 ตุลาคม 2569 (Day 1: 12 หัวข้อวิชา)</h3>
-                  <p class="text-xs text-slate-500 font-light">วัฒนธรรมองค์กร, กฎระเบียบสวัสดิการ, เครื่องมือแพทย์, คุณภาพและความเสี่ยง, การควบคุมการติดเชื้อ และความปลอดภัย</p>
+            <!-- Day 1 Strip Header -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between border-b border-sky-200 pb-2">
+                <div class="flex items-center space-x-2">
+                  <span class="px-2 py-0.5 rounded-md bg-[#004b93] text-white text-[11px] font-bold font-display">DAY 1</span>
+                  <h3 id="orientDay1Label" class="text-xs sm:text-sm font-bold text-[#004b93]">วันที่ 1 ของรอบ: 12 หัวข้อวิชา (เวลา 08.00 - 17.00 น.)</h3>
                 </div>
+                <span class="text-[11px] font-medium text-slate-500">12 วิชา • วัฒนธรรมองค์กร, เครื่องมือแพทย์, คุณภาพ &amp; ความปลอดภัย</span>
               </div>
-              <span class="text-xs font-bold text-[#004b93] bg-white px-3 py-1 rounded-lg border border-sky-200 shadow-2xs">
-                เวลา 08.00 - 17.00 น.
-              </span>
+              <div id="orientDay1StripContainer" class="space-y-1.5 w-full">
+                <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
+              </div>
             </div>
 
-            <!-- Day 1 Grid -->
-            <div id="orientDay1Container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-              <!-- Rendered dynamically -->
-            </div>
-
-            <!-- Day 2 Header -->
-            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between mt-6">
-              <div class="flex items-center space-x-3">
-                <span class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-xs font-display">D2</span>
-                <div>
-                  <h3 class="text-sm font-bold text-emerald-800">วันศุกร์ที่ 2 ตุลาคม 2569 (Day 2: 2 หัวข้อวิชา)</h3>
-                  <p class="text-xs text-slate-500 font-light">การช่วยชีวิตขั้นพื้นฐาน (BLS) และฝ่ายการพยาบาลพบพนักงานใหม่</p>
+            <!-- Day 2 Strip Header -->
+            <div class="space-y-2 pt-2">
+              <div class="flex items-center justify-between border-b border-emerald-200 pb-2">
+                <div class="flex items-center space-x-2">
+                  <span class="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[11px] font-bold font-display">DAY 2</span>
+                  <h3 id="orientDay2Label" class="text-xs sm:text-sm font-bold text-emerald-800">วันที่ 2 ของรอบ: 2 หัวข้อวิชา (เวลา 08.00 - 10.00 น.)</h3>
                 </div>
+                <span class="text-[11px] font-medium text-slate-500">2 วิชา • Basic Life Support (BLS) &amp; ฝ่ายการพยาบาล</span>
               </div>
-              <span class="text-xs font-bold text-emerald-800 bg-white px-3 py-1 rounded-lg border border-emerald-200 shadow-2xs">
-                เวลา 08.00 - 10.00 น.
-              </span>
-            </div>
-
-            <!-- Day 2 Grid -->
-            <div id="orientDay2Container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-              <!-- Rendered dynamically -->
+              <div id="orientDay2StripContainer" class="space-y-1.5 w-full">
+                <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
+              </div>
             </div>
 
           </div>
 
-          <!-- TAB 2: ATTENDANCE & CHECKLIST MATRIX -->
-          <div id="orientTabMatrix" class="hidden bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-xs">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <!-- TAB 2: ATTENDANCE & CHECKLIST MATRIX (NO DOUBLE SCROLLBARS) -->
+          <div id="orientTabMatrix" class="hidden bg-white rounded-xl border border-slate-200 p-3 sm:p-4 space-y-3 shadow-2xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-100 pb-2.5">
               <div>
-                <h3 class="text-base font-bold text-[#004b93] flex items-center gap-2">
-                  <span class="material-icons-round text-lg">checklist_rtl</span>
-                  <span>ตารางติดตามการเซ็นชื่อรายวิชาของพนักงานใหม่ (14 หัวข้อ)</span>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                  <span class="material-icons-round text-base text-[#004b93]">checklist_rtl</span>
+                  <span>ตารางติดตามการเซ็นชื่อรายวิชา (14 หัวข้อ)</span>
                 </h3>
-                <p class="text-xs text-slate-400 font-light mt-0.5">คลิกที่ปุ่มสถานะของพนักงานแต่ละท่านเพื่อเปิดดูและบันทึกการเซ็นชื่อรายวิชา</p>
               </div>
-              <input 
-                type="text" 
-                id="orientMatrixSearchInput" 
-                oninput="filterOrientationMatrix(this.value)" 
-                placeholder="ค้นหาชื่อ, รหัส 6 หลัก, หรือแผนก..." 
-                class="text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none w-56 focus:w-72 focus:bg-white focus:border-[#004b93] transition-all"
-              >
+              <div class="flex items-center gap-2">
+                <input 
+                  type="text" 
+                  id="orientMatrixSearchInput" 
+                  oninput="filterOrientationMatrix(this.value)" 
+                  placeholder="ค้นหารหัส 6 หลัก, ชื่อ หรือแผนก..." 
+                  class="text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg outline-none w-52 focus:w-64 focus:bg-white focus:border-[#004b93] transition-all"
+                >
+              </div>
             </div>
 
-            <!-- Table -->
-            <div class="overflow-x-auto rounded-2xl border border-slate-200 custom-scroll w-full shadow-2xs">
+            <!-- Table (Single Page Scrollbar, only horizontal overflow for mobile) -->
+            <div class="overflow-x-auto rounded-lg border border-slate-200 w-full shadow-2xs">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr class="bg-[#f0f7ff] text-[#004b93] font-semibold border-b border-sky-200">
-                    <th class="py-3 px-4 w-12 text-center">ลำดับ</th>
-                    <th class="py-3 px-4 w-28">รหัสพนักงาน</th>
-                    <th class="py-3 px-4 min-w-[180px]">ชื่อ - นามสกุล</th>
-                    <th class="py-3 px-4 min-w-[180px]">ตำแหน่ง</th>
-                    <th class="py-3 px-4 min-w-[180px]">แผนก / ฝ่าย</th>
-                    <th class="py-3 px-4 min-w-[200px]">ความก้าวหน้า (14 วิชา)</th>
-                    <th class="py-3 px-4 w-28 text-center">สถานะ</th>
-                    <th class="py-3 px-4 w-28 text-center">บันทึกเซ็นชื่อ</th>
-                    <th class="py-3 px-4 w-16 text-center">จัดการ</th>
+                    <th class="py-2.5 px-3 w-10 text-center">#</th>
+                    <th class="py-2.5 px-3 w-24">รหัสพนักงาน</th>
+                    <th class="py-2.5 px-3 min-w-[150px]">ชื่อ - นามสกุล</th>
+                    <th class="py-2.5 px-3 min-w-[140px]">ตำแหน่ง</th>
+                    <th class="py-2.5 px-3 min-w-[130px]">แผนก</th>
+                    <th class="py-2.5 px-3 min-w-[160px]">ความคืบหน้า</th>
+                    <th class="py-2.5 px-3 w-16 text-center">สถานะ</th>
+                    <th class="py-2.5 px-3 w-24 text-center">เซ็นชื่อ</th>
+                    <th class="py-2.5 px-3 w-12 text-center">ลบ</th>
                   </tr>
                 </thead>
                 <tbody id="orientMatrixTableBody" class="divide-y divide-slate-100 text-slate-600 bg-white">
@@ -1841,80 +1938,76 @@
             </div>
           </div>
 
-          <!-- TAB 3: ENROLL NEW EMPLOYEE -->
-          <div id="orientTabEnroll" class="hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs max-w-3xl mx-auto">
-            <div class="border-b border-slate-100 pb-4">
-              <h3 class="text-base font-bold text-[#004b93] flex items-center gap-2">
-                <span class="material-icons-round text-lg">person_add_alt</span>
-                <span>เพิ่มพนักงานใหม่เข้ารอบปฐมนิเทศ</span>
+          <!-- TAB 3: ENROLL NEW EMPLOYEE (COMPACT FORM) -->
+          <div id="orientTabEnroll" class="hidden bg-white rounded-xl border border-slate-200 p-4 sm:p-5 space-y-4 shadow-2xs max-w-2xl mx-auto">
+            <div class="border-b border-slate-100 pb-2.5">
+              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <span class="material-icons-round text-base text-[#004b93]">person_add</span>
+                <span>เพิ่มพนักงานใหม่เข้ารอบปฐมนิเทศนี้</span>
               </h3>
-              <p class="text-xs text-slate-400 font-light mt-0.5">ค้นหารหัสพนักงาน 6 หลักจากฐานข้อมูล รพ. เพื่อลงทะเบียนเข้าสู่รุ่นปฐมนิเทศ</p>
             </div>
 
-            <!-- Search Employee Box -->
-            <div class="space-y-2">
-              <label class="text-xs font-bold text-slate-700">ค้นหารหัสพนักงานหรือชื่อพนักงานใหม่:</label>
-              <div class="relative">
-                <input 
-                  type="text" 
-                  id="orientEmpSearchInput" 
-                  oninput="handleOrientEmpSearch(this.value)" 
-                  autocomplete="off" 
-                  placeholder="พิมพ์รหัส 6 หลัก (เช่น 000023) หรือชื่อ-นามสกุล..." 
-                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-xs sm:text-sm focus:border-[#004b93] focus:ring-4 focus:ring-[#004b93]/15 transition-all outline-none"
-                >
-                <span class="material-icons-round text-slate-400 absolute left-3 top-3 text-lg">search</span>
-                
-                <div id="orientEmpSearchResults" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl border border-slate-200 shadow-2xl max-h-60 overflow-y-auto z-30 divide-y divide-slate-100">
-                  <!-- Populated dynamically -->
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  ค้นหาบุคลากรในฐานข้อมูลโรงพยาบาล (รหัส 6 หลัก หรือชื่อ)
+                </label>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    id="orientEmpSearchInput" 
+                    oninput="handleOrientEmpSearch(this.value)" 
+                    placeholder="พิมพ์รหัสพนักงาน เช่น 000023 หรือชื่อพนักงาน..." 
+                    class="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] transition-all"
+                  >
+                  <!-- Instant Suggestion Dropdown -->
+                  <div id="orientEmpSearchResults" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-30 max-h-56 overflow-y-auto divide-y divide-slate-100">
+                    <!-- Dynamic -->
+                  </div>
                 </div>
               </div>
+
+              <!-- Selected Candidate Compact Strip Card -->
+              <div id="orientSelectedEmpCard" class="hidden bg-sky-50/70 border border-sky-200 rounded-lg p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-[#004b93] uppercase tracking-wide">ข้อมูลพนักงานที่เลือก:</span>
+                  <button type="button" onclick="clearOrientSelectedEmp()" class="text-xs text-slate-400 hover:text-slate-600">เปลี่ยน</button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div>
+                    <span class="text-slate-400 block text-[10.5px]">รหัสพนักงาน</span>
+                    <strong id="dispOrientEmpId" class="font-mono text-xs text-[#004b93]">-</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10.5px]">ชื่อ - นามสกุล</span>
+                    <strong id="dispOrientEmpName" class="text-xs text-slate-800 truncate block">-</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10.5px]">ตำแหน่ง</span>
+                    <span id="dispOrientEmpPos" class="text-slate-700 text-xs truncate block">-</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10.5px]">แผนก</span>
+                    <span id="dispOrientEmpDept" class="text-slate-700 text-xs truncate block">-</span>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                type="button" 
+                id="btnConfirmEnrollOrient" 
+                onclick="enrollSelectedOrientationEmp()" 
+                disabled 
+                class="w-full py-2.5 bg-[#004b93] hover:bg-[#002e6e] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs rounded-lg shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span class="material-icons-round text-base">how_to_reg</span>
+                <span>ยืนยันเพิ่มพนักงานใหม่เข้ารอบนี้</span>
+              </button>
             </div>
-
-            <!-- Selected Employee Card Preview -->
-            <div id="orientSelectedEmpCard" class="hidden bg-[#f0f7ff] border border-sky-200 rounded-2xl p-5 space-y-3 shadow-2xs">
-              <div class="flex items-center justify-between border-b border-sky-100 pb-2">
-                <span class="text-xs font-bold text-[#004b93] uppercase tracking-wider flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>ข้อมูลพนักงานใหม่ที่พร้อมลงทะเบียน</span>
-                </span>
-                <button type="button" onclick="clearOrientSelectedEmp()" class="text-xs text-slate-400 hover:text-rose-600 transition-colors cursor-pointer">✕ ยกเลิก</button>
-              </div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div>
-                  <span class="text-slate-400 block text-[11px]">รหัสพนักงาน</span>
-                  <strong id="dispOrientEmpId" class="font-mono text-sm text-[#004b93]">-</strong>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">ชื่อ - นามสกุล</span>
-                  <strong id="dispOrientEmpName" class="text-sm text-slate-800">-</strong>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">ตำแหน่ง</span>
-                  <span id="dispOrientEmpPos" class="text-slate-700 font-medium">-</span>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">แผนก / สังกัด</span>
-                  <span id="dispOrientEmpDept" class="text-slate-700 font-medium">-</span>
-                </div>
-              </div>
-            </div>
-
-            <button 
-              type="button" 
-              id="btnConfirmEnrollOrient" 
-              onclick="enrollSelectedOrientationEmp()" 
-              disabled 
-              class="w-full py-3.5 bg-gradient-to-r from-[#004b93] to-[#0284c7] hover:from-[#002e6e] hover:to-[#004b93] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm rounded-2xl shadow-lg shadow-[#004b93]/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span class="material-icons-round text-base">how_to_reg</span>
-              <span>ยืนยันเพิ่มพนักงานใหม่เข้ารอบปฐมนิเทศ</span>
-            </button>
-
           </div>
 
         </div>
-
+        <!-- ==================== END VIEW 4: NEW EMPLOYEE ORIENTATION ==================== -->
       </main>
     </div>
   </div>
@@ -2205,6 +2298,63 @@
 
 
   <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
+  
+  <!-- MODAL: CREATE NEW ORIENTATION BATCH -->
+  <div id="newOrientBatchModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in duration-150">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="material-icons-round text-base text-[#004b93]">add_circle</span>
+          <span>สร้างรอบปฐมนิเทศใหม่</span>
+        </h3>
+        <button type="button" onclick="closeNewBatchModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ประจำเดือน (YYYY-MM) *</label>
+          <input type="month" id="newBatchMonthInput" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ชื่อรอบปฐมนิเทศ *</label>
+          <input type="text" id="newBatchTitleInput" placeholder="เช่น ปฐมนิเทศพนักงานใหม่ รอบ 5-6 พ.ย. 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">วันที่จัดอบรม *</label>
+          <input type="text" id="newBatchDatesInput" placeholder="เช่น 5-6 พฤศจิกายน 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ลิงก์ Google Sheet ใบรายชื่อของรอบนี้ (ถ้ามี)</label>
+          <input type="url" id="newBatchSheetInput" placeholder="https://docs.google.com/spreadsheets/d/..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeNewBatchModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">ยกเลิก</button>
+        <button type="button" onclick="confirmCreateNewOrientationBatch()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs">บันทึกรอบใหม่</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT GOOGLE SHEET LINK FOR BATCH -->
+  <div id="editBatchSheetModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in duration-150">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="material-icons-round text-base text-emerald-700">table_chart</span>
+          <span>กำหนดลิงก์ Google Sheet ใบรายชื่อ</span>
+        </h3>
+        <button type="button" onclick="closeEditBatchSheetModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs">✕</button>
+      </div>
+      <div class="space-y-2 text-xs">
+        <p class="text-slate-500">ระบุลิงก์ Google Sheet สำหรับดู/บันทึกใบรายชื่อของรอบปฐมนิเทศนี้:</p>
+        <input type="url" id="editBatchSheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="closeEditBatchSheetModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">ยกเลิก</button>
+        <button type="button" onclick="saveEditBatchSheetUrl()" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
   <div id="orientationChecklistModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
       
@@ -3991,6 +4141,67 @@
       outline-offset: 2px;
     }
 
+    
+    /* Orientation KPI Strip (Medical Equipment Archetype) */
+    .orient-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .orient-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    }
+    .orient-kpi-card {
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      border-radius: 9px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.02);
+      transition: all 0.15s ease;
+    }
+    .orient-kpi-card:hover {
+      border-color: var(--border-blue-soft);
+      box-shadow: 0 2px 8px rgba(0, 75, 147, 0.06);
+    }
+    .orient-kpi-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Single-Row Horizontal Strip Cards for 14 Topics (Golden Rule 3) */
+    .orient-topic-strip {
+      background: #ffffff;
+      border: 1px solid var(--border-main);
+      border-left: 3.5px solid var(--royal-blue);
+      border-radius: 8px;
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0, 46, 110, 0.02);
+      transition: all 0.15s ease;
+    }
+    .orient-topic-strip:hover {
+      border-color: #93c5fd;
+      background: #fbfdff;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 75, 147, 0.06);
+    }
+    .orient-topic-strip.day2 {
+      border-left-color: #059669;
+    }
+
     /* ==================== 1. TOP HEADER (56px STICKY) ==================== */
     .app-topbar {
       height: 56px;
@@ -4442,15 +4653,15 @@
     .course-strip-card {
       background: #ffffff;
       border: 1px solid var(--border-main);
-      border-left: 4px solid var(--royal-blue);
-      border-radius: 14px;
-      padding: 12px 18px;
+      border-left: 3.5px solid var(--royal-blue);
+      border-radius: 10px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       width: 100%;
-      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.04);
+      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.03);
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
@@ -4478,10 +4689,10 @@
       flex-wrap: wrap;
     }
     .strip-title {
-      font-size: 14.5px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text-main);
-      letter-spacing: -0.2px;
+      letter-spacing: -0.15px;
       line-height: 1.35;
       white-space: nowrap;
       overflow: hidden;
@@ -4502,11 +4713,11 @@
     }
 
     .strip-quota-col {
-      width: 190px;
+      width: 150px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     @media (max-width: 860px) {
       .strip-quota-col { display: none; }
@@ -4528,9 +4739,9 @@
     }
     .btn-floating-trigger {
       position: relative;
-      width: 34px;
-      height: 34px;
-      min-width: 34px;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
       border-radius: 50%;
       background: #ffffff;
       border: 1.5px solid var(--border-main);
@@ -6987,38 +7198,82 @@
 
     // ============================================================================
     // DEDICATED NEW EMPLOYEE ORIENTATION CONTROLLER (14 TOPICS SPECIFICATION)
+    // Multi-Month Batch Architecture + Google Sheet Live Link + 6-Digit ID Rule
     // ============================================================================
     const ORIENTATION_SYLLABUS = [
-      // Day 1: 1 ตุลาคม 2569 (12 หัวข้อ)
-      { id: 'or-1', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '08.00 - 08.30 น.', title: 'Ice Breaking & ทำความรู้จัก', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-2', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '08.30 - 09.00 น.', title: 'คลิป Co–CEO ต้อนรับพนักงานใหม่ & Introduction to PRINC', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-3', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '09.00 - 09.30 น.', title: 'ผู้อำนวยการโรงพยาบาลพบพนักงานใหม่', speaker: 'พญ.วิลาสินี รัตนชัยวงศ์ (ผอ.รพ.พิษณุเวช พิจิตร)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-4', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '09.30 - 11.00 น.', title: 'กฎระเบียบ สวัสดิการ และวัฒนธรรมองค์กร PRINC (Purpose, Mission, Vision, Core Value, โครงสร้าง, ประเมินผล, วินัย, สวัสดิการ, การลา)', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-5', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '11.00 - 11.20 น.', title: 'การใช้งานเครื่องมือแพทย์ในโรงพยาบาล', speaker: 'คุณอาภากร บุญเกตกูล (จนท.เครื่องมือแพทย์)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-6', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '11.20 - 12.00 น.', title: 'มาตรฐานพฤติกรรมการบริการ (Service Behavior Standard)', speaker: 'คุณวิไลรัตน์ ประสาทสีดา (ผู้ช่วย ผจก.ฝ่ายปฏิบัติการคลินิก)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-7', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '13.00 - 13.30 น.', title: 'มาตรฐานงานคุณภาพของโรงพยาบาล HA และความเสี่ยง (RM)', speaker: 'คุณเพริศพักตร์ ศรีวุฒิพงษ์ (หน.ศูนย์บริหารคุณภาพฯ)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-8', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '13.30 - 15.30 น.', title: 'มาตรฐานการบริการพยาบาลป้องกันและควบคุมการติดเชื้อในโรงพยาบาล (IC)', speaker: 'คุณเพริศพักตร์ ศรีวุฒิพงษ์ / ทีมพยาบาล IC', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-9', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '15.30 - 16.00 น.', title: 'ความปลอดภัยอาชีวอนามัยและสภาพแวดล้อมในการทำงาน พ.ศ. 2554 (Safety)', speaker: 'คุณอภิณภัสฌาย์ วงศ์ธนัชนันท์ (ผู้ช่วย หน.อาคารและสถานที่)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-10', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '16.00 - 16.20 น.', title: 'การจัดการและนโยบายสารสนเทศ (MOI)', speaker: 'แผนกเทคโนโลยีสารสนเทศ (IT)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-11', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '16.20 - 16.40 น.', title: 'แนะนำการใช้ PRINC Academy', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-12', day: 1, dayLabel: 'วันที่ 1 (1 ต.ค. 2569)', time: '16.40 - 17.00 น.', title: 'กิจกรรมทัวร์โรงพยาบาล (Hospital Tour)', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'รอบอาคารโรงพยาบาล' },
-      // Day 2: 2 ตุลาคม 2569 (2 หัวข้อ)
-      { id: 'or-13', day: 2, dayLabel: 'วันที่ 2 (2 ต.ค. 2569)', time: '08.00 - 09.00 น.', title: 'Basic Life Support (BLS)', speaker: 'แผนกห้องฉุกเฉิน (Emergency Department)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
-      { id: 'or-14', day: 2, dayLabel: 'วันที่ 2 (2 ต.ค. 2569)', time: '09.00 - 10.00 น.', title: 'ฝ่ายการพยาบาลพบพนักงานใหม่', speaker: 'ผู้จัดการฝ่ายปฏิบัติการคลินิก, ผู้ช่วยผู้จัดการฯ', venue: 'ห้องประชุมใหญ่ ชั้น 4' }
+      // Day 1: 12 หัวข้อวิชา
+      { id: 'or-1', day: 1, time: '08.00 - 08.30 น.', title: 'Ice Breaking & ทำความรู้จัก', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-2', day: 1, time: '08.30 - 09.00 น.', title: 'คลิป Co–CEO ต้อนรับพนักงานใหม่ & Introduction to PRINC', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-3', day: 1, time: '09.00 - 09.30 น.', title: 'ผู้อำนวยการโรงพยาบาลพบพนักงานใหม่', speaker: 'พญ.วิลาสินี รัตนชัยวงศ์ (ผอ.รพ.พิษณุเวช พิจิตร)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-4', day: 1, time: '09.30 - 11.00 น.', title: 'กฎระเบียบ สวัสดิการ และวัฒนธรรมองค์กร PRINC (Purpose, Mission, Vision, Core Value, โครงสร้าง, ประเมินผล, วินัย, สวัสดิการ, การลา)', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-5', day: 1, time: '11.00 - 11.20 น.', title: 'การใช้งานเครื่องมือแพทย์ในโรงพยาบาล', speaker: 'คุณอาภากร บุญเกตกูล (จนท.เครื่องมือแพทย์)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-6', day: 1, time: '11.20 - 12.00 น.', title: 'มาตรฐานพฤติกรรมการบริการ (Service Behavior Standard)', speaker: 'คุณวิไลรัตน์ ประสาทสีดา (ผู้ช่วย ผจก.ฝ่ายปฏิบัติการคลินิก)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-7', day: 1, time: '13.00 - 13.30 น.', title: 'มาตรฐานงานคุณภาพของโรงพยาบาล HA และความเสี่ยง (RM)', speaker: 'คุณเพริศพักตร์ ศรีวุฒิพงษ์ (หน.ศูนย์บริหารคุณภาพฯ)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-8', day: 1, time: '13.30 - 15.30 น.', title: 'มาตรฐานการบริการพยาบาลป้องกันและควบคุมการติดเชื้อในโรงพยาบาล (IC)', speaker: 'คุณเพริศพักตร์ ศรีวุฒิพงษ์ / ทีมพยาบาล IC', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-9', day: 1, time: '15.30 - 16.00 น.', title: 'ความปลอดภัยอาชีวอนามัยและสภาพแวดล้อมในการทำงาน พ.ศ. 2554 (Safety)', speaker: 'คุณอภิณภัสฌาย์ วงศ์ธนัชนันท์ (ผู้ช่วย หน.อาคารและสถานที่)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-10', day: 1, time: '16.00 - 16.20 น.', title: 'การจัดการและนโยบายสารสนเทศ (MOI)', speaker: 'แผนกเทคโนโลยีสารสนเทศ (IT)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-11', day: 1, time: '16.20 - 16.40 น.', title: 'แนะนำการใช้ PRINC Academy', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-12', day: 1, time: '16.40 - 17.00 น.', title: 'กิจกรรมทัวร์โรงพยาบาล (Hospital Tour)', speaker: 'ฝ่ายทรัพยากรบุคคล (HR)', venue: 'รอบอาคารโรงพยาบาล' },
+      // Day 2: 2 หัวข้อวิชา
+      { id: 'or-13', day: 2, time: '08.00 - 09.00 น.', title: 'Basic Life Support (BLS)', speaker: 'แผนกห้องฉุกเฉิน (Emergency Department)', venue: 'ห้องประชุมใหญ่ ชั้น 4' },
+      { id: 'or-14', day: 2, time: '09.00 - 10.00 น.', title: 'ฝ่ายการพยาบาลพบพนักงานใหม่', speaker: 'ผู้จัดการฝ่ายปฏิบัติการคลินิก, ผู้ช่วยผู้จัดการฯ', venue: 'ห้องประชุมใหญ่ ชั้น 4' }
     ];
 
-    let orientationAttendees = [];
+    // Multi-Month Orientation Batches (จัดการได้ทุกๆ เดือน)
+    let orientationBatches = [
+      {
+        id: 'c-2026-orientation-oct',
+        month: '2026-10',
+        title: 'ปฐมนิเทศพนักงานใหม่ 1-2/10/2569',
+        shortTitle: 'รอบ 1-2 ต.ค. 2569 (ปัจจุบัน)',
+        dates: '1-2 ตุลาคม 2569',
+        sheetUrl: 'https://docs.google.com/spreadsheets/d/1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg/edit?usp=drivesdk',
+        status: 'active',
+        attendees: []
+      },
+      {
+        id: 'c-2026-orientation-nov',
+        month: '2026-11',
+        title: 'ปฐมนิเทศพนักงานใหม่ รอบ พ.ย. 2569',
+        shortTitle: 'รอบ พ.ย. 2569',
+        dates: '5-6 พฤศจิกายน 2569',
+        sheetUrl: '',
+        status: 'upcoming',
+        attendees: []
+      },
+      {
+        id: 'c-2026-orientation-dec',
+        month: '2026-12',
+        title: 'ปฐมนิเทศพนักงานใหม่ รอบ ธ.ค. 2569',
+        shortTitle: 'รอบ ธ.ค. 2569',
+        dates: '3-4 ธันวาคม 2569',
+        sheetUrl: '',
+        status: 'upcoming',
+        attendees: []
+      }
+    ];
+
+    let currentOrientBatchId = 'c-2026-orientation-oct';
     let currentOrientActiveEmpId = null;
     let selectedOrientCandidate = null;
 
+    function getActiveOrientBatch() {
+      return orientationBatches.find(b => b.id === currentOrientBatchId) || orientationBatches[0];
+    }
+
     function initOrientationView() {
-      // Load from Supabase or existing attendees
-      if (orientationAttendees.length === 0) {
-        // Sample default cohort based on new employees in database
+      // Sync Google Sheet link & attendees from coursesData if available
+      const octCourse = coursesData.find(c => c && c.id === 'c-2026-orientation-oct');
+      const batchOct = orientationBatches.find(b => b.id === 'c-2026-orientation-oct');
+      if (octCourse && batchOct) {
+        if (octCourse.sheetUrl) batchOct.sheetUrl = octCourse.sheetUrl;
+      }
+
+      // Populate sample attendees into active batch if empty
+      if (batchOct && batchOct.attendees.length === 0) {
         const db = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
         if (db.length > 0) {
-          // Take first 5-8 as initial cohort
-          orientationAttendees = db.slice(0, 6).map((e, idx) => ({
+          batchOct.attendees = db.slice(0, 6).map((e, idx) => ({
             id: String(e.id || '').padStart(6, '0'),
             name: (e.title || '') + e.firstName + ' ' + e.lastName,
             position: e.position || '-',
@@ -7029,25 +7284,69 @@
         }
       }
 
-      renderOrientationStats();
-      renderOrientationSyllabus();
-      renderOrientationMatrix();
+      renderOrientBatchDropdown();
+      renderOrientationBatchDetails();
     }
 
-    function renderOrientationStats() {
-      const total = orientationAttendees.length;
-      const completed = orientationAttendees.filter(a => a.completedTopics && a.completedTopics.length === 14).length;
+    function renderOrientBatchDropdown() {
+      const select = document.getElementById('orientBatchSelect');
+      if (!select) return;
+
+      select.innerHTML = orientationBatches.map(b => `
+        <option value="${b.id}" ${b.id === currentOrientBatchId ? 'selected' : ''}>
+          ${escapeHtml(b.shortTitle || b.title)}
+        </option>
+      `).join('');
+    }
+
+    function onSelectOrientBatch(batchId) {
+      currentOrientBatchId = batchId;
+      renderOrientationBatchDetails();
+    }
+
+    function renderOrientationBatchDetails() {
+      const b = getActiveOrientBatch();
+      if (!b) return;
+
+      // Update Google Sheet Button
+      const btnSheet = document.getElementById('btnOrientGoogleSheet');
+      if (btnSheet) {
+        if (b.sheetUrl) {
+          btnSheet.href = b.sheetUrl;
+          btnSheet.style.opacity = '1';
+          btnSheet.title = 'เปิด Google Sheet: ' + b.title;
+        } else {
+          btnSheet.href = 'javascript:void(0);';
+          btnSheet.onclick = () => openEditBatchSheetModal();
+          btnSheet.title = 'ยังไม่ได้กำหนด Google Sheet ของรอบนี้ (คลิกเพื่อกำหนด)';
+        }
+      }
+
+      // Update KPI strip
+      const total = b.attendees ? b.attendees.length : 0;
+      const completed = b.attendees ? b.attendees.filter(a => a.completedTopics && a.completedTopics.length === 14).length : 0;
       const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-      const statTot = document.getElementById('statOrientTotal');
-      const statComp = document.getElementById('statOrientCompleted');
-      const statRate = document.getElementById('statOrientRate');
+      const kpiName = document.getElementById('kpiOrientBatchName');
+      const kpiTot = document.getElementById('kpiOrientTotal');
+      const kpiComp = document.getElementById('kpiOrientCompleted');
+      const kpiRate = document.getElementById('kpiOrientRate');
       const badgeCnt = document.getElementById('orientBadgeCount');
 
-      if (statTot) statTot.textContent = total;
-      if (statComp) statComp.textContent = completed;
-      if (statRate) statRate.textContent = rate + '% สำเร็จ';
+      if (kpiName) kpiName.textContent = b.dates || b.title;
+      if (kpiTot) kpiTot.textContent = total;
+      if (kpiComp) kpiComp.textContent = completed;
+      if (kpiRate) kpiRate.textContent = rate + '% สำเร็จ';
       if (badgeCnt) badgeCnt.textContent = total;
+
+      // Update Day 1 & Day 2 labels
+      const d1Label = document.getElementById('orientDay1Label');
+      const d2Label = document.getElementById('orientDay2Label');
+      if (d1Label) d1Label.textContent = `วันที่ 1 ของ${b.shortTitle || b.title}: 12 หัวข้อวิชา (เวลา 08.00 - 17.00 น.)`;
+      if (d2Label) d2Label.textContent = `วันที่ 2 ของ${b.shortTitle || b.title}: 2 หัวข้อวิชา (เวลา 08.00 - 10.00 น.)`;
+
+      renderOrientationSyllabus();
+      renderOrientationMatrix();
     }
 
     function switchOrientationTab(tab) {
@@ -7063,8 +7362,8 @@
       if (mView) mView.classList.toggle('hidden', tab !== 'matrix');
       if (eView) eView.classList.toggle('hidden', tab !== 'enroll');
 
-      const activeClass = "px-4 py-2 rounded-lg font-bold text-xs bg-white text-[#004b93] shadow-xs transition-all flex items-center gap-1.5 cursor-pointer";
-      const inactiveClass = "px-4 py-2 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer";
+      const activeClass = "px-3.5 py-1.5 rounded-lg font-bold text-xs bg-white text-[#004b93] shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer";
+      const inactiveClass = "px-3.5 py-1.5 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer";
 
       if (sBtn) sBtn.className = (tab === 'syllabus') ? activeClass : inactiveClass;
       if (mBtn) mBtn.className = (tab === 'matrix') ? activeClass : inactiveClass;
@@ -7073,26 +7372,35 @@
       if (tab === 'matrix') renderOrientationMatrix();
     }
 
+    // Render 14 Topics as Single-Row Horizontal Strip Cards (Khun Nick's Golden Rule 3)
     function renderOrientationSyllabus() {
-      const d1Container = document.getElementById('orientDay1Container');
-      const d2Container = document.getElementById('orientDay2Container');
+      const d1Container = document.getElementById('orientDay1StripContainer');
+      const d2Container = document.getElementById('orientDay2StripContainer');
 
       const day1Topics = ORIENTATION_SYLLABUS.filter(t => t.day === 1);
       const day2Topics = ORIENTATION_SYLLABUS.filter(t => t.day === 2);
 
       if (d1Container) {
         d1Container.innerHTML = day1Topics.map((t, idx) => `
-          <div class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs hover:border-sky-300 transition-all space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-mono font-bold text-[#004b93] bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-md">
+          <div class="orient-topic-strip">
+            <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+              <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
+                ${String(idx + 1).padStart(2, '0')}
+              </span>
+              <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
                 ${t.time}
               </span>
-              <span class="text-[11px] font-semibold text-slate-400">หัวข้อที่ ${idx + 1}</span>
+              <span class="text-xs font-bold text-slate-900 truncate">
+                ${escapeHtml(t.title)}
+              </span>
+              <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
+                • ${escapeHtml(t.speaker)}
+              </span>
             </div>
-            <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-snug">${escapeHtml(t.title)}</h4>
-            <div class="text-[11px] text-slate-500 pt-1 border-t border-slate-100 flex items-center gap-1.5">
-              <span class="material-icons-round text-sm text-slate-400">person</span>
-              <span>${escapeHtml(t.speaker)}</span>
+            <div class="flex items-center space-x-2 shrink-0">
+              <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
+                ${escapeHtml(t.venue)}
+              </span>
             </div>
           </div>
         `).join('');
@@ -7100,17 +7408,25 @@
 
       if (d2Container) {
         d2Container.innerHTML = day2Topics.map((t, idx) => `
-          <div class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs hover:border-emerald-300 transition-all space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md">
+          <div class="orient-topic-strip day2">
+            <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+              <span class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-emerald-200">
+                ${String(idx + 13).padStart(2, '0')}
+              </span>
+              <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
                 ${t.time}
               </span>
-              <span class="text-[11px] font-semibold text-slate-400">หัวข้อที่ ${idx + 13}</span>
+              <span class="text-xs font-bold text-slate-900 truncate">
+                ${escapeHtml(t.title)}
+              </span>
+              <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
+                • ${escapeHtml(t.speaker)}
+              </span>
             </div>
-            <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-snug">${escapeHtml(t.title)}</h4>
-            <div class="text-[11px] text-slate-500 pt-1 border-t border-slate-100 flex items-center gap-1.5">
-              <span class="material-icons-round text-sm text-slate-400">person</span>
-              <span>${escapeHtml(t.speaker)}</span>
+            <div class="flex items-center space-x-2 shrink-0">
+              <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
+                ${escapeHtml(t.venue)}
+              </span>
             </div>
           </div>
         `).join('');
@@ -7121,13 +7437,16 @@
       const tbody = document.getElementById('orientMatrixTableBody');
       if (!tbody) return;
 
+      const b = getActiveOrientBatch();
+      const attendees = b ? (b.attendees || []) : [];
+
       const q = filterQuery.toLowerCase().trim();
-      const list = q ? orientationAttendees.filter(a => 
+      const list = q ? attendees.filter(a => 
         a.id.includes(q) || a.name.toLowerCase().includes(q) || a.department.toLowerCase().includes(q) || a.position.toLowerCase().includes(q)
-      ) : orientationAttendees;
+      ) : attendees;
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="py-12 text-center text-slate-400 text-xs font-light">ไม่พบรายชื่อพนักงานในรุ่นปฐมนิเทศนี้</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-slate-400 text-xs font-light">ไม่พบรายชื่อพนักงานในรอบปฐมนิเทศนี้</td></tr>';
         return;
       }
 
@@ -7136,40 +7455,41 @@
         const percent = Math.round((count / 14) * 100);
         const isCompleted = count === 14;
 
+        // Symbol-Based Status Button (Khun Nick's Golden Rule 3)
         const statusBtn = isCompleted
-          ? '<button type="button" class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 inline-flex items-center justify-center font-bold text-xs border border-emerald-300 shadow-2xs mx-auto" title="ผ่านครบ 14 หัวข้อแล้ว"><span class="material-icons-round text-sm">check</span></button>'
-          : '<button type="button" class="w-7 h-7 rounded-full bg-amber-50 text-amber-700 inline-flex items-center justify-center font-bold text-xs border border-amber-300 shadow-2xs mx-auto" title="อยู่ระหว่างการอบรม"><span class="material-icons-round text-sm">schedule</span></button>';
+          ? `<button type="button" onclick="openOrientationChecklistModal('${a.id}')" class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-200 inline-flex items-center justify-center font-bold text-xs border border-emerald-300 shadow-2xs mx-auto cursor-pointer" title="ผ่านครบ 14 วิชาแล้ว (คลิกดูรายละเอียด)"><span class="material-icons-round text-sm">check</span></button>`
+          : `<button type="button" onclick="openOrientationChecklistModal('${a.id}')" class="w-6 h-6 rounded-full bg-amber-50 text-amber-700 hover:bg-amber-100 inline-flex items-center justify-center font-bold text-xs border border-amber-300 shadow-2xs mx-auto cursor-pointer" title="อยู่ระหว่างอบรม ${count}/14 (คลิกเพื่อเซ็นชื่อ)"><span class="material-icons-round text-sm">schedule</span></button>`;
 
-        const barColor = isCompleted ? 'bg-emerald-500' : 'bg-gradient-to-r from-[#004b93] to-[#0284c7]';
+        const barColor = isCompleted ? 'bg-emerald-500' : 'bg-[#004b93]';
 
         return `
           <tr class="hover:bg-[#f0f7ff] transition-colors">
-            <td class="py-3 px-4 text-center font-mono text-slate-400">${idx + 1}</td>
-            <td class="py-3 px-4 font-mono font-bold text-[#004b93]">${a.id}</td>
-            <td class="py-3 px-4 font-bold text-slate-900">${escapeHtml(a.name)}</td>
-            <td class="py-3 px-4 text-slate-600">${escapeHtml(a.position)}</td>
-            <td class="py-3 px-4 text-slate-600">${escapeHtml(a.department)}</td>
-            <td class="py-3 px-4">
+            <td class="py-2.5 px-3 text-center font-mono text-slate-400 text-xs">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-mono font-bold text-[#004b93] text-xs">${a.id}</td>
+            <td class="py-2.5 px-3 font-bold text-slate-900 text-xs">${escapeHtml(a.name)}</td>
+            <td class="py-2.5 px-3 text-slate-600 text-xs">${escapeHtml(a.position)}</td>
+            <td class="py-2.5 px-3 text-slate-600 text-xs">${escapeHtml(a.department)}</td>
+            <td class="py-2.5 px-3">
               <div class="space-y-1">
-                <div class="flex justify-between text-[11px] font-semibold text-slate-600">
-                  <span>${count} / 14 หัวข้อ</span>
+                <div class="flex justify-between text-[10.5px] font-semibold text-slate-600">
+                  <span>${count} / 14 วิชา</span>
                   <span class="font-mono">${percent}%</span>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                  <div class="${barColor} h-2 rounded-full" style="width: ${percent}%;"></div>
+                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div class="${barColor} h-1.5 rounded-full" style="width: ${percent}%;"></div>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center">${statusBtn}</td>
-            <td class="py-3 px-4 text-center">
-              <button type="button" onclick="openOrientationChecklistModal('${a.id}')" class="px-2.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-[#004b93] border border-sky-200 text-xs font-semibold inline-flex items-center gap-1 cursor-pointer transition-all active:scale-95">
-                <span class="material-icons-round text-sm">checklist</span>
+            <td class="py-2.5 px-3 text-center">${statusBtn}</td>
+            <td class="py-2.5 px-3 text-center">
+              <button type="button" onclick="openOrientationChecklistModal('${a.id}')" class="px-2 py-1 rounded-md bg-sky-50 hover:bg-sky-100 text-[#004b93] border border-sky-200 text-xs font-semibold inline-flex items-center gap-1 cursor-pointer transition-all active:scale-95">
+                <span class="material-icons-round text-xs">checklist</span>
                 <span>เซ็นชื่อ</span>
               </button>
             </td>
-            <td class="py-3 px-4 text-center">
-              <button type="button" onclick="removeOrientationAttendee('${a.id}')" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 inline-flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95 mx-auto" title="นำออกจากรุ่น">
-                <span class="material-icons-round text-sm">delete_outline</span>
+            <td class="py-2.5 px-3 text-center">
+              <button type="button" onclick="removeOrientationAttendee('${a.id}')" class="w-6 h-6 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/80 inline-flex items-center justify-center transition-all cursor-pointer shadow-2xs mx-auto" title="นำออกจากรอบนี้">
+                <span class="material-icons-round text-xs">delete_outline</span>
               </button>
             </td>
           </tr>
@@ -7182,7 +7502,9 @@
     }
 
     function openOrientationChecklistModal(empId) {
-      const attendee = orientationAttendees.find(a => a.id === empId);
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const attendee = b.attendees.find(a => a.id === empId);
       if (!attendee) return;
 
       currentOrientActiveEmpId = empId;
@@ -7192,7 +7514,7 @@
       const container = document.getElementById('orientChecklistContainer');
 
       if (nameEl) nameEl.textContent = attendee.name + ' (' + attendee.id + ')';
-      if (infoEl) infoEl.textContent = attendee.position + ' • ' + attendee.department;
+      if (infoEl) infoEl.textContent = attendee.position + ' • ' + attendee.department + ' • ' + (b.shortTitle || b.title);
 
       updateOrientModalProgress(attendee);
 
@@ -7200,26 +7522,26 @@
         container.innerHTML = ORIENTATION_SYLLABUS.map((t, idx) => {
           const isDone = attendee.completedTopics && attendee.completedTopics.includes(t.id);
           return `
-            <label class="p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${isDone ? 'bg-emerald-50/70 border-emerald-300' : 'bg-white border-slate-200 hover:bg-slate-50'}">
-              <div class="flex items-start space-x-3">
+            <label class="p-2.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${isDone ? 'bg-emerald-50/70 border-emerald-300' : 'bg-white border-slate-200 hover:bg-slate-50'}">
+              <div class="flex items-start space-x-2.5">
                 <input 
                   type="checkbox" 
                   value="${t.id}" 
                   ${isDone ? 'checked' : ''} 
                   onchange="toggleTopicAttendance('${attendee.id}', '${t.id}', this.checked)"
-                  class="w-4 h-4 text-[#004b93] rounded mt-0.5"
+                  class="w-4 h-4 text-[#004b93] rounded mt-0.5 cursor-pointer"
                 >
                 <div class="space-y-0.5">
                   <div class="text-xs font-bold ${isDone ? 'text-emerald-900' : 'text-slate-800'}">
                     ${idx + 1}. ${escapeHtml(t.title)}
                   </div>
-                  <div class="text-[11px] text-slate-500 font-light">
-                    📅 ${t.dayLabel} • ⏰ ${t.time} • 🎤 ${escapeHtml(t.speaker)}
+                  <div class="text-[10.5px] text-slate-500 font-light">
+                    ⏰ ${t.time} • 🎤 ${escapeHtml(t.speaker)} • 📍 ${escapeHtml(t.venue)}
                   </div>
                 </div>
               </div>
-              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 ${isDone ? 'bg-emerald-200/80 text-emerald-800' : 'bg-slate-100 text-slate-500'}">
-                ${isDone ? '✓ เข้าร่วมแล้ว' : 'ยังไม่เซ็นชื่อ'}
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${isDone ? 'bg-emerald-200/80 text-emerald-800' : 'bg-slate-100 text-slate-500'}">
+                ${isDone ? '✓ เซ็นแล้ว' : 'ยังไม่เซ็น'}
               </span>
             </label>
           `;
@@ -7241,7 +7563,9 @@
     }
 
     function toggleTopicAttendance(empId, topicId, isChecked) {
-      const attendee = orientationAttendees.find(a => a.id === empId);
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const attendee = b.attendees.find(a => a.id === empId);
       if (!attendee) return;
 
       if (!Array.isArray(attendee.completedTopics)) attendee.completedTopics = [];
@@ -7253,20 +7577,20 @@
       }
 
       updateOrientModalProgress(attendee);
-      renderOrientationStats();
-      renderOrientationMatrix();
+      renderOrientationBatchDetails();
     }
 
     function toggleAllOrientationTopicsForEmp() {
       if (!currentOrientActiveEmpId) return;
-      const attendee = orientationAttendees.find(a => a.id === currentOrientActiveEmpId);
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const attendee = b.attendees.find(a => a.id === currentOrientActiveEmpId);
       if (!attendee) return;
 
       const allIds = ORIENTATION_SYLLABUS.map(t => t.id);
       attendee.completedTopics = allIds;
       openOrientationChecklistModal(currentOrientActiveEmpId);
-      renderOrientationStats();
-      renderOrientationMatrix();
+      renderOrientationBatchDetails();
     }
 
     function closeOrientationChecklistModal() {
@@ -7275,6 +7599,89 @@
       currentOrientActiveEmpId = null;
     }
 
+    // Modal: Add New Monthly Batch
+    function openNewBatchModal() {
+      const modal = document.getElementById('newOrientBatchModal');
+      const now = new Date();
+      const mStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      if (document.getElementById('newBatchMonthInput')) document.getElementById('newBatchMonthInput').value = mStr;
+      if (document.getElementById('newBatchTitleInput')) document.getElementById('newBatchTitleInput').value = '';
+      if (document.getElementById('newBatchDatesInput')) document.getElementById('newBatchDatesInput').value = '';
+      if (document.getElementById('newBatchSheetInput')) document.getElementById('newBatchSheetInput').value = '';
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeNewBatchModal() {
+      const modal = document.getElementById('newOrientBatchModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function confirmCreateNewOrientationBatch() {
+      const mVal = (document.getElementById('newBatchMonthInput') || {}).value || '';
+      const titleVal = (document.getElementById('newBatchTitleInput') || {}).value || '';
+      const datesVal = (document.getElementById('newBatchDatesInput') || {}).value || '';
+      const sheetVal = (document.getElementById('newBatchSheetInput') || {}).value || '';
+
+      if (!titleVal || !datesVal) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาระบุชื่อรอบปฐมนิเทศและวันที่จัดอบรมให้ครบถ้วน');
+        return;
+      }
+
+      const newId = 'c-orient-' + Date.now();
+      const newBatch = {
+        id: newId,
+        month: mVal,
+        title: titleVal,
+        shortTitle: titleVal.length > 24 ? titleVal.slice(0, 24) + '...' : titleVal,
+        dates: datesVal,
+        sheetUrl: sheetVal,
+        status: 'upcoming',
+        attendees: []
+      };
+
+      orientationBatches.push(newBatch);
+      currentOrientBatchId = newId;
+
+      closeNewBatchModal();
+      renderOrientBatchDropdown();
+      renderOrientationBatchDetails();
+
+      if (typeof HrdModal !== 'undefined') {
+        HrdModal.success('สร้างรอบปฐมนิเทศใหม่เรียบร้อยแล้วค่ะ');
+      }
+    }
+
+    // Modal: Edit Batch Google Sheet Link
+    function openEditBatchSheetModal() {
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const inp = document.getElementById('editBatchSheetUrlInput');
+      if (inp) inp.value = b.sheetUrl || '';
+      const modal = document.getElementById('editBatchSheetModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeEditBatchSheetModal() {
+      const modal = document.getElementById('editBatchSheetModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveEditBatchSheetUrl() {
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const inp = document.getElementById('editBatchSheetUrlInput');
+      const url = inp ? inp.value.trim() : '';
+
+      b.sheetUrl = url;
+      closeEditBatchSheetModal();
+      renderOrientationBatchDetails();
+
+      if (typeof HrdModal !== 'undefined') {
+        HrdModal.success('บันทึก Google Sheet ใบรายชื่อของรอบนี้เรียบร้อยแล้วค่ะ');
+      }
+    }
+
+    // Employee Search and Enroll into Active Batch
     function handleOrientEmpSearch(query) {
       const container = document.getElementById('orientEmpSearchResults');
       if (!container) return;
@@ -7283,6 +7690,9 @@
         container.classList.add('hidden');
         return;
       }
+
+      const b = getActiveOrientBatch();
+      const attendees = b ? b.attendees : [];
 
       const q = query.trim().toLowerCase();
       const isDigits = /^\d+$/.test(q);
@@ -7300,21 +7710,21 @@
       }).slice(0, 8);
 
       if (matches.length === 0) {
-        container.innerHTML = '<div class="p-4 text-xs text-slate-400 text-center">ไม่พบข้อมูลพนักงาน</div>';
+        container.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">ไม่พบข้อมูลพนักงาน</div>';
       } else {
         container.innerHTML = matches.map(m => {
           const empIdPadded = String(m.id).padStart(6, '0');
-          const isEnrolled = orientationAttendees.some(a => a.id === empIdPadded);
+          const isEnrolled = attendees.some(a => a.id === empIdPadded);
           return `
-            <div onclick="selectOrientationCandidate('${m.id}')" class="p-3 hover:bg-sky-50 cursor-pointer flex items-center justify-between text-xs">
-              <div class="flex items-center space-x-2.5">
-                <span class="font-mono font-bold text-[#004b93] bg-sky-50 px-2 py-0.5 rounded border border-sky-200">${empIdPadded}</span>
+            <div onclick="selectOrientationCandidate('${m.id}')" class="p-2.5 hover:bg-sky-50 cursor-pointer flex items-center justify-between text-xs">
+              <div class="flex items-center space-x-2">
+                <span class="font-mono font-bold text-[#004b93] bg-sky-50 px-2 py-0.5 rounded border border-sky-200 text-xs">${empIdPadded}</span>
                 <div>
                   <div class="font-bold text-slate-800">${escapeHtml((m.title || '') + m.firstName + ' ' + m.lastName)}</div>
-                  <div class="text-[11px] text-slate-400">${escapeHtml(m.position || '-')} • ${escapeHtml(m.department || '-')}</div>
+                  <div class="text-[10.5px] text-slate-400">${escapeHtml(m.position || '-')} • ${escapeHtml(m.department || '-')}</div>
                 </div>
               </div>
-              <div>${isEnrolled ? '<span class="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-bold">ในรุ่นแล้ว</span>' : '<span class="text-xs text-[#004b93] font-bold">เลือก →</span>'}</div>
+              <div>${isEnrolled ? '<span class="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-bold">ในรอบนี้แล้ว</span>' : '<span class="text-xs text-[#004b93] font-bold">เลือก →</span>'}</div>
             </div>
           `;
         }).join('');
@@ -7357,25 +7767,27 @@
 
     function enrollSelectedOrientationEmp() {
       if (!selectedOrientCandidate) return;
+      const b = getActiveOrientBatch();
+      if (!b) return;
 
       const empIdPadded = String(selectedOrientCandidate.id).padStart(6, '0');
-      const exists = orientationAttendees.some(a => a.id === empIdPadded);
+      const exists = b.attendees.some(a => a.id === empIdPadded);
 
       if (exists) {
-        if (typeof HrdModal !== 'undefined') HrdModal.warning('พนักงานท่านนี้อยู่ในรุ่นปฐมนิเทศนี้เรียบร้อยแล้วค่ะ');
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('พนักงานท่านนี้อยู่ในรอบปฐมนิเทศนี้เรียบร้อยแล้วค่ะ');
         return;
       }
 
-      orientationAttendees.push({
+      b.attendees.push({
         id: empIdPadded,
         name: (selectedOrientCandidate.title || '') + selectedOrientCandidate.firstName + ' ' + selectedOrientCandidate.lastName,
         position: selectedOrientCandidate.position || '-',
         department: selectedOrientCandidate.department || '-',
         completedTopics: [],
-        enrolledAt: '1-2 ตุลาคม 2569'
+        enrolledAt: b.dates || b.title
       });
 
-      renderOrientationStats();
+      renderOrientationBatchDetails();
       clearOrientSelectedEmp();
       switchOrientationTab('matrix');
 
@@ -7385,37 +7797,42 @@
     }
 
     async function removeOrientationAttendee(empId) {
-      const attendee = orientationAttendees.find(a => a.id === empId);
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const attendee = b.attendees.find(a => a.id === empId);
       if (!attendee) return;
 
-      const ok = await HrdModal.confirm(`ต้องการนำคุณ ${attendee.name} (${attendee.id}) ออกจากรุ่นปฐมนิเทศนี้หรือไม่?`, 'ยืนยันการนำออก', { danger: true });
+      const ok = await HrdModal.confirm(`ต้องการนำคุณ ${attendee.name} (${attendee.id}) ออกจากรอบปฐมนิเทศนี้หรือไม่?`, 'ยืนยันการนำออก', { danger: true });
       if (!ok) return;
 
-      orientationAttendees = orientationAttendees.filter(a => a.id !== empId);
-      renderOrientationStats();
-      renderOrientationMatrix();
-      if (typeof HrdModal !== 'undefined') HrdModal.success('นำรายชื่อออกจากรุ่นปฐมนิเทศแล้วค่ะ');
+      b.attendees = b.attendees.filter(a => a.id !== empId);
+      renderOrientationBatchDetails();
+      if (typeof HrdModal !== 'undefined') HrdModal.success('นำรายชื่อออกจากรอบปฐมนิเทศแล้วค่ะ');
     }
 
     function exportOrientationCsv() {
-      if (!orientationAttendees || orientationAttendees.length === 0) {
-        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่พบข้อมูลพนักงานในรุ่นปฐมนิเทศ');
+      const b = getActiveOrientBatch();
+      const attendees = b ? b.attendees : [];
+
+      if (!attendees || attendees.length === 0) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่พบข้อมูลพนักงานในรอบปฐมนิเทศนี้');
         return;
       }
-      let csv = '\uFEFF';
-      csv += 'ลำดับ,รหัสพนักงาน,ชื่อจริง-นามสกุล,ตำแหน่ง,แผนก,จำนวนหัวข้อที่ผ่าน(จาก 14),เปอร์เซ็นต์,สถานะปฐมนิเทศ\n';
-      orientationAttendees.forEach((a, idx) => {
+      const rows = [];
+      rows.push(['ลำดับ', 'รหัสพนักงาน', 'ชื่อจริง-นามสกุล', 'ตำแหน่ง', 'แผนก', 'จำนวนหัวข้อที่ผ่าน(จาก 14)', 'เปอร์เซ็นต์', 'สถานะปฐมนิเทศ'].join(','));
+      attendees.forEach((a, idx) => {
         const count = a.completedTopics ? a.completedTopics.length : 0;
         const percent = Math.round((count / 14) * 100);
         const status = count === 14 ? 'ผ่านครบถ้วน' : 'อยู่ระหว่างอบรม';
-        csv += `${idx + 1},"${a.id}","${a.name}","${a.position}","${a.department}",${count},"${percent}%","${status}"\n`;
+        rows.push([idx + 1, `"${a.id}"`, `"${a.name}"`, `"${a.position}"`, `"${a.department}"`, count, `"${percent}%"`, `"${status}"`].join(','));
       });
+      const csv = '\uFEFF' + rows.join('\r\n');
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `PPCH_HRD_Orientation_1-2Oct2026_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `PPCH_HRD_Orientation_${(b.month || 'batch').replace(/-/g, '')}_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -7424,18 +7841,21 @@
     }
 
     function exportOrientationExcel() {
-      if (!orientationAttendees || orientationAttendees.length === 0) {
-        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่พบข้อมูลพนักงานในรุ่นปฐมนิเทศ');
+      const b = getActiveOrientBatch();
+      const attendees = b ? b.attendees : [];
+
+      if (!attendees || attendees.length === 0) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่พบข้อมูลพนักงานในรอบปฐมนิเทศนี้');
         return;
       }
       let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
       html += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Orientation</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
       html += '<table border="1"><thead><tr style="background:#004b93;color:#ffffff;"><th>ลำดับ</th><th>รหัสพนักงาน</th><th>ชื่อ - นามสกุล</th><th>ตำแหน่ง</th><th>แผนก</th><th>หัวข้อที่ผ่าน</th><th>เปอร์เซ็นต์</th><th>สถานะปฐมนิเทศ</th></tr></thead><tbody>';
-      orientationAttendees.forEach((a, idx) => {
+      attendees.forEach((a, idx) => {
         const count = a.completedTopics ? a.completedTopics.length : 0;
         const percent = Math.round((count / 14) * 100);
         const status = count === 14 ? 'ผ่านครบถ้วน' : 'อยู่ระหว่างอบรม';
-        html += `<tr><td>${idx+1}</td><td style="mso-number-format:\'\\@\'">${a.id}</td><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.position)}</td><td>${escapeHtml(a.department)}</td><td>${count} / 14</td><td>${percent}%</td><td>${status}</td></tr>`;
+        html += `<tr><td>${idx+1}</td><td style="mso-number-format:'\@'">${a.id}</td><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.position)}</td><td>${escapeHtml(a.department)}</td><td>${count} / 14</td><td>${percent}%</td><td>${status}</td></tr>`;
       });
       html += '</tbody></table></body></html>';
 
@@ -7443,7 +7863,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `PPCH_HRD_Orientation_1-2Oct2026_${new Date().toISOString().slice(0, 10)}.xls`;
+      a.download = `PPCH_HRD_Orientation_${(b.month || 'batch').replace(/-/g, '')}_${new Date().toISOString().slice(0, 10)}.xls`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
