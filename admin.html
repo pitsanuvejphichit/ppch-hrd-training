@@ -2132,7 +2132,7 @@
                       <span>แบบฟอร์มใบลงทะเบียนมาตรฐาน</span>
                       <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-50 text-[#004b93] border border-sky-200">FM-PPCH-HR-012</span>
                     </div>
-                    <div class="text-[11px] text-slate-500 font-light">ตาราง 26 แถว พร้อมหัวข้อ วันที่ เวลา วิทยากร และช่องลายมือชื่อ อ้างอิงตามเอกสารควบคุมคุณภาพโรงพยาบาล</div>
+                    <div class="text-[11px] text-slate-500 font-light">ตาราง 21 แถว แนวนอน (A4 Landscape) พร้อมหัวข้อ วันที่ เวลา วิทยากร และช่องลายมือชื่อ อ้างอิงตามเอกสารควบคุมคุณภาพโรงพยาบาล</div>
                   </div>
                 </div>
 
@@ -2142,7 +2142,7 @@
                   <div class="flex items-center gap-1.5">
                     <label class="text-xs font-semibold text-slate-600 hidden sm:inline">เลือกหัวข้อ:</label>
                     <select id="orientTabTopicSelect" onchange="renderOrientationTabRosterSheets()" class="text-xs font-semibold px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] max-w-[260px]">
-                      <option value="all">📑 ครบทั้ง 14 หัวข้อ (14 หน้า A4)</option>
+                      <option value="all">📑 ครบทั้ง 14 หัวข้อ (14 หน้า A4 แนวนอน)</option>
                     </select>
                   </div>
 
@@ -2151,10 +2151,10 @@
                     type="button" 
                     onclick="printOrientationTabSheets()" 
                     class="px-3.5 py-1.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
-                    title="พิมพ์แบบฟอร์ม A4 ออกทางเครื่องพิมพ์ หรือบันทึกเป็น PDF"
+                    title="พิมพ์แบบฟอร์ม A4 แนวนอน ออกทางเครื่องพิมพ์ หรือบันทึกเป็น PDF"
                   >
                     <span class="material-icons-round text-sm">print</span>
-                    <span>พิมพ์ A4</span>
+                    <span>พิมพ์ A4 แนวนอน</span>
                   </button>
 
                   <!-- Backup to Google Sheet (Flat Master Table Log) Button -->
@@ -2170,9 +2170,11 @@
                 </div>
               </div>
 
-              <!-- Sheets Preview Container -->
-              <div id="orientTabSheetsContainer" class="flex flex-col items-center gap-6 py-2">
-                <!-- Rendered dynamically as 1 or 14 A4 Sheets matching FM-PPCH-HR-012 -->
+              <!-- Sheets Preview Container (Scrollable Horizontally for A4 Landscape) -->
+              <div class="w-full overflow-x-auto pb-4 custom-scroll">
+                <div id="orientTabSheetsContainer" class="flex flex-col items-center gap-6 py-2 min-w-[297mm]">
+                  <!-- Rendered dynamically as 1 or 14 A4 Sheets matching FM-PPCH-HR-012 -->
+                </div>
               </div>
             </div>
 
@@ -2649,7 +2651,7 @@
 
   <!-- MODAL: NATIVE PRINTABLE A4 REGISTRATION ROSTER (OFFICIAL PPCH TEMPLATE) -->
   <div id="orientationPrintModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
-    <div class="bg-white rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col max-h-[96vh] animate-in fade-in zoom-in duration-150 overflow-hidden">
+    <div class="bg-white rounded-2xl w-full max-w-[1240px] shadow-2xl flex flex-col max-h-[96vh] animate-in fade-in zoom-in duration-150 overflow-hidden">
       
       <!-- Modal Header / Print Control Toolbar (Hidden during print) -->
       <div class="orient-print-no-print p-4 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
@@ -2662,7 +2664,7 @@
               ใบลงทะเบียนอบรม / สัมมนาภายใน
             </h3>
             <p class="text-xs text-slate-500 font-light" id="orientPrintModalSubtitle">
-              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร • พิมพ์พร้อมตารางรายชื่อและช่องเซ็นชื่อ
+              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 21 แถว) • พิมพ์พร้อมตารางรายชื่อและช่องเซ็นชื่อ
             </p>
           </div>
         </div>
@@ -2679,7 +2681,7 @@
           <!-- Print Trigger Button -->
           <button type="button" onclick="printOrientationSheetNow()" class="px-3.5 py-1.5 bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95">
             <span class="material-icons-round text-sm">print</span>
-            <span>พิมพ์ A4 (Print)</span>
+            <span>พิมพ์ A4 แนวนอน (Print)</span>
           </button>
 
           <!-- Close Modal Button -->
@@ -2689,9 +2691,9 @@
         </div>
       </div>
 
-      <!-- Scrollable Preview Area for A4 Sheets -->
-      <div id="orientPrintPreviewArea" class="orient-print-preview-container flex-1 overflow-y-auto">
-        <div id="orientPrintSheetsContainer" class="flex flex-col items-center">
+      <!-- Scrollable Preview Area for A4 Sheets (Horizontal + Vertical Scrolling) -->
+      <div id="orientPrintPreviewArea" class="orient-print-preview-container flex-1 overflow-y-auto overflow-x-auto custom-scroll">
+        <div id="orientPrintSheetsContainer" class="flex flex-col items-center min-w-[297mm]">
           <!-- Rendered dynamically as 1 or 14 A4 Sheets -->
         </div>
       </div>
@@ -4511,33 +4513,35 @@
     }
     .orient-a4-sheet {
       background: #ffffff;
-      width: 210mm;
-      max-width: 100%;
-      min-height: 297mm;
+      width: 297mm;
+      height: 210mm;
+      min-width: 297mm;
+      max-width: 297mm;
+      min-height: 210mm;
+      max-height: 210mm;
       margin: 0 auto 24px auto;
-      padding: 12mm 14mm;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+      padding: 4.8mm 5.5mm;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       box-sizing: border-box;
       color: #000000;
       font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      page-break-inside: avoid;
     }
     .orient-sheet-header-table,
     .orient-sheet-meta-table,
     .orient-sheet-attendee-table {
       width: 100%;
       border-collapse: collapse;
-    }
-    @media screen and (max-width: 768px) {
-      .orient-a4-sheet {
-        padding: 8mm;
-        min-height: auto;
-      }
+      border-spacing: 0;
+      table-layout: fixed;
     }
     @media print {
       @page {
-        size: A4 portrait;
-        margin: 8mm 10mm;
+        size: A4 landscape;
+        margin: 0;
       }
       body.printing-orientation > *:not(#orientationPrintModal) {
         display: none !important;
@@ -4552,7 +4556,7 @@
         display: block !important;
         position: static !important;
         inset: auto !important;
-        width: 100% !important;
+        width: 297mm !important;
         height: auto !important;
         background: transparent !important;
         padding: 0 !important;
@@ -4562,8 +4566,8 @@
         overflow: visible !important;
       }
       body.printing-orientation #orientationPrintModal > div {
-        max-width: 100% !important;
-        width: 100% !important;
+        max-width: 297mm !important;
+        width: 297mm !important;
         height: auto !important;
         max-height: none !important;
         border-radius: 0 !important;
@@ -4586,14 +4590,19 @@
       body.printing-orientation .orient-a4-sheet {
         box-shadow: none !important;
         margin: 0 0 0 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-        min-height: auto !important;
-        page-break-after: always;
-        page-break-inside: avoid;
+        padding: 4.8mm 5.5mm !important;
+        width: 297mm !important;
+        height: 210mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
+        min-height: 210mm !important;
+        max-height: 210mm !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        overflow: hidden !important;
       }
       body.printing-orientation .orient-a4-sheet:last-child {
-        page-break-after: auto;
+        page-break-after: auto !important;
       }
     }
 
@@ -9078,8 +9087,8 @@
       const safeTopicDate = escapeHtml(topic.date || batch.dates || '');
       const safeTopicTime = escapeHtml(topic.time || '');
 
-      // Strictly 26 rows to match the official hospital registration template FM-PPCH-HR-012
-      const TOTAL_ROWS = 26;
+      // Strictly 21 rows to match the official hospital registration template FM-PPCH-HR-012 (media_1792404910100_d1e3941f.pdf)
+      const TOTAL_ROWS = 21;
       let rowsHtml = '';
 
       for (let i = 0; i < TOTAL_ROWS; i++) {
@@ -9089,28 +9098,28 @@
           const parsedName = parseEmpNameParts(a.name);
           const empIdPadded = String(a.id || '').padStart(6, '0');
           rowsHtml += `
-            <tr style="height: 23px; border: 1px solid #000;">
-              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 1.5px;">${rowNo}</td>
-              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-weight: bold; font-size: 10px; padding: 1.5px;">${empIdPadded}</td>
-              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 1.5px;">${escapeHtml(parsedName.title)}</td>
-              <td style="border: 1px solid #000; font-size: 10px; padding: 1.5px 4px;">${escapeHtml(parsedName.firstName)}</td>
-              <td style="border: 1px solid #000; font-size: 10px; padding: 1.5px 4px;">${escapeHtml(parsedName.lastName)}</td>
-              <td style="border: 1px solid #000; font-size: 9px; padding: 1.5px 4px;">${escapeHtml(a.position || '')}</td>
-              <td style="border: 1px solid #000; font-size: 9px; padding: 1.5px 4px;">${escapeHtml(a.department || '')}</td>
-              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 1.5px;">&nbsp;</td>
+            <tr style="height: 19px; max-height: 19px; line-height: 19px; border: 1px solid #000;">
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 9.5px; padding: 0 2px; overflow: hidden; white-space: nowrap;">${rowNo}</td>
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-weight: bold; font-size: 9.5px; padding: 0 2px; overflow: hidden; white-space: nowrap;">${empIdPadded}</td>
+              <td style="border: 1px solid #000; text-align: center; font-size: 9.5px; padding: 0 2px; overflow: hidden; white-space: nowrap;">${escapeHtml(parsedName.title)}</td>
+              <td style="border: 1px solid #000; font-size: 9.5px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(parsedName.firstName)}</td>
+              <td style="border: 1px solid #000; font-size: 9.5px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(parsedName.lastName)}</td>
+              <td style="border: 1px solid #000; font-size: 9px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(a.position || '')}</td>
+              <td style="border: 1px solid #000; font-size: 9px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(a.department || '')}</td>
+              <td style="border: 1px solid #000; text-align: center; font-size: 9px; padding: 0 2px;">&nbsp;</td>
             </tr>
           `;
         } else {
           rowsHtml += `
-            <tr style="height: 23px; border: 1px solid #000;">
-              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 1.5px; color: #475569;">${rowNo}</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+            <tr style="height: 19px; max-height: 19px; line-height: 19px; border: 1px solid #000;">
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 9.5px; padding: 0 2px; color: #475569;">${rowNo}</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
             </tr>
           `;
         }
@@ -9118,69 +9127,92 @@
 
       return `
         <div class="orient-a4-sheet" data-topic-id="${topic.id}">
-          <!-- HEADER WITH LOGO AND TITLES -->
-          <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; margin-bottom: -1px;">
-            <tr>
-              <td style="width: 25%; padding: 5px 8px; border-right: 1.5px solid #000; vertical-align: middle; text-align: center;">
-                <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 40px; max-width: 135px; object-fit: contain; display: inline-block;">
+          <!-- 1. HEADER WITH LOGO AND BILINGUAL TITLE -->
+          <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: -1px; table-layout: fixed;">
+            <tr style="height: 48px;">
+              <td style="width: 18.18%; padding: 4px 8px; border-right: 1px solid #000; vertical-align: middle; text-align: center;">
+                <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 38px; max-width: 130px; object-fit: contain; display: inline-block;">
               </td>
-              <td style="width: 75%; padding: 5px 8px; text-align: center; vertical-align: middle;">
-                <div style="font-size: 15.5px; font-weight: bold; color: #000; letter-spacing: 0.3px; line-height: 1.25;">ใบลงทะเบียนอบรม / สัมมนาภายใน</div>
-                <div style="font-size: 11px; font-weight: 500; color: #1e293b; line-height: 1.2;">Training Registration Form</div>
-              </td>
-            </tr>
-          </table>
-
-          <!-- TOPIC METADATA GRID -->
-          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; font-size: 9.5px; margin-bottom: -1px;">
-            <tr>
-              <td style="width: 17%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">หลักสูตร / เรื่อง (Topic)</td>
-              <td style="width: 33%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; color: #000;">${safeTopicTitle}</td>
-              <td style="width: 20%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">วันที่อบรม / สัมมนา (Date) :</td>
-              <td style="width: 14%; border: 1px solid #000; padding: 3px 5px; text-align: center;">${safeTopicDate}</td>
-              <td style="width: 8%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">เวลา / Time :</td>
-              <td style="width: 8%; border: 1px solid #000; padding: 3px 5px; font-family: monospace; text-align: center;">${safeTopicTime}</td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc; vertical-align: top;">วิทยากร (Speakers)</td>
-              <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">${safeTopicSpeaker}</td>
-              <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">
-                <div style="font-weight: bold; margin-bottom: 2px;">ประเภทหลักสูตร</div>
-                <div style="display: flex; gap: 10px; margin-top: 3px;">
-                  <span>☑ ในแผน</span>
-                  <span>☐ นอกแผน</span>
-                </div>
-              </td>
-              <td colspan="2" style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 9px;">
-                  <span>☑ Mandatory Course</span>
-                  <span>☐ Managerial Course</span>
-                  <span>☐ Functional Course</span>
-                  <span>☐ Quality Course</span>
-                </div>
-              </td>
-              <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top; text-align: center;">
-                <div style="font-weight: bold; font-size: 9px;">จำนวนเครดิต</div>
-                <div style="margin-top: 4px; font-weight: bold;">-</div>
+              <td style="width: 81.82%; padding: 4px 8px; text-align: center; vertical-align: middle;">
+                <div style="font-size: 15px; font-weight: bold; color: #000; letter-spacing: 0.3px; line-height: 1.25;">ใบลงทะเบียนอบรม / สัมมนาภายใน</div>
+                <div style="font-size: 10.5px; font-weight: 500; color: #000; line-height: 1.2;">Training Registration Form</div>
               </td>
             </tr>
           </table>
 
-          <!-- ATTENDEE TABLE (26 ROWS) -->
-          <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000;">
+          <!-- 2. TOPIC METADATA GRID (EXACT HOSPITAL MATRIX) -->
+          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9.5px; margin-bottom: -1px; table-layout: fixed;">
+            <tr style="height: 24px;">
+              <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">หลักสูตร / เรื่อง (Topic)</td>
+              <td style="width: 27.27%; border: 1px solid #000; padding: 2px 6px; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeTopicTitle}</td>
+              <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">วันที่อบรม / สัมมนา (Date) :</td>
+              <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-size: 9.5px;">${safeTopicDate}</td>
+              <td style="width: 9.09%; border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold; background: #ffffff;">เวลา / Time :</td>
+              <td style="width: 9.10%; border: 1px solid #000; padding: 2px 3px; font-family: monospace; text-align: center; font-size: 9.5px;">${safeTopicTime}</td>
+            </tr>
+            <tr style="height: 80px;">
+              <td style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold; background: #ffffff; vertical-align: middle;">วิทยากร (Speakers)</td>
+              <td style="border: 1px solid #000; padding: 0; vertical-align: top;">
+                <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeTopicSpeaker}</div>
+                <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
+                <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
+                <div style="height: 20px; line-height: 20px; padding: 0 6px;">&nbsp;</div>
+              </td>
+              <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
+                <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">ประเภทหลักสูตร</div>
+                <div style="display: flex; flex-direction: column; gap: 5px; padding-left: 10px;">
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
+                    <span>ในแผน</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                    <span>นอกแผน</span>
+                  </div>
+                </div>
+              </td>
+              <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
+                <div style="display: flex; flex-direction: column; gap: 3.5px; padding-left: 6px; font-size: 9px;">
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
+                    <span>Mandatory Course</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                    <span>Managerial Course</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                    <span>Functional Course</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                    <span>Quality Course</span>
+                  </div>
+                </div>
+              </td>
+              <td colspan="2" style="border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: center;">
+                <div style="font-weight: bold; font-size: 9.5px; margin-bottom: 6px;">จำนวนเครดิต</div>
+                <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">-</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- 3. ATTENDEE TABLE (EXACTLY 21 ROWS MATCHING DCC TEMPLATE) -->
+          <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; table-layout: fixed;">
             <thead>
-              <tr style="background: #f1f5f9; text-align: center; font-weight: bold; border: 1px solid #000;">
-                <th colspan="8" style="padding: 3px; font-size: 10.5px; border: 1px solid #000; color: #000;">รายชื่อผู้เข้าร่วมอบรม</th>
+              <tr style="height: 22px; text-align: center; font-weight: bold; border: 1px solid #000;">
+                <th colspan="8" style="padding: 2px; font-size: 10.5px; border: 1px solid #000; color: #000; background: #ffffff;">รายชื่อผู้เข้าร่วมอบรม</th>
               </tr>
-              <tr style="background: #f8fafc; text-align: center; font-weight: bold; border: 1px solid #000; line-height: 1.15; font-size: 9.5px;">
-                <th style="width: 5%; border: 1px solid #000; padding: 2.5px 2px;">ลำดับ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">No.</span></th>
-                <th style="width: 12%; border: 1px solid #000; padding: 2.5px 2px;">รหัสพนักงาน<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Em.No.</span></th>
-                <th style="width: 10%; border: 1px solid #000; padding: 2.5px 2px;">คำนำหน้าชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Title</span></th>
-                <th style="width: 16%; border: 1px solid #000; padding: 2.5px 2px;">ชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Name</span></th>
-                <th style="width: 16%; border: 1px solid #000; padding: 2.5px 2px;">นามสกุล<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Surname</span></th>
-                <th style="width: 16%; border: 1px solid #000; padding: 2.5px 2px;">ตำแหน่ง<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Position</span></th>
-                <th style="width: 13%; border: 1px solid #000; padding: 2.5px 2px;">แผนก<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Department</span></th>
-                <th style="width: 12%; border: 1px solid #000; padding: 2.5px 2px;">ลายมือชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Signature</span></th>
+              <tr style="height: 24px; text-align: center; font-weight: bold; border: 1px solid #000; line-height: 1.15; font-size: 9.5px; background: #ffffff;">
+                <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">ลำดับ<br><span style="font-size: 8px; font-weight: normal; color: #000;">No.</span></th>
+                <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">รหัสพนักงาน<br><span style="font-size: 8px; font-weight: normal; color: #000;">Em.No.</span></th>
+                <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">คำนำหน้าชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #000;">Title</span></th>
+                <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">ชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #000;">Name</span></th>
+                <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">นามสกุล<br><span style="font-size: 8px; font-weight: normal; color: #000;">Surname</span></th>
+                <th style="width: 18.18%; border: 1px solid #000; padding: 2px;">ตำแหน่ง<br><span style="font-size: 8px; font-weight: normal; color: #000;">Position</span></th>
+                <th style="width: 18.18%; border: 1px solid #000; padding: 2px;">แผนก<br><span style="font-size: 8px; font-weight: normal; color: #000;">Department</span></th>
+                <th style="width: 18.18%; border: 1px solid #000; padding: 2px; vertical-align: middle;">ลายมือชื่อ</th>
               </tr>
             </thead>
             <tbody>
@@ -9188,24 +9220,10 @@
             </tbody>
           </table>
 
-          <!-- FOOTER SIGNATURE BOXES -->
-          <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 10px;">
-            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 6px 10px; text-align: center; line-height: 1.45;">
-              <div>ลงชื่อ ................................................................ ผู้บันทึก / เจ้าหน้าที่ HRD</div>
-              <div style="margin-top: 2px; color: #334155;">( ................................................................ )</div>
-              <div style="margin-top: 2px; color: #475569;">วันที่ ........ / ........ / ................</div>
-            </div>
-            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 6px 10px; text-align: center; line-height: 1.45;">
-              <div>ลงชื่อ ................................................................ วิทยากร / ผู้ควบคุมการอบรม</div>
-              <div style="margin-top: 2px; color: #334155;">( ................................................................ )</div>
-              <div style="margin-top: 2px; color: #475569;">วันที่ ........ / ........ / ................</div>
-            </div>
-          </div>
-
-          <!-- DOCUMENT CONTROL FOOTER (FM-PPCH-HR-012) -->
-          <div style="margin-top: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; color: #1e293b; border-top: 1px dashed #cbd5e1; padding-top: 3px;">
-            <div style="font-weight: 700; letter-spacing: 0.2px;">FM-PPCH-HR-012 แก้ไขครั้งที่ 1 วันที่บังคับใช้ 1 ม.ค. 2569 (DCC)</div>
-            <div style="color: #64748b; font-weight: 500;">หน้าที่ 1 / 1 &bull; วิชาที่ ${topicIndex + 1} จาก 14</div>
+          <!-- 4. OFFICIAL DOCUMENT CONTROL FOOTER (FM-PPCH-HR-012) -->
+          <div style="margin-top: 5px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; color: #000; padding: 0 2px;">
+            <div style="font-weight: normal; letter-spacing: 0.1px;">FM-PPCH-HR-012 แก้ไขครั้งที่ 1 วันที่บังคับใช้ 1 ม.ค. 2569 (DCC)</div>
+            <div style="color: #64748b; font-weight: 500;">หน้าที่ 1 / 1 &bull; วิชาที่ ${topicIndex + 1} จาก ${totalSheetsCount}</div>
           </div>
         </div>
       `;
