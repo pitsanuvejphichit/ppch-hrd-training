@@ -1943,16 +1943,6 @@
                   <span>ดูใบลงทะเบียน A4 (14 หัวข้อ)</span>
                 </button>
 
-                <!-- Flat Master Table Log Backup to Google Sheet Button -->
-                <button 
-                  type="button" 
-                  onclick="backupOrientationToGoogleSheet()" 
-                  class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 cursor-pointer" 
-                  title="สำรองข้อมูลขึ้น Google Sheet เป็นตาราง Master Table Log เดี่ยว"
-                >
-                  <span class="material-icons-round text-sm">cloud_upload</span>
-                  <span>สำรองข้อมูลขึ้น Google Sheet</span>
-                </button>
 
                 <button 
                   type="button" 
@@ -2274,16 +2264,6 @@
                     <span>พิมพ์ A4 แนวนอน</span>
                   </button>
 
-                  <!-- Backup to Google Sheet (Flat Master Table Log) Button -->
-                  <button 
-                    type="button" 
-                    onclick="backupOrientationToGoogleSheet()" 
-                    class="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer" 
-                    title="สำรองข้อมูลขึ้น Google Sheet เป็นตาราง Master Table Log เดี่ยว"
-                  >
-                    <span class="material-icons-round text-sm">cloud_upload</span>
-                    <span id="btnBackupSheetText">สำรองข้อมูลขึ้น Google Sheet</span>
-                  </button>
                 </div>
               </div>
 
@@ -6975,13 +6955,10 @@
       const b = batchId ? orientationBatches.find(x => x.id === batchId) : getActiveOrientBatch();
       if (!b) return;
 
-      const sheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-
       let fetchedAttendees = [];
       let sourceFound = false;
 
-      // 1. Fetch from Supabase (Primary Database)
+      // 1. Fetch from Supabase (Primary Database - Sole Source of Truth)
       if (typeof SupabaseService !== 'undefined') {
         try {
           const sbList = await SupabaseService.getAttendeesByCourse(b.id);
@@ -7001,28 +6978,7 @@
         }
       }
 
-      // 2. Fetch from Google Sheet (Live Sheet Sync via GAS)
-      if (sheetId && gasUrl) {
-        try {
-          const res = await fetch(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(sheetId)).then(r => r.json());
-          if (res && res.success && Array.isArray(res.attendees) && res.attendees.length > 0) {
-            const syllabusTopics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
-            const sheetMapped = aggregateOrientationAttendees(res.attendees, syllabusTopics);
-            if (sheetMapped.length > 0) {
-              if (sourceFound && typeof SupabaseService !== 'undefined' && typeof SupabaseService.mergeAttendees === 'function') {
-                fetchedAttendees = SupabaseService.mergeAttendees(fetchedAttendees, sheetMapped);
-              } else {
-                fetchedAttendees = sheetMapped;
-                sourceFound = true;
-              }
-            }
-          }
-        } catch(err) {
-          console.warn('[Orientation] Sheet getAttendees error:', err);
-        }
-      }
-
-      // 3. Process and filter out any locally deleted attendees
+      // 2. Process and filter out any locally deleted attendees
       if (sourceFound) {
         const deletedSet = new Set(b.deletedAttendeeIds || []);
         b.attendees = fetchedAttendees.filter(a => !deletedSet.has(a.id));
@@ -7101,7 +7057,7 @@
         const sheetUrl = b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL;
 
         return `
-          <div class="course-strip-card hover:border-[#004b93] transition-all">
+          <div class="course-strip-card hover:border-[#004b93] hover:shadow-md transition-all cursor-pointer group" onclick="openOrientationBatchDetail('${b.id}')" title="คลิกเพื่อดูรายละเอียดและเช็คชื่อรอบนี้">
             
             <!-- Left Info Column -->
             <div class="strip-info-col">
@@ -7117,7 +7073,7 @@
                   : '<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[10.5px]">รอบใหม่</span>'}
               </div>
 
-              <div class="strip-title" onclick="openOrientationBatchDetail('${b.id}')" style="cursor: pointer;" title="คลิกเพื่อดูรายละเอียดและเช็คชื่อ">
+              <div class="strip-title group-hover:text-[#004b93] transition-colors">
                 ${escapeHtml(b.title)}
               </div>
 
@@ -7149,7 +7105,7 @@
             </div>
 
             <!-- Right Actions: Floating Action Speed Dial -->
-            <div class="strip-actions-col">
+            <div class="strip-actions-col" onclick="event.stopPropagation()">
               <div class="floating-action-wrapper" onmouseenter="handleFloatingEnter(this)" onmouseleave="handleFloatingLeave(this)">
                 <button type="button" class="btn-floating-trigger" onclick="toggleFloatingMenu(this, event)" title="เมนูจัดการรอบนี้">
                   <span class="material-icons-round trigger-icon">more_horiz</span>
@@ -8225,34 +8181,6 @@
           .then(res => console.log('[Orientation] Enrolled attendee saved to Supabase:', res))
           .catch(err => console.warn('[Orientation] Supabase registerAttendee error:', err));
       }
-
-      // 3. Sync to Google Sheet in the background (Secondary Mirroring)
-      const sheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (gasUrl && sheetId) {
-        try {
-          fetch(gasUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'register',
-              sheetId: sheetId,
-              id: empIdPadded,
-              title: candidateSnapshot.title || '',
-              firstName: candidateSnapshot.firstName || '',
-              lastName: candidateSnapshot.lastName || '',
-              position: candidateSnapshot.position || '-',
-              department: candidateSnapshot.department || '-',
-              batch: '1. ' + (b.shortTitle || b.title || 'ปฐมนิเทศพนักงานใหม่')
-            })
-          })
-          .then(r => r.json())
-          .then(res => console.log('[Orientation] Saved to Google Sheet:', res))
-          .catch(err => console.warn('[Orientation] Sheet register error:', err));
-        } catch(e) {
-          console.warn('[Orientation] Sheet register exception:', e);
-        }
-      }
     }
 
     async function removeOrientationAttendee(empId) {
@@ -8261,7 +8189,7 @@
       const attendee = b.attendees.find(a => a.id === empId);
       if (!attendee) return;
 
-      const ok = await HrdModal.confirm(`ต้องการนำคุณ ${attendee.name} (${attendee.id}) ออกจากรอบปฐมนิเทศนี้หรือไม่?\n(ระบบจะลบข้อมูลออกจาก Google Sheet และฐานข้อมูลทันที)`, 'ยืนยันการนำออก', { danger: true });
+      const ok = await HrdModal.confirm(`ต้องการนำคุณ ${attendee.name} (${attendee.id}) ออกจากรอบปฐมนิเทศนี้หรือไม่?\n(ระบบจะลบข้อมูลออกจากฐานข้อมูล Supabase ทันที)`, 'ยืนยันการนำออก', { danger: true });
       if (!ok) return;
 
       // 1. Instant local removal (< 100ms)
@@ -8273,35 +8201,10 @@
       if (currentOrientSubView === 'list') renderOrientationBatchList();
 
       if (typeof HrdModal !== 'undefined') {
-        HrdModal.success(`นำคุณ ${attendee.name} ออกจากระบบแล้ว และกำลังซิงค์ลบข้อมูลจาก Google Sheet...`);
+        HrdModal.success(`นำคุณ ${attendee.name} ออกจากระบบเรียบร้อยแล้วค่ะ`);
       }
 
-      // 2. Sync deletion to Google Sheet via GAS deleteAttendee
-      const sheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (gasUrl && sheetId) {
-        try {
-          fetch(gasUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'deleteAttendee',
-              sheetId: sheetId,
-              id: empId,
-              adminPassword: '014125'
-            })
-          })
-          .then(r => r.json())
-          .then(res => {
-            console.log('[Orientation] GAS deleteAttendee response:', res);
-          })
-          .catch(err => console.warn('[Orientation] GAS deleteAttendee error:', err));
-        } catch(e) {
-          console.warn('[Orientation] GAS deleteAttendee exception:', e);
-        }
-      }
-
-      // 3. Sync deletion to Supabase
+      // 2. Sync deletion to Supabase Primary Database
       if (typeof SupabaseService !== 'undefined') {
         SupabaseService.deleteAttendee(b.id, empId).catch(err => {
           console.warn('[Orientation] Supabase deleteAttendee error:', err);
