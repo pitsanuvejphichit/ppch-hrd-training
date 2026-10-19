@@ -6963,14 +6963,29 @@
         try {
           const sbList = await SupabaseService.getAttendeesByCourse(b.id);
           if (Array.isArray(sbList) && sbList.length > 0) {
-            fetchedAttendees = sbList.map(a => ({
-              id: String(a.id || a.empId).padStart(6, '0'),
-              name: (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName)).trim(),
-              position: a.position || '-',
-              department: a.department || '-',
-              completedTopics: Array.isArray(a.selectedTopics) ? a.selectedTopics : [],
-              enrolledAt: a.timestamp || b.dates || '1-2 ตุลาคม 2569'
-            }));
+            // Deduplicate by 6-digit employee ID to guarantee no duplicate rows
+            const uniqueMap = new Map();
+            sbList.forEach(a => {
+              const empId = String(a.id || a.empId).padStart(6, '0');
+              const item = {
+                id: empId,
+                name: (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName)).trim(),
+                position: a.position || '-',
+                department: a.department || '-',
+                completedTopics: Array.isArray(a.selectedTopics) ? a.selectedTopics : [],
+                enrolledAt: a.timestamp || b.dates || '1-2 ตุลาคม 2569'
+              };
+              if (!uniqueMap.has(empId)) {
+                uniqueMap.set(empId, item);
+              } else {
+                // If duplicate found, keep the one with higher topic completion count
+                const existing = uniqueMap.get(empId);
+                if (item.completedTopics.length > (existing.completedTopics ? existing.completedTopics.length : 0)) {
+                  uniqueMap.set(empId, item);
+                }
+              }
+            });
+            fetchedAttendees = Array.from(uniqueMap.values());
             sourceFound = true;
           }
         } catch(e) {
@@ -8125,7 +8140,10 @@
       if (inp) { inp.value = ''; inp.focus(); }
     }
 
-    function enrollSelectedOrientationEmp() {
+    let isEnrollingOrientEmp = false;
+
+    async function enrollSelectedOrientationEmp() {
+      if (isEnrollingOrientEmp) return;
       if (!selectedOrientCandidate) return;
       const b = getActiveOrientBatch();
       if (!b) return;
@@ -8138,48 +8156,57 @@
         return;
       }
 
-      // If this attendee was previously in deleted list, remove from deleted list so they won't be filtered out
-      if (b.deletedAttendeeIds) {
-        b.deletedAttendeeIds = b.deletedAttendeeIds.filter(id => id !== empIdPadded);
-      }
+      isEnrollingOrientEmp = true;
+      const btn = document.getElementById('btnConfirmEnrollOrient');
+      if (btn) btn.disabled = true;
 
-      const candidateSnapshot = selectedOrientCandidate;
-      const attendeeObj = {
-        id: empIdPadded,
-        name: (candidateSnapshot.title || '') + candidateSnapshot.firstName + ' ' + candidateSnapshot.lastName,
-        position: candidateSnapshot.position || '-',
-        department: candidateSnapshot.department || '-',
-        completedTopics: [],
-        enrolledAt: b.dates || b.title
-      };
+      try {
+        // If this attendee was previously in deleted list, remove from deleted list so they won't be filtered out
+        if (b.deletedAttendeeIds) {
+          b.deletedAttendeeIds = b.deletedAttendeeIds.filter(id => id !== empIdPadded);
+        }
 
-      // 1. Instant local UI update (< 100ms)
-      b.attendees.push(attendeeObj);
-      renderOrientationBatchDetails();
-      if (currentOrientSubView === 'list') renderOrientationBatchList();
-      clearOrientSelectedEmp();
-      switchOrientationTab('matrix');
-
-      if (typeof HrdModal !== 'undefined') {
-        HrdModal.success('เพิ่มพนักงานใหม่เข้ารอบปฐมนิเทศสำเร็จเรียบร้อยแล้วค่ะ!');
-      }
-
-      // 2. Persist to Supabase Primary Database immediately (< 0.1s)
-      if (typeof SupabaseService !== 'undefined') {
-        const sbAttendee = {
+        const candidateSnapshot = selectedOrientCandidate;
+        const attendeeObj = {
           id: empIdPadded,
-          empId: empIdPadded,
-          title: candidateSnapshot.title || '',
-          firstName: candidateSnapshot.firstName || '',
-          lastName: candidateSnapshot.lastName || '',
+          name: (candidateSnapshot.title || '') + candidateSnapshot.firstName + ' ' + candidateSnapshot.lastName,
           position: candidateSnapshot.position || '-',
           department: candidateSnapshot.department || '-',
-          batch: b.shortTitle || b.title || 'ปฐมนิเทศพนักงานใหม่',
-          selectedTopics: []
+          completedTopics: [],
+          enrolledAt: b.dates || b.title
         };
-        SupabaseService.registerAttendee(sbAttendee, b.id, b.sheetId || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg')
-          .then(res => console.log('[Orientation] Enrolled attendee saved to Supabase:', res))
-          .catch(err => console.warn('[Orientation] Supabase registerAttendee error:', err));
+
+        // 1. Instant local UI update (< 100ms)
+        b.attendees.push(attendeeObj);
+        renderOrientationBatchDetails();
+        if (currentOrientSubView === 'list') renderOrientationBatchList();
+        clearOrientSelectedEmp();
+        switchOrientationTab('matrix');
+
+        if (typeof HrdModal !== 'undefined') {
+          HrdModal.success('เพิ่มพนักงานใหม่เข้ารอบปฐมนิเทศสำเร็จเรียบร้อยแล้วค่ะ!');
+        }
+
+        // 2. Persist to Supabase Primary Database immediately (< 0.1s)
+        if (typeof SupabaseService !== 'undefined') {
+          const sbAttendee = {
+            id: empIdPadded,
+            empId: empIdPadded,
+            title: candidateSnapshot.title || '',
+            firstName: candidateSnapshot.firstName || '',
+            lastName: candidateSnapshot.lastName || '',
+            position: candidateSnapshot.position || '-',
+            department: candidateSnapshot.department || '-',
+            batch: b.shortTitle || b.title || 'ปฐมนิเทศพนักงานใหม่',
+            selectedTopics: []
+          };
+          await SupabaseService.registerAttendee(sbAttendee, b.id, b.sheetId || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg');
+        }
+      } catch(err) {
+        console.warn('[Orientation] enrollSelectedOrientationEmp error:', err);
+      } finally {
+        isEnrollingOrientEmp = false;
+        if (btn) btn.disabled = false;
       }
     }
 

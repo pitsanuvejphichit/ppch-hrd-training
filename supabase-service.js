@@ -45,10 +45,39 @@ var SupabaseService = (() => {
       throw new Error('Supabase client is not available');
     }
 
+    const empId = String(attendee.id || attendee.empId || '');
+    const cId = String(courseId || '');
+
+    // Prevent duplicate registration in database
+    if (cId && empId) {
+      try {
+        const { data: existingRows } = await sb
+          .from('registrations')
+          .select('id, registered_at, created_at')
+          .eq('course_id', cId)
+          .eq('emp_id', empId)
+          .limit(1);
+
+        if (existingRows && existingRows.length > 0) {
+          console.log('[SupabaseService] Attendee already registered in this course, returning existing record.');
+          const existing = existingRows[0];
+          return {
+            success: true,
+            transactionId: existing.id,
+            registeredAt: existing.registered_at || existing.created_at,
+            source: 'supabase',
+            isDuplicate: true
+          };
+        }
+      } catch (checkErr) {
+        console.warn('[SupabaseService] Duplicate check skipped on error:', checkErr);
+      }
+    }
+
     const payload = {
-      course_id: String(courseId || ''),
+      course_id: cId,
       sheet_id: String(sheetId || ''),
-      emp_id: String(attendee.id || attendee.empId || ''),
+      emp_id: empId,
       title: attendee.title || '',
       first_name: attendee.firstName || '',
       last_name: attendee.lastName || '',
