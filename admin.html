@@ -6991,7 +6991,7 @@
               name: (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName)).trim(),
               position: a.position || '-',
               department: a.department || '-',
-              completedTopics: Array.isArray(a.selectedTopics) ? a.selectedTopics : (b.topics || []).map(t => t.id),
+              completedTopics: Array.isArray(a.selectedTopics) ? a.selectedTopics : [],
               enrolledAt: a.timestamp || b.dates || '1-2 ตุลาคม 2569'
             }));
             sourceFound = true;
@@ -7009,8 +7009,12 @@
             const syllabusTopics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
             const sheetMapped = aggregateOrientationAttendees(res.attendees, syllabusTopics);
             if (sheetMapped.length > 0) {
-              fetchedAttendees = sheetMapped;
-              sourceFound = true;
+              if (sourceFound && typeof SupabaseService !== 'undefined' && typeof SupabaseService.mergeAttendees === 'function') {
+                fetchedAttendees = SupabaseService.mergeAttendees(fetchedAttendees, sheetMapped);
+              } else {
+                fetchedAttendees = sheetMapped;
+                sourceFound = true;
+              }
             }
           }
         } catch(err) {
@@ -7620,6 +7624,19 @@
 
       updateOrientModalProgress(attendee);
       renderOrientationBatchDetails();
+
+      // Persist completedTopics to Supabase (Real-time Checklist Sync)
+      if (typeof SupabaseService !== 'undefined') {
+        const sb = SupabaseService.getClient();
+        if (sb) {
+          sb.from('registrations')
+            .update({ selected_topics: attendee.completedTopics })
+            .eq('course_id', b.id)
+            .eq('emp_id', empId)
+            .then(res => console.log('[Orientation] Updated completedTopics in Supabase:', res))
+            .catch(err => console.warn('[Orientation] Supabase checklist update error:', err));
+        }
+      }
     }
 
     function toggleAllOrientationTopicsForEmp() {
@@ -7634,6 +7651,19 @@
       attendee.completedTopics = allIds;
       openOrientationChecklistModal(currentOrientActiveEmpId);
       renderOrientationBatchDetails();
+
+      // Persist completedTopics to Supabase (Real-time Checklist Sync)
+      if (typeof SupabaseService !== 'undefined') {
+        const sb = SupabaseService.getClient();
+        if (sb) {
+          sb.from('registrations')
+            .update({ selected_topics: allIds })
+            .eq('course_id', b.id)
+            .eq('emp_id', currentOrientActiveEmpId)
+            .then(res => console.log('[Orientation] Updated all completedTopics in Supabase:', res))
+            .catch(err => console.warn('[Orientation] Supabase checklist update error:', err));
+        }
+      }
     }
 
     function closeOrientationChecklistModal() {
@@ -8152,21 +8182,76 @@
         return;
       }
 
-      b.attendees.push({
+      // If this attendee was previously in deleted list, remove from deleted list so they won't be filtered out
+      if (b.deletedAttendeeIds) {
+        b.deletedAttendeeIds = b.deletedAttendeeIds.filter(id => id !== empIdPadded);
+      }
+
+      const candidateSnapshot = selectedOrientCandidate;
+      const attendeeObj = {
         id: empIdPadded,
-        name: (selectedOrientCandidate.title || '') + selectedOrientCandidate.firstName + ' ' + selectedOrientCandidate.lastName,
-        position: selectedOrientCandidate.position || '-',
-        department: selectedOrientCandidate.department || '-',
+        name: (candidateSnapshot.title || '') + candidateSnapshot.firstName + ' ' + candidateSnapshot.lastName,
+        position: candidateSnapshot.position || '-',
+        department: candidateSnapshot.department || '-',
         completedTopics: [],
         enrolledAt: b.dates || b.title
-      });
+      };
 
+      // 1. Instant local UI update (< 100ms)
+      b.attendees.push(attendeeObj);
       renderOrientationBatchDetails();
+      if (currentOrientSubView === 'list') renderOrientationBatchList();
       clearOrientSelectedEmp();
       switchOrientationTab('matrix');
 
       if (typeof HrdModal !== 'undefined') {
         HrdModal.success('เพิ่มพนักงานใหม่เข้ารอบปฐมนิเทศสำเร็จเรียบร้อยแล้วค่ะ!');
+      }
+
+      // 2. Persist to Supabase Primary Database immediately (< 0.1s)
+      if (typeof SupabaseService !== 'undefined') {
+        const sbAttendee = {
+          id: empIdPadded,
+          empId: empIdPadded,
+          title: candidateSnapshot.title || '',
+          firstName: candidateSnapshot.firstName || '',
+          lastName: candidateSnapshot.lastName || '',
+          position: candidateSnapshot.position || '-',
+          department: candidateSnapshot.department || '-',
+          batch: b.shortTitle || b.title || 'ปฐมนิเทศพนักงานใหม่',
+          selectedTopics: []
+        };
+        SupabaseService.registerAttendee(sbAttendee, b.id, b.sheetId || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg')
+          .then(res => console.log('[Orientation] Enrolled attendee saved to Supabase:', res))
+          .catch(err => console.warn('[Orientation] Supabase registerAttendee error:', err));
+      }
+
+      // 3. Sync to Google Sheet in the background (Secondary Mirroring)
+      const sheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl && sheetId) {
+        try {
+          fetch(gasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'register',
+              sheetId: sheetId,
+              id: empIdPadded,
+              title: candidateSnapshot.title || '',
+              firstName: candidateSnapshot.firstName || '',
+              lastName: candidateSnapshot.lastName || '',
+              position: candidateSnapshot.position || '-',
+              department: candidateSnapshot.department || '-',
+              batch: '1. ' + (b.shortTitle || b.title || 'ปฐมนิเทศพนักงานใหม่')
+            })
+          })
+          .then(r => r.json())
+          .then(res => console.log('[Orientation] Saved to Google Sheet:', res))
+          .catch(err => console.warn('[Orientation] Sheet register error:', err));
+        } catch(e) {
+          console.warn('[Orientation] Sheet register exception:', e);
+        }
       }
     }
 
