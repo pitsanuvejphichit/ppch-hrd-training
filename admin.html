@@ -260,6 +260,119 @@
       border-left-color: #7c3aed;
     }
 
+    /* ==================== NATIVE PRINTABLE A4 REGISTRATION SHEET (OFFICIAL PPCH TEMPLATE) ==================== */
+    .orient-print-preview-container {
+      background-color: #475569;
+      padding: 24px 16px;
+      overflow-y: auto;
+    }
+    .orient-a4-sheet {
+      background: #ffffff;
+      width: 297mm;
+      height: 210mm;
+      min-width: 297mm;
+      max-width: 297mm;
+      min-height: 210mm;
+      max-height: 210mm;
+      margin: 0 auto 24px auto;
+      padding: 4.8mm 5.5mm;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      box-sizing: border-box;
+      color: #000000;
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+    .orient-sheet-header-table,
+    .orient-sheet-meta-table,
+    .orient-sheet-attendee-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      /* Hide all website elements */
+      .app-topbar, .app-sidebar, #adminSidebar, header, nav, aside, footer,
+      #adminMainContent, #loading, .orient-print-no-print, button, select, input,
+      #selectedEmployeesModal, #saveProgressModal, #orientationChecklistModal,
+      .no-print {
+        display: none !important;
+      }
+      body > *:not(#orientationPrintModal) {
+        display: none !important;
+      }
+      #orientationPrintModal {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        width: 297mm !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+      }
+      #orientationPrintModal > div {
+        max-width: 297mm !important;
+        width: 297mm !important;
+        height: auto !important;
+        max-height: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+      }
+      #orientPrintPreviewArea {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        max-height: none !important;
+      }
+      #orientPrintSheetsContainer {
+        min-width: 297mm !important;
+        width: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .orient-a4-sheet {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 4.8mm 5.5mm !important;
+        width: 297mm !important;
+        height: 210mm !important;
+        min-width: 297mm !important;
+        max-width: 297mm !important;
+        min-height: 210mm !important;
+        max-height: 210mm !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        overflow: hidden !important;
+      }
+      .orient-a4-sheet:last-child {
+        page-break-after: auto !important;
+      }
+    }
+
     /* ==================== 1. TOP HEADER (56px STICKY) ==================== */
     .app-topbar {
       height: 56px;
@@ -4377,896 +4490,7 @@
               .no-print { display: none !important; }
               body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             }
-          
-    /* ==================== PPCH DEEP ROYAL BLUE & CRISP WHITE THEME (PROJECT 12 REFERENCE) ==================== */
-    :root {
-      --royal-dark: #002e6e;
-      --royal-blue: #004b93;
-      --royal-hover: #003a73;
-      --royal-light: #0284c7;
-      --royal-subtle: #f0f7ff;
-      --royal-glow: rgba(0, 75, 147, 0.16);
-
-      --canvas-bg: #f4f7fb;
-      --surface-white: #ffffff;
-      --border-main: #e2e8f0;
-      --border-subtle: #edf2f7;
-      --border-focus: #004b93;
-      --border-blue-soft: #bfdbfe;
-
-      --text-main: #0f172a;
-      --text-body: #334155;
-      --text-muted: #64748b;
-      --text-light: #94a3b8;
-
-      --green-ready: #059669;
-      --green-bg: #ecfdf5;
-      --green-border: #a7f3d0;
-
-      --amber-pending: #d97706;
-      --amber-bg: #fffbeb;
-      --amber-border: #fde68a;
-
-      --red-abnormal: #dc2626;
-      --red-bg: #fef2f2;
-      --red-border: #fecaca;
-
-      --font-sans: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'Manrope', 'Inter', monospace;
-      color-scheme: light;
-      accent-color: #004b93;
-    }
-
-    ::selection {
-      background-color: var(--royal-blue);
-      color: #ffffff;
-    }
-
-    html {
-      scrollbar-color: #94a3b8 #f1f5f9;
-      scrollbar-width: thin;
-    }
-
-    body {
-      background-color: var(--canvas-bg);
-      color: var(--text-main);
-      font-family: var(--font-sans);
-    }
-
-    h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
-    p { text-wrap: pretty; }
-
-    :focus-visible {
-      outline: 2px solid var(--royal-blue);
-      outline-offset: 2px;
-    }
-
-    
-    /* Orientation KPI Strip (Medical Equipment Archetype) */
-    .orient-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      width: 100%;
-    }
-    @media (max-width: 768px) {
-      .orient-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    }
-    .orient-kpi-card {
-      background: #ffffff;
-      border: 1px solid var(--border-main);
-      border-radius: 9px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.02);
-      transition: all 0.15s ease;
-    }
-    .orient-kpi-card:hover {
-      border-color: var(--border-blue-soft);
-      box-shadow: 0 2px 8px rgba(0, 75, 147, 0.06);
-    }
-    .orient-kpi-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    /* Single-Row Horizontal Strip Cards for 14 Topics (Golden Rule 3) */
-    .orient-topic-strip {
-      background: #ffffff;
-      border: 1px solid var(--border-main);
-      border-left: 3.5px solid var(--royal-blue);
-      border-radius: 8px;
-      padding: 7px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      width: 100%;
-      box-shadow: 0 1px 2px rgba(0, 46, 110, 0.02);
-      transition: all 0.15s ease;
-    }
-    .orient-topic-strip:hover {
-      border-color: #93c5fd;
-      background: #fbfdff;
-      transform: translateY(-1px);
-      box-shadow: 0 3px 8px rgba(0, 75, 147, 0.06);
-    }
-    .orient-topic-strip.day2 {
-      border-left-color: #059669;
-    }
-    .orient-topic-strip.day3 {
-      border-left-color: #7c3aed;
-    }
-
-    /* ==================== NATIVE PRINTABLE A4 REGISTRATION SHEET (OFFICIAL PPCH TEMPLATE) ==================== */
-    .orient-print-preview-container {
-      background-color: #475569;
-      padding: 24px 16px;
-      overflow-y: auto;
-    }
-    .orient-a4-sheet {
-      background: #ffffff;
-      width: 297mm;
-      height: 210mm;
-      min-width: 297mm;
-      max-width: 297mm;
-      min-height: 210mm;
-      max-height: 210mm;
-      margin: 0 auto 24px auto;
-      padding: 4.8mm 5.5mm;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      box-sizing: border-box;
-      color: #000000;
-      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      position: relative;
-      overflow: hidden;
-      page-break-after: always;
-      page-break-inside: avoid;
-    }
-    .orient-sheet-header-table,
-    .orient-sheet-meta-table,
-    .orient-sheet-attendee-table {
-      width: 100%;
-      border-collapse: collapse;
-      border-spacing: 0;
-      table-layout: fixed;
-    }
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 0;
-      }
-      body.printing-orientation > *:not(#orientationPrintModal) {
-        display: none !important;
-      }
-      body.printing-orientation {
-        background: #fff !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        overflow: visible !important;
-      }
-      body.printing-orientation #orientationPrintModal {
-        display: block !important;
-        position: static !important;
-        inset: auto !important;
-        width: 297mm !important;
-        height: auto !important;
-        background: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        z-index: auto !important;
-        overflow: visible !important;
-      }
-      body.printing-orientation #orientationPrintModal > div {
-        max-width: 297mm !important;
-        width: 297mm !important;
-        height: auto !important;
-        max-height: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        background: transparent !important;
-        border: none !important;
-      }
-      body.printing-orientation .orient-print-no-print {
-        display: none !important;
-      }
-      body.printing-orientation .orient-print-preview-container {
-        background: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        overflow: visible !important;
-        max-height: none !important;
-      }
-      body.printing-orientation .orient-a4-sheet {
-        box-shadow: none !important;
-        margin: 0 0 0 0 !important;
-        padding: 4.8mm 5.5mm !important;
-        width: 297mm !important;
-        height: 210mm !important;
-        min-width: 297mm !important;
-        max-width: 297mm !important;
-        min-height: 210mm !important;
-        max-height: 210mm !important;
-        page-break-after: always !important;
-        page-break-inside: avoid !important;
-        overflow: hidden !important;
-      }
-      body.printing-orientation .orient-a4-sheet:last-child {
-        page-break-after: auto !important;
-      }
-    }
-
-    /* ==================== 1. TOP HEADER (56px STICKY) ==================== */
-    .app-topbar {
-      height: 56px;
-      background: #ffffff;
-      border-bottom: 2px solid var(--royal-blue);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 46, 110, 0.05);
-      flex-shrink: 0;
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .topbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-
-    .brand-logo-img {
-      height: 36px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .brand-divider {
-      width: 1px;
-      height: 22px;
-      background: var(--border-main);
-    }
-
-    .brand-badge-pill {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--royal-blue);
-      background: var(--royal-subtle);
-      border: 1px solid var(--border-blue-soft);
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-    }
-
-    .topbar-breadcrumbs {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      margin-left: 8px;
-    }
-    .bread-parent { color: var(--text-muted); font-weight: 500; }
-    .bread-sep { color: var(--text-light); }
-    .bread-current {
-      color: var(--royal-blue);
-      font-weight: 700;
-      background: var(--royal-subtle);
-      padding: 2px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border-blue-soft);
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .status-realtime-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--royal-blue);
-      background: var(--royal-subtle);
-      border: 1px solid var(--border-blue-soft);
-      padding: 4px 10px;
-      border-radius: 9999px;
-    }
-
-    .pulse-indicator-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green-ready);
-      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
-      animation: pulseIndicator 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseIndicator {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.25); opacity: 0.7; }
-    }
-
-    .btn-topbar-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, var(--royal-blue) 0%, var(--royal-light) 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: 10px;
-      padding: 7px 14px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 75, 147, 0.25);
-      transition: all 0.18s ease;
-      font-family: inherit;
-    }
-    .btn-topbar-primary:hover {
-      box-shadow: 0 4px 12px rgba(0, 75, 147, 0.35);
-      transform: translateY(-1px);
-    }
-
-    .btn-topbar-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: #f1f5f9;
-      color: var(--text-body);
-      border: 1px solid var(--border-main);
-      border-radius: 10px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-family: inherit;
-    }
-    .btn-topbar-secondary:hover {
-      background: #e2e8f0;
-      color: var(--text-main);
-    }
-
-    /* ==================== LEAN LEFT SIDEBAR (COLLAPSIBLE MINI / EXPAND ON HOVER) ==================== */
-    .app-sidebar {
-      width: 68px;
-      background: linear-gradient(180deg, #001f44 0%, #001733 100%);
-      border-right: 1px solid rgba(0, 50, 110, 0.4);
-      padding: 12px 8px;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      position: sticky;
-      top: 56px;
-      height: calc(100vh - 56px);
-      height: calc(100dvh - 56px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      z-index: 95;
-      align-self: flex-start;
-      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
-      user-select: none;
-    }
-    @media (min-width: 993px) {
-      .app-sidebar:hover,
-      .app-sidebar.is-expanded {
-        width: 240px;
-        box-shadow: 4px 0 20px rgba(0, 15, 45, 0.2);
-      }
-    }
-    .app-sidebar::-webkit-scrollbar { width: 4px; }
-    .app-sidebar::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: 4px;
-    }
-
-    .sidebar-section-title {
-      font-size: 10px;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 8px 8px 4px 8px;
-      white-space: nowrap;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 0.15s ease, max-height 0.2s ease, padding 0.2s ease;
-    }
-    .app-sidebar:hover .sidebar-section-title,
-    .app-sidebar.is-expanded .sidebar-section-title,
-    .app-sidebar.mobile-open .sidebar-section-title {
-      opacity: 1;
-      max-height: 30px;
-      padding: 8px 10px 4px 10px;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .nav-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: #cbd5e1;
-      text-decoration: none;
-      background: transparent;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      position: relative;
-      white-space: nowrap;
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-      font-family: inherit;
-    }
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      transform: translateX(2px);
-    }
-    .nav-btn.active {
-      background: linear-gradient(135deg, #0072db 0%, #0284c7 100%) !important;
-      color: #ffffff !important;
-      font-weight: 600 !important;
-      box-shadow: 0 4px 14px rgba(0, 114, 219, 0.45);
-    }
-    .nav-btn .material-icons-round {
-      font-size: 20px;
-      color: #94a3b8;
-      transition: color 0.15s;
-      flex-shrink: 0;
-      width: 24px;
-      text-align: center;
-    }
-    .nav-btn:hover .material-icons-round,
-    .nav-btn.active .material-icons-round {
-      color: #ffffff;
-    }
-
-    .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon) {
-      opacity: 0;
-      max-width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      pointer-events: none;
-      transform: translateX(-4px);
-      transition: opacity 0.16s ease, max-width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s ease;
-    }
-    .app-sidebar:hover .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon),
-    .app-sidebar.is-expanded .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon),
-    .app-sidebar.mobile-open .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon) {
-      opacity: 1;
-      max-width: 170px;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-
-    .nav-ext-icon {
-      opacity: 0;
-      margin-left: auto;
-      font-size: 14px !important;
-      color: #94a3b8 !important;
-      transition: opacity 0.15s ease;
-    }
-    .app-sidebar:hover .nav-ext-icon,
-    .app-sidebar.is-expanded .nav-ext-icon,
-    .app-sidebar.mobile-open .nav-ext-icon {
-      opacity: 1;
-    }
-
-    @media (max-width: 992px) {
-      .app-sidebar {
-        position: fixed;
-        top: 56px;
-        left: 0;
-        bottom: 0;
-        height: calc(100vh - 56px);
-        width: 240px;
-        transform: translateX(-100%);
-        transition: transform 0.25s ease;
-      }
-      .app-sidebar.mobile-open {
-        transform: translateX(0);
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
-      }
-      .app-sidebar.mobile-open .nav-btn > span:not(.material-icons-round) {
-        opacity: 1;
-        max-width: 170px;
-        pointer-events: auto;
-      }
-    }
-
-    /* ==================== SINGLE-ROW STREAMLINED FILTER TOOLBAR ==================== */
-    .filter-toolbar-single-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding: 8px 12px;
-      background: #ffffff;
-      border: 1px solid var(--border-main);
-      border-radius: 14px;
-      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.04);
-      scrollbar-width: none;
-    }
-    .filter-toolbar-single-row::-webkit-scrollbar { display: none; }
-
-    .toolbar-search-wrapper {
-      position: relative;
-      min-width: 200px;
-      max-width: 280px;
-      flex: 1;
-      flex-shrink: 0;
-    }
-    .toolbar-search-icon {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 18px;
-      color: var(--text-light);
-      pointer-events: none;
-    }
-    .toolbar-search-input {
-      width: 100%;
-      padding: 7px 10px 7px 34px;
-      font-size: 12px;
-      border: 1px solid var(--border-main);
-      border-radius: 9px;
-      background: var(--canvas-bg);
-      outline: none;
-      color: var(--text-main);
-      transition: all 0.15s ease;
-      font-family: inherit;
-    }
-    .toolbar-search-input:focus {
-      background: #ffffff;
-      border-color: var(--royal-blue);
-      box-shadow: 0 0 0 2px var(--royal-subtle);
-    }
-
-    .toolbar-divider {
-      width: 1px;
-      height: 24px;
-      background: var(--border-main);
-      flex-shrink: 0;
-    }
-
-    .toolbar-select-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .toolbar-icon {
-      font-size: 17px;
-      color: var(--text-light);
-    }
-    .toolbar-select {
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: 500;
-      border: 1px solid var(--border-main);
-      border-radius: 9px;
-      background: #ffffff;
-      color: var(--text-main);
-      cursor: pointer;
-      outline: none;
-      font-family: inherit;
-    }
-    .toolbar-select:focus {
-      border-color: var(--royal-blue);
-    }
-
-    .toolbar-category-chips {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .toolbar-chip-btn {
-      padding: 6px 11px;
-      font-size: 11.5px;
-      font-weight: 500;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text-body);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-      font-family: inherit;
-    }
-    .toolbar-chip-btn:hover {
-      background: var(--canvas-bg);
-      color: var(--royal-blue);
-    }
-    .toolbar-chip-btn.active {
-      background: var(--royal-subtle);
-      color: var(--royal-blue);
-      border-color: var(--border-blue-soft);
-      font-weight: 700;
-    }
-
-    .toolbar-count-badge {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--royal-blue);
-      background: var(--royal-subtle);
-      border: 1px solid var(--border-blue-soft);
-      padding: 4px 10px;
-      border-radius: 9999px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .toolbar-sync-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      border-radius: 9px;
-      background: #ffffff;
-      border: 1px solid var(--border-main);
-      color: var(--royal-blue);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      flex-shrink: 0;
-      font-family: inherit;
-    }
-    .toolbar-sync-btn:hover {
-      background: var(--royal-subtle);
-      border-color: var(--border-blue-soft);
-    }
-
-    /* ==================== SINGLE-ROW HORIZONTAL STRIP CARDS ==================== */
-    .course-strip-card {
-      background: #ffffff;
-      border: 1px solid var(--border-main);
-      border-left: 3.5px solid var(--royal-blue);
-      border-radius: 10px;
-      padding: 8px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      width: 100%;
-      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.03);
-      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-    .course-strip-card:hover {
-      border-color: var(--border-blue-soft);
-      box-shadow: 0 4px 16px rgba(0, 46, 110, 0.08);
-      transform: translateY(-1px);
-    }
-    .course-strip-card:has(.floating-action-wrapper.open) {
-      z-index: 40;
-      position: relative;
-    }
-
-    .strip-info-col {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .strip-badges-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .strip-title {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.15px;
-      line-height: 1.35;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .strip-meta-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 11.5px;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-    .strip-meta-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .strip-quota-col {
-      width: 150px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    @media (max-width: 860px) {
-      .strip-quota-col { display: none; }
-    }
-
-    .strip-actions-col {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    /* ==================== FLOATING ACTION SPEED DIAL ==================== */
-    .floating-action-wrapper {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .btn-floating-trigger {
-      position: relative;
-      width: 30px;
-      height: 30px;
-      min-width: 30px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 1.5px solid var(--border-main);
-      color: var(--royal-blue);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0, 46, 110, 0.08);
-      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-      padding: 0;
-    }
-    .btn-floating-trigger:hover {
-      background: var(--royal-subtle);
-      border-color: var(--border-blue-soft);
-      transform: scale(1.08);
-      box-shadow: 0 3px 8px rgba(0, 75, 147, 0.18);
-    }
-    .btn-floating-trigger .trigger-icon {
-      font-size: 19px;
-    }
-    .floating-badge-count {
-      position: absolute;
-      top: -3px;
-      right: -3px;
-      background: var(--royal-blue);
-      color: #ffffff;
-      font-size: 9px;
-      font-weight: 700;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1.5px solid #ffffff;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .floating-action-tray {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%) scale(0.92);
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 10px 25px -4px rgba(0, 46, 110, 0.22), 0 4px 10px -2px rgba(0, 0, 0, 0.08);
-      border-radius: 20px;
-      padding: 3px 6px;
-      display: none;
-      align-items: center;
-      gap: 4px;
-      z-index: 150;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-      white-space: nowrap;
-    }
-    .floating-action-wrapper.open .floating-action-tray {
-      display: inline-flex;
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(-50%) scale(1);
-    }
-    .floating-action-wrapper.open .btn-floating-trigger {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .btn-tray-action {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: #f8fafc;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.15s ease;
-      font-size: 11px;
-      color: var(--text-body);
-      gap: 3px;
-      padding: 0 6px;
-    }
-    .btn-tray-action:hover {
-      background: var(--royal-subtle);
-      border-color: var(--border-blue-soft);
-      transform: scale(1.05);
-    }
-    .btn-tray-action .material-icons-round {
-      font-size: 17px;
-    }
-    .tray-label {
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .btn-floating-close {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: none;
-      background: #f1f5f9;
-      color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      margin-left: 2px;
-      transition: all 0.15s;
-      padding: 0;
-    }
-    .btn-floating-close:hover {
-      background: #fee2e2;
-      color: #dc2626;
-      transform: rotate(90deg);
-    }
-
-  </style>
+          </style>
         </head>
         <body>
           <div class="no-print" style="background: #e0f2fe; padding: 10px 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #bae6fd;">
@@ -9262,13 +8486,118 @@
       }).join('');
     }
 
+    function printOrientationSheetsDirect(topicId = null) {
+      const b = getActiveOrientBatch();
+      if (!b) return;
+
+      if (!topicId) {
+        const modalSelect = document.getElementById('orientPrintTopicSelect');
+        const tabSelect = document.getElementById('orientTabTopicSelect');
+        const modal = document.getElementById('orientationPrintModal');
+        const isModalVisible = modal && !modal.classList.contains('hidden');
+        topicId = isModalVisible && modalSelect ? modalSelect.value : (tabSelect ? tabSelect.value : 'all');
+      }
+
+      const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const attendees = b.attendees || [];
+      const targets = (topicId === 'all')
+        ? topics
+        : topics.filter(t => t.id === topicId);
+
+      const sheetsHtml = targets.map((t, idx) => {
+        const originalIdx = topics.findIndex(x => x.id === t.id);
+        return generateA4SheetHtml(t, b, attendees, originalIdx >= 0 ? originalIdx : idx, targets.length);
+      }).join('');
+
+      // Create isolated printing iframe to print ONLY the A4 landscape roster sheets (no website UI)
+      let iframe = document.getElementById('orientPrintHiddenFrame');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'orientPrintHiddenFrame';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        iframe.style.visibility = 'hidden';
+        iframe.style.opacity = '0';
+        document.body.appendChild(iframe);
+      }
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`
+        <!DOCTYPE html>
+        <html lang="th">
+        <head>
+          <meta charset="utf-8">
+          <title>ใบลงทะเบียนอบรม - ${escapeHtml(b.title)}</title>
+          <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+          <style>
+            @page {
+              size: A4 landscape;
+              margin: 0;
+            }
+            * {
+              box-sizing: border-box;
+            }
+            html, body {
+              margin: 0;
+              padding: 0;
+              background: #ffffff;
+              font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+              color: #000000;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .orient-a4-sheet {
+              width: 297mm;
+              height: 210mm;
+              min-width: 297mm;
+              max-width: 297mm;
+              min-height: 210mm;
+              max-height: 210mm;
+              padding: 4.8mm 5.5mm;
+              margin: 0;
+              box-sizing: border-box;
+              background: #ffffff;
+              color: #000000;
+              position: relative;
+              overflow: hidden;
+              page-break-after: always;
+              page-break-inside: avoid;
+            }
+            .orient-a4-sheet:last-child {
+              page-break-after: auto;
+            }
+            .orient-sheet-header-table,
+            .orient-sheet-meta-table,
+            .orient-sheet-attendee-table {
+              width: 100%;
+              border-collapse: collapse;
+              border-spacing: 0;
+              table-layout: fixed;
+            }
+          </style>
+        </head>
+        <body>
+          ${sheetsHtml}
+        </body>
+        </html>
+      `);
+      doc.close();
+
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      }, 350);
+    }
+
     function printOrientationTabSheets() {
       const selectEl = document.getElementById('orientTabTopicSelect');
       const topicId = selectEl ? selectEl.value : 'all';
-      openOrientationPrintModal(topicId);
-      setTimeout(() => {
-        printOrientationSheetNow();
-      }, 300);
+      printOrientationSheetsDirect(topicId);
     }
 
     function renderOrientationPrintSheets(filterTopicId = 'all') {
@@ -9304,7 +8633,7 @@
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
       if (selectEl) {
         selectEl.innerHTML = `
-          <option value="all">🖨️ พิมพ์ครบทุกวิชา (14 หัวข้อ • แยก 14 หน้า A4)</option>
+          <option value="all">🖨️ พิมพ์ครบทุกวิชา (14 หัวข้อ • แยก 14 หน้า A4 แนวนอน)</option>
           ${topics.map((t, idx) => `
             <option value="${t.id}" ${topicId === t.id ? 'selected' : ''}>
               ${idx + 1}. ${escapeHtml(t.title)} (${t.date || ''} ${t.time || ''})
@@ -9331,11 +8660,9 @@
     }
 
     function printOrientationSheetNow() {
-      document.body.classList.add('printing-orientation');
-      window.print();
-      setTimeout(() => {
-        document.body.classList.remove('printing-orientation');
-      }, 1000);
+      const selectEl = document.getElementById('orientPrintTopicSelect');
+      const topicId = selectEl ? selectEl.value : 'all';
+      printOrientationSheetsDirect(topicId);
     }
 
     function printOrientationChecklist() {
