@@ -1802,31 +1802,40 @@
                 </div>
               </div>
 
-              <!-- Right: Print Roster A4, Open Google Sheet, Edit Schedule, & Export Speed Dial -->
+              <!-- Right: Print Roster A4, Web Roster Tab, Backup Master Log, Edit Schedule, & Export Speed Dial -->
               <div class="flex items-center space-x-2 shrink-0">
                 <!-- Native A4 Official Registration Print Button (Matching Hospital Form Template) -->
                 <button 
                   type="button" 
                   onclick="openOrientationPrintModal('all')" 
                   class="px-3.5 py-1.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
-                  title="พิมพ์ใบลงทะเบียนเข้าอบรม A4 ทั้ง 14 หัวข้อ (ตามแบบฟอร์มมาตรฐาน รพ.พิษณุเวช พิจิตร)"
+                  title="พิมพ์ใบลงทะเบียนเข้าอบรม A4 ทั้ง 14 หัวข้อ (ตามแบบฟอร์มมาตรฐาน FM-PPCH-HR-012)"
                 >
                   <span class="material-icons-round text-sm">print</span>
                   <span>พิมพ์ใบรายชื่อ A4 (14 หัวข้อ)</span>
                 </button>
 
-                <!-- Golden Rule: Open Google Sheet Roster Button -->
-                <a 
-                  id="btnOrientGoogleSheet" 
-                  href="https://docs.google.com/spreadsheets/d/1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg/edit?usp=drivesdk" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 cursor-pointer"
-                  title="เปิดใบรายชื่อและข้อมูลการลงทะเบียน 14 หัวข้อบน Google Sheet ของรอบนี้"
+                <!-- Web Roster Tab Button (FM-PPCH-HR-012 on Web) -->
+                <button 
+                  type="button" 
+                  onclick="switchOrientationTab('roster')" 
+                  class="px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-[#004b93] border border-sky-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 cursor-pointer"
+                  title="ดูแบบฟอร์มใบลงทะเบียน 14 หัวข้อบนหน้าเว็บตามแบบต้นฉบับโรงพยาบาล"
                 >
-                  <span class="material-icons-round text-sm text-emerald-700">table_chart</span>
-                  <span>เปิดใบรายชื่อบน Google Sheet</span>
-                </a>
+                  <span class="material-icons-round text-sm text-[#004b93]">description</span>
+                  <span>ดูใบลงทะเบียน A4 (14 หัวข้อ)</span>
+                </button>
+
+                <!-- Flat Master Table Log Backup to Google Sheet Button -->
+                <button 
+                  type="button" 
+                  onclick="backupOrientationToGoogleSheet()" 
+                  class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 cursor-pointer" 
+                  title="สำรองข้อมูลขึ้น Google Sheet เป็นตาราง Master Table Log เดี่ยว"
+                >
+                  <span class="material-icons-round text-sm">cloud_upload</span>
+                  <span>สำรองข้อมูลขึ้น Google Sheet</span>
+                </button>
 
                 <button 
                   type="button" 
@@ -1836,10 +1845,6 @@
                 >
                   <span class="material-icons-round text-sm text-amber-700">edit_calendar</span>
                   <span>เปลี่ยนวัน/เวลา 14 หัวข้อ</span>
-                </button>
-
-                <button type="button" onclick="openEditBatchSheetModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm cursor-pointer transition-colors" title="แก้ไขลิงก์ Google Sheet ประจำรอบนี้">
-                  <span class="material-icons-round text-sm">edit_note</span>
                 </button>
 
                 <button type="button" onclick="printOrientationChecklist()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1 cursor-pointer shadow-2xs active:scale-95" title="พิมพ์ใบบันทึกผลและใบเซ็นชื่อ A4">
@@ -1918,7 +1923,7 @@
               </div>
             </div>
 
-            <!-- NAVIGATION TABS: SYLLABUS, MATRIX, ENROLL -->
+            <!-- NAVIGATION TABS: SYLLABUS, MATRIX, ENROLL, ROSTER (FM-PPCH-HR-012) -->
             <div class="flex items-center space-x-1.5 bg-slate-200/70 p-1 rounded-xl w-fit">
               <button type="button" id="tabOrientSyllabusBtn" onclick="switchOrientationTab('syllabus')" class="px-3.5 py-1.5 rounded-lg font-bold text-xs bg-white text-[#004b93] shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer">
                 <span class="material-icons-round text-sm">schedule</span>
@@ -1931,6 +1936,10 @@
               <button type="button" id="tabOrientEnrollBtn" onclick="switchOrientationTab('enroll')" class="px-3.5 py-1.5 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer">
                 <span class="material-icons-round text-sm">person_add</span>
                 <span>เพิ่มพนักงานใหม่</span>
+              </button>
+              <button type="button" id="tabOrientRosterBtn" onclick="switchOrientationTab('roster')" class="px-3.5 py-1.5 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer">
+                <span class="material-icons-round text-sm">description</span>
+                <span>ใบลงทะเบียน (14 หัวข้อ)</span>
               </button>
             </div>
 
@@ -2107,6 +2116,63 @@
                   <span class="material-icons-round text-base">how_to_reg</span>
                   <span>ยืนยันเพิ่มพนักงานใหม่เข้ารอบนี้</span>
                 </button>
+              </div>
+            </div>
+
+            <!-- TAB 4: OFFICIAL REGISTRATION ROSTER SHEETS (FM-PPCH-HR-012 ON WEB) -->
+            <div id="orientTabRosterSheets" class="hidden space-y-4">
+              <!-- Top Toolbar (Khun Nick's Streamlined Filter / Action Toolbar) -->
+              <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-3.5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center space-x-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-sky-50 text-[#004b93] flex items-center justify-center border border-sky-200 shrink-0">
+                    <span class="material-icons-round text-base">description</span>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 flex items-center gap-2">
+                      <span>แบบฟอร์มใบลงทะเบียนมาตรฐาน</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-50 text-[#004b93] border border-sky-200">FM-PPCH-HR-012</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 font-light">ตาราง 26 แถว พร้อมหัวข้อ วันที่ เวลา วิทยากร และช่องลายมือชื่อ อ้างอิงตามเอกสารควบคุมคุณภาพโรงพยาบาล</div>
+                  </div>
+                </div>
+
+                <!-- Action Toolbar -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <!-- Topic Filter Dropdown -->
+                  <div class="flex items-center gap-1.5">
+                    <label class="text-xs font-semibold text-slate-600 hidden sm:inline">เลือกหัวข้อ:</label>
+                    <select id="orientTabTopicSelect" onchange="renderOrientationTabRosterSheets()" class="text-xs font-semibold px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] max-w-[260px]">
+                      <option value="all">📑 ครบทั้ง 14 หัวข้อ (14 หน้า A4)</option>
+                    </select>
+                  </div>
+
+                  <!-- Print Button -->
+                  <button 
+                    type="button" 
+                    onclick="printOrientationTabSheets()" 
+                    class="px-3.5 py-1.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
+                    title="พิมพ์แบบฟอร์ม A4 ออกทางเครื่องพิมพ์ หรือบันทึกเป็น PDF"
+                  >
+                    <span class="material-icons-round text-sm">print</span>
+                    <span>พิมพ์ A4</span>
+                  </button>
+
+                  <!-- Backup to Google Sheet (Flat Master Table Log) Button -->
+                  <button 
+                    type="button" 
+                    onclick="backupOrientationToGoogleSheet()" 
+                    class="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer" 
+                    title="สำรองข้อมูลขึ้น Google Sheet เป็นตาราง Master Table Log เดี่ยว"
+                  >
+                    <span class="material-icons-round text-sm">cloud_upload</span>
+                    <span id="btnBackupSheetText">สำรองข้อมูลขึ้น Google Sheet</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sheets Preview Container -->
+              <div id="orientTabSheetsContainer" class="flex flex-col items-center gap-6 py-2">
+                <!-- Rendered dynamically as 1 or 14 A4 Sheets matching FM-PPCH-HR-012 -->
               </div>
             </div>
 
@@ -2453,22 +2519,6 @@
             <input type="text" id="newOrientDay3DateInput" placeholder="เช่น 7 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-purple-300 rounded-lg outline-none text-xs">
           </div>
         </div>
-
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">
-            ลิงก์ Google Sheet ใบรายชื่อ 14 หัวข้อ (ไฟล์เดียวกัน)
-          </label>
-          <input 
-            type="url" 
-            id="newOrientSheetInput" 
-            value="https://docs.google.com/spreadsheets/d/1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg/edit?usp=drivesdk" 
-            placeholder="https://docs.google.com/spreadsheets/d/..." 
-            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] font-mono text-[11px]"
-          >
-          <span class="text-[10.5px] text-slate-500 mt-1 block">
-            💡 ใช้แม่แบบไฟล์เดียวที่มีครบทั้ง 14 หัวข้อวิชา (เหมือนรอบ 1-2 ต.ค. 2569) หรือระบุลิงก์สเปรดชีตใหม่ของรอบนี้
-          </span>
-        </div>
       </div>
 
       <!-- Modal Footer -->
@@ -2549,61 +2599,7 @@
 
   <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
   
-  <!-- MODAL: CREATE NEW ORIENTATION BATCH -->
-  <div id="newOrientBatchModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in duration-150">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-          <span class="material-icons-round text-base text-[#004b93]">add_circle</span>
-          <span>สร้างรอบปฐมนิเทศใหม่</span>
-        </h3>
-        <button type="button" onclick="closeNewBatchModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs">✕</button>
-      </div>
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">ประจำเดือน (YYYY-MM) *</label>
-          <input type="month" id="newBatchMonthInput" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">ชื่อรอบปฐมนิเทศ *</label>
-          <input type="text" id="newBatchTitleInput" placeholder="เช่น ปฐมนิเทศพนักงานใหม่ รอบ 5-6 พ.ย. 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">วันที่จัดอบรม *</label>
-          <input type="text" id="newBatchDatesInput" placeholder="เช่น 5-6 พฤศจิกายน 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">ลิงก์ Google Sheet ใบรายชื่อของรอบนี้ (ถ้ามี)</label>
-          <input type="url" id="newBatchSheetInput" placeholder="https://docs.google.com/spreadsheets/d/..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
-        </div>
-      </div>
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-        <button type="button" onclick="closeNewBatchModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">ยกเลิก</button>
-        <button type="button" onclick="confirmCreateNewOrientationBatch()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs">บันทึกรอบใหม่</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: EDIT GOOGLE SHEET LINK FOR BATCH -->
-  <div id="editBatchSheetModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in duration-150">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-          <span class="material-icons-round text-base text-emerald-700">table_chart</span>
-          <span>กำหนดลิงก์ Google Sheet ใบรายชื่อ</span>
-        </h3>
-        <button type="button" onclick="closeEditBatchSheetModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs">✕</button>
-      </div>
-      <div class="space-y-2 text-xs">
-        <p class="text-slate-500">ระบุลิงก์ Google Sheet สำหรับดู/บันทึกใบรายชื่อของรอบปฐมนิเทศนี้:</p>
-        <input type="url" id="editBatchSheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
-      </div>
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-        <button type="button" onclick="closeEditBatchSheetModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">ยกเลิก</button>
-        <button type="button" onclick="saveEditBatchSheetUrl()" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs">บันทึก</button>
-      </div>
-    </div>
-  </div>
+  <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
 
   <div id="orientationChecklistModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
@@ -7925,9 +7921,9 @@
                   <button type="button" onclick="openEditBatchScheduleModal('${b.id}')" class="btn-tray-action text-amber-700" title="เปลี่ยนวัน/เวลา 14 หัวข้อ">
                     <span class="material-icons-round">edit_calendar</span>
                   </button>
-                  <a href="${sheetUrl}" target="_blank" rel="noopener noreferrer" class="btn-tray-action text-emerald-800" title="เปิดใบรายชื่อบน Google Sheet">
-                    <span class="material-icons-round">table_chart</span>
-                  </a>
+                  <button type="button" onclick="openOrientationPrintModalForBatch('${b.id}')" class="btn-tray-action text-[#004b93]" title="ดูและพิมพ์ใบลงทะเบียน A4 (FM-PPCH-HR-012)">
+                    <span class="material-icons-round">description</span>
+                  </button>
                   <button type="button" onclick="deleteOrientationBatch('${b.id}')" class="btn-tray-action text-rose-600" title="ลบรอบนี้">
                     <span class="material-icons-round">delete</span>
                   </button>
@@ -8020,6 +8016,7 @@
 
       renderOrientationSyllabus();
       renderOrientationMatrix();
+      renderOrientationTabRosterSheets();
     }
 
     function updateOrientationBreadcrumb() {
@@ -8073,14 +8070,17 @@
       const sView = document.getElementById('orientTabSyllabus');
       const mView = document.getElementById('orientTabMatrix');
       const eView = document.getElementById('orientTabEnroll');
+      const rView = document.getElementById('orientTabRosterSheets');
 
       const sBtn = document.getElementById('tabOrientSyllabusBtn');
       const mBtn = document.getElementById('tabOrientMatrixBtn');
       const eBtn = document.getElementById('tabOrientEnrollBtn');
+      const rBtn = document.getElementById('tabOrientRosterBtn');
 
       if (sView) sView.classList.toggle('hidden', tab !== 'syllabus');
       if (mView) mView.classList.toggle('hidden', tab !== 'matrix');
       if (eView) eView.classList.toggle('hidden', tab !== 'enroll');
+      if (rView) rView.classList.toggle('hidden', tab !== 'roster');
 
       const activeClass = "px-3.5 py-1.5 rounded-lg font-bold text-xs bg-white text-[#004b93] shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer";
       const inactiveClass = "px-3.5 py-1.5 rounded-lg font-semibold text-xs text-slate-600 hover:text-[#004b93] transition-all flex items-center gap-1.5 cursor-pointer";
@@ -8088,8 +8088,10 @@
       if (sBtn) sBtn.className = (tab === 'syllabus') ? activeClass : inactiveClass;
       if (mBtn) mBtn.className = (tab === 'matrix') ? activeClass : inactiveClass;
       if (eBtn) eBtn.className = (tab === 'enroll') ? activeClass : inactiveClass;
+      if (rBtn) rBtn.className = (tab === 'roster') ? activeClass : inactiveClass;
 
       if (tab === 'matrix') renderOrientationMatrix();
+      if (tab === 'roster') renderOrientationTabRosterSheets();
     }
 
     // Render 14 Topics as Single-Row Horizontal Strip Cards (Khun Nick's Golden Rule 3)
@@ -8691,34 +8693,111 @@
       }
     }
 
-    // Modal: Edit Batch Google Sheet Link
-    function openEditBatchSheetModal() {
-      const b = getActiveOrientBatch();
-      if (!b) return;
-      const inp = document.getElementById('editBatchSheetUrlInput');
-      if (inp) inp.value = b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL;
-      const modal = document.getElementById('editBatchSheetModal');
-      if (modal) modal.classList.remove('hidden');
-    }
-
-    function closeEditBatchSheetModal() {
-      const modal = document.getElementById('editBatchSheetModal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function saveEditBatchSheetUrl() {
-      const b = getActiveOrientBatch();
-      if (!b) return;
-      const inp = document.getElementById('editBatchSheetUrlInput');
-      const url = inp ? inp.value.trim() : '';
-
-      b.sheetUrl = url || ORIENTATION_TEMPLATE_SHEET_URL;
-      closeEditBatchSheetModal();
-      renderOrientationBatchDetails();
-
-      if (typeof HrdModal !== 'undefined') {
-        HrdModal.success('บันทึก Google Sheet ใบรายชื่อของรอบนี้เรียบร้อยแล้วค่ะ');
+    // --------------------------------------------------------------------------
+    // FEATURE: BACKUP ORIENTATION DATA TO GOOGLE SHEET (FLAT MASTER TABLE LOG)
+    // --------------------------------------------------------------------------
+    async function backupOrientationToGoogleSheet(batchId) {
+      const b = batchId ? orientationBatches.find(x => x.id === batchId) : getActiveOrientBatch();
+      if (!b) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาเลือกรอบปฐมนิเทศที่ต้องการสำรองข้อมูล');
+        return;
       }
+
+      const btnText = document.getElementById('btnBackupSheetText');
+      const originalText = btnText ? btnText.textContent : 'สำรองข้อมูลขึ้น Google Sheet';
+      if (btnText) btnText.textContent = 'กำลังสำรองข้อมูล...';
+
+      try {
+        const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+        const attendees = b.attendees || [];
+        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+        const targetSheetId = b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg';
+
+        const rows = [];
+        const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        topics.forEach((t, tIdx) => {
+          if (attendees.length > 0) {
+            attendees.forEach(a => {
+              const isCompleted = a.completedTopics && (a.completedTopics.includes(t.id) || a.completedTopics.includes(String(tIdx + 1)));
+              rows.push({
+                timestamp: nowStr,
+                batchId: b.id,
+                batchTitle: b.title,
+                batchMonth: b.month || '',
+                batchDates: b.dates || '',
+                topicId: t.id,
+                topicNo: tIdx + 1,
+                topicTitle: t.title,
+                topicDate: t.date || b.dates || '',
+                topicTime: t.time || '',
+                topicSpeaker: t.speaker || 'ฝ่ายทรัพยากรบุคคล (HR)',
+                empId: String(a.id || '').padStart(6, '0'),
+                empName: a.name || '',
+                department: a.department || '',
+                position: a.position || '',
+                attendanceStatus: isCompleted ? 'เข้าร่วมแล้ว' : 'ลงทะเบียนแล้ว',
+                docCode: 'FM-PPCH-HR-012'
+              });
+            });
+          } else {
+            rows.push({
+              timestamp: nowStr,
+              batchId: b.id,
+              batchTitle: b.title,
+              batchMonth: b.month || '',
+              batchDates: b.dates || '',
+              topicId: t.id,
+              topicNo: tIdx + 1,
+              topicTitle: t.title,
+              topicDate: t.date || b.dates || '',
+              topicTime: t.time || '',
+              topicSpeaker: t.speaker || 'ฝ่ายทรัพยากรบุคคล (HR)',
+              empId: '-',
+              empName: '(ยังไม่มีผู้เข้าอบรม)',
+              department: '-',
+              position: '-',
+              attendanceStatus: 'ร่างกำหนดการ',
+              docCode: 'FM-PPCH-HR-012'
+            });
+          }
+        });
+
+        const response = await fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'backupOrientationMasterTable',
+            sheetId: targetSheetId,
+            batchId: b.id,
+            replaceBatch: true,
+            rows: rows
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          if (typeof HrdModal !== 'undefined') {
+            HrdModal.success(`สำรองข้อมูลการปฐมนิเทศขึ้น Google Sheet เรียบร้อยแล้วค่ะ! (ตาราง Master Log: ${rows.length} แถว)`);
+          }
+        } else {
+          throw new Error(result.error || 'Server error');
+        }
+      } catch (err) {
+        console.error('[Orientation] Backup error:', err);
+        if (typeof HrdModal !== 'undefined') {
+          HrdModal.error('สำรองข้อมูลขึ้น Google Sheet ไม่สำเร็จ: ' + err.message);
+        }
+      } finally {
+        if (btnText) btnText.textContent = originalText;
+      }
+    }
+
+    function openOrientationPrintModalForBatch(batchId) {
+      const b = orientationBatches.find(x => x.id === batchId);
+      if (!b) return;
+      currentOrientBatchId = b.id;
+      openOrientationPrintModal('all');
     }
 
     async function deleteOrientationBatch(batchId) {
@@ -8993,44 +9072,45 @@
       return { title, firstName, lastName };
     }
 
-    function generateA4SheetHtml(topic, batch, attendees, topicIndex) {
+    function generateA4SheetHtml(topic, batch, attendees, topicIndex, totalSheetsCount = 14) {
       const safeTopicTitle = escapeHtml(topic.title || '');
       const safeTopicSpeaker = escapeHtml(topic.speaker || 'ฝ่ายทรัพยากรบุคคล (HR)');
       const safeTopicDate = escapeHtml(topic.date || batch.dates || '');
       const safeTopicTime = escapeHtml(topic.time || '');
 
-      const totalMinRows = Math.max(18, (attendees ? attendees.length : 0) + 3);
+      // Strictly 26 rows to match the official hospital registration template FM-PPCH-HR-012
+      const TOTAL_ROWS = 26;
       let rowsHtml = '';
 
-      for (let i = 0; i < totalMinRows; i++) {
+      for (let i = 0; i < TOTAL_ROWS; i++) {
         const a = (attendees && attendees[i]) ? attendees[i] : null;
         const rowNo = i + 1;
         if (a) {
           const parsedName = parseEmpNameParts(a.name);
           const empIdPadded = String(a.id || '').padStart(6, '0');
           rowsHtml += `
-            <tr style="height: 25px; border: 1px solid #000;">
-              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 2px;">${rowNo}</td>
-              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-weight: bold; font-size: 10px; padding: 2px;">${empIdPadded}</td>
-              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 2px;">${escapeHtml(parsedName.title)}</td>
-              <td style="border: 1px solid #000; font-size: 10px; padding: 2px 4px;">${escapeHtml(parsedName.firstName)}</td>
-              <td style="border: 1px solid #000; font-size: 10px; padding: 2px 4px;">${escapeHtml(parsedName.lastName)}</td>
-              <td style="border: 1px solid #000; font-size: 9.5px; padding: 2px 4px;">${escapeHtml(a.position || '')}</td>
-              <td style="border: 1px solid #000; font-size: 9.5px; padding: 2px 4px;">${escapeHtml(a.department || '')}</td>
-              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 2px;">&nbsp;</td>
+            <tr style="height: 23px; border: 1px solid #000;">
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 1.5px;">${rowNo}</td>
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-weight: bold; font-size: 10px; padding: 1.5px;">${empIdPadded}</td>
+              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 1.5px;">${escapeHtml(parsedName.title)}</td>
+              <td style="border: 1px solid #000; font-size: 10px; padding: 1.5px 4px;">${escapeHtml(parsedName.firstName)}</td>
+              <td style="border: 1px solid #000; font-size: 10px; padding: 1.5px 4px;">${escapeHtml(parsedName.lastName)}</td>
+              <td style="border: 1px solid #000; font-size: 9px; padding: 1.5px 4px;">${escapeHtml(a.position || '')}</td>
+              <td style="border: 1px solid #000; font-size: 9px; padding: 1.5px 4px;">${escapeHtml(a.department || '')}</td>
+              <td style="border: 1px solid #000; text-align: center; font-size: 10px; padding: 1.5px;">&nbsp;</td>
             </tr>
           `;
         } else {
           rowsHtml += `
-            <tr style="height: 25px; border: 1px solid #000;">
-              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 2px; color: #475569;">${rowNo}</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
-              <td style="border: 1px solid #000; padding: 2px;">&nbsp;</td>
+            <tr style="height: 23px; border: 1px solid #000;">
+              <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 10px; padding: 1.5px; color: #475569;">${rowNo}</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
+              <td style="border: 1px solid #000; padding: 1.5px;">&nbsp;</td>
             </tr>
           `;
         }
@@ -9041,18 +9121,18 @@
           <!-- HEADER WITH LOGO AND TITLES -->
           <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; margin-bottom: -1px;">
             <tr>
-              <td style="width: 25%; padding: 6px 10px; border-right: 1.5px solid #000; vertical-align: middle; text-align: center;">
-                <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 42px; max-width: 140px; object-fit: contain; display: inline-block;">
+              <td style="width: 25%; padding: 5px 8px; border-right: 1.5px solid #000; vertical-align: middle; text-align: center;">
+                <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 40px; max-width: 135px; object-fit: contain; display: inline-block;">
               </td>
-              <td style="width: 75%; padding: 6px 10px; text-align: center; vertical-align: middle;">
-                <div style="font-size: 16px; font-weight: bold; color: #000; letter-spacing: 0.3px; line-height: 1.25;">ใบลงทะเบียนอบรม / สัมมนาภายใน</div>
-                <div style="font-size: 11.5px; font-weight: 500; color: #1e293b; line-height: 1.2;">Training Registration Form</div>
+              <td style="width: 75%; padding: 5px 8px; text-align: center; vertical-align: middle;">
+                <div style="font-size: 15.5px; font-weight: bold; color: #000; letter-spacing: 0.3px; line-height: 1.25;">ใบลงทะเบียนอบรม / สัมมนาภายใน</div>
+                <div style="font-size: 11px; font-weight: 500; color: #1e293b; line-height: 1.2;">Training Registration Form</div>
               </td>
             </tr>
           </table>
 
           <!-- TOPIC METADATA GRID -->
-          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; font-size: 10px; margin-bottom: -1px;">
+          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000; font-size: 9.5px; margin-bottom: -1px;">
             <tr>
               <td style="width: 17%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; background: #f8fafc;">หลักสูตร / เรื่อง (Topic)</td>
               <td style="width: 33%; border: 1px solid #000; padding: 3px 5px; font-weight: bold; color: #000;">${safeTopicTitle}</td>
@@ -9072,7 +9152,7 @@
                 </div>
               </td>
               <td colspan="2" style="border: 1px solid #000; padding: 3px 5px; vertical-align: top;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 9.5px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 9px;">
                   <span>☑ Mandatory Course</span>
                   <span>☐ Managerial Course</span>
                   <span>☐ Functional Course</span>
@@ -9080,27 +9160,27 @@
                 </div>
               </td>
               <td style="border: 1px solid #000; padding: 3px 5px; vertical-align: top; text-align: center;">
-                <div style="font-weight: bold; font-size: 9.5px;">จำนวนเครดิต</div>
+                <div style="font-weight: bold; font-size: 9px;">จำนวนเครดิต</div>
                 <div style="margin-top: 4px; font-weight: bold;">-</div>
               </td>
             </tr>
           </table>
 
-          <!-- ATTENDEE TABLE -->
+          <!-- ATTENDEE TABLE (26 ROWS) -->
           <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1.5px solid #000;">
             <thead>
               <tr style="background: #f1f5f9; text-align: center; font-weight: bold; border: 1px solid #000;">
-                <th colspan="8" style="padding: 4px; font-size: 11px; border: 1px solid #000; color: #000;">รายชื่อผู้เข้าร่วมอบรม</th>
+                <th colspan="8" style="padding: 3px; font-size: 10.5px; border: 1px solid #000; color: #000;">รายชื่อผู้เข้าร่วมอบรม</th>
               </tr>
-              <tr style="background: #f8fafc; text-align: center; font-weight: bold; border: 1px solid #000; line-height: 1.15; font-size: 10px;">
-                <th style="width: 5%; border: 1px solid #000; padding: 3px 2px;">ลำดับ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">No.</span></th>
-                <th style="width: 12%; border: 1px solid #000; padding: 3px 2px;">รหัสพนักงาน<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Em.No.</span></th>
-                <th style="width: 10%; border: 1px solid #000; padding: 3px 2px;">คำนำหน้าชื่อ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Title</span></th>
-                <th style="width: 16%; border: 1px solid #000; padding: 3px 2px;">ชื่อ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Name</span></th>
-                <th style="width: 16%; border: 1px solid #000; padding: 3px 2px;">นามสกุล<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Surname</span></th>
-                <th style="width: 16%; border: 1px solid #000; padding: 3px 2px;">ตำแหน่ง<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Position</span></th>
-                <th style="width: 13%; border: 1px solid #000; padding: 3px 2px;">แผนก<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Department</span></th>
-                <th style="width: 12%; border: 1px solid #000; padding: 3px 2px;">ลายมือชื่อ<br><span style="font-size: 8.5px; font-weight: normal; color: #475569;">Signature</span></th>
+              <tr style="background: #f8fafc; text-align: center; font-weight: bold; border: 1px solid #000; line-height: 1.15; font-size: 9.5px;">
+                <th style="width: 5%; border: 1px solid #000; padding: 2.5px 2px;">ลำดับ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">No.</span></th>
+                <th style="width: 12%; border: 1px solid #000; padding: 2.5px 2px;">รหัสพนักงาน<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Em.No.</span></th>
+                <th style="width: 10%; border: 1px solid #000; padding: 2.5px 2px;">คำนำหน้าชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Title</span></th>
+                <th style="width: 16%; border: 1px solid #000; padding: 2.5px 2px;">ชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Name</span></th>
+                <th style="width: 16%; border: 1px solid #000; padding: 2.5px 2px;">นามสกุล<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Surname</span></th>
+                <th style="width: 16%; border: 1px solid #000; padding: 2.5px 2px;">ตำแหน่ง<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Position</span></th>
+                <th style="width: 13%; border: 1px solid #000; padding: 2.5px 2px;">แผนก<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Department</span></th>
+                <th style="width: 12%; border: 1px solid #000; padding: 2.5px 2px;">ลายมือชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #475569;">Signature</span></th>
               </tr>
             </thead>
             <tbody>
@@ -9109,20 +9189,68 @@
           </table>
 
           <!-- FOOTER SIGNATURE BOXES -->
-          <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 10.5px;">
-            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 8px 12px; text-align: center; line-height: 1.5;">
+          <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 10px;">
+            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 6px 10px; text-align: center; line-height: 1.45;">
               <div>ลงชื่อ ................................................................ ผู้บันทึก / เจ้าหน้าที่ HRD</div>
-              <div style="margin-top: 3px; color: #334155;">( ................................................................ )</div>
-              <div style="margin-top: 3px; color: #475569;">วันที่ ........ / ........ / ................</div>
+              <div style="margin-top: 2px; color: #334155;">( ................................................................ )</div>
+              <div style="margin-top: 2px; color: #475569;">วันที่ ........ / ........ / ................</div>
             </div>
-            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 8px 12px; text-align: center; line-height: 1.5;">
+            <div style="border: 1px solid #64748b; border-radius: 4px; padding: 6px 10px; text-align: center; line-height: 1.45;">
               <div>ลงชื่อ ................................................................ วิทยากร / ผู้ควบคุมการอบรม</div>
-              <div style="margin-top: 3px; color: #334155;">( ................................................................ )</div>
-              <div style="margin-top: 3px; color: #475569;">วันที่ ........ / ........ / ................</div>
+              <div style="margin-top: 2px; color: #334155;">( ................................................................ )</div>
+              <div style="margin-top: 2px; color: #475569;">วันที่ ........ / ........ / ................</div>
             </div>
+          </div>
+
+          <!-- DOCUMENT CONTROL FOOTER (FM-PPCH-HR-012) -->
+          <div style="margin-top: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; color: #1e293b; border-top: 1px dashed #cbd5e1; padding-top: 3px;">
+            <div style="font-weight: 700; letter-spacing: 0.2px;">FM-PPCH-HR-012 แก้ไขครั้งที่ 1 วันที่บังคับใช้ 1 ม.ค. 2569 (DCC)</div>
+            <div style="color: #64748b; font-weight: 500;">หน้าที่ 1 / 1 &bull; วิชาที่ ${topicIndex + 1} จาก 14</div>
           </div>
         </div>
       `;
+    }
+
+    function renderOrientationTabRosterSheets() {
+      const b = getActiveOrientBatch();
+      const container = document.getElementById('orientTabSheetsContainer');
+      const selectEl = document.getElementById('orientTabTopicSelect');
+      if (!b || !container) return;
+
+      const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const attendees = b.attendees || [];
+
+      if (selectEl && (!selectEl.options || selectEl.options.length <= 1)) {
+        const curVal = selectEl.value || 'all';
+        selectEl.innerHTML = `
+          <option value="all">📑 ครบทั้ง 14 หัวข้อ (14 หน้า A4)</option>
+          ${topics.map((t, idx) => `
+            <option value="${t.id}" ${curVal === t.id ? 'selected' : ''}>
+              ${idx + 1}. ${escapeHtml(t.title)} (${t.date || ''} ${t.time || ''})
+            </option>
+          `).join('')}
+        `;
+        selectEl.value = curVal;
+      }
+
+      const selectedTopicId = selectEl ? selectEl.value : 'all';
+      const targets = (selectedTopicId === 'all')
+        ? topics
+        : topics.filter(t => t.id === selectedTopicId);
+
+      container.innerHTML = targets.map((t, idx) => {
+        const originalIdx = topics.findIndex(x => x.id === t.id);
+        return generateA4SheetHtml(t, b, attendees, originalIdx >= 0 ? originalIdx : idx, targets.length);
+      }).join('');
+    }
+
+    function printOrientationTabSheets() {
+      const selectEl = document.getElementById('orientTabTopicSelect');
+      const topicId = selectEl ? selectEl.value : 'all';
+      openOrientationPrintModal(topicId);
+      setTimeout(() => {
+        printOrientationSheetNow();
+      }, 300);
     }
 
     function renderOrientationPrintSheets(filterTopicId = 'all') {
@@ -9138,7 +9266,7 @@
 
       container.innerHTML = targets.map((t, idx) => {
         const originalIdx = topics.findIndex(x => x.id === t.id);
-        return generateA4SheetHtml(t, currentPrintBatch, attendees, originalIdx >= 0 ? originalIdx : idx);
+        return generateA4SheetHtml(t, currentPrintBatch, attendees, originalIdx >= 0 ? originalIdx : idx, targets.length);
       }).join('');
     }
 
