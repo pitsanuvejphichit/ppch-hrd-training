@@ -284,6 +284,8 @@
       overflow: hidden;
       page-break-after: always;
       page-break-inside: avoid;
+      display: flex;
+      flex-direction: column;
     }
     .orient-sheet-header-table,
     .orient-sheet-meta-table,
@@ -367,6 +369,8 @@
         page-break-after: always !important;
         page-break-inside: avoid !important;
         overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       .orient-a4-sheet:last-child {
         page-break-after: auto !important;
@@ -2245,7 +2249,7 @@
                       <span>แบบฟอร์มใบลงทะเบียนมาตรฐาน</span>
                       <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-50 text-[#004b93] border border-sky-200">FM-PPCH-HR-012</span>
                     </div>
-                    <div class="text-[11px] text-slate-500 font-light">ตาราง 21 แถว แนวนอน (A4 Landscape) พร้อมหัวข้อ วันที่ เวลา วิทยากร และช่องลายมือชื่อ อ้างอิงตามเอกสารควบคุมคุณภาพโรงพยาบาล</div>
+                    <div class="text-[11px] text-slate-500 font-light">ตาราง 28 แถว แนวนอน (A4 Landscape) พอดีเต็มหน้ากระดาษ พร้อมหัวข้อ วันที่ เวลา วิทยากร และช่องลายมือชื่อ อ้างอิงตามเอกสารควบคุมคุณภาพโรงพยาบาล</div>
                   </div>
                 </div>
 
@@ -2777,7 +2781,7 @@
               ใบลงทะเบียนอบรม / สัมมนาภายใน
             </h3>
             <p class="text-xs text-slate-500 font-light" id="orientPrintModalSubtitle">
-              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 21 แถว) • พิมพ์พร้อมตารางรายชื่อและช่องเซ็นชื่อ
+              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 28 แถว พอดีเต็มหน้ากระดาษ) • พิมพ์พร้อมตารางรายชื่อและช่องเซ็นชื่อ
             </p>
           </div>
         </div>
@@ -8311,8 +8315,8 @@
       const safeTopicDate = escapeHtml(topic.date || batch.dates || '');
       const safeTopicTime = escapeHtml(topic.time || '');
 
-      // Strictly 21 rows to match the official hospital registration template FM-PPCH-HR-012 (media_1792404910100_d1e3941f.pdf)
-      const TOTAL_ROWS = 21;
+      // 28 rows to cleanly fill the entire A4 Landscape sheet down to footer (FM-PPCH-HR-012)
+      const TOTAL_ROWS = 28;
       let rowsHtml = '';
 
       for (let i = 0; i < TOTAL_ROWS; i++) {
@@ -8422,7 +8426,7 @@
             </tr>
           </table>
 
-          <!-- 3. ATTENDEE TABLE (EXACTLY 21 ROWS MATCHING DCC TEMPLATE) -->
+          <!-- 3. ATTENDEE TABLE (28 ROWS FULL A4 SHEET) -->
           <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; table-layout: fixed;">
             <thead>
               <tr style="height: 22px; text-align: center; font-weight: bold; border: 1px solid #000;">
@@ -8445,7 +8449,7 @@
           </table>
 
           <!-- 4. OFFICIAL DOCUMENT CONTROL FOOTER (FM-PPCH-HR-012) -->
-          <div style="margin-top: 5px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; color: #000; padding: 0 2px;">
+          <div style="margin-top: auto; padding-top: 3px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; color: #000; padding: 0 2px;">
             <div style="font-weight: normal; letter-spacing: 0.1px;">FM-PPCH-HR-012 แก้ไขครั้งที่ 1 วันที่บังคับใช้ 1 ม.ค. 2569 (DCC)</div>
             <div style="color: #64748b; font-weight: 500;">หน้าที่ 1 / 1 &bull; วิชาที่ ${topicIndex + 1} จาก ${totalSheetsCount}</div>
           </div>
@@ -8567,6 +8571,8 @@
               overflow: hidden;
               page-break-after: always;
               page-break-inside: avoid;
+              display: flex;
+              flex-direction: column;
             }
             .orient-a4-sheet:last-child {
               page-break-after: auto;
