@@ -1147,6 +1147,12 @@
           <span class="material-icons-round">school</span>
           <span>ปฐมนิเทศพนักงานใหม่</span>
         </button>
+
+        <!-- 5. ตั้งค่า & จัดการพนักงาน (Settings & Employee Management) -->
+        <button type="button" id="sidebarNavSettings" onclick="switchAdminView('settings')" class="nav-btn" title="ตั้งค่าระบบ & จัดการข้อมูลพนักงาน">
+          <span class="material-icons-round">manage_accounts</span>
+          <span>จัดการพนักงาน</span>
+        </button>
       </div>
 
       <!-- Footer at bottom of sidebar -->
@@ -1203,15 +1209,18 @@
             </div>
           </div>
 
-          <!-- Card 4: Google Sheet Central -->
+          <!-- Card 4: Primary Database (Supabase PostgreSQL) -->
           <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between">
             <div>
-              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">ฐานข้อมูลกลาง</div>
-              <div class="text-xs sm:text-sm font-bold text-slate-800 font-display mt-1">Google Sheets</div>
+              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">ฐานข้อมูลหลัก</div>
+              <div class="text-xs sm:text-sm font-bold text-[#004b93] font-display mt-0.5 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Supabase 0.08s</span>
+              </div>
             </div>
-            <a id="btnMasterSheet" href="https://docs.google.com/spreadsheets/d/1b-DkQsgUN11RJ__ydmAp8kI19xPIurRvQAcSy8SEhbw/edit" target="_blank" class="w-11 h-11 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer" title="เปิด Google Sheets กลาง">
-              📊
-            </a>
+            <button type="button" onclick="switchAdminView('settings')" class="w-11 h-11 rounded-xl bg-sky-50 hover:bg-sky-100 text-[#004b93] flex items-center justify-center text-sm font-bold transition-colors cursor-pointer" title="ตั้งค่าระบบ & จัดการข้อมูลพนักงาน">
+              <span class="material-icons-round text-lg">manage_accounts</span>
+            </button>
           </div>
         </section>
 
@@ -1283,7 +1292,7 @@
           </div>
 
           <!-- 7. Sync Button -->
-          <button type="button" id="btnSyncCourses" onclick="loadAdminCourses(true)" class="toolbar-sync-btn" title="ดึงข้อมูลล่าสุดจาก Supabase และ Google Sheets">
+          <button type="button" id="btnSyncCourses" onclick="loadAdminCourses(true)" class="toolbar-sync-btn" title="ดึงข้อมูลล่าสุดจากฐานข้อมูล Supabase">
             <span class="material-icons-round" id="syncIcon">sync</span>
             <span id="syncText">ซิงค์</span>
           </button>
@@ -2279,7 +2288,266 @@
 
         </div>
         <!-- ==================== END VIEW 4: NEW EMPLOYEE ORIENTATION ==================== -->
+
+        <!-- ==================== VIEW 5: SETTINGS & EMPLOYEE MANAGEMENT ==================== -->
+        <div id="viewSettings" class="w-full px-3 sm:px-5 py-4 space-y-3.5 hidden">
+          
+          <!-- 1. KPI Summary Ribbon -->
+          <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
+            <!-- Card 1: Total Employees -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">พนักงานทั้งหมด</div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display mt-0.5" id="statEmpTotal">0</div>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#004b93] flex items-center justify-center text-lg font-bold">
+                <span class="material-icons-round">badge</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Total Departments -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">แผนกทั้งหมด</div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-[#004b93] font-display mt-0.5" id="statEmpDepts">0</div>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#004b93] flex items-center justify-center text-lg font-bold">
+                <span class="material-icons-round">apartment</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Total Positions -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">ตำแหน่งงาน</div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-slate-800 font-display mt-0.5" id="statEmpPositions">0</div>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#004b93] flex items-center justify-center text-lg font-bold">
+                <span class="material-icons-round">work_outline</span>
+              </div>
+            </div>
+
+            <!-- Card 4: Supabase Cloud DB Status -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">ฐานข้อมูลกลาง</div>
+                <div class="text-xs sm:text-sm font-bold text-slate-800 font-display mt-1 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>Supabase PostgreSQL</span>
+                </div>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                <span class="material-icons-round">dns</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. Single-Row Filter & Action Toolbar -->
+          <section class="bg-white rounded-2xl p-3 border border-slate-200/90 shadow-2xs flex flex-wrap items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2 flex-1 min-w-[280px]">
+              <!-- Search Input -->
+              <div class="relative flex-1 max-w-sm">
+                <input 
+                  type="text" 
+                  id="empSearchInput" 
+                  oninput="filterEmployeeTable()" 
+                  placeholder="ค้นหารหัส 6 หลัก, ชื่อ หรือแผนก..." 
+                  class="w-full text-xs pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-[#004b93] transition-all"
+                >
+                <span class="material-icons-round absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-400 text-sm">search</span>
+              </div>
+
+              <!-- Department Filter -->
+              <select id="empFilterDept" onchange="filterEmployeeTable()" class="text-xs px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-700 focus:bg-white focus:border-[#004b93]">
+                <option value="all">ทุกแผนก</option>
+              </select>
+
+              <!-- Position Filter -->
+              <select id="empFilterPos" onchange="filterEmployeeTable()" class="text-xs px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-700 focus:bg-white focus:border-[#004b93] hidden md:block">
+                <option value="all">ทุกตำแหน่ง</option>
+              </select>
+            </div>
+
+            <!-- Action Buttons: + เพิ่มพนักงานใหม่ & Export Speed Dial -->
+            <div class="flex items-center gap-2">
+              <button 
+                type="button" 
+                onclick="openAddEmployeeModal()" 
+                class="px-3.5 py-2 bg-[#004b93] hover:bg-[#002e6e] text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                <span class="material-icons-round text-sm">person_add</span>
+                <span>เพิ่มพนักงานใหม่</span>
+              </button>
+
+              <!-- Export Speed Dial -->
+              <div class="floating-action-wrapper" onmouseenter="handleFloatingEnter(this)" onmouseleave="handleFloatingLeave(this)">
+                <button type="button" class="btn-floating-trigger" onclick="toggleFloatingMenu(this, event)" title="ส่งออกข้อมูลพนักงาน">
+                  <span class="material-icons-round trigger-icon">file_download</span>
+                  <span class="floating-badge-count">2</span>
+                </button>
+                <div class="floating-action-tray">
+                  <button type="button" onclick="exportEmployeesExcel()" class="btn-tray-action text-emerald-700" title="ส่งออก Excel (.xls)">
+                    <span class="material-icons-round">table_view</span>
+                    <span class="tray-label">Excel</span>
+                  </button>
+                  <button type="button" onclick="exportEmployeesCsv()" class="btn-tray-action text-sky-700" title="ส่งออก CSV (UTF-8 BOM)">
+                    <span class="material-icons-round">description</span>
+                    <span class="tray-label">CSV</span>
+                  </button>
+                  <button type="button" class="btn-floating-close" onclick="closeFloatingMenu(this, event)" title="ปิด">
+                    <span class="material-icons-round">close</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Employee Master Table -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+            <div class="overflow-x-auto w-full">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-[#f0f7ff] text-[#004b93] font-semibold border-b border-sky-200">
+                    <th class="py-2.5 px-3 w-12 text-center">#</th>
+                    <th class="py-2.5 px-3 w-28">รหัสพนักงาน</th>
+                    <th class="py-2.5 px-3 w-24">คำนำหน้า</th>
+                    <th class="py-2.5 px-3 min-w-[160px]">ชื่อ - นามสกุล</th>
+                    <th class="py-2.5 px-3 min-w-[160px]">ตำแหน่ง</th>
+                    <th class="py-2.5 px-3 min-w-[160px]">แผนก</th>
+                    <th class="py-2.5 px-3 w-24 text-center">จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="employeeMasterTableBody" class="divide-y divide-slate-100 text-slate-600 bg-white">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <!-- ==================== END VIEW 5: SETTINGS & EMPLOYEE MANAGEMENT ==================== -->
       </main>
+    </div>
+  </div>
+
+  <!-- ==================== EMPLOYEE ADD/EDIT MODAL ==================== -->
+  <div id="employeeFormModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-6 border border-slate-200 animate-in fade-in zoom-in duration-150 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="employeeModalTitle" class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+          <span class="material-icons-round text-[#004b93]">manage_accounts</span>
+          <span>เพิ่มพนักงานใหม่</span>
+        </h3>
+        <button type="button" onclick="closeEmployeeModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 cursor-pointer">
+          <span class="material-icons-round text-base">close</span>
+        </button>
+      </div>
+
+      <form id="employeeForm" onsubmit="handleEmployeeFormSubmit(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="empFormMode" value="add">
+        <input type="hidden" id="empFormOriginalId" value="">
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">รหัสพนักงาน (6 หลัก) <span class="text-rose-500">*</span></label>
+          <input 
+            type="text" 
+            id="empFormId" 
+            required 
+            maxlength="6"
+            placeholder="เช่น 014125" 
+            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-mono font-bold text-slate-800 focus:bg-white focus:border-[#004b93]"
+          >
+          <span class="text-[10.5px] text-slate-400">ระบบจะเติมเลข 0 นำหน้าให้ครบ 6 หลักอัตโนมัติ</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">คำนำหน้า</label>
+            <input 
+              type="text" 
+              id="empFormTitle" 
+              list="empTitleSuggestions"
+              placeholder="นาย/นางสาว" 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-800 focus:bg-white focus:border-[#004b93]"
+            >
+            <datalist id="empTitleSuggestions">
+              <option value="นาย">
+              <option value="นางสาว">
+              <option value="นาง">
+              <option value="นพ.">
+              <option value="พญ.">
+              <option value="ทพ.">
+              <option value="ทพญ.">
+              <option value="ภก.">
+              <option value="ภญ.">
+              <option value="ว่าที่ ร.ต.">
+            </datalist>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ชื่อ <span class="text-rose-500">*</span></label>
+            <input 
+              type="text" 
+              id="empFormFirstName" 
+              required 
+              placeholder="ชื่อจริง" 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-800 focus:bg-white focus:border-[#004b93]"
+            >
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">นามสกุล <span class="text-rose-500">*</span></label>
+            <input 
+              type="text" 
+              id="empFormLastName" 
+              required 
+              placeholder="นามสกุล" 
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-800 focus:bg-white focus:border-[#004b93]"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ตำแหน่งงาน <span class="text-rose-500">*</span></label>
+          <input 
+            type="text" 
+            id="empFormPosition" 
+            list="empPosSuggestions"
+            required 
+            placeholder="เช่น Officer HR-Training" 
+            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-800 focus:bg-white focus:border-[#004b93]"
+          >
+          <datalist id="empPosSuggestions"></datalist>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">แผนก <span class="text-rose-500">*</span></label>
+          <input 
+            type="text" 
+            id="empFormDept" 
+            list="empDeptSuggestions"
+            required 
+            placeholder="เช่น Human Resource Department" 
+            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none text-slate-800 focus:bg-white focus:border-[#004b93]"
+          >
+          <datalist id="empDeptSuggestions"></datalist>
+        </div>
+
+        <div class="flex items-center gap-2 pt-3 border-t border-slate-100">
+          <button 
+            type="button" 
+            onclick="closeEmployeeModal()" 
+            class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all cursor-pointer"
+          >
+            ยกเลิก
+          </button>
+          <button 
+            type="submit" 
+            id="btnSaveEmpForm"
+            class="flex-1 py-2 bg-[#004b93] hover:bg-[#002e6e] text-white font-bold rounded-xl transition-all shadow-xs cursor-pointer"
+          >
+            บันทึกข้อมูล
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -2513,7 +2781,7 @@
         </div>
         <div id="saveStep3" class="flex items-center space-x-2.5 text-slate-400">
           <span class="step-icon w-5 h-5 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-[10px] font-bold">⚪</span>
-          <span class="step-text">สำรองข้อมูลลงระบบทะเบียนกลาง Google Sheets</span>
+          <span class="step-text">ความพร้อมของระบบและการลงทะเบียน (100% Ready)</span>
         </div>
       </div>
 
@@ -3287,68 +3555,13 @@
     async function loadAdminCourses(forceRescan) {
       let hasData = false;
 
-      // 1. Tier 1: Stale-While-Revalidate from localStorage (Instant 0ms display!)
-      if (!forceRescan) {
-        try {
-          const cachedStr = localStorage.getItem('hrd_all_courses') || localStorage.getItem('hrd_courses_list');
-          if (cachedStr) {
-            const cachedList = JSON.parse(cachedStr);
-            if (Array.isArray(cachedList) && cachedList.length > 0) {
-              const valid = cachedList.filter(function(c) {
-                return !isDemoCourse(c);
-              });
-              coursesData = sortCourses(valid, adminSortOrder);
-              if (coursesData.length !== cachedList.length) {
-                try { localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData)); } catch(e) {}
-              }
-              if (coursesData.length > 0) {
-                hasData = true;
-                updateCourseCountDisplay();
-                renderCourseList();
-                hideLoader();
-              }
-            }
-          }
-        } catch(e) {
-          console.warn('LocalStorage course cache read error:', e);
-        }
-
-        // 2. Tier 2: Instant static fallback from bundled courses.json (<50ms from Surge CDN!)
-        if (!hasData) {
-          try {
-            const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
-            if (Array.isArray(resStatic) && resStatic.length > 0) {
-              const valid = resStatic.filter(function(c) {
-                return !isDemoCourse(c);
-              });
-              coursesData = sortCourses(valid, adminSortOrder);
-              if (coursesData.length > 0) {
-                hasData = true;
-                try {
-                  localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
-                } catch(e) {}
-                updateCourseCountDisplay();
-                renderCourseList();
-                hideLoader();
-              }
-            }
-          } catch(e) {
-            console.warn('courses.json static read error:', e);
-          }
-        }
-      }
-
-      // 2. Tier 2: Supabase Primary Source of Truth (Instant 0.08s speed!)
+      // 1. Supabase Primary Source of Truth (Instant 0.08s speed!)
       if (typeof SupabaseService !== 'undefined') {
         try {
           const sbCourses = await SupabaseService.getAllCourses();
           if (Array.isArray(sbCourses) && sbCourses.length > 0) {
             const valid = sbCourses.filter(function(c) { return !isDemoCourse(c); });
             coursesData = sortCourses(valid, adminSortOrder);
-            try {
-              localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
-              localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
-            } catch(e) {}
             hasData = true;
             updateCourseCountDisplay();
             renderCourseList();
@@ -3359,148 +3572,41 @@
         }
       }
 
-      // If we still have no data or user explicitly clicked force rescan:
+      // 2. Bundled fallback if Supabase offline
       if (!hasData) {
-        showLoader(forceRescan ? 'กำลังซิงค์ข้อมูลหลักสูตร...' : 'ระบบบริหารจัดการหลักสูตร', 'โรงพยาบาลพิษณุเวช พิจิตร');
+        try {
+          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
+          if (Array.isArray(resStatic) && resStatic.length > 0) {
+            const valid = resStatic.filter(function(c) {
+              return !isDemoCourse(c);
+            });
+            coursesData = sortCourses(valid, adminSortOrder);
+            if (coursesData.length > 0) {
+              hasData = true;
+              updateCourseCountDisplay();
+              renderCourseList();
+              hideLoader();
+            }
+          }
+        } catch(e) {
+          console.warn('courses.json static read error:', e);
+        }
+      }
+
+      if (!hasData) {
         renderLoadingState();
       } else {
-        // Data is already displayed nicely! Lift the loader curtain immediately!
         hideLoader();
       }
 
-      // 3. Tier 3: Sync fresh from Google Apps Script central registry in background (Non-destructive merge)
-      syncFromGas(forceRescan, hasData);
+      if (forceRescan && typeof HrdModal !== 'undefined') {
+        HrdModal.toast('ดึงข้อมูลหลักสูตรล่าสุดจากฐานข้อมูล Supabase สำเร็จแล้วค่ะ (พบ ' + coursesData.length + ' หลักสูตร)', 'success');
+      }
     }
 
     async function syncFromGas(forceRescan, alreadyShowingData) {
-      if (isSyncingGas) return;
-      isSyncingGas = true;
-
-      const syncBtn = document.getElementById('btnSyncCourses');
-      const syncIcon = document.getElementById('syncIcon');
-      const syncText = document.getElementById('syncText');
-
-      if (syncIcon) syncIcon.classList.add('animate-spin');
-      if (syncText && forceRescan) syncText.textContent = 'กำลังซิงค์...';
-
-      if (forceRescan) {
-        HrdModal.toast('กำลังเชื่อมต่อ Google Sheets เพื่อดึงข้อมูลหลักสูตรล่าสุด...', 'info');
-      }
-
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (!gasUrl) {
-        isSyncingGas = false;
-        if (syncIcon) syncIcon.classList.remove('animate-spin');
-        if (syncText) syncText.textContent = 'ซิงค์ข้อมูลสด';
-        hideLoader();
-        return;
-      }
-
-      const url = gasUrl + '?action=getAllCourses' + (forceRescan ? '&rescan=true' : '');
-
-      try {
-        let staticCatalog = [];
-        try {
-          const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
-          if (Array.isArray(resStatic)) staticCatalog = resStatic;
-        } catch(e) {}
-
-        const res = await fetchWithTimeout(url, {}, 25000).then(r => r.json());
-
-        if (res && res.success && Array.isArray(res.courses)) {
-          const gasCourses = res.courses.filter(function(c) {
-            return !isDemoCourse(c);
-          });
-
-          // Non-destructive merge: preserve Supabase high-fidelity data, clean dates and target configs
-          const existingMap = new Map();
-          coursesData.forEach(c => {
-            if (c && c.id) existingMap.set(String(c.id).toLowerCase(), c);
-          });
-
-          gasCourses.forEach(fresh => {
-            if (!fresh || !fresh.id) return;
-            const key = String(fresh.id).toLowerCase();
-            const existing = existingMap.get(key);
-            const staticMatch = staticCatalog.find(st => st && String(st.id).toLowerCase() === key);
-
-            if (existing) {
-              // Only enrich missing sheet links or drive folders
-              if (!existing.sheetUrl && fresh.sheetUrl) existing.sheetUrl = fresh.sheetUrl;
-              if (!existing.sheetId && fresh.sheetId) existing.sheetId = fresh.sheetId;
-              if (!existing.folderUrl && fresh.folderUrl) existing.folderUrl = fresh.folderUrl;
-              if ((!existing.topics || existing.topics.length === 0) && fresh.topics && fresh.topics.length > 0) {
-                existing.topics = fresh.topics;
-                existing.hasSubTopics = true;
-              }
-            } else {
-              // Brand new course present only in Google Sheets
-              const subSource = staticMatch && staticMatch.hasSubTopics ? staticMatch : null;
-              if (subSource && (!fresh.hasSubTopics || !fresh.topics || fresh.topics.length === 0)) {
-                fresh.hasSubTopics = subSource.hasSubTopics;
-                fresh.topicMode = subSource.topicMode || 'all';
-                fresh.topics = subSource.topics || [];
-              }
-              coursesData.push(fresh);
-              existingMap.set(key, fresh);
-            }
-          });
-
-          // Always enforce canonical sorting so list never swaps order!
-          coursesData = sortCourses(coursesData, adminSortOrder);
-
-          try {
-            localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
-            localStorage.setItem('hrd_courses_list', JSON.stringify(coursesData));
-          } catch(e) {}
-
-          if (res.masterSheetUrl) {
-            localStorage.setItem('hrd_master_sheet_url', res.masterSheetUrl);
-            const btnM = document.getElementById('btnMasterSheet');
-            if (btnM) btnM.href = res.masterSheetUrl;
-          }
-
-          updateCourseCountDisplay();
-          renderCourseList();
-
-          if (currentAdminView === 'target') {
-            initTargetView(targetActiveCourseId);
-          }
-
-          if (forceRescan) {
-            HrdModal.toast('ซิงค์ข้อมูลล่าสุดจาก Google Sheets สำเร็จแล้วค่ะ (พบ ' + coursesData.length + ' หลักสูตร)', 'success');
-          }
-
-          const urlParams = new URLSearchParams(window.location.search);
-          const dashParam = urlParams.get('dashboard');
-          if (dashParam) {
-            window.location.href = 'dashboard.html?course=' + encodeURIComponent(dashParam);
-          }
-        } else if (!alreadyShowingData) {
-          // Only blank if we had no data prior
-          coursesData = [];
-          updateCourseCountDisplay();
-          renderCourseList();
-        }
-      } catch (err) {
-        console.warn('Sync from GAS error:', err);
-        if (alreadyShowingData) {
-          // If we already have courses displayed, DO NOT wipe them out!
-          if (forceRescan) {
-            HrdModal.toast('การเชื่อมต่อกับ Google Sheets ขัดข้องชั่วคราว ระบบยังคงแสดงข้อมูลที่มีในเครื่องค่ะ', 'warning');
-          }
-        } else {
-          coursesData = [];
-          updateCourseCountDisplay();
-          renderCourseList();
-          HrdModal.toast('ไม่สามารถเชื่อมต่อฐานข้อมูล Google Sheets ได้ กรุณากดปุ่ม "ซิงค์ข้อมูลสด" เพื่อลองใหม่ค่ะ', 'error');
-        }
-      } finally {
-        isSyncingGas = false;
-        hideLoader();
-        if (syncIcon) syncIcon.classList.remove('animate-spin');
-        if (syncText) syncText.textContent = 'ซิงค์ข้อมูลสด';
-      }
+      // Google Sheet syncing has been removed in favor of Supabase Primary Database
+      await loadAdminCourses(forceRescan);
     }
 
     function renderLoadingState() {
@@ -3747,9 +3853,9 @@
                 '<button type="button" onclick="openQrModal(\'' + c.title.replace(/'/g, "\\'") + '\', \'' + autoDetectUrl + '\', \'' + evalUrl + '\', \'' + checkinUrl + '\')" class="btn-tray-action text-indigo-700" title="QR Code & ลิงก์">' +
                   '<span class="material-icons-round">qr_code_2</span>' +
                 '</button>' +
-                '<a href="' + sheetUrl + '" target="_blank" class="btn-tray-action text-emerald-800" title="Google Sheet ประจำวิชา">' +
-                  '<span class="material-icons-round">table_chart</span>' +
-                '</a>' +
+                '<button type="button" onclick="printNormalCourseRoster(\'' + c.id + '\')" class="btn-tray-action text-[#004b93]" title="พิมพ์ใบลงทะเบียน A4 (FM-PPCH-HR-012)">' +
+                  '<span class="material-icons-round">print</span>' +
+                '</button>' +
                 '<button type="button" onclick="openEditView(\'' + c.id + '\')" class="btn-tray-action text-blue-700" title="แก้ไขหลักสูตร">' +
                   '<span class="material-icons-round">edit</span>' +
                 '</button>' +
@@ -3997,8 +4103,8 @@
 
     async function deleteCourse(id, title) {
       const ok = await HrdModal.confirm(
-        'ต้องการนำหลักสูตร "' + title + '" ออกจากหน้าเว็บใช่หรือไม่คะ?\n(ข้อมูลโฟลเดอร์และไฟล์ Google Sheet ประจำวิชาจะยังคงถูกเก็บรักษาไว้อย่างปลอดภัยใน Google Drive ค่ะ)',
-        'ยืนยันนำหลักสูตรออกจากหน้าเว็บ',
+        'ต้องการนำหลักสูตร "' + title + '" ออกจากระบบใช่หรือไม่คะ?\n(ระบบจะลบข้อมูลออกจากฐานข้อมูล Supabase โดยตรง)',
+        'ยืนยันนำหลักสูตรออก',
         { danger: true, confirmText: 'ยืนยันนำออก', cancelText: 'ยกเลิก' }
       );
       if (!ok) return;
@@ -4012,23 +4118,11 @@
       } catch(e) {}
       updateCourseCountDisplay();
       renderCourseList();
-      HrdModal.toast('นำหลักสูตรออกจากหน้าเว็บเรียบร้อยแล้วค่ะ', 'success');
+      HrdModal.toast('นำหลักสูตรออกจากระบบเรียบร้อยแล้วค่ะ', 'success');
 
       // ลบจาก Supabase (0.08s)
       if (typeof SupabaseService !== 'undefined') {
         SupabaseService.deleteCourse(id).catch(err => console.warn('[Supabase Delete]', err));
-      }
-
-      // ซิงค์การปลดหลักสูตรไปยังระบบกลาง Master Sheet
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (gasUrl) {
-        fetchWithTimeout(gasUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'deleteCourse', id: id })
-        }, 40000).then(r => r.json()).then(res => {
-          console.log('Course removed from web on server:', res);
-        }).catch(err => console.warn('Sync delete to GAS failed:', err));
       }
     }
 
@@ -4244,25 +4338,6 @@
           }
         }).catch(err => console.warn('Supabase admin roster fetch error:', err));
       }
-
-      // 2. Background sync from Google Sheet if sheetId exists
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (course.sheetId && gasUrl) {
-        fetch(gasUrl + '?action=getAttendees&sheetId=' + encodeURIComponent(course.sheetId))
-          .then(r => r.json())
-          .then(res => {
-            if (res && res.success && Array.isArray(res.attendees)) {
-              if (typeof SupabaseService !== 'undefined' && typeof SupabaseService.mergeAttendees === 'function') {
-                currentRosterAttendees = SupabaseService.mergeAttendees(currentRosterAttendees, res.attendees);
-              } else {
-                currentRosterAttendees = res.attendees;
-              }
-              try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(currentRosterAttendees)); } catch(e) {}
-              renderRosterAttendees();
-            }
-          })
-          .catch(() => {});
-      }
     }
 
     function closeCourseRosterModal() {
@@ -4385,176 +4460,320 @@
       }).join('');
     }
 
-    function printTopicRoster() {
-      if (!currentRosterCourse) return;
-      const filtered = getFilteredRosterAttendees();
-      const selectedBatch = document.getElementById('rosterBatchSelect') ? document.getElementById('rosterBatchSelect').value : 'all';
-      const batchLabel = selectedBatch === 'all' ? 'ทุกรุ่นการอบรม' : selectedBatch;
-
-      let topicLabel = 'ภาพรวมการอบรมทั้งหมด';
-      let speakerLabel = currentRosterCourse.speaker || 'HRD';
-      let topicDate = currentRosterCourse.date || '-';
-      let topicTime = currentRosterCourse.time || '';
-      if (currentRosterCourse.hasSubTopics && currentRosterSelectedTopic !== 'all') {
-        const t = (currentRosterCourse.topics || []).find(x => (x.id || '') === currentRosterSelectedTopic);
-        if (t) {
-          topicLabel = t.title;
-          if (t.speaker) speakerLabel = t.speaker;
-          if (t.date) topicDate = formatDisplayDate(t.date);
-          if (t.time) topicTime = t.time;
-        }
-      }
-
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        HrdModal.warning('กรุณาอนุญาตให้เบราว์เซอร์เปิดหน้าต่างพิมพ์ (Pop-up) นะคะ', 'ไม่สามารถเปิดหน้าพิมพ์');
+    async function printNormalCourseRoster(courseId, topicId = 'all', batchName = 'all') {
+      let course = coursesData.find(c => String(c.id).toLowerCase() === String(courseId).toLowerCase());
+      if (!course) {
+        if (typeof HrdModal !== 'undefined') HrdModal.error('ไม่พบข้อมูลหลักสูตรที่เลือกค่ะ', 'เกิดข้อผิดพลาด');
         return;
       }
 
-      const rowsHtml = filtered.map((a, idx) => {
-        const empId = a.id || a.empId || '-';
-        const fullName = (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName));
-        const pos = a.position || '-';
-        const dept = a.department || a.dept || '-';
-        const batch = a.batch ? a.batch.split('(')[0].trim() : '-';
+      // Fetch attendees directly from Supabase Primary DB
+      let attendees = [];
+      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
+        try {
+          attendees = await SupabaseService.getAttendeesByCourse(course.id);
+        } catch(e) {
+          console.warn('Supabase fetch error for printNormalCourseRoster:', e);
+        }
+      }
+      if (!attendees || attendees.length === 0) {
+        if (currentRosterCourse && currentRosterCourse.id === course.id && Array.isArray(currentRosterAttendees) && currentRosterAttendees.length > 0) {
+          attendees = currentRosterAttendees;
+        } else if (Array.isArray(course.attendees) && course.attendees.length > 0) {
+          attendees = course.attendees;
+        }
+      }
 
-        return `
-          <tr style="height: 38px;">
-            <td style="border: 1px solid #333; text-align: center; font-size: 11px;">${idx + 1}</td>
-            <td style="border: 1px solid #333; text-align: center; font-size: 11px; font-family: monospace;">${escapeHtml(empId)}</td>
-            <td style="border: 1px solid #333; padding-left: 8px; font-size: 12px; font-weight: bold;">${escapeHtml(fullName)}</td>
-            <td style="border: 1px solid #333; padding-left: 6px; font-size: 11px;">${escapeHtml(pos)}</td>
-            <td style="border: 1px solid #333; padding-left: 6px; font-size: 11px;">${escapeHtml(dept)}</td>
-            <td style="border: 1px solid #333; text-align: center; font-size: 10px;">${escapeHtml(batch)}</td>
-            <td style="border: 1px solid #333; width: 140px;"></td>
-            <td style="border: 1px solid #333; width: 80px;"></td>
-          </tr>
-        `;
-      }).join('');
+      // Filter by batch if specified
+      if (batchName && batchName !== 'all') {
+        attendees = attendees.filter(a => isMatchingBatch(a.batch, batchName));
+      }
 
-      // Generate 15 Walk-in blank rows for Offline Backup
-      const startWalkinNo = filtered.length + 1;
-      let walkinRowsHtml = '';
-      for (let w = 0; w < 15; w++) {
-        const no = startWalkinNo + w;
-        walkinRowsHtml += `
-          <tr style="height: 36px; background: #fffbeb;">
-            <td style="border: 1px solid #333; text-align: center; font-size: 11px; color: #b45309; font-weight: bold;">${no}</td>
-            <td style="border: 1px solid #333; text-align: center; font-size: 11px;"></td>
-            <td style="border: 1px solid #333; padding-left: 8px; font-size: 11px;"></td>
-            <td style="border: 1px solid #333; padding-left: 6px; font-size: 10px;"></td>
-            <td style="border: 1px solid #333; padding-left: 6px; font-size: 10px;"></td>
-            <td style="border: 1px solid #333; text-align: center; font-size: 10px; color: #b45309; font-weight: bold;">Walk-in</td>
-            <td style="border: 1px solid #333; width: 140px; text-align: center; font-size: 9px; color: #999;">____________________</td>
-            <td style="border: 1px solid #333; width: 80px;"></td>
-          </tr>
+      // Filter by topic if specified and course has subtopics
+      let topicObj = null;
+      if (course.hasSubTopics && topicId && topicId !== 'all') {
+        topicObj = (course.topics || []).find(t => String(t.id) === String(topicId));
+        if (topicObj && course.topicMode === 'selective') {
+          const curTopicTitle = topicObj.title.trim().toLowerCase();
+          attendees = attendees.filter(a => {
+            const selTopics = a.selectedTopics || [];
+            if (Array.isArray(selTopics)) {
+              return selTopics.some(st => {
+                const s = String(st).trim().toLowerCase();
+                return s === String(topicId).toLowerCase() || (curTopicTitle && s.includes(curTopicTitle));
+              });
+            } else if (typeof selTopics === 'string') {
+              return selTopics.toLowerCase().includes(topicId.toLowerCase()) || (curTopicTitle && selTopics.toLowerCase().includes(curTopicTitle));
+            }
+            return false;
+          });
+        }
+      }
+
+      const courseTitle = topicObj ? (course.title + ' - ' + topicObj.title) : course.title;
+      const courseSpeaker = (topicObj && topicObj.speaker) ? topicObj.speaker : (course.speaker || 'ฝ่ายทรัพยากรบุคคล (HR)');
+      const courseDate = (topicObj && topicObj.date) ? formatDisplayDate(topicObj.date) : (course.date ? formatDisplayDate(course.date) : '-');
+      const courseTime = (topicObj && topicObj.time) ? topicObj.time : (course.time || '-');
+
+      // Exact 28 rows per page to cleanly fill full A4 Landscape sheet down to footer (FM-PPCH-HR-012)
+      const ROWS_PER_PAGE = 28;
+      const totalPages = Math.max(1, Math.ceil(attendees.length / ROWS_PER_PAGE));
+      let sheetsHtml = '';
+
+      for (let page = 0; page < totalPages; page++) {
+        const pageAttendees = attendees.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE);
+        let rowsHtml = '';
+
+        for (let r = 0; r < ROWS_PER_PAGE; r++) {
+          const globalRowNo = (page * ROWS_PER_PAGE) + r + 1;
+          const a = pageAttendees[r];
+          if (a) {
+            const parsedName = parseEmpNameParts(a.name || (a.firstName ? (a.firstName + ' ' + (a.lastName || '')) : ''));
+            const empIdPadded = String(a.id || a.empId || '').padStart(6, '0');
+            rowsHtml += `
+              <tr style="height: 19px; max-height: 19px; line-height: 19px; border: 1px solid #000;">
+                <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 9.5px; padding: 0 2px; overflow: hidden; white-space: nowrap;">${globalRowNo}</td>
+                <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-weight: bold; font-size: 9.5px; padding: 0 2px; overflow: hidden; white-space: nowrap;">${empIdPadded}</td>
+                <td style="border: 1px solid #000; text-align: center; font-size: 9.5px; padding: 0 2px; overflow: hidden; white-space: nowrap;">${escapeHtml(a.title || parsedName.title || '')}</td>
+                <td style="border: 1px solid #000; font-size: 9.5px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(a.firstName || parsedName.firstName || '')}</td>
+                <td style="border: 1px solid #000; font-size: 9.5px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(a.lastName || parsedName.lastName || '')}</td>
+                <td style="border: 1px solid #000; font-size: 9px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(a.position || '')}</td>
+                <td style="border: 1px solid #000; font-size: 9px; padding: 0 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${escapeHtml(a.department || a.dept || '')}</td>
+                <td style="border: 1px solid #000; text-align: center; font-size: 9px; padding: 0 2px;">&nbsp;</td>
+              </tr>
+            `;
+          } else {
+            rowsHtml += `
+              <tr style="height: 19px; max-height: 19px; line-height: 19px; border: 1px solid #000;">
+                <td style="border: 1px solid #000; text-align: center; font-family: monospace; font-size: 9.5px; padding: 0 2px; color: #475569;">${globalRowNo}</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+                <td style="border: 1px solid #000; padding: 0 2px;">&nbsp;</td>
+              </tr>
+            `;
+          }
+        }
+
+        sheetsHtml += `
+          <div class="orient-a4-sheet">
+            <!-- 1. HEADER WITH LOGO AND BILINGUAL TITLE -->
+            <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: -1px; table-layout: fixed;">
+              <tr style="height: 48px;">
+                <td style="width: 18.18%; padding: 4px 8px; border-right: 1px solid #000; vertical-align: middle; text-align: center;">
+                  <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 38px; max-width: 130px; object-fit: contain; display: inline-block;">
+                </td>
+                <td style="width: 81.82%; padding: 4px 8px; text-align: center; vertical-align: middle;">
+                  <div style="font-size: 15px; font-weight: bold; color: #000; letter-spacing: 0.3px; line-height: 1.25;">ใบลงทะเบียนอบรม / สัมมนาภายใน</div>
+                  <div style="font-size: 10.5px; font-weight: 500; color: #000; line-height: 1.2;">Training Registration Form</div>
+                </td>
+              </tr>
+            </table>
+
+            <!-- 2. METADATA GRID -->
+            <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9.5px; margin-bottom: -1px; table-layout: fixed;">
+              <tr style="height: 24px;">
+                <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">หลักสูตร / เรื่อง (Topic)</td>
+                <td style="width: 27.27%; border: 1px solid #000; padding: 2px 6px; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(courseTitle)}</td>
+                <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">วันที่อบรม / สัมมนา (Date) :</td>
+                <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-size: 9.5px;">${escapeHtml(courseDate)}</td>
+                <td style="width: 9.09%; border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold; background: #ffffff;">เวลา / Time :</td>
+                <td style="width: 9.10%; border: 1px solid #000; padding: 2px 3px; font-family: monospace; text-align: center; font-size: 9.5px;">${escapeHtml(courseTime)}</td>
+              </tr>
+              <tr style="height: 80px;">
+                <td style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold; background: #ffffff; vertical-align: middle;">วิทยากร (Speakers)</td>
+                <td style="border: 1px solid #000; padding: 0; vertical-align: top;">
+                  <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(courseSpeaker)}</div>
+                  <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
+                  <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
+                  <div style="height: 20px; line-height: 20px; padding: 0 6px;">&nbsp;</div>
+                </td>
+                <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
+                  <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">ประเภทหลักสูตร</div>
+                  <div style="display: flex; flex-direction: column; gap: 5px; padding-left: 10px;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
+                      <span>ในแผน</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                      <span>นอกแผน</span>
+                    </div>
+                  </div>
+                </td>
+                <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
+                  <div style="display: flex; flex-direction: column; gap: 3.5px; padding-left: 6px; font-size: 9px;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
+                      <span>Mandatory Course</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                      <span>Managerial Course</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                      <span>Functional Course</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
+                      <span>Quality Course</span>
+                    </div>
+                  </div>
+                </td>
+                <td colspan="2" style="border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: center;">
+                  <div style="font-weight: bold; font-size: 9.5px; margin-bottom: 6px;">จำนวนเครดิต</div>
+                  <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">${course.creditHours || '-'}</div>
+                </td>
+              </tr>
+            </table>
+
+            <!-- 3. ATTENDEE TABLE (28 ROWS FULL A4 SHEET) -->
+            <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; table-layout: fixed;">
+              <thead>
+                <tr style="height: 22px; text-align: center; font-weight: bold; border: 1px solid #000;">
+                  <th colspan="8" style="padding: 2px; font-size: 10.5px; border: 1px solid #000; color: #000; background: #ffffff;">รายชื่อผู้เข้าร่วมอบรม</th>
+                </tr>
+                <tr style="height: 24px; text-align: center; font-weight: bold; border: 1px solid #000; line-height: 1.15; font-size: 9.5px; background: #ffffff;">
+                  <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">ลำดับ<br><span style="font-size: 8px; font-weight: normal; color: #000;">No.</span></th>
+                  <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">รหัสพนักงาน<br><span style="font-size: 8px; font-weight: normal; color: #000;">Em.No.</span></th>
+                  <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">คำนำหน้าชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #000;">Title</span></th>
+                  <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">ชื่อ<br><span style="font-size: 8px; font-weight: normal; color: #000;">Name</span></th>
+                  <th style="width: 9.09%; border: 1px solid #000; padding: 2px;">นามสกุล<br><span style="font-size: 8px; font-weight: normal; color: #000;">Surname</span></th>
+                  <th style="width: 18.18%; border: 1px solid #000; padding: 2px;">ตำแหน่ง<br><span style="font-size: 8px; font-weight: normal; color: #000;">Position</span></th>
+                  <th style="width: 18.18%; border: 1px solid #000; padding: 2px;">แผนก<br><span style="font-size: 8px; font-weight: normal; color: #000;">Department</span></th>
+                  <th style="width: 18.18%; border: 1px solid #000; padding: 2px; vertical-align: middle;">ลายมือชื่อ</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+
+            <!-- 4. OFFICIAL DOCUMENT CONTROL FOOTER (FM-PPCH-HR-012) -->
+            <div style="margin-top: auto; padding-top: 3px; display: flex; align-items: center; justify-content: space-between; font-size: 8.5px; color: #000; padding: 0 2px;">
+              <div style="font-weight: normal; letter-spacing: 0.1px;">FM-PPCH-HR-012 แก้ไขครั้งที่ 1 วันที่บังคับใช้ 1 ม.ค. 2569 (DCC)</div>
+              <div style="color: #64748b; font-weight: 500;">หน้าที่ ${page + 1} / ${totalPages}</div>
+            </div>
+          </div>
         `;
       }
 
-      const docHtml = `
+      // Print via isolated hidden iframe
+      let iframe = document.getElementById('normalCoursePrintFrame');
+      if (iframe) iframe.remove();
+
+      iframe = document.createElement('iframe');
+      iframe.id = 'normalCoursePrintFrame';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = 'none';
+      iframe.style.zIndex = '-9999';
+      iframe.style.visibility = 'hidden';
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`
         <!DOCTYPE html>
         <html lang="th">
         <head>
           <meta charset="utf-8">
-          <title>ใบลงทะเบียนและเซ็นชื่อเข้าร่วมการอบรม - ${escapeHtml(currentRosterCourse.title)}</title>
+          <title>ใบลงทะเบียนอบรม - ${escapeHtml(courseTitle)}</title>
           <style>
-            @page { size: A4 portrait; margin: 10mm 12mm; }
-            body { font-family: 'Sarabun', 'Prompt', sans-serif; color: #000; margin: 0; padding: 0; }
-            .header { text-align: center; margin-bottom: 12px; border-bottom: 2px solid #000; padding-bottom: 6px; }
-            .logo-text { font-size: 15px; font-weight: bold; color: #1e5387; }
-            .sub-logo { font-size: 12px; color: #555; }
-            .doc-title { font-size: 16px; font-weight: bold; margin-top: 4px; }
-            .offline-badge { display: inline-block; padding: 2px 8px; background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; border-radius: 4px; font-size: 10px; font-weight: bold; margin-top: 2px; }
-            .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px; margin-bottom: 10px; line-height: 1.4; background: #f8fafc; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-            th { border: 1px solid #333; background: #f0f4f8; padding: 6px 4px; font-size: 10px; font-weight: bold; text-align: center; }
-            .footer-sign { margin-top: 24px; display: flex; justify-content: space-between; font-size: 11px; page-break-inside: avoid; }
-            .sign-box { text-align: center; width: 250px; line-height: 1.6; }
+            @page {
+              size: A4 landscape;
+              margin: 0;
+            }
             @media print {
-              .no-print { display: none !important; }
-              body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+              html, body {
+                margin: 0;
+                padding: 0;
+                width: 297mm;
+                height: 210mm;
+                background: #ffffff;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              .orient-a4-sheet {
+                page-break-after: always;
+                page-break-inside: avoid;
+              }
+            }
+            body {
+              margin: 0;
+              padding: 0;
+              background: #ffffff;
+              font-family: 'Sarabun', 'Prompt', sans-serif;
+              -webkit-font-smoothing: antialiased;
+            }
+            .orient-a4-sheet {
+              width: 297mm;
+              height: 210mm;
+              min-width: 297mm;
+              max-width: 297mm;
+              min-height: 210mm;
+              max-height: 210mm;
+              padding: 4.8mm 5.5mm;
+              margin: 0;
+              box-sizing: border-box;
+              background: #ffffff;
+              color: #000000;
+              position: relative;
+              overflow: hidden;
+              page-break-after: always;
+              page-break-inside: avoid;
+              display: flex;
+              flex-direction: column;
+            }
+            .orient-a4-sheet:last-child {
+              page-break-after: auto;
+            }
+            .orient-sheet-header-table,
+            .orient-sheet-meta-table,
+            .orient-sheet-attendee-table {
+              width: 100%;
+              border-collapse: collapse;
+              border-spacing: 0;
+              table-layout: fixed;
             }
           </style>
         </head>
         <body>
-          <div class="no-print" style="background: #e0f2fe; padding: 10px 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #bae6fd;">
-            <span style="font-size: 13px; font-weight: bold; color: #0369a1;">🖨️ ตัวอย่างก่อนพิมพ์ใบเซ็นชื่อ (A4 Offline Backup Sign-in Sheet)</span>
-            <button onclick="window.print()" style="padding: 8px 18px; background: #0284c7; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">พิมพ์เอกสาร (Print)</button>
-          </div>
-
-          <div class="header">
-            <div class="logo-text">โรงพยาบาลพิษณุเวช พิจิตร (PHITSANUVEJ PHICHIT HOSPITAL)</div>
-            <div class="sub-logo">ฝ่ายพัฒนาทรัพยากรบุคคล (Human Resource Development : HRD)</div>
-            <div class="doc-title">ใบลงทะเบียนและเซ็นชื่อเข้าร่วมการฝึกอบรม</div>
-            <div class="offline-badge">เอกสารสำรองหน้างาน (OFFLINE BACKUP ATTENDANCE ROSTER)</div>
-          </div>
-
-          <div class="meta-grid">
-            <div><strong>หลักสูตร:</strong> ${escapeHtml(currentRosterCourse.title)}</div>
-            <div><strong>วันที่จัดอบรม:</strong> ${escapeHtml(topicDate)}${topicTime ? ' (' + escapeHtml(topicTime) + ')' : ''}</div>
-            <div><strong>หัวข้อ:</strong> ${escapeHtml(topicLabel)}</div>
-            <div><strong>วิทยากร:</strong> ${escapeHtml(speakerLabel)}</div>
-            <div><strong>รุ่นการอบรม:</strong> ${escapeHtml(batchLabel)}</div>
-            <div><strong>ผู้ลงทะเบียนล่วงหน้า:</strong> ${filtered.length} ท่าน (มีช่อง Walk-in 15 แถว)</div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 35px;">ลำดับ</th>
-                <th style="width: 75px;">รหัสพนักงาน</th>
-                <th>ชื่อ - นามสกุล</th>
-                <th style="width: 110px;">ตำแหน่ง</th>
-                <th style="width: 110px;">แผนก / สังกัด</th>
-                <th style="width: 60px;">รุ่นที่</th>
-                <th style="width: 140px;">ลายมือชื่อ (Signature)</th>
-                <th style="width: 80px;">หมายเหตุ</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-              ${walkinRowsHtml}
-            </tbody>
-          </table>
-
-          <div class="footer-sign">
-            <div class="sign-box">
-              <div>ผู้บันทึก / เจ้าหน้าที่:</div>
-              <div style="margin-top: 35px;">(............................................................)</div>
-              <div style="margin-top: 5px;">วันที่: ...... / ...... / ......</div>
-            </div>
-            <div class="sign-box">
-              <div>วิทยากร / ผู้ควบคุมการอบรม:</div>
-              <div style="margin-top: 35px;">(............................................................)</div>
-              <div style="margin-top: 5px;">วันที่: ...... / ...... / ......</div>
-            </div>
-          </div>
+          ${sheetsHtml}
         </body>
         </html>
-      `;
+      `);
+      doc.close();
 
-      printWindow.document.open();
-      printWindow.document.write(docHtml);
-      printWindow.document.close();
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      }, 350);
+    }
+
+    function printTopicRoster() {
+      if (!currentRosterCourse) return;
+      const selectedBatch = document.getElementById('rosterBatchSelect') ? document.getElementById('rosterBatchSelect').value : 'all';
+      printNormalCourseRoster(currentRosterCourse.id, currentRosterSelectedTopic, selectedBatch);
     }
 
     function exportRosterCsv() {
       if (!currentRosterCourse) return;
       const filtered = getFilteredRosterAttendees();
-      if (filtered.length === 0) {
-        HrdModal.warning('ไม่พบข้อมูลรายชื่อสำหรับส่งออกค่ะ', 'ไม่มีข้อมูล');
-        return;
-      }
-
-      let csvContent = '\uFEFF'; // UTF-8 BOM for Microsoft Excel Thai font support
-      csvContent += 'ลำดับ,รหัสพนักงาน,ชื่อ-นามสกุล,ตำแหน่ง,แผนก,รุ่นที่อบรม,หัวข้อที่เข้า,วันที่ลงทะเบียน\n';
-
+      let csvContent = '\uFEFFลำดับ,รหัสพนักงาน,ชื่อ - นามสกุล,ตำแหน่ง,แผนก,รุ่นการอบรม,หัวข้อที่ลงทะเบียน,เวลาลงทะเบียน\n';
       filtered.forEach((a, idx) => {
-        const fullName = (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName));
+        const fullName = (a.title || '') + (a.name || (a.firstName + ' ' + (a.lastName || '')));
         const topicsStr = Array.isArray(a.selectedTopics) ? a.selectedTopics.join('; ') : (a.selectedTopics || 'ทุกหัวข้อ');
         const row = [
           idx + 1,
-          `"${(a.id || a.empId || '').replace(/"/g, '""')}"`,
+          `"${String(a.id || a.empId || '').padStart(6, '0').replace(/"/g, '""')}"`,
           `"${fullName.replace(/"/g, '""')}"`,
           `"${(a.position || '').replace(/"/g, '""')}"`,
           `"${(a.department || a.dept || '').replace(/"/g, '""')}"`,
@@ -4576,6 +4795,438 @@
     }
 
     // ==========================================
+    // VIEW 5: SETTINGS & MASTER EMPLOYEE REGISTRY
+    // ==========================================
+    let filteredEmployeesList = [];
+
+    function initSettingsView() {
+      if (!Array.isArray(employeeDatabase)) employeeDatabase = [];
+
+      // Update KPI Ribbons
+      const elTotal = document.getElementById('statEmpTotal');
+      const elDepts = document.getElementById('statEmpDepts');
+      const elPositions = document.getElementById('statEmpPositions');
+      if (elTotal) elTotal.textContent = employeeDatabase.length.toLocaleString();
+      if (elDepts) elDepts.textContent = departmentList.length.toLocaleString();
+      if (elPositions) elPositions.textContent = positionList.length.toLocaleString();
+
+      // Populate Department Filter Dropdown
+      const deptFilter = document.getElementById('empFilterDept');
+      if (deptFilter) {
+        const curDept = deptFilter.value || 'all';
+        deptFilter.innerHTML = '<option value="all">ทุกแผนก (' + departmentList.length + ' แผนก)</option>' +
+          departmentList.map(d => `<option value="${escapeHtml(d)}" ${curDept === d ? 'selected' : ''}>${escapeHtml(d)}</option>`).join('');
+      }
+
+      // Populate Position Filter Dropdown
+      const posFilter = document.getElementById('empFilterPos');
+      if (posFilter) {
+        const curPos = posFilter.value || 'all';
+        posFilter.innerHTML = '<option value="all">ทุกตำแหน่ง (' + positionList.length + ' ตำแหน่ง)</option>' +
+          positionList.map(p => `<option value="${escapeHtml(p)}" ${curPos === p ? 'selected' : ''}>${escapeHtml(p)}</option>`).join('');
+      }
+
+      // Populate Datalists for Suggestions in Modal Form
+      const deptSuggestions = document.getElementById('empDeptSuggestions');
+      if (deptSuggestions) {
+        deptSuggestions.innerHTML = departmentList.map(d => `<option value="${escapeHtml(d)}">`).join('');
+      }
+      const posSuggestions = document.getElementById('empPosSuggestions');
+      if (posSuggestions) {
+        posSuggestions.innerHTML = positionList.map(p => `<option value="${escapeHtml(p)}">`).join('');
+      }
+
+      filterEmployeeTable();
+    }
+
+    function filterEmployeeTable() {
+      if (!Array.isArray(employeeDatabase)) employeeDatabase = [];
+      const searchInput = document.getElementById('empSearchInput');
+      const deptFilter = document.getElementById('empFilterDept');
+      const posFilter = document.getElementById('empFilterPos');
+
+      const keyword = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const selectedDept = deptFilter ? deptFilter.value : 'all';
+      const selectedPos = posFilter ? posFilter.value : 'all';
+
+      filteredEmployeesList = employeeDatabase.filter(emp => {
+        if (!emp) return false;
+        // Dept match
+        if (selectedDept !== 'all' && (emp.department || '').trim() !== selectedDept) return false;
+        // Pos match
+        if (selectedPos !== 'all' && (emp.position || '').trim() !== selectedPos) return false;
+        // Search query match (id, name, department, position)
+        if (keyword) {
+          const empId = String(emp.id || '').toLowerCase();
+          const fullName = ((emp.title || '') + (emp.firstName || '') + ' ' + (emp.lastName || '')).toLowerCase();
+          const dept = String(emp.department || '').toLowerCase();
+          const pos = String(emp.position || '').toLowerCase();
+          return empId.includes(keyword) || fullName.includes(keyword) || dept.includes(keyword) || pos.includes(keyword);
+        }
+        return true;
+      });
+
+      renderEmployeeManagementTable(filteredEmployeesList);
+    }
+
+    function renderEmployeeManagementTable(list) {
+      const tbody = document.getElementById('employeeMasterTableBody');
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-12 text-center text-slate-400">
+              <span class="material-icons-round text-3xl mb-1 text-slate-300">person_off</span>
+              <div class="text-xs font-semibold">ไม่พบข้อมูลพนักงานที่ตรงกับเงื่อนไขการค้นหา</div>
+              <p class="text-[11px] text-slate-400 font-light mt-0.5">ลองค้นหาด้วยรหัสพนักงาน ชื่อ หรือแผนกอื่น หรือกดปุ่ม "เพิ่มพนักงานใหม่" นะคะ</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = list.map((emp, idx) => {
+        const empIdPadded = String(emp.id || '').padStart(6, '0');
+        const titleStr = emp.title || '-';
+        const fullName = (emp.firstName || '') + ' ' + (emp.lastName || '');
+        const pos = emp.position || '-';
+        const dept = emp.department || '-';
+
+        return `
+          <tr class="hover:bg-sky-50/50 transition-colors group">
+            <td class="py-2.5 px-3 text-center text-slate-400 font-mono text-[11px]">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-mono font-bold text-[#004b93] text-xs">
+              <span class="bg-sky-50 px-2 py-0.5 rounded border border-sky-200">${empIdPadded}</span>
+            </td>
+            <td class="py-2.5 px-3 text-slate-600">${escapeHtml(titleStr)}</td>
+            <td class="py-2.5 px-3 font-semibold text-slate-800">${escapeHtml(fullName.trim() || '-')}</td>
+            <td class="py-2.5 px-3 text-slate-600 text-[11.5px]">${escapeHtml(pos)}</td>
+            <td class="py-2.5 px-3 text-slate-600 text-[11.5px]">${escapeHtml(dept)}</td>
+            <td class="py-2.5 px-3 text-center">
+              <div class="flex items-center justify-center space-x-1.5">
+                <button 
+                  type="button" 
+                  onclick="openEditEmployeeModal('${empIdPadded}')" 
+                  class="w-7 h-7 rounded-lg bg-sky-50 hover:bg-[#004b93] text-[#004b93] hover:text-white border border-sky-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95" 
+                  title="แก้ไขข้อมูลพนักงาน"
+                >
+                  <span class="material-icons-round text-xs">edit</span>
+                </button>
+                <button 
+                  type="button" 
+                  onclick="deleteEmployeeData('${empIdPadded}')" 
+                  class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95" 
+                  title="ลบพนักงาน"
+                >
+                  <span class="material-icons-round text-xs">delete_outline</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openAddEmployeeModal() {
+      const modal = document.getElementById('employeeFormModal');
+      const titleEl = document.getElementById('employeeModalTitle');
+      const modeEl = document.getElementById('empFormMode');
+      const origIdEl = document.getElementById('empFormOriginalId');
+      const idInput = document.getElementById('empFormId');
+      const titleInput = document.getElementById('empFormTitle');
+      const fnInput = document.getElementById('empFormFirstName');
+      const lnInput = document.getElementById('empFormLastName');
+      const posInput = document.getElementById('empFormPosition');
+      const deptInput = document.getElementById('empFormDept');
+
+      if (titleEl) {
+        titleEl.innerHTML = `<span class="material-icons-round text-[#004b93]">person_add</span><span>เพิ่มพนักงานใหม่</span>`;
+      }
+      if (modeEl) modeEl.value = 'add';
+      if (origIdEl) origIdEl.value = '';
+
+      if (idInput) {
+        idInput.value = '';
+        idInput.readOnly = false;
+        idInput.classList.remove('bg-slate-100', 'cursor-not-allowed');
+      }
+      if (titleInput) titleInput.value = '';
+      if (fnInput) fnInput.value = '';
+      if (lnInput) lnInput.value = '';
+      if (posInput) posInput.value = '';
+      if (deptInput) deptInput.value = '';
+
+      if (modal) modal.classList.remove('hidden');
+      setTimeout(() => { if (idInput) idInput.focus(); }, 100);
+    }
+
+    function openEditEmployeeModal(empId) {
+      const targetId = String(empId).padStart(6, '0');
+      const emp = (employeeDatabase || []).find(e => String(e.id).padStart(6, '0') === targetId);
+      if (!emp) {
+        if (typeof HrdModal !== 'undefined') HrdModal.error('ไม่พบข้อมูลพนักงานรหัส ' + targetId);
+        return;
+      }
+
+      const modal = document.getElementById('employeeFormModal');
+      const titleEl = document.getElementById('employeeModalTitle');
+      const modeEl = document.getElementById('empFormMode');
+      const origIdEl = document.getElementById('empFormOriginalId');
+      const idInput = document.getElementById('empFormId');
+      const titleInput = document.getElementById('empFormTitle');
+      const fnInput = document.getElementById('empFormFirstName');
+      const lnInput = document.getElementById('empFormLastName');
+      const posInput = document.getElementById('empFormPosition');
+      const deptInput = document.getElementById('empFormDept');
+
+      if (titleEl) {
+        titleEl.innerHTML = `<span class="material-icons-round text-[#004b93]">manage_accounts</span><span>แก้ไขข้อมูลพนักงาน (${targetId})</span>`;
+      }
+      if (modeEl) modeEl.value = 'edit';
+      if (origIdEl) origIdEl.value = targetId;
+
+      if (idInput) {
+        idInput.value = targetId;
+        idInput.readOnly = false;
+        idInput.classList.remove('bg-slate-100', 'cursor-not-allowed');
+      }
+      if (titleInput) titleInput.value = emp.title || '';
+      if (fnInput) fnInput.value = emp.firstName || '';
+      if (lnInput) lnInput.value = emp.lastName || '';
+      if (posInput) posInput.value = emp.position || '';
+      if (deptInput) deptInput.value = emp.department || '';
+
+      if (modal) modal.classList.remove('hidden');
+      setTimeout(() => { if (fnInput) fnInput.focus(); }, 100);
+    }
+
+    function closeEmployeeModal() {
+      const modal = document.getElementById('employeeFormModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function handleEmployeeFormSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const modeEl = document.getElementById('empFormMode');
+      const origIdEl = document.getElementById('empFormOriginalId');
+      const idInput = document.getElementById('empFormId');
+      const titleInput = document.getElementById('empFormTitle');
+      const fnInput = document.getElementById('empFormFirstName');
+      const lnInput = document.getElementById('empFormLastName');
+      const posInput = document.getElementById('empFormPosition');
+      const deptInput = document.getElementById('empFormDept');
+
+      const mode = modeEl ? modeEl.value : 'add';
+      const origId = origIdEl ? origIdEl.value : '';
+      const rawId = idInput ? idInput.value.trim() : '';
+      if (!rawId) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาระบุรหัสพนักงาน');
+        return;
+      }
+
+      // Golden Rule 2: Strict 6-Digit Employee ID Format padStart(6, '0')
+      const empId = rawId.padStart(6, '0');
+      const title = titleInput ? titleInput.value.trim() : '';
+      const firstName = fnInput ? fnInput.value.trim() : '';
+      const lastName = lnInput ? lnInput.value.trim() : '';
+      const position = posInput ? posInput.value.trim() : '';
+      const department = deptInput ? deptInput.value.trim() : '';
+
+      if (!firstName || !lastName) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณากรอกชื่อและนามสกุลให้ครบถ้วน');
+        return;
+      }
+
+      if (!Array.isArray(employeeDatabase)) employeeDatabase = [];
+
+      if (mode === 'add') {
+        const exists = employeeDatabase.some(x => String(x.id).padStart(6, '0') === empId);
+        if (exists) {
+          if (typeof HrdModal !== 'undefined') HrdModal.warning(`มีพนักงานรหัส ${empId} ในระบบแล้วค่ะ`, 'รหัสพนักงานซ้ำ');
+          return;
+        }
+
+        const newEmp = {
+          id: empId,
+          title: title,
+          firstName: firstName,
+          lastName: lastName,
+          position: position || '-',
+          department: department || '-'
+        };
+        employeeDatabase.push(newEmp);
+      } else {
+        // Mode: Edit
+        const targetSearchId = origId || empId;
+        const idx = employeeDatabase.findIndex(x => String(x.id).padStart(6, '0') === targetSearchId);
+        if (idx >= 0) {
+          employeeDatabase[idx] = {
+            id: empId,
+            title: title,
+            firstName: firstName,
+            lastName: lastName,
+            position: position || '-',
+            department: department || '-'
+          };
+        } else {
+          employeeDatabase.push({
+            id: empId,
+            title: title,
+            firstName: firstName,
+            lastName: lastName,
+            position: position || '-',
+            department: department || '-'
+          });
+        }
+      }
+
+      // Keep sorted by 6-digit ID
+      employeeDatabase.sort((a, b) => String(a.id || '').localeCompare(String(b.id || '')));
+
+      // Re-index
+      indexEmployeeData();
+
+      // Persist to Supabase Master Employee Registry
+      if (typeof HrdModal !== 'undefined') HrdModal.toast('กำลังบันทึกข้อมูลพนักงานลง Supabase...', 'info');
+      let savedOk = false;
+      if (typeof SupabaseService !== 'undefined') {
+        savedOk = await SupabaseService.saveEmployees(employeeDatabase);
+      }
+
+      closeEmployeeModal();
+      initSettingsView();
+
+      if (savedOk) {
+        if (typeof HrdModal !== 'undefined') HrdModal.success(`บันทึกข้อมูลพนักงาน ${empId} สำเร็จเรียบร้อยแล้วค่ะ`);
+      } else {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning(`บันทึกข้อมูลในระบบแล้ว แต่การเชื่อมต่อ Supabase ขัดข้อง กรุณากดตรวจสอบอีกครั้ง`);
+      }
+    }
+
+    async function deleteEmployeeData(empId) {
+      const targetId = String(empId).padStart(6, '0');
+      const emp = (employeeDatabase || []).find(e => String(e.id).padStart(6, '0') === targetId);
+      const name = emp ? `${emp.title || ''}${emp.firstName} ${emp.lastName}` : targetId;
+
+      const performDelete = async () => {
+        employeeDatabase = employeeDatabase.filter(e => String(e.id).padStart(6, '0') !== targetId);
+        indexEmployeeData();
+
+        if (typeof HrdModal !== 'undefined') HrdModal.toast('กำลังอัปเดตข้อมูลบน Supabase...', 'info');
+        let savedOk = false;
+        if (typeof SupabaseService !== 'undefined') {
+          savedOk = await SupabaseService.saveEmployees(employeeDatabase);
+        }
+
+        initSettingsView();
+        if (typeof HrdModal !== 'undefined') {
+          HrdModal.success(`ลบข้อมูลพนักงานรหัส ${targetId} (${name}) เรียบร้อยแล้วค่ะ`);
+        }
+      };
+
+      if (typeof HrdModal !== 'undefined' && HrdModal.confirm) {
+        HrdModal.confirm(
+          `คุณต้องการลบข้อมูลพนักงานรหัส ${targetId} (${name}) ออกจากระบบใช่หรือไม่คะ?`,
+          'ยืนยันการลบพนักงาน',
+          performDelete
+        );
+      } else if (confirm(`คุณต้องการลบข้อมูลพนักงานรหัส ${targetId} (${name}) ออกจากระบบใช่หรือไม่คะ?`)) {
+        await performDelete();
+      }
+    }
+
+    function exportEmployeesCsv() {
+      if (!Array.isArray(employeeDatabase) || employeeDatabase.length === 0) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่มีข้อมูลพนักงานสำหรับส่งออกค่ะ');
+        return;
+      }
+
+      const list = (filteredEmployeesList && filteredEmployeesList.length > 0) ? filteredEmployeesList : employeeDatabase;
+
+      // Golden Rule 3: UTF-8 BOM \uFEFF for Thai CSV export
+      let csv = '\uFEFFลำดับ,รหัสพนักงาน,คำนำหน้าชื่อ,ชื่อ,นามสกุล,ตำแหน่ง,แผนก\n';
+      list.forEach((emp, idx) => {
+        const row = [
+          idx + 1,
+          `"${String(emp.id || '').padStart(6, '0').replace(/"/g, '""')}"`,
+          `"${(emp.title || '').replace(/"/g, '""')}"`,
+          `"${(emp.firstName || '').replace(/"/g, '""')}"`,
+          `"${(emp.lastName || '').replace(/"/g, '""')}"`,
+          `"${(emp.position || '').replace(/"/g, '""')}"`,
+          `"${(emp.department || '').replace(/"/g, '""')}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `รายชื่อพนักงานทั้งหมด_${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function exportEmployeesExcel() {
+      if (!Array.isArray(employeeDatabase) || employeeDatabase.length === 0) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('ไม่มีข้อมูลพนักงานสำหรับส่งออกค่ะ');
+        return;
+      }
+
+      const list = (filteredEmployeesList && filteredEmployeesList.length > 0) ? filteredEmployeesList : employeeDatabase;
+
+      let tableHtml = `
+        <table border="1">
+          <thead>
+            <tr style="background-color: #004b93; color: #ffffff; font-weight: bold; text-align: center;">
+              <th>ลำดับ</th>
+              <th>รหัสพนักงาน</th>
+              <th>คำนำหน้าชื่อ</th>
+              <th>ชื่อ</th>
+              <th>นามสกุล</th>
+              <th>ตำแหน่ง</th>
+              <th>แผนก</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      list.forEach((emp, idx) => {
+        tableHtml += `
+          <tr>
+            <td style="text-align: center;">${idx + 1}</td>
+            <td style="text-align: center; mso-number-format:'\\@';">${String(emp.id || '').padStart(6, '0')}</td>
+            <td>${escapeHtml(emp.title || '')}</td>
+            <td>${escapeHtml(emp.firstName || '')}</td>
+            <td>${escapeHtml(emp.lastName || '')}</td>
+            <td>${escapeHtml(emp.position || '')}</td>
+            <td>${escapeHtml(emp.department || '')}</td>
+          </tr>
+        `;
+      });
+
+      tableHtml += `</tbody></table>`;
+
+      // Golden Rule 3: UTF-8 BOM \uFEFF for Thai Excel export
+      const excelContent = '\uFEFF' +
+        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+        '<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>รายชื่อพนักงาน</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>' +
+        '<body>' + tableHtml + '</body></html>';
+
+      const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `รายชื่อพนักงานทั้งหมด_${Date.now()}.xls`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // ==========================================
     // SPA Portal Navigation & View Switcher Logic
     // ==========================================
     let currentAdminView = 'courses';
@@ -4589,12 +5240,14 @@
       const viewCourses = document.getElementById('viewCourses');
       const viewTarget = document.getElementById('viewTarget');
       const viewCreate = document.getElementById('viewCreate');
-
       const viewOrientation = document.getElementById('viewOrientation');
+      const viewSettings = document.getElementById('viewSettings');
+
       if (viewCourses) viewCourses.classList.toggle('hidden', viewName !== 'courses');
       if (viewTarget) viewTarget.classList.toggle('hidden', viewName !== 'target');
       if (viewCreate) viewCreate.classList.toggle('hidden', viewName !== 'create');
       if (viewOrientation) viewOrientation.classList.toggle('hidden', viewName !== 'orientation');
+      if (viewSettings) viewSettings.classList.toggle('hidden', viewName !== 'settings');
 
       updateSidebarNav(viewName);
       updateAdminBreadcrumb(viewName, courseId);
@@ -4624,6 +5277,8 @@
         setupCreateOrEditView(courseId);
       } else if (viewName === 'orientation') {
         initOrientationView();
+      } else if (viewName === 'settings') {
+        initSettingsView();
       }
 
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -4644,10 +5299,12 @@
       const btnCreate = document.getElementById('sidebarNavCreate');
       const btnTarget = document.getElementById('sidebarNavTarget');
       const btnOrientation = document.getElementById('sidebarNavOrientation');
+      const btnSettings = document.getElementById('sidebarNavSettings');
       if (btnCourses) btnCourses.classList.toggle('active', viewName === 'courses');
       if (btnCreate) btnCreate.classList.toggle('active', viewName === 'create');
       if (btnTarget) btnTarget.classList.toggle('active', viewName === 'target');
       if (btnOrientation) btnOrientation.classList.toggle('active', viewName === 'orientation');
+      if (btnSettings) btnSettings.classList.toggle('active', viewName === 'settings');
     }
 
     function updateAdminBreadcrumb(viewName, courseId) {
@@ -4667,6 +5324,25 @@
           </span>
         `;
         if (actions) actions.innerHTML = '';
+      } else if (viewName === 'settings') {
+        content.innerHTML = `
+          <button type="button" onclick="switchAdminView('courses')" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] cursor-pointer transition-colors">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span>หน้าหลัก</span>
+          </button>
+          <span class="text-slate-400 font-light">&gt;</span>
+          <span class="font-bold text-[#004b93] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
+            ⚙️ ตั้งค่า & จัดการข้อมูลพนักงาน
+          </span>
+        `;
+        if (actions) {
+          actions.innerHTML = `
+            <button type="button" onclick="openAddEmployeeModal()" class="px-3 py-1 bg-[#004b93] hover:bg-[#002e6e] text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs active:scale-95">
+              <span class="material-icons-round text-sm">person_add</span>
+              <span>เพิ่มพนักงานใหม่</span>
+            </button>
+          `;
+        }
       } else if (viewName === 'target') {
         let courseTitle = '';
         if (targetActiveCourse && targetActiveCourse.title) {
@@ -5737,57 +6413,6 @@
         setSaveProgressStep(2, 'done');
       }
 
-      // 3. Background Non-Blocking GAS Sync (Tier-2 institutional sheets)
-      setSaveProgressStep(3, 'active');
-      setSaveProgressPercent(90, 'กำลังเชื่อมโยงระบบทะเบียนกลาง Google Sheets...');
-
-      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-      if (gasUrl) {
-        const gasPayload = {
-          action: isEditMode ? 'saveCourse' : 'createCourse',
-          course: coursePayload,
-          id: courseId,
-          title: title,
-          speaker: speaker,
-          date: summaryDate,
-          time: summaryTime,
-          planType: planType,
-          category: category,
-          batches: batches,
-          quota: quota,
-          targetAudience: existingTarget,
-          hasSubTopics: hasSubTopics,
-          topicMode: topicMode,
-          topics: topics,
-          skipTabSync: isEditMode
-        };
-
-        fetch(gasUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(gasPayload)
-        }).then(r => r.json()).then(data => {
-          if (data && data.success && data.sheetUrl) {
-            coursePayload.sheetUrl = data.sheetUrl;
-            coursePayload.sheetId = data.sheetId || '';
-            coursePayload.folderUrl = data.folderUrl || '';
-            try {
-              localStorage.setItem('hrd_course_' + courseId, JSON.stringify(coursePayload));
-              const curIdx = coursesData.findIndex(c => c && String(c.id).toLowerCase() === String(courseId).toLowerCase());
-              if (curIdx !== -1) {
-                coursesData[curIdx].sheetUrl = data.sheetUrl;
-                coursesData[curIdx].sheetId = data.sheetId || '';
-                coursesData[curIdx].folderUrl = data.folderUrl || '';
-                localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
-              }
-              if (typeof SupabaseService !== 'undefined') {
-                SupabaseService.saveCourse(coursePayload).catch(() => {});
-              }
-            } catch(e) {}
-          }
-        }).catch(err => console.warn('[Background GAS Sync notice]', err));
-      }
-
       setSaveProgressStep(3, 'done');
       setSaveProgressPercent(100, 'บันทึกข้อมูลหลักสูตรเรียบร้อยสมบูรณ์!');
 
@@ -5843,13 +6468,18 @@
     }
 
     async function loadEmployeeDatabase() {
-      // 1. Instant Memory Lookup from demo_data.js (0ms)
-      if (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES) && DEMO_EMPLOYEES.length > 0) {
-        employeeDatabase = DEMO_EMPLOYEES;
-        indexEmployeeData();
-      } else if (typeof window.DEMO_EMPLOYEES !== 'undefined' && Array.isArray(window.DEMO_EMPLOYEES) && window.DEMO_EMPLOYEES.length > 0) {
-        employeeDatabase = window.DEMO_EMPLOYEES;
-        indexEmployeeData();
+      // 1. Direct fetch from Supabase sys-employees-registry (Primary Database)
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          const emps = await SupabaseService.getEmployees();
+          if (Array.isArray(emps) && emps.length > 0) {
+            employeeDatabase = emps;
+            indexEmployeeData();
+            return employeeDatabase;
+          }
+        } catch(e) {
+          console.warn('[Employee Database] Supabase fetch error:', e);
+        }
       }
 
       // 2. Instant Local File Lookup (employees.json)
@@ -5860,29 +6490,19 @@
           if (Array.isArray(data) && data.length > 0) {
             employeeDatabase = data;
             indexEmployeeData();
+            // Seed to Supabase if not yet present
+            if (typeof SupabaseService !== 'undefined') {
+              SupabaseService.saveEmployees(data).catch(() => {});
+            }
             return employeeDatabase;
           }
         }
       } catch (err) {}
 
-      if (employeeDatabase.length > 0) {
-        return employeeDatabase;
-      }
-
-      // 3. Fallback to GAS getEmployees
-      try {
-        const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
-        const response = await fetchWithTimeout(`${gasUrl}?action=getEmployees`, {}, 5000);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && Array.isArray(data.employees) && data.employees.length > 0) {
-            employeeDatabase = data.employees;
-            indexEmployeeData();
-            return employeeDatabase;
-          }
-        }
-      } catch (e) {
-        console.warn('[Target Admin] GAS getEmployees fallback:', e.message);
+      // 3. Fallback to bundled DEMO_EMPLOYEES
+      if (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES) && DEMO_EMPLOYEES.length > 0) {
+        employeeDatabase = DEMO_EMPLOYEES;
+        indexEmployeeData();
       }
 
       return employeeDatabase;

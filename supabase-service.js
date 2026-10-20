@@ -496,6 +496,85 @@ var SupabaseService = (() => {
     }
   }
 
+  /**
+   * ดึงข้อมูลพนักงานทั้งหมดจาก Supabase (sys-employees-registry)
+   */
+  async function getEmployees() {
+    const sb = getClient();
+    if (!sb) return null;
+
+    try {
+      const { data, error } = await sb
+        .from('courses')
+        .select('topics')
+        .eq('id', 'sys-employees-registry')
+        .single();
+
+      if (error) {
+        console.warn('[SupabaseService] getEmployees error:', error);
+        return null;
+      }
+
+      if (data && Array.isArray(data.topics)) {
+        return data.topics.map(emp => ({
+          id: String(emp.id).padStart(6, '0'),
+          title: emp.title || '',
+          firstName: emp.firstName || '',
+          lastName: emp.lastName || '',
+          position: emp.position || '-',
+          department: emp.department || '-'
+        }));
+      }
+      return [];
+    } catch(err) {
+      console.warn('[SupabaseService] getEmployees failed:', err);
+      return null;
+    }
+  }
+
+  /**
+   * บันทึกข้อมูลพนักงานทั้งหมดลง Supabase (sys-employees-registry)
+   */
+  async function saveEmployees(employeesList) {
+    const sb = getClient();
+    if (!sb || !Array.isArray(employeesList)) return false;
+
+    try {
+      const formatted = employeesList.map(emp => ({
+        id: String(emp.id).padStart(6, '0'),
+        title: emp.title || '',
+        firstName: emp.firstName || '',
+        lastName: emp.lastName || '',
+        position: emp.position || '-',
+        department: emp.department || '-'
+      }));
+
+      const payload = {
+        id: 'sys-employees-registry',
+        title: '[SYSTEM] Master Employee Registry',
+        speaker: 'HRD Master Database',
+        date: new Date().toISOString(),
+        time: '00:00',
+        status: 'system',
+        topics: formatted,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await sb
+        .from('courses')
+        .upsert([payload], { onConflict: 'id' });
+
+      if (error) {
+        console.error('[SupabaseService] saveEmployees error:', error);
+        return false;
+      }
+      return true;
+    } catch(err) {
+      console.warn('[SupabaseService] saveEmployees failed:', err);
+      return false;
+    }
+  }
+
   return {
     getClient,
     isEnabled,
@@ -512,6 +591,8 @@ var SupabaseService = (() => {
     archiveOldRegistrations,
     saveEvaluation,
     saveCheckin,
+    getEmployees,
+    saveEmployees,
     DEFAULT_SUPABASE_URL,
     DEFAULT_SUPABASE_KEY
   };
