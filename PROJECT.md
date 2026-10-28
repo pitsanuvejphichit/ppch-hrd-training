@@ -1,123 +1,115 @@
 # Project: HRD Training Admin Portal - Native SPA & Supabase Overhaul
 **Hospital:** โรงพยาบาลพิษณุเวช พิจิตร (Phitsanuvej Phichit Hospital - Princ Health)  
 **Target Codebase:** `h:/My Drive/HRD AI/projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/`  
-**Date:** 2026-10-09  
+**Updated:** 2026-10-28 (100% Native SPA, Supabase Primary Database, DCC A4 Landscape Roster, Orientation & Employee Management)  
 
 ---
 
 ## Architecture
 
-The HRD Training Admin Portal has been overhauled into a **100% Native Single Page Application (SPA)** with zero page reloads, zero `<iframe>` usage, and sub-0.1s Tier-1 database operations:
+The HRD Training Admin Portal has been overhauled into a **100% Native Single Page Application (SPA)** with zero page reloads, zero `<iframe>` usage, and sub-0.1s Supabase database operations:
 
 ```
-+---------------------------------------------------------------------------------------------------+
-|  PERMANENT STICKY HEADER (z-40)                                                                   |
-|  [Logo + Hospital Name]      [⚡ Supabase 0.08s Active]   [Archive Modal]   [+ สร้างหลักสูตรใหม่]     |
-+---------------------------------------------------------------------------------------------------+
-| PERMANENT LEFT SIDEBAR       | WORKSPACE CONTAINER                                                |
-|                              | [Dynamic Breadcrumb Navigation Bar: หน้าหลัก > View Label]         |
-| [กลุ่มที่ 1: ระบบฝึกอบรม]        |-------------------------------------------------------------------|
-|  - รายการหลักสูตร (#courses)   |  <main id="adminMainWorkspace">                                   |
-|  - สร้างหลักสูตร (#create)     |    +- VIEW 1: #viewCourses (Native DOM) -------------------------+ |
-|  - กลุ่มเป้าหมาย (#target)     |    |  KPI Summary, Search/Filters, Clinical Cards, FAB Dock     | |
-|                              |    +--------------------------------------------------------------+ |
-| [REMOVED: Training Record]   |    +- VIEW 2: #viewTarget (Native DOM - Pre-existing) ------------+ |
-| [REMOVED: Training Dash]     |    |  Course Selector, Target Scope Toggle, Dept/Pos Union Matrix | |
-| [REMOVED: Personal Dash]     |    +--------------------------------------------------------------+ |
-|                              |    +- VIEW 3: #viewCreate (NATIVE DOM - Replaces iframe) ---------+ |
-|                              |    |  1. ข้อมูลทั่วไป (ID, Title, Speaker, Cover Image Upload)    | |
-|                              |    |  2. ประเภทและหมวดหมู่ (In-plan, Mandatory, etc.)             | |
-|                              |    |  3. รุ่นการอบรม (Batches CRUD & Quota)                      | |
-|                              |    |  4. หัวข้อย่อย / ฐานการเรียนรู้ (Subtopics CRUD)             | |
-|                              |    |  5. เอกสารประกอบและบันทึก (Handout Links, Drive Folder)       | |
-|                              |    +--------------------------------------------------------------+ |
-|                              |  </main>                                                           |
-+---------------------------------------------------------------------------------------------------+
-| MODAL LAYER (Root Body):                                                                          |
-| - #saveProgressModal   - #successModal (QR Code)   - #archiveModal   - HrdModal (Toasts & Alerts) |
-+---------------------------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------------------+
+|  PERMANENT STICKY HEADER (z-40)                                                                                         |
+|  [Logo + Hospital Name]      [⚡ Supabase 0.08s Active]   [Archive Modal]   [+ สร้างหลักสูตรใหม่]                           |
++-------------------------------------------------------------------------------------------------------------------------+
+| PERMANENT LEFT SIDEBAR       | WORKSPACE CONTAINER                                                                      |
+|                              | [Dynamic Breadcrumb Navigation Bar: หน้าหลัก > View Label]                               |
+| [ระบบฝึกอบรม & ปฐมนิเทศ]      |-----------------------------------------------------------------------------------------|
+|  - รายการหลักสูตร (#courses)   |  <main id="adminMainContent">                                                           |
+|  - กำหนดกลุ่มเป้าหมาย (#target)|    +- VIEW 1: #viewCourses (Native DOM) ----------------------------------------------+ |
+|  - ปฐมนิเทศพนักงานใหม่        |    |  KPI Summary, Search/Filters, Speed Dial (Excel/CSV/Print), Clinical Cards        | |
+|    (#orientation)            |    +------------------------------------------------------------------------------------+ |
+|  - จัดการพนักงาน (#settings)  |    +- VIEW 2: #viewTarget (Native DOM) -------------------------------------------------+ |
+|  - สร้างหลักสูตร (#create)     |    |  Course Selector, Target Scope Toggle, Dept/Pos Union Matrix                       | |
+|                              |    +------------------------------------------------------------------------------------+ |
+|                              |    +- VIEW 3: #viewCreate (Native DOM) -------------------------------------------------+ |
+|                              |    |  General Info, Category, Batches CRUD, Uploads, Save Progress                      | |
+|                              |    +------------------------------------------------------------------------------------+ |
+|                              |    +- VIEW 4: #viewOrientation (New Employee Orientation Suite) ------------------------+ |
+|                              |    |  Monthly Batches, Dynamic Date Topics, Date Pickers, Time Selectors, Roster A4     | |
+|                              |    +------------------------------------------------------------------------------------+ |
+|                              |    +- VIEW 5: #viewSettings (Master Employee Management) -------------------------------+ |
+|                              |    |  Employee Registry, Strict 6-Digit ID, CRUD, Filters, Export UTF-8 BOM             | |
+|                              |    +------------------------------------------------------------------------------------+ |
+|                              |  </main>                                                                                 |
++-------------------------------------------------------------------------------------------------------------------------+
+| MODAL LAYER (Root Body):                                                                                                |
+| - #saveProgressModal   - #successModal (QR Code)   - #archiveModal   - #orientationPrintModal (DCC A4 Landscape)        |
+| - #editBatchScheduleModal (Native Date Picker & Time Dropdowns)       - HrdModal (Branded Hospital Toasts & Alerts)     |
++-------------------------------------------------------------------------------------------------------------------------+
 ```
 
 ### Data Layer Architecture
-- **Tier 1 (Instant 0ms):** In-memory state and `localStorage` caching (`hrd_all_courses`).
-- **Tier 1 DB (Direct PostgreSQL via Supabase REST API ~0.08s):** `SupabaseService.saveCourse()`, `updateCourseTarget()`, `deleteCourse()`, `getAllCourses()`.
-- **Tier 2 (Background Sync):** Non-blocking asynchronous sync to Google Apps Script (`DEFAULT_GAS_URL`) ensuring zero UI stalling while updating institutional Google Spreadsheets.
+- **Primary Database (Direct PostgreSQL via Supabase REST API < 0.1s):** `SupabaseService.saveCourse()`, `updateCourseTarget()`, `deleteCourse()`, `getAllCourses()`, `registerAttendee()`, `getAttendeesByCourse()`, `deleteAttendee()`, `getEmployees()`, `saveEmployees()`.
+- **Fast Failover Guard (1.5s Timeout):** `Promise.race` bounded query (1500ms). If Supabase stalls or DNS fails, seamlessly falls back to `courses.json` and `localStorage` without hanging.
+- **Roster & Record Printing:** Replaced Google Sheets entirely with native web-based printable A4 landscape rosters (DCC `FM-PPCH-HR-012`, 28 rows per page).
+- **Strict 6-Digit Employee ID Formatting:** Always padded with leading zeros (`padStart(6, '0')`) across all databases and inputs.
 
 ---
 
 ## Feature Inventory
 
-| # | Feature | Description | Milestone | Source |
-|---|---------|-------------|-----------|--------|
-| F1 | Native SPA Shell | Header and Sidebar permanently mounted; dynamic breadcrumbs; zero page refresh | M1 | Survey (E1) |
-| F2 | 0ms View Switching | Instantaneous view toggle via Tailwind `.hidden` classes for `#viewCourses`, `#viewCreate`, `#viewTarget` | M1 | Survey (E1, E2) |
-| F3 | Remove `<iframe>` Container | Completely remove `<iframe id="createCourseFrame">` and inter-frame `postMessage` | M1 | Survey (E1) |
-| F4 | Excise Training Record Links | Eliminate Group 2 external navigation links from Sidebar (`admin.html:241-280`) | M1 | Survey (E1) |
-| F5 | Native Course Create/Edit View | Move 4-section course form DOM from `admin-create.html` directly into `#viewCreate` in `admin.html` | M2 | Survey (E1, E2) |
-| F6 | Batch/Session Management | Dynamic add/remove batches, Thai date parsing, and quota management | M2 | Survey (E2) |
-| F7 | Subtopics & Learning Stations | Dynamic subtopic addition with dates, times, speakers, and topic modes | M2 | Survey (E2) |
-| F8 | Cover Image & Document Uploads | Add course poster/cover image upload with live preview and training document attachments | M2 | Survey (E2) |
-| F9 | Direct Supabase CRUD (~0.08s) | Direct client CRUD operations on Supabase `courses` and `target_audience` tables | M3 | Survey (E3) |
-| F10 | Google Sheets Background Sync | Non-blocking background sync to Google Apps Script without locking UI | M3 | Survey (E3) |
-| F11 | Active Supabase Status Indicator | Live connection indicator badge in Header (`⚡ Supabase 0.08s Active`) | M3 | Survey (E2, E3) |
-| F12 | Multi-Step Live Progress Modal | Transparent step-by-step progress feedback during course creation/saving | M3 | Survey (E2, E3) |
-| F13 | Hospital Professional Styling | Phitsanuvej brand palette (Executive Navy `#0a2540`, Royal Blue `#0369a1`, Emerald `#059669`), tactile glassmorphism | M4 | Survey (E2) |
-| F14 | HrdModal Dialogs & Toasts | Replace native `alert`/`confirm` with branded hospital modal alerts | M4 | Survey (E2) |
-| F15 | Responsive & Ergonomic Layout | Desktop widescreen ergonomic max-width and mobile drawer navigation | M4 | Survey (E2) |
-| F16 | Backward Compatibility Redirects | `admin-create.html` & `admin-target.html` redirect to `admin.html?view=...` | M1 | Survey (E1, E2) |
-
----
-
-## Milestones
-
-| # | Name | Scope | Dependencies | Status |
-|---|------|-------|-------------|--------|
-| M1 | Native SPA Shell & Navigation Cleansing | Remove Training Record links; convert `#viewCreate` into native DOM container; implement `switchAdminView(0ms)`; update redirects | none | DONE |
-| M2 | Native Course Form & Feature Unification | Insource 4-section course form DOM and controllers into `admin.html`; add cover image upload & document attachments; unify state | M1 | DONE |
-| M3 | Direct Supabase CRUD & Dual-Tier Sync | Wire `SupabaseService` direct CRUD (~0.08s); setup non-blocking GAS background sync; add live progress modal & Supabase badge | M2 | DONE |
-| M4 | Hospital Professional UI/UX & Responsive Polish | Apply Phitsanuvej hospital theme; tactile glassmorphism; dynamic quota indicators; `HrdModal` integration; mobile drawer | M3 | DONE |
-| M5 | E2E Programmatic Verification & Audit | Opaque-box E2E testing (0ms switching, zero iframes, no external links, Supabase CRUD, syntax integrity); Challenger verification; Forensic Audit | M4 | DONE |
+| # | Feature | Description | Status | Source |
+|---|---------|-------------|:---:|--------|
+| F1 | Native SPA Shell | Header and Sidebar permanently mounted; dynamic breadcrumbs; zero page refresh | DONE | Golden Design Rules |
+| F2 | 0ms View Switching | Instantaneous view toggle via Tailwind `.hidden` classes for all 5 views | DONE | SPA Overhaul |
+| F3 | Zero `<iframe>` Architecture | Completely eliminated all iframes; 100% native DOM containers | DONE | SPA Overhaul |
+| F4 | Native Course Form | In-house 4-section course form DOM directly in `#viewCreate` | DONE | SPA Overhaul |
+| F5 | Direct Supabase CRUD (<0.1s) | Client CRUD operations on Supabase `courses`, `registrations`, and `sys-employees-registry` | DONE | Database Rules |
+| F6 | Fast Failover Loader Guard | Full-page `#loading` stays active until courses & KPI counters are ready; 1.5s timeout guard | DONE | Zero-Flicker Policy |
+| F7 | New Employee Orientation (View 4) | Monthly batches, clickable card surfaces, 14 core topics, attendee enrollment matrix | DONE | User Request |
+| F8 | Dynamic Date Topic Scheduling | Replaced Day 1-3 with dynamic actual dates; automatic date grouping with Thai badges | DONE | User Request |
+| F9 | Native Date & Time Selectors | HTML5 `<input type="date">` with Thai full-date preview; standardized time dropdowns | DONE | User Request |
+| F10 | Master Employee Registry (View 5) | Full CRUD for hospital employees; strict 6-digit ID format; department filters | DONE | User Request |
+| F11 | Hospital DCC Standard A4 Roster | `FM-PPCH-HR-012 แก้ไขครั้งที่ 1 วันที่บังคับใช้ 1 ม.ค. 2569 (DCC)`, 28 rows/page A4 landscape | DONE | Hospital DCC Rule |
+| F12 | Normal Course A4 Roster | Extended DCC A4 landscape printable template to all general courses | DONE | User Request |
+| F13 | Complete Google Sheets Removal | Fully removed Google Sheets dependency for registrations and rosters | DONE | User Directive |
+| F14 | Excel / CSV Export UTF-8 BOM | Strict UTF-8 BOM (`\uFEFF`) on all Excel and CSV exports | DONE | Golden Design Rules |
+| F15 | Speed Dial Filter Toolbar | Single-row filter bar with Floating Action Speed Dial for Excel, CSV, and Print | DONE | Golden Design Rules |
 
 ---
 
 ## Interface Contracts
 
 ### 1. Navigation Controller Contract (`admin.html`)
-- `switchAdminView(viewName: 'courses' | 'create' | 'target', courseId: string | null = null, pushHistory: boolean = true): void`
-  - Toggles `.hidden` class on `#viewCourses`, `#viewCreate`, and `#viewTarget`.
-  - Updates Sidebar active indicators (`#sidebarCoursesDot`, `#sidebarCreateDot`, `#sidebarTargetDot`).
+- `switchAdminView(viewName: 'courses' | 'create' | 'target' | 'orientation' | 'settings', courseId: string | null = null, pushHistory: boolean = true): void`
+  - Toggles `.hidden` class across `#viewCourses`, `#viewCreate`, `#viewTarget`, `#viewOrientation`, and `#viewSettings`.
+  - Updates Sidebar active indicators.
   - Updates Breadcrumbs (`#adminBreadcrumbCurrent`).
-  - Calls view setup:
+  - Calls view initialization:
     - `'courses'` -> `renderCourseList()`
     - `'create'` -> `setupCreateOrEditView(courseId)`
     - `'target'` -> `initTargetView(courseId || targetActiveCourseId)`
+    - `'orientation'` -> `initOrientationView()`
+    - `'settings'` -> `initSettingsView()`
 
-### 2. Native Form Controller Contract (`admin.html`)
-- `setupCreateOrEditView(courseId: string | null): void`
-  - Resets form if `courseId === null`.
-  - Populates existing course data if `courseId` provided.
-- `handleSaveCourse(event: Event): Promise<void>`
-  - Collects form data (general info, cover image, batches, subtopics, documents).
-  - Validates required fields using `HrdModal.warning()`.
-  - Executes dual-tier persistence:
-    1. Writes to `localStorage` immediately.
-    2. Calls `SupabaseService.saveCourse(courseData)` (<0.1s).
-    3. Triggers background `syncToGas(courseData)` without awaiting.
-    4. Displays `#successModal` with registration QR code and link.
+### 2. Loading Lifecycle Contract (`admin.html`)
+- `showLoader(title?: string, subtitle?: string): void`
+  - Ensures `#loading` is displayed with `z-index: 9999` and flex display.
+- `hideLoader(): void`
+  - Smoothly transitions loader opacity to 0 (0.35s ease) and sets `display: none`.
+  - Clears safety failsafe timer (`loaderFailsafeTimer`).
+- **Guarantee:** `#loading` remains active on initial page load until `loadAdminCourses()` has completely loaded data and rendered KPI ribbon and course cards.
 
 ### 3. Database Service Contract (`supabase-service.js`)
 - `SupabaseService.saveCourse(courseData: Object): Promise<{ success: boolean, data?: Object, error?: Object }>`
 - `SupabaseService.updateCourseTarget(courseId: string, targetData: Object): Promise<{ success: boolean, data?: Object, error?: Object }>`
 - `SupabaseService.deleteCourse(courseId: string): Promise<{ success: boolean, error?: Object }>`
-- `SupabaseService.getAllCourses(): Promise<{ success: boolean, data?: Array, error?: Object }>`
+- `SupabaseService.getAllCourses(): Promise<Array<Object> | null>`
+- `SupabaseService.registerAttendee(attendee: Object, courseId: string, sheetId: string): Promise<Object>`
+- `SupabaseService.getAttendeesByCourse(courseId: string): Promise<Array<Object>>`
+- `SupabaseService.deleteAttendee(courseId: string, empId: string): Promise<Object>`
+- `SupabaseService.getEmployees(): Promise<Array<Object>>`
+- `SupabaseService.saveEmployees(employees: Array<Object>): Promise<Object>`
 
 ---
 
-## Code Layout
+## Automated Verification Suites (100% Pass)
 
-- `projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/admin.html`: Primary SPA application file containing Header, Sidebar, `#viewCourses`, `#viewCreate`, `#viewTarget`, and shared modals.
-- `projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/supabase-service.js`: Tier-1 PostgreSQL client service.
-- `projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/modal.js`: Branded modal & toast library.
-- `projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/demo_data.js`: Validated 177-employee fallback dataset with window export.
-- `projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/admin-create.html`: Backward-compatibility redirect shim to `admin.html?view=create`.
-- `projects/02-เว็บลงทะเบียนเข้าอบรม/ระบบ/src/web/admin-target.html`: Backward-compatibility redirect shim to `admin.html?view=target`.
+Total 56 programmatic assertions passing across 4 dedicated test suites:
+1. `test_admin_spa_suite.js`: 11 / 11 tests (100%)
+2. `test_orientation_suite.js`: 32 / 32 tests (100%)
+3. `test_frontend_redesign_suite.js`: 7 / 7 tests (100%)
+4. `test_loader_lifecycle.js`: 6 / 6 tests (100%)

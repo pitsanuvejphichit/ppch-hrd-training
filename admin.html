@@ -1037,9 +1037,246 @@
       transform: rotate(90deg);
     }
 
+    /* Training calendar: compact operational view, built on the existing course data model */
+    .training-calendar-shell {
+      --calendar-ink: #0f2742;
+      --calendar-primary: #075985;
+      --calendar-accent: #0f766e;
+      --calendar-surface: #ffffff;
+      --calendar-border: #dbe5ee;
+      background: var(--calendar-surface);
+      border: 1px solid var(--calendar-border);
+      border-radius: 22px;
+      box-shadow: 0 14px 34px rgba(15, 39, 66, 0.07);
+      overflow: hidden;
+    }
+    .training-calendar-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--calendar-border);
+      background:
+        linear-gradient(90deg, rgba(7, 89, 133, 0.055), transparent 44%),
+        #fff;
+    }
+    .training-calendar-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .training-calendar-title-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      color: #fff;
+      background: var(--calendar-primary);
+      box-shadow: 0 8px 18px rgba(7, 89, 133, 0.22);
+    }
+    .training-calendar-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .calendar-toolbar-btn {
+      min-height: 36px;
+      border: 1px solid var(--calendar-border);
+      border-radius: 10px;
+      background: #fff;
+      color: #334155;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, color .16s ease, transform .16s ease;
+    }
+    .calendar-toolbar-btn:hover {
+      border-color: #7dd3fc;
+      background: #f0f9ff;
+      color: var(--calendar-primary);
+      transform: translateY(-1px);
+    }
+    .calendar-toolbar-btn.primary {
+      border-color: var(--calendar-primary);
+      background: var(--calendar-primary);
+      color: #fff;
+    }
+    .calendar-toolbar-btn .material-icons-round { font-size: 17px; }
+    .training-calendar-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px 18px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--calendar-border);
+    }
+    .calendar-kpi {
+      min-width: 0;
+      padding: 11px 13px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .calendar-kpi-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      background: #e0f2fe;
+      color: var(--calendar-primary);
+    }
+    .calendar-kpi:nth-child(2) .calendar-kpi-icon { background: #ccfbf1; color: var(--calendar-accent); }
+    .calendar-kpi:nth-child(3) .calendar-kpi-icon { background: #ecfdf5; color: #047857; }
+    .calendar-kpi:nth-child(4) .calendar-kpi-icon { background: #f1f5f9; color: #475569; }
+    .calendar-kpi-icon .material-icons-round { font-size: 18px; }
+    .training-calendar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      min-height: 610px;
+    }
+    .training-calendar-board { min-width: 0; border-right: 1px solid var(--calendar-border); }
+    .training-calendar-weekdays,
+    .training-calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .training-calendar-weekdays {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--calendar-border);
+    }
+    .training-calendar-weekdays div {
+      padding: 10px 8px;
+      text-align: center;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    .training-calendar-day {
+      min-height: 116px;
+      padding: 8px;
+      border-right: 1px solid #e8eef4;
+      border-bottom: 1px solid #e8eef4;
+      background: #fff;
+      overflow: hidden;
+    }
+    .training-calendar-day:nth-child(7n) { border-right: 0; }
+    .training-calendar-day.outside { background: #f8fafc; color: #94a3b8; }
+    .training-calendar-day.today { box-shadow: inset 0 0 0 2px #0ea5e9; background: #f7fcff; }
+    .training-calendar-day.has-events { cursor: pointer; }
+    .training-calendar-day.has-events:hover { background: #f8fbfd; }
+    .training-calendar-day-number {
+      width: 25px;
+      height: 25px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .training-calendar-day.today .training-calendar-day-number { background: var(--calendar-primary); color: #fff; }
+    .training-calendar-day.outside .training-calendar-day-number { color: #a8b4c2; }
+    .training-calendar-event {
+      width: 100%;
+      margin-top: 5px;
+      padding: 5px 7px;
+      border: 0;
+      border-left: 3px solid #0284c7;
+      border-radius: 6px;
+      background: #eaf7ff;
+      color: #0c4a6e;
+      text-align: left;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform .15s ease, filter .15s ease;
+    }
+    .training-calendar-event:hover { transform: translateX(1px); filter: saturate(1.12); }
+    .training-calendar-event.quality { border-left-color: #0f766e; background: #e7f8f5; color: #115e59; }
+    .training-calendar-event.mandatory { border-left-color: #1d4ed8; background: #edf3ff; color: #1e3a8a; }
+    .training-calendar-event.functional { border-left-color: #7c3aed; background: #f3efff; color: #5b21b6; }
+    .training-calendar-event.orientation { border-left-color: #c2410c; background: #fff1e9; color: #9a3412; }
+    .training-calendar-event-time { display: block; font-size: 9px; font-weight: 800; opacity: .76; white-space: nowrap; }
+    .training-calendar-event-title { display: block; margin-top: 1px; font-size: 10px; font-weight: 800; line-height: 1.28; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .training-calendar-more { margin-top: 5px; color: #64748b; font-size: 9px; font-weight: 800; }
+    .training-calendar-aside { min-width: 0; background: #fbfdff; }
+    .training-calendar-aside-head { padding: 16px; border-bottom: 1px solid var(--calendar-border); background: #fff; }
+    .training-calendar-agenda { padding: 8px 10px 14px; }
+    .calendar-agenda-group { padding: 10px 4px 5px; color: #64748b; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+    .calendar-agenda-item {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 9px;
+      color: #334155;
+    }
+    .calendar-agenda-item:hover, .calendar-agenda-item.active { background: #fff; border-color: #bae6fd; box-shadow: 0 5px 14px rgba(15, 39, 66, .06); }
+    .calendar-agenda-date { font-size: 16px; line-height: 1; font-weight: 900; color: var(--calendar-primary); text-align: center; }
+    .calendar-agenda-date small { display: block; margin-top: 4px; font-size: 8px; color: #94a3b8; font-weight: 800; }
+    .calendar-agenda-title { font-size: 11px; line-height: 1.42; font-weight: 800; color: var(--calendar-ink); }
+    .calendar-agenda-meta { margin-top: 3px; font-size: 9px; line-height: 1.4; color: #64748b; }
+    .calendar-inspector {
+      margin: 6px 14px 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--calendar-ink);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(15, 39, 66, .18);
+    }
+    .calendar-inspector-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+    .calendar-inspector-btn { border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; padding: 7px 8px; font-size: 10px; font-weight: 800; cursor: pointer; }
+    .calendar-inspector-btn:hover { background: rgba(255,255,255,.16); }
+    .calendar-empty { padding: 30px 18px; text-align: center; color: #94a3b8; font-size: 11px; line-height: 1.6; }
+    @media (max-width: 1024px) {
+      .training-calendar-layout { grid-template-columns: minmax(0, 1fr) 270px; }
+      .training-calendar-day { min-height: 102px; padding: 6px; }
+    }
+    @media (max-width: 820px) {
+      .training-calendar-hero { align-items: flex-start; flex-direction: column; padding: 16px; }
+      .training-calendar-toolbar { justify-content: flex-start; width: 100%; }
+      .training-calendar-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; }
+      .training-calendar-layout { display: block; min-height: auto; }
+      .training-calendar-board { display: none; }
+      .training-calendar-aside { background: #fff; }
+      .training-calendar-agenda { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 10px; }
+      .calendar-agenda-group { grid-column: 1 / -1; }
+      .calendar-inspector { margin: 4px 10px 14px; }
+    }
+    @media (max-width: 520px) {
+      .training-calendar-kpis { grid-template-columns: 1fr 1fr; }
+      .calendar-kpi { padding: 9px; gap: 7px; }
+      .calendar-kpi-icon { width: 30px; height: 30px; }
+      .training-calendar-agenda { grid-template-columns: 1fr; }
+      .calendar-toolbar-btn span:not(.material-icons-round) { display: none; }
+      .calendar-toolbar-btn.primary span:not(.material-icons-round) { display: inline; }
+    }
+
   </style>
+  <link rel="stylesheet" href="admin-redesign.css?v=20261028">
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased h-screen h-[100dvh] overflow-hidden flex flex-col selection:bg-[#0284c7] selection:text-white">
+<body class="hrd-admin-redesign bg-[#f8fafc] text-slate-800 antialiased h-screen h-[100dvh] overflow-hidden flex flex-col selection:bg-[#0284c7] selection:text-white">
 
   <!-- โครงสร้างกล่องหน้าจอโหลดหลัก (Loading Overlay) -->
   <div id="loading" style="position: fixed; inset: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.35s ease, visibility 0.35s ease;">
@@ -1130,25 +1367,31 @@
           <span>รายการหลักสูตร</span>
         </button>
 
-        <!-- 2. สร้างหลักสูตร -->
+        <!-- 2. ปฏิทินการอบรม -->
+        <button type="button" id="sidebarNavCalendar" onclick="switchAdminView('calendar')" class="nav-btn" title="ปฏิทินการอบรมรายเดือน">
+          <span class="material-icons-round">calendar_month</span>
+          <span>ปฏิทินการอบรม</span>
+        </button>
+
+        <!-- 3. สร้างหลักสูตร -->
         <button type="button" id="sidebarNavCreate" onclick="switchAdminView('create')" class="nav-btn" title="สร้างหลักสูตรใหม่">
           <span class="material-icons-round">add_circle_outline</span>
           <span>สร้างหลักสูตร</span>
         </button>
 
-        <!-- 3. กำหนดกลุ่มเป้าหมาย -->
+        <!-- 4. กำหนดกลุ่มเป้าหมาย -->
         <button type="button" id="sidebarNavTarget" onclick="switchAdminView('target')" class="nav-btn" title="กำหนดกลุ่มเป้าหมายบุคลากร">
           <span class="material-icons-round">track_changes</span>
           <span>กำหนดกลุ่มเป้าหมาย</span>
         </button>
 
-        <!-- 4. ปฐมนิเทศพนักงานใหม่ (Orientation) -->
+        <!-- 5. ปฐมนิเทศพนักงานใหม่ (Orientation) -->
         <button type="button" id="sidebarNavOrientation" onclick="switchAdminView('orientation')" class="nav-btn" title="ระบบปฐมนิเทศพนักงานใหม่ (New Employee Orientation)">
           <span class="material-icons-round">school</span>
           <span>ปฐมนิเทศพนักงานใหม่</span>
         </button>
 
-        <!-- 5. ตั้งค่า & จัดการพนักงาน (Settings & Employee Management) -->
+        <!-- 6. ตั้งค่า & จัดการพนักงาน (Settings & Employee Management) -->
         <button type="button" id="sidebarNavSettings" onclick="switchAdminView('settings')" class="nav-btn" title="ตั้งค่าระบบ & จัดการข้อมูลพนักงาน">
           <span class="material-icons-round">manage_accounts</span>
           <span>จัดการพนักงาน</span>
@@ -1183,7 +1426,7 @@
               <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display mt-0.5" id="statKpiTotal">0</div>
             </div>
             <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center text-lg font-bold">
-              📋
+              <span class="material-icons-round text-xl">library_books</span>
             </div>
           </div>
 
@@ -1194,7 +1437,7 @@
               <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 font-display mt-0.5" id="statKpiActive">0</div>
             </div>
             <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg font-bold">
-              ⚡
+              <span class="material-icons-round text-xl">event_available</span>
             </div>
           </div>
 
@@ -1205,7 +1448,7 @@
               <div class="text-2xl sm:text-3xl font-extrabold text-[#0369a1] font-display mt-0.5" id="statKpiEnrolled">0</div>
             </div>
             <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0369a1] flex items-center justify-center text-lg font-bold">
-              👥
+              <span class="material-icons-round text-xl">groups</span>
             </div>
           </div>
 
@@ -1309,6 +1552,60 @@
         </div>
         <!-- ==================== END VIEW 1: COURSES LIST ==================== -->
 
+        <!-- ==================== VIEW: TRAINING CALENDAR ==================== -->
+        <div id="viewCalendar" class="w-full px-3 sm:px-5 py-4 hidden">
+          <section class="training-calendar-shell" aria-labelledby="trainingCalendarHeading">
+            <header class="training-calendar-hero">
+              <div class="training-calendar-title">
+                <div class="training-calendar-title-icon" aria-hidden="true">
+                  <span class="material-icons-round">calendar_month</span>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[10px] uppercase tracking-[0.14em] font-extrabold text-sky-700">Training operations</p>
+                  <h2 id="trainingCalendarHeading" class="text-lg sm:text-xl font-extrabold text-slate-900 font-display leading-tight">ปฏิทินการอบรม</h2>
+                  <p id="trainingCalendarSubtitle" class="text-[11px] text-slate-500 mt-0.5">ภาพรวมกำหนดการอบรมรายเดือนจากข้อมูลหลักสูตรปัจจุบัน</p>
+                </div>
+              </div>
+              <div class="training-calendar-toolbar" aria-label="เครื่องมือปฏิทิน">
+                <button type="button" class="calendar-toolbar-btn" onclick="moveTrainingCalendar(-1)" title="เดือนก่อนหน้า">
+                  <span class="material-icons-round">chevron_left</span><span>เดือนก่อน</span>
+                </button>
+                <button type="button" class="calendar-toolbar-btn" onclick="goTrainingCalendarToday()" title="กลับไปเดือนปัจจุบัน">
+                  <span class="material-icons-round">today</span><span>เดือนนี้</span>
+                </button>
+                <button type="button" class="calendar-toolbar-btn" onclick="moveTrainingCalendar(1)" title="เดือนถัดไป">
+                  <span>เดือนถัดไป</span><span class="material-icons-round">chevron_right</span>
+                </button>
+                <button type="button" class="calendar-toolbar-btn primary" onclick="switchAdminView('create')">
+                  <span class="material-icons-round">add</span><span>สร้างหลักสูตร</span>
+                </button>
+              </div>
+            </header>
+
+            <div id="trainingCalendarKpis" class="training-calendar-kpis" aria-live="polite"></div>
+
+            <div class="training-calendar-layout">
+              <div class="training-calendar-board" aria-label="ปฏิทินรายเดือน">
+                <div class="training-calendar-weekdays" aria-hidden="true">
+                  <div>จันทร์</div><div>อังคาร</div><div>พุธ</div><div>พฤหัสบดี</div><div>ศุกร์</div><div>เสาร์</div><div>อาทิตย์</div>
+                </div>
+                <div id="trainingCalendarGrid" class="training-calendar-grid"></div>
+              </div>
+
+              <div class="training-calendar-aside">
+                <div class="training-calendar-aside-head">
+                  <p class="text-[10px] uppercase tracking-[0.12em] font-extrabold text-slate-400">Monthly agenda</p>
+                  <h3 id="trainingAgendaHeading" class="text-sm font-extrabold text-slate-900 mt-0.5">รายการอบรมประจำเดือน</h3>
+                  <p class="text-[10px] text-slate-500 mt-1">เลือกหลักสูตรเพื่อดูรายละเอียดและทางลัดจัดการ</p>
+                </div>
+                <div id="trainingCalendarAgenda" class="training-calendar-agenda"></div>
+                <div id="trainingCalendarInspector"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- ==================== END VIEW: TRAINING CALENDAR ==================== -->
+
         <!-- ==================== VIEW 2: TARGET AUDIENCE SETUP ==================== -->
         <div id="viewTarget" class="w-full px-3 sm:px-5 py-4 space-y-3.5 hidden">
 
@@ -1328,7 +1625,7 @@
                     <span>สถานะเปิดใช้งาน</span>
                   </span>
                   <span id="badgeCurrentTarget" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                    🎯 กำลังโหลดข้อมูล...
+                    กำลังโหลดข้อมูล...
                   </span>
                 </div>
 
@@ -1347,7 +1644,7 @@
                 </div>
 
                 <div class="flex items-center space-x-4 text-xs text-slate-500 font-light flex-wrap gap-y-1">
-                  <span id="courseDateDisplay">📅 -</span>
+                  <span id="courseDateDisplay">-</span>
                   <span id="courseTimeDisplay">⏰ -</span>
                   <span id="courseSpeakerDisplay">🎤 -</span>
                   <span id="courseBatchesDisplay">🔢 -</span>
@@ -1356,7 +1653,7 @@
 
               <div class="shrink-0 flex items-center space-x-2">
                 <button type="button" id="btnNavEditCourse" class="px-3.5 py-2 bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer">
-                  <span>✏️ แก้ไขหลักสูตร</span>
+                  <span>แก้ไขหลักสูตร</span>
                 </button>
                 <a id="btnCourseRegLink" href="#" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-[#0369a1] border border-slate-200 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -1544,7 +1841,7 @@
               <div>
                 <div class="flex items-center space-x-2.5 mb-1.5 flex-wrap gap-y-1">
                   <span id="createViewModeBadge" class="px-3 py-0.5 rounded-full text-xs font-bold bg-sky-50 text-[#0369a1] border border-sky-200">
-                    ➕ สร้างหลักสูตรใหม่
+                    สร้างหลักสูตรใหม่
                   </span>
                   <span class="text-xs text-slate-400 font-mono" id="createViewIdBadge">ID: กำลังสร้าง...</span>
                 </div>
@@ -1784,7 +2081,7 @@
 
                       <div id="coverImageUploadPrompt" class="space-y-2 py-3">
                         <div class="w-12 h-12 rounded-2xl bg-sky-50 text-[#0369a1] flex items-center justify-center mx-auto text-xl border border-sky-100 shadow-2xs">
-                          🖼️
+                          <span class="material-icons-round">image</span>
                         </div>
                         <div class="text-xs font-semibold text-slate-700">คลิกเพื่ออัปโหลดภาพโปสเตอร์</div>
                         <p class="text-[11px] text-slate-400">รองรับ JPG, PNG, WEBP (พรีวิวและแสดงผลทันที)</p>
@@ -1813,8 +2110,9 @@
                     <div id="documentLinksContainer" class="space-y-2.5">
                       <!-- Dynamic doc link rows -->
                     </div>
-                    <p class="text-[11px] text-slate-400 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                      💡 แนบลิงก์ Google Drive, สไลด์บรรยาย, หรือชีทสรุป เพื่อให้ผู้เข้าอบรมดาวน์โหลดศึกษาล่วงหน้าได้ทันที
+                    <p class="text-[11px] text-slate-500 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200/70 flex items-start gap-2">
+                      <span class="material-icons-round text-sm text-[#0b7d7f]">info</span>
+                      <span>แนบลิงก์ Google Drive, สไลด์บรรยาย หรือชีทสรุป เพื่อให้ผู้เข้าอบรมดาวน์โหลดศึกษาล่วงหน้าได้ทันที</span>
                     </p>
                   </div>
                 </div>
@@ -3153,6 +3451,289 @@
       return '9999-99-99';
     }
 
+    // ==========================================
+    // Training Calendar (read-only operational view)
+    // ==========================================
+    let trainingCalendarCursor = new Date(_initialDate.getFullYear(), _initialDate.getMonth(), 1);
+    let trainingCalendarSelectedCourseId = null;
+    let trainingCalendarSelectedDate = null;
+    let trainingCalendarVisibleSessions = [];
+
+    function calendarDateIso(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + d;
+    }
+
+    function isValidCalendarIso(value) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return false;
+      const parts = String(value).split('-').map(Number);
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return date.getFullYear() === parts[0] && date.getMonth() === parts[1] - 1 && date.getDate() === parts[2];
+    }
+
+    function calendarCategoryClass(course) {
+      const text = String((course && (course.category || course.type || course.title)) || '').toLowerCase();
+      if (text.includes('orientation') || text.includes('ปฐมนิเทศ')) return 'orientation';
+      if (text.includes('mandatory') || text.includes('บังคับ')) return 'mandatory';
+      if (text.includes('quality') || text.includes('safety') || text.includes('คุณภาพ')) return 'quality';
+      if (text.includes('functional') || text.includes('วิชาชีพ')) return 'functional';
+      return '';
+    }
+
+    function calendarFormatLabel(course) {
+      const raw = String((course && (course.format || course.trainingFormat || course.mode)) || '').trim();
+      if (!raw) return 'ยังไม่ระบุรูปแบบ';
+      return raw;
+    }
+
+    function extractThaiDateRange(course) {
+      const raw = String((course && course.date) || '');
+      const monthMap = {
+        'มกราคม': 1, 'ม.ค.': 1, 'ม.ค': 1, 'กุมภาพันธ์': 2, 'ก.พ.': 2, 'ก.พ': 2,
+        'มีนาคม': 3, 'มี.ค.': 3, 'มี.ค': 3, 'เมษายน': 4, 'เม.ย.': 4, 'เม.ย': 4,
+        'พฤษภาคม': 5, 'พ.ค.': 5, 'พ.ค': 5, 'มิถุนายน': 6, 'มิ.ย.': 6, 'มิ.ย': 6,
+        'กรกฎาคม': 7, 'ก.ค.': 7, 'ก.ค': 7, 'สิงหาคม': 8, 'ส.ค.': 8, 'ส.ค': 8,
+        'กันยายน': 9, 'ก.ย.': 9, 'ก.ย': 9, 'ตุลาคม': 10, 'ต.ค.': 10, 'ต.ค': 10,
+        'พฤศจิกายน': 11, 'พ.ย.': 11, 'พ.ย': 11, 'ธันวาคม': 12, 'ธ.ค.': 12, 'ธ.ค': 12
+      };
+      for (const [name, month] of Object.entries(monthMap)) {
+        if (!raw.includes(name)) continue;
+        const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const match = raw.match(new RegExp('(\\d{1,2})(?:\\s*[-–]\\s*(\\d{1,2}))?\\s*' + escapedName + '(?:\\s*(\\d{4}))?', 'i'));
+        if (!match) continue;
+        let year = match[3] ? parseInt(match[3], 10) : currentAdminYear;
+        if (year > 2400) year -= 543;
+        const startDay = parseInt(match[1], 10);
+        const endDay = match[2] ? parseInt(match[2], 10) : startDay;
+        const results = [];
+        for (let day = startDay; day <= endDay && results.length < 31; day++) {
+          const date = new Date(year, month - 1, day);
+          if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) {
+            results.push(calendarDateIso(date));
+          }
+        }
+        return results;
+      }
+      return [];
+    }
+
+    function getCourseCalendarSessions(course) {
+      if (!course || !course.id) return [];
+      const sessions = [];
+      const base = {
+        courseId: String(course.id),
+        course: course,
+        title: course.title || 'หลักสูตรไม่ระบุชื่อ',
+        location: course.location || course.venue || 'ยังไม่ระบุสถานที่',
+        format: calendarFormatLabel(course),
+        categoryClass: calendarCategoryClass(course)
+      };
+
+      if (Array.isArray(course.batchDetails) && course.batchDetails.length) {
+        course.batchDetails.forEach((batch, index) => {
+          if (!batch || !isValidCalendarIso(batch.dateIso)) return;
+          sessions.push({
+            ...base,
+            date: batch.dateIso,
+            time: batch.timeRange || course.time || '-',
+            label: batch.name || ('รุ่นที่ ' + (index + 1))
+          });
+        });
+      } else if (Array.isArray(course.topics) && course.topics.length) {
+        const dates = new Map();
+        course.topics.forEach(topic => {
+          if (!topic || !isValidCalendarIso(topic.date)) return;
+          if (!dates.has(topic.date)) dates.set(topic.date, []);
+          dates.get(topic.date).push(topic);
+        });
+        Array.from(dates.entries()).sort((a, b) => a[0].localeCompare(b[0])).forEach(([date, topics]) => {
+          sessions.push({
+            ...base,
+            date: date,
+            time: course.time || (topics[0] && topics[0].time) || '-',
+            label: topics.length + ' หัวข้อ'
+          });
+        });
+      } else {
+        let dates = extractThaiDateRange(course);
+        if (!dates.length) {
+          const startDate = extractCourseStartDate(course);
+          if (isValidCalendarIso(startDate)) dates = [startDate];
+        }
+        dates.forEach((date, index) => {
+          sessions.push({
+            ...base,
+            date: date,
+            time: course.time || '-',
+            label: dates.length > 1 ? ('วันที่ ' + (index + 1)) : ''
+          });
+        });
+      }
+
+      return sessions.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    }
+
+    function getAllTrainingCalendarSessions() {
+      return (Array.isArray(coursesData) ? coursesData : [])
+        .flatMap(getCourseCalendarSessions)
+        .filter(session => isValidCalendarIso(session.date))
+        .sort((a, b) => (a.date + a.time + a.title).localeCompare(b.date + b.time + b.title));
+    }
+
+    function moveTrainingCalendar(monthDelta) {
+      trainingCalendarCursor = new Date(trainingCalendarCursor.getFullYear(), trainingCalendarCursor.getMonth() + Number(monthDelta || 0), 1);
+      trainingCalendarSelectedCourseId = null;
+      trainingCalendarSelectedDate = null;
+      renderTrainingCalendar();
+    }
+
+    function goTrainingCalendarToday() {
+      const today = new Date();
+      trainingCalendarCursor = new Date(today.getFullYear(), today.getMonth(), 1);
+      trainingCalendarSelectedCourseId = null;
+      trainingCalendarSelectedDate = calendarDateIso(today);
+      renderTrainingCalendar();
+    }
+
+    function selectTrainingCalendarCourse(courseId, dateIso) {
+      trainingCalendarSelectedCourseId = String(courseId || '');
+      trainingCalendarSelectedDate = dateIso || null;
+      renderTrainingCalendarAgenda(trainingCalendarVisibleSessions);
+      renderTrainingCalendarInspector(trainingCalendarSelectedCourseId, trainingCalendarSelectedDate);
+    }
+
+    function renderTrainingCalendar() {
+      const grid = document.getElementById('trainingCalendarGrid');
+      const agenda = document.getElementById('trainingCalendarAgenda');
+      const kpis = document.getElementById('trainingCalendarKpis');
+      if (!grid || !agenda || !kpis) return;
+
+      const year = trainingCalendarCursor.getFullYear();
+      const month = trainingCalendarCursor.getMonth();
+      const monthKey = year + '-' + String(month + 1).padStart(2, '0');
+      const allSessions = getAllTrainingCalendarSessions();
+      const sessions = allSessions.filter(session => session.date.startsWith(monthKey + '-'));
+      trainingCalendarVisibleSessions = sessions;
+
+      const monthTitle = (THAI_MONTH_FULL[month + 1] || '') + ' ' + (year + 543);
+      const title = document.getElementById('trainingCalendarHeading');
+      const agendaHeading = document.getElementById('trainingAgendaHeading');
+      const subtitle = document.getElementById('trainingCalendarSubtitle');
+      if (title) title.textContent = 'ปฏิทินการอบรม · ' + monthTitle;
+      if (agendaHeading) agendaHeading.textContent = 'รายการอบรม ' + monthTitle;
+      if (subtitle) subtitle.textContent = sessions.length
+        ? 'พบ ' + sessions.length + ' รอบอบรม จาก ' + new Set(sessions.map(item => item.courseId)).size + ' หลักสูตร'
+        : 'ยังไม่มีตารางอบรมในเดือนนี้';
+
+      const uniqueDays = new Set(sessions.map(item => item.date)).size;
+      const onsite = sessions.filter(item => /onsite|สถานที่|ห้อง/i.test(item.format + ' ' + item.location)).length;
+      const onlineHybrid = sessions.filter(item => /online|hybrid|ออนไลน์/i.test(item.format)).length;
+      kpis.innerHTML = [
+        ['event_note', sessions.length, 'รอบอบรม'],
+        ['date_range', uniqueDays, 'วันที่มีการอบรม'],
+        ['meeting_room', onsite, 'Onsite / มีสถานที่'],
+        ['cast_for_education', onlineHybrid, 'Online / Hybrid']
+      ].map(item => `
+        <div class="calendar-kpi">
+          <span class="calendar-kpi-icon"><span class="material-icons-round">${item[0]}</span></span>
+          <span class="min-w-0"><strong class="block text-lg leading-none text-slate-900 font-extrabold">${item[1]}</strong><small class="block text-[9px] mt-1 text-slate-500 font-bold truncate">${item[2]}</small></span>
+        </div>
+      `).join('');
+
+      const byDate = new Map();
+      sessions.forEach(session => {
+        if (!byDate.has(session.date)) byDate.set(session.date, []);
+        byDate.get(session.date).push(session);
+      });
+      const firstDay = new Date(year, month, 1);
+      const mondayOffset = (firstDay.getDay() + 6) % 7;
+      const gridStart = new Date(year, month, 1 - mondayOffset);
+      const todayIso = calendarDateIso(new Date());
+      const cells = [];
+
+      for (let index = 0; index < 42; index++) {
+        const date = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + index);
+        const dateIso = calendarDateIso(date);
+        const daySessions = byDate.get(dateIso) || [];
+        const classNames = ['training-calendar-day'];
+        if (date.getMonth() !== month) classNames.push('outside');
+        if (dateIso === todayIso) classNames.push('today');
+        if (daySessions.length) classNames.push('has-events');
+        const visible = daySessions.slice(0, 2).map(session => {
+          const encodedId = encodeURIComponent(session.courseId).replace(/'/g, '%27');
+          return `<button type="button" class="training-calendar-event ${session.categoryClass}" onclick="selectTrainingCalendarCourse(decodeURIComponent('${encodedId}'), '${dateIso}')" title="${escapeHtml(session.title)}">
+            <span class="training-calendar-event-time">${escapeHtml(session.time || '-')}</span>
+            <span class="training-calendar-event-title">${escapeHtml(session.title)}</span>
+          </button>`;
+        }).join('');
+        const more = daySessions.length > 2 ? `<div class="training-calendar-more">+${daySessions.length - 2} รอบเพิ่มเติม</div>` : '';
+        cells.push(`<div class="${classNames.join(' ')}" data-calendar-date="${dateIso}">
+          <span class="training-calendar-day-number">${date.getDate()}</span>${visible}${more}
+        </div>`);
+      }
+      grid.innerHTML = cells.join('');
+
+      if (trainingCalendarSelectedCourseId && !sessions.some(item => item.courseId === trainingCalendarSelectedCourseId)) {
+        trainingCalendarSelectedCourseId = null;
+        trainingCalendarSelectedDate = null;
+      }
+      renderTrainingCalendarAgenda(sessions);
+      renderTrainingCalendarInspector(trainingCalendarSelectedCourseId, trainingCalendarSelectedDate);
+    }
+
+    function renderTrainingCalendarAgenda(sessions) {
+      const container = document.getElementById('trainingCalendarAgenda');
+      if (!container) return;
+      if (!sessions || !sessions.length) {
+        container.innerHTML = '<div class="calendar-empty"><span class="material-icons-round block text-3xl mb-2">event_busy</span>เดือนนี้ยังไม่มีรายการอบรม<br>สามารถสร้างหลักสูตรใหม่ได้จากปุ่มด้านบน</div>';
+        return;
+      }
+      let lastDate = '';
+      container.innerHTML = sessions.map(session => {
+        const parts = session.date.split('-').map(Number);
+        const encodedId = encodeURIComponent(session.courseId).replace(/'/g, '%27');
+        const active = trainingCalendarSelectedCourseId === session.courseId && (!trainingCalendarSelectedDate || trainingCalendarSelectedDate === session.date);
+        const group = session.date !== lastDate ? `<div class="calendar-agenda-group">${formatDisplayDate(session.date)}</div>` : '';
+        lastDate = session.date;
+        return group + `<button type="button" class="calendar-agenda-item${active ? ' active' : ''}" onclick="selectTrainingCalendarCourse(decodeURIComponent('${encodedId}'), '${session.date}')">
+          <span class="calendar-agenda-date">${parts[2]}<small>${THAI_MONTH_SHORT[parts[1]] || ''}</small></span>
+          <span class="min-w-0"><span class="calendar-agenda-title block">${escapeHtml(session.title)}</span><span class="calendar-agenda-meta block">${escapeHtml(session.time)}${session.label ? ' · ' + escapeHtml(session.label) : ''}</span></span>
+        </button>`;
+      }).join('');
+    }
+
+    function renderTrainingCalendarInspector(courseId, dateIso) {
+      const container = document.getElementById('trainingCalendarInspector');
+      if (!container) return;
+      if (!courseId) {
+        container.innerHTML = '';
+        return;
+      }
+      const course = (coursesData || []).find(item => item && String(item.id) === String(courseId));
+      if (!course) {
+        container.innerHTML = '';
+        return;
+      }
+      const encodedId = encodeURIComponent(String(course.id)).replace(/'/g, '%27');
+      container.innerHTML = `<div class="calendar-inspector">
+        <p class="text-[9px] uppercase tracking-[0.12em] text-sky-200 font-extrabold">Selected course</p>
+        <h4 class="text-xs leading-relaxed font-extrabold mt-1">${escapeHtml(course.title || 'หลักสูตรไม่ระบุชื่อ')}</h4>
+        <div class="mt-3 space-y-1.5 text-[10px] text-slate-200">
+          <p class="flex gap-2"><span class="material-icons-round text-sm text-sky-300">event</span><span>${escapeHtml(formatDisplayDate(dateIso || course.date))} · ${escapeHtml(course.time || '-')}</span></p>
+          <p class="flex gap-2"><span class="material-icons-round text-sm text-sky-300">location_on</span><span>${escapeHtml(course.location || course.venue || 'ยังไม่ระบุสถานที่')}</span></p>
+          <p class="flex gap-2"><span class="material-icons-round text-sm text-sky-300">co_present</span><span>${escapeHtml(course.speaker || 'ยังไม่ระบุวิทยากร')}</span></p>
+        </div>
+        <div class="calendar-inspector-actions">
+          <button type="button" class="calendar-inspector-btn" onclick="openEditView(decodeURIComponent('${encodedId}'))">แก้ไขหลักสูตร</button>
+          <button type="button" class="calendar-inspector-btn" onclick="openTargetView(decodeURIComponent('${encodedId}'))">กลุ่มเป้าหมาย</button>
+          <button type="button" class="calendar-inspector-btn" onclick="openCourseDashboard(decodeURIComponent('${encodedId}'))">แดชบอร์ด</button>
+          <button type="button" class="calendar-inspector-btn" onclick="switchAdminView('courses')">กลับหน้ารายการ</button>
+        </div>
+      </div>`;
+    }
+
     let adminSortOrder = localStorage.getItem('hrd_admin_sort_order') || 'date_asc';
 
     function sortCourses(list, sortMode = adminSortOrder) {
@@ -3428,6 +4009,8 @@
         switchAdminView('target', courseParam, false);
       } else if (viewParam === 'create') {
         switchAdminView('create', null, false);
+      } else if (viewParam === 'calendar') {
+        switchAdminView('calendar', null, false);
       } else if (viewParam === 'orientation') {
         switchAdminView('orientation', null, false);
       } else if (viewParam === 'settings') {
@@ -3460,6 +4043,12 @@
           switchAdminView('create', editParam, false);
         } else if (viewParam === 'target') {
           switchAdminView('target', courseParam, false);
+        } else if (viewParam === 'calendar') {
+          switchAdminView('calendar', null, false);
+        } else if (viewParam === 'orientation') {
+          switchAdminView('orientation', null, false);
+        } else if (viewParam === 'settings') {
+          switchAdminView('settings', null, false);
         } else {
           switchAdminView('courses', null, false);
         }
@@ -3585,7 +4174,7 @@
       const container = document.getElementById('courseListStack');
       if (!container) return;
       container.innerHTML = '<div class="bg-white rounded-3xl p-12 text-center text-slate-400 border border-slate-200/80 space-y-3 shadow-xs">' +
-        '<div class="text-3xl animate-spin inline-block">⏳</div>' +
+        '<span class="material-icons-round text-3xl animate-spin inline-block text-[#0b7d7f]">sync</span>' +
         '<div class="text-sm font-bold text-slate-700">กำลังซิงค์ข้อมูลหลักสูตรจากระบบกลาง...</div>' +
         '<p class="text-xs text-slate-400 font-light">กำลังเชื่อมโยง Google Drive และดึงข้อมูลแบบฟอร์มประจำวิชาค่ะ</p>' +
       '</div>';
@@ -3628,7 +4217,7 @@
       if (!coursesData || coursesData.length === 0) {
         container.removeAttribute('data-rendered-key');
         container.innerHTML = '<div class="bg-white rounded-3xl p-12 text-center text-slate-400 border border-slate-200/80 space-y-3 shadow-xs">' +
-          '<div class="text-3xl">📋</div>' +
+          '<span class="material-icons-round text-3xl text-slate-400">library_books</span>' +
           '<div class="text-sm font-bold text-slate-700">ยังไม่มีหลักสูตรในระบบ</div>' +
           '<p class="text-xs text-slate-400 font-light">กดปุ่ม "+ สร้างหลักสูตรใหม่" ด้านบนเพื่อเริ่มต้นสร้างหลักสูตรได้เลยค่ะ</p>' +
         '</div>';
@@ -3687,7 +4276,7 @@
       if (filtered.length === 0) {
         const isMonthFiltered = (currentAdminMonth && currentAdminMonth !== 'all');
         container.innerHTML = '<div class="bg-white rounded-2xl p-10 text-center text-slate-400 border border-slate-200/80 space-y-3 shadow-2xs">' +
-          '<div class="text-3xl">📅</div>' +
+          '<span class="material-icons-round text-3xl text-slate-400">event_busy</span>' +
           '<div class="text-sm font-bold text-slate-700">' + 
             (isMonthFiltered ? 'ไม่มีหลักสูตรในเดือน' + formatMonthHeader(currentAdminMonth) : 'ไม่พบหลักสูตรที่ตรงกับเงื่อนไข') + 
           '</div>' +
@@ -3752,7 +4341,7 @@
         }
 
         const topicsBadge = (c.hasSubTopics && Array.isArray(c.topics) && c.topics.length > 0)
-          ? '<button onclick="openCourseRosterModal(\'' + c.id + '\')" class="text-[11px] font-semibold px-2 py-0.5 bg-sky-50 hover:bg-sky-100 text-[#004b93] border border-sky-200 rounded-full transition-colors cursor-pointer flex items-center gap-1 shadow-2xs" title="ใบรายชื่อตามหัวข้อ"><span>📑 ' + c.topics.length + ' หัวข้อ</span></button>'
+          ? '<button onclick="openCourseRosterModal(\'' + c.id + '\')" class="text-[11px] font-semibold px-2 py-0.5 bg-sky-50 hover:bg-sky-100 text-[#004b93] border border-sky-200 rounded-full transition-colors cursor-pointer flex items-center gap-1 shadow-2xs" title="ใบรายชื่อตามหัวข้อ"><span class="material-icons-round text-sm">description</span><span>' + c.topics.length + ' หัวข้อ</span></button>'
           : '';
 
         const targetSummary = (c.targetAudience && c.targetAudience.type === 'specific' && c.targetAudience.summary)
@@ -3778,7 +4367,7 @@
                 '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>' +
                 '<span>เปิดรับจอง</span>' +
               '</span>' +
-              '<button type="button" onclick="openTargetView(\'' + c.id + '\')" class="text-[11px] text-slate-600 bg-slate-100 hover:bg-slate-200 px-2.5 py-0.5 rounded-full border border-slate-200 transition-colors cursor-pointer" title="กำหนดกลุ่มเป้าหมาย">🎯 ' + targetSummary + '</button>' +
+              '<button type="button" onclick="openTargetView(\'' + c.id + '\')" class="text-[11px] text-slate-600 bg-slate-100 hover:bg-slate-200 px-2.5 py-0.5 rounded-full border border-slate-200 transition-colors cursor-pointer inline-flex items-center gap-1" title="กำหนดกลุ่มเป้าหมาย"><span class="material-icons-round text-xs">track_changes</span><span>' + targetSummary + '</span></button>' +
               '<span class="text-xs text-slate-500 font-light">' +
                 '• ลงทะเบียน <strong class="text-[#004b93] font-bold font-mono">' + enrolledCount + '</strong> ท่าน' +
               '</span>' +
@@ -5206,12 +5795,14 @@
       if (courseId) targetActiveCourseId = courseId;
 
       const viewCourses = document.getElementById('viewCourses');
+      const viewCalendar = document.getElementById('viewCalendar');
       const viewTarget = document.getElementById('viewTarget');
       const viewCreate = document.getElementById('viewCreate');
       const viewOrientation = document.getElementById('viewOrientation');
       const viewSettings = document.getElementById('viewSettings');
 
       if (viewCourses) viewCourses.classList.toggle('hidden', viewName !== 'courses');
+      if (viewCalendar) viewCalendar.classList.toggle('hidden', viewName !== 'calendar');
       if (viewTarget) viewTarget.classList.toggle('hidden', viewName !== 'target');
       if (viewCreate) viewCreate.classList.toggle('hidden', viewName !== 'create');
       if (viewOrientation) viewOrientation.classList.toggle('hidden', viewName !== 'orientation');
@@ -5223,9 +5814,8 @@
       // Close mobile sidebar if open
       const sb = document.getElementById('adminSidebar');
       const bd = document.getElementById('sidebarBackdrop');
-      if (sb && sb.classList.contains('flex')) {
-        sb.classList.add('hidden');
-        sb.classList.remove('flex', 'fixed', 'inset-y-0', 'left-0', 'z-50', 'w-72', 'shadow-2xl');
+      if (sb && sb.classList.contains('mobile-open')) {
+        sb.classList.remove('mobile-open');
         if (bd) bd.classList.add('hidden');
       }
 
@@ -5239,6 +5829,8 @@
       // Handle specific view activation (Instant 0ms display!)
       if (viewName === 'courses') {
         renderCourseList();
+      } else if (viewName === 'calendar') {
+        renderTrainingCalendar();
       } else if (viewName === 'target') {
         initTargetView(courseId || targetActiveCourseId);
       } else if (viewName === 'create') {
@@ -5264,11 +5856,13 @@
 
     function updateSidebarNav(viewName) {
       const btnCourses = document.getElementById('sidebarNavCourses');
+      const btnCalendar = document.getElementById('sidebarNavCalendar');
       const btnCreate = document.getElementById('sidebarNavCreate');
       const btnTarget = document.getElementById('sidebarNavTarget');
       const btnOrientation = document.getElementById('sidebarNavOrientation');
       const btnSettings = document.getElementById('sidebarNavSettings');
       if (btnCourses) btnCourses.classList.toggle('active', viewName === 'courses');
+      if (btnCalendar) btnCalendar.classList.toggle('active', viewName === 'calendar');
       if (btnCreate) btnCreate.classList.toggle('active', viewName === 'create');
       if (btnTarget) btnTarget.classList.toggle('active', viewName === 'target');
       if (btnOrientation) btnOrientation.classList.toggle('active', viewName === 'orientation');
@@ -5292,6 +5886,24 @@
           </span>
         `;
         if (actions) actions.innerHTML = '';
+      } else if (viewName === 'calendar') {
+        content.innerHTML = `
+          <button type="button" onclick="switchAdminView('courses')" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] cursor-pointer transition-colors">
+            <span class="material-icons-round text-sm text-slate-500">home</span>
+            <span>รายการหลักสูตร</span>
+          </button>
+          <span class="text-slate-400 font-light">&gt;</span>
+          <span class="font-bold text-[#075985] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200 flex items-center gap-1">
+            <span class="material-icons-round text-sm">calendar_month</span> ปฏิทินการอบรม
+          </span>
+        `;
+        if (actions) {
+          actions.innerHTML = `
+            <button type="button" onclick="goTrainingCalendarToday()" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer">
+              <span class="material-icons-round text-sm">today</span><span>เดือนปัจจุบัน</span>
+            </button>
+          `;
+        }
       } else if (viewName === 'settings') {
         content.innerHTML = `
           <button type="button" onclick="switchAdminView('courses')" class="flex items-center space-x-1.5 font-semibold text-slate-600 hover:text-[#0369a1] cursor-pointer transition-colors">
@@ -5300,7 +5912,7 @@
           </button>
           <span class="text-slate-400 font-light">&gt;</span>
           <span class="font-bold text-[#004b93] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
-            ⚙️ ตั้งค่า & จัดการข้อมูลพนักงาน
+            <span class="material-icons-round text-sm">manage_accounts</span> ตั้งค่าและจัดการข้อมูลพนักงาน
           </span>
         `;
         if (actions) {
@@ -5327,7 +5939,7 @@
           </button>
           <span class="text-slate-400 font-light">&gt;</span>
           <span class="font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-            🎯 กำหนดกลุ่มเป้าหมาย
+            <span class="material-icons-round text-sm">track_changes</span> กำหนดกลุ่มเป้าหมาย
           </span>
           ${courseTitle ? `<span class="text-slate-400 font-light hidden sm:inline">&gt;</span><span class="text-slate-600 font-medium truncate max-w-xs hidden sm:inline">${escapeHtml(courseTitle)}</span>` : ''}
         `;
@@ -5347,7 +5959,7 @@
           </button>
           <span class="text-slate-400 font-light">&gt;</span>
           <span class="font-bold text-[#004b93] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
-            🎓 ปฐมนิเทศพนักงานใหม่
+            <span class="material-icons-round text-sm">school</span> ปฐมนิเทศพนักงานใหม่
           </span>
         `;
         if (actions) {
@@ -5367,7 +5979,7 @@
           </button>
           <span class="text-slate-400 font-light">&gt;</span>
           <span class="font-bold text-[#0369a1] bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
-            ${isEdit ? '✏️ แก้ไขหลักสูตร' : '➕ สร้างหลักสูตรใหม่'}
+            <span class="material-icons-round text-sm">${isEdit ? 'edit' : 'add_circle'}</span> ${isEdit ? 'แก้ไขหลักสูตร' : 'สร้างหลักสูตรใหม่'}
           </span>
         `;
         if (actions) {
@@ -5642,7 +6254,7 @@
         }
 
         if (modeBadge) {
-          modeBadge.textContent = '✏️ แก้ไขหลักสูตร';
+          modeBadge.textContent = 'แก้ไขหลักสูตร';
           modeBadge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200';
         }
         if (idBadge) idBadge.textContent = 'ID: ' + courseId;
@@ -5666,7 +6278,7 @@
         editingCourse = null;
 
         if (modeBadge) {
-          modeBadge.textContent = '➕ สร้างหลักสูตรใหม่';
+          modeBadge.textContent = 'สร้างหลักสูตรใหม่';
           modeBadge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-sky-50 text-[#0369a1] border border-sky-200';
         }
         if (idBadge) idBadge.textContent = 'ID: กำลังสร้าง...';
@@ -7221,7 +7833,7 @@
       if (badgeId) badgeId.textContent = targetActiveCourse.id;
       if (titleHeading) titleHeading.textContent = targetActiveCourse.title || 'ไม่มีชื่อหลักสูตร';
       if (badgeType) badgeType.textContent = targetActiveCourse.type || 'หลักสูตรอบรม';
-      if (dateDisplay) dateDisplay.textContent = '📅 ' + formatDisplayDate(targetActiveCourse.date);
+      if (dateDisplay) dateDisplay.textContent = formatDisplayDate(targetActiveCourse.date);
       if (timeDisplay) timeDisplay.textContent = targetActiveCourse.time ? ('⏰ ' + targetActiveCourse.time) : '';
       if (speakerDisplay) speakerDisplay.textContent = '🎤 ' + (targetActiveCourse.speaker || 'HRD');
       
@@ -7272,13 +7884,13 @@
         }
 
         const badgeTarget = document.getElementById('badgeCurrentTarget');
-        if (badgeTarget) badgeTarget.textContent = '🎯 ' + (curTarget.summary || 'กำหนดเฉพาะกลุ่ม');
+        if (badgeTarget) badgeTarget.textContent = curTarget.summary || 'กำหนดเฉพาะกลุ่ม';
         handleTargetScopeChange('specific');
       } else {
         targetAudienceState.scope = 'all';
         if (radioAll) radioAll.checked = true;
         const badgeTarget = document.getElementById('badgeCurrentTarget');
-        if (badgeTarget) badgeTarget.textContent = '🎯 ทุกแผนก/ตำแหน่ง';
+        if (badgeTarget) badgeTarget.textContent = 'ทุกแผนก/ตำแหน่ง';
         handleTargetScopeChange('all');
       }
 
@@ -7381,7 +7993,7 @@
 
       const badgeCurrent = document.getElementById('badgeCurrentTarget');
       if (badgeCurrent) {
-        badgeCurrent.textContent = '🎯 ' + summaryText;
+        badgeCurrent.textContent = summaryText;
       }
 
       renderCourseList();
