@@ -2059,69 +2059,9 @@
               </button>
             </div>
 
-            <!-- TAB 1: 14 CORE TOPICS SYLLABUS (SINGLE-ROW HORIZONTAL STRIP CARDS) -->
+            <!-- TAB 1: 14 CORE TOPICS SYLLABUS (DYNAMIC GROUPING BY ACTUAL DATE) -->
             <div id="orientTabSyllabus" class="space-y-4">
-              
-              <!-- Day 1 Strip Header -->
-              <div class="space-y-2">
-                <div class="flex items-center justify-between border-b border-sky-200 pb-2">
-                  <div class="flex items-center space-x-2">
-                    <span class="px-2 py-0.5 rounded-md bg-[#004b93] text-white text-[11px] font-bold font-display">DAY 1</span>
-                    <h3 id="orientDay1Label" class="text-xs sm:text-sm font-bold text-[#004b93]">วันที่ 1 ของรอบ: 12 หัวข้อวิชา</h3>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-medium text-slate-500 hidden sm:inline">12 วิชา • วัฒนธรรมองค์กร, เครื่องมือแพทย์, คุณภาพ &amp; ความปลอดภัย</span>
-                    <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-[#004b93] hover:underline font-semibold flex items-center gap-0.5">
-                      <span class="material-icons-round text-xs">edit</span>
-                      <span>แก้ไขวัน/เวลา</span>
-                    </button>
-                  </div>
-                </div>
-                <div id="orientDay1StripContainer" class="space-y-1.5 w-full">
-                  <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
-                </div>
-              </div>
-
-              <!-- Day 2 Strip Header -->
-              <div class="space-y-2 pt-2">
-                <div class="flex items-center justify-between border-b border-emerald-200 pb-2">
-                  <div class="flex items-center space-x-2">
-                    <span class="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[11px] font-bold font-display">DAY 2</span>
-                    <h3 id="orientDay2Label" class="text-xs sm:text-sm font-bold text-emerald-800">วันที่ 2 ของรอบ: 1 หัวข้อวิชา</h3>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-medium text-slate-500 hidden sm:inline">1 วิชา • Basic Life Support (BLS)</span>
-                    <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-0.5">
-                      <span class="material-icons-round text-xs">edit</span>
-                      <span>แก้ไขวัน/เวลา</span>
-                    </button>
-                  </div>
-                </div>
-                <div id="orientDay2StripContainer" class="space-y-1.5 w-full">
-                  <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
-                </div>
-              </div>
-
-              <!-- Day 3 Strip Header (ฝ่ายการพยาบาลพบพนักงานใหม่) -->
-              <div id="orientDay3Section" class="space-y-2 pt-2">
-                <div class="flex items-center justify-between border-b border-purple-200 pb-2">
-                  <div class="flex items-center space-x-2">
-                    <span class="px-2 py-0.5 rounded-md bg-purple-700 text-white text-[11px] font-bold font-display">DAY 3</span>
-                    <h3 id="orientDay3Label" class="text-xs sm:text-sm font-bold text-purple-900">วันที่ 3 ของรอบ: 1 หัวข้อวิชา</h3>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-medium text-slate-500 hidden sm:inline">1 วิชา • ฝ่ายการพยาบาลพบพนักงานใหม่</span>
-                    <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-purple-800 hover:underline font-semibold flex items-center gap-0.5">
-                      <span class="material-icons-round text-xs">edit</span>
-                      <span>แก้ไขวัน/เวลา</span>
-                    </button>
-                  </div>
-                </div>
-                <div id="orientDay3StripContainer" class="space-y-1.5 w-full">
-                  <!-- Rendered dynamically as Single-Row Horizontal Strip Cards -->
-                </div>
-              </div>
-
+              <!-- Rendered dynamically by renderOrientationSyllabus() based on actual topic dates -->
             </div>
 
             <!-- TAB 2: ATTENDANCE & CHECKLIST MATRIX (NO DOUBLE SCROLLBARS) -->
@@ -2872,19 +2812,10 @@
           <input type="text" id="newOrientTitleInput" placeholder="เช่น ปฐมนิเทศพนักงานใหม่ รอบ 5-6 พ.ย. 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-sky-50/60 p-3 rounded-xl border border-sky-200">
-          <div>
-            <label class="block font-semibold text-[#004b93] mb-1">วันที่ 1 (Day 1 - 12 วิชา) *</label>
-            <input type="text" id="newOrientDay1DateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-sky-300 rounded-lg outline-none text-xs">
-          </div>
-          <div>
-            <label class="block font-semibold text-emerald-800 mb-1">วันที่ 2 (Day 2 - BLS) *</label>
-            <input type="text" id="newOrientDay2DateInput" placeholder="เช่น 6 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-emerald-300 rounded-lg outline-none text-xs">
-          </div>
-          <div>
-            <label class="block font-semibold text-purple-800 mb-1">วันที่ 3 (Day 3 - พยาบาล)</label>
-            <input type="text" id="newOrientDay3DateInput" placeholder="เช่น 7 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-purple-300 rounded-lg outline-none text-xs">
-          </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">วันที่เริ่มต้นสำหรับทั้ง 14 หัวข้อวิชา *</label>
+          <input type="text" id="newOrientInitialDateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
+          <span class="text-[11px] text-slate-400 mt-1 block">ระบบจะใช้วันที่นี้เป็นค่าเริ่มต้นสำหรับทุกหัวข้อ และสามารถปรับเปลี่ยนวันที่ของแต่ละหัวข้อวิชาได้อย่างอิสระค่ะ</span>
         </div>
       </div>
 
@@ -2916,34 +2847,17 @@
         <button type="button" onclick="closeEditBatchScheduleModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
       </div>
 
-      <!-- Quick Batch Day Date Setters -->
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-2.5 shrink-0 text-xs">
-        <div class="space-y-1">
-          <label class="block font-semibold text-[#004b93]">วันที่ Day 1 (หัวข้อ 1-12):</label>
-          <div class="flex items-center gap-1.5">
-            <input type="text" id="quickDay1DateInput" placeholder="เช่น 1 ต.ค. 2569" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs">
-            <button type="button" onclick="applyQuickDayDate(1)" class="px-2 py-1.5 bg-sky-50 text-[#004b93] hover:bg-sky-100 border border-sky-300 rounded-lg font-semibold whitespace-nowrap text-xs cursor-pointer">
-              ใช้วันนี้
-            </button>
-          </div>
+      <!-- Quick Batch Date Setter for All Topics -->
+      <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shrink-0 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="material-icons-round text-base text-[#004b93]">calendar_today</span>
+          <span class="font-bold text-slate-800">กำหนดวันที่ให้ทุกหัวข้อพร้อมกัน:</span>
         </div>
-        <div class="space-y-1">
-          <label class="block font-semibold text-emerald-800">วันที่ Day 2 (หัวข้อ 13 - BLS):</label>
-          <div class="flex items-center gap-1.5">
-            <input type="text" id="quickDay2DateInput" placeholder="เช่น 2 ต.ค. 2569" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs">
-            <button type="button" onclick="applyQuickDayDate(2)" class="px-2 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-300 rounded-lg font-semibold whitespace-nowrap text-xs cursor-pointer">
-              ใช้วันนี้
-            </button>
-          </div>
-        </div>
-        <div class="space-y-1">
-          <label class="block font-semibold text-purple-800">วันที่ Day 3 (หัวข้อ 14 - พยาบาล):</label>
-          <div class="flex items-center gap-1.5">
-            <input type="text" id="quickDay3DateInput" placeholder="เช่น 3 ต.ค. 2569" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs">
-            <button type="button" onclick="applyQuickDayDate(3)" class="px-2 py-1.5 bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-300 rounded-lg font-semibold whitespace-nowrap text-xs cursor-pointer">
-              ใช้วันนี้
-            </button>
-          </div>
+        <div class="flex items-center gap-2 flex-1 max-w-md">
+          <input type="text" id="quickBatchAllDateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-sky-300 rounded-lg text-xs outline-none focus:border-[#004b93]">
+          <button type="button" onclick="applyQuickDateToAll()" class="px-3.5 py-1.5 bg-[#004b93] text-white hover:bg-[#002e6e] rounded-lg font-bold whitespace-nowrap text-xs cursor-pointer shadow-xs active:scale-95">
+            ใช้วันนี้กับทุกวิชา
+          </button>
         </div>
       </div>
 
@@ -7801,13 +7715,6 @@
       if (badgeEl) badgeEl.textContent = b.month || 'รอบประจำเดือน';
       if (datesEl) datesEl.textContent = `📅 วันที่จัดอบรม: ${b.dates || b.title} • 14 หัวข้อวิชาหลัก`;
 
-      // Update Google Sheet Button
-      const btnSheet = document.getElementById('btnOrientGoogleSheet');
-      if (btnSheet) {
-        btnSheet.href = b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL;
-        btnSheet.title = 'เปิด Google Sheet 14 หัวข้อ (ไฟล์เดียวกัน): ' + b.title;
-      }
-
       // Update KPI strip
       const total = b.attendees ? b.attendees.length : 0;
       const completed = b.attendees ? b.attendees.filter(a => a.completedTopics && a.completedTopics.length === 14).length : 0;
@@ -7824,27 +7731,6 @@
       if (kpiComp) kpiComp.textContent = completed;
       if (kpiRate) kpiRate.textContent = rate + '% สำเร็จ';
       if (badgeCnt) badgeCnt.textContent = total;
-
-      // Update Day 1, Day 2 & Day 3 labels
-      const d1Label = document.getElementById('orientDay1Label');
-      const d2Label = document.getElementById('orientDay2Label');
-      const d3Label = document.getElementById('orientDay3Label');
-      const d3Section = document.getElementById('orientDay3Section');
-      const day1Topics = (b.topics || []).filter(t => t.day === 1);
-      const day2Topics = (b.topics || []).filter(t => t.day === 2);
-      const day3Topics = (b.topics || []).filter(t => t.day >= 3);
-      const d1Dates = [...new Set(day1Topics.map(t => t.date).filter(Boolean))];
-      const d2Dates = [...new Set(day2Topics.map(t => t.date).filter(Boolean))];
-      const d3Dates = [...new Set(day3Topics.map(t => t.date).filter(Boolean))];
-      const d1Text = d1Dates.length > 0 ? d1Dates.join(', ') : (b.day1Date || 'วันแรก');
-      const d2Text = d2Dates.length > 0 ? d2Dates.join(', ') : (b.day2Date || 'วันที่สอง');
-      const d3Text = d3Dates.length > 0 ? d3Dates.join(', ') : (b.day3Date || 'วันที่สาม');
-      if (d1Label) d1Label.textContent = `วันที่ 1 (${d1Text}): ${day1Topics.length} หัวข้อวิชา`;
-      if (d2Label) d2Label.textContent = `วันที่ 2 (${d2Text}): ${day2Topics.length} หัวข้อวิชา`;
-      if (d3Label) d3Label.textContent = `วันที่ 3 (${d3Text}): ${day3Topics.length} หัวข้อวิชา`;
-      if (d3Section) {
-        d3Section.classList.toggle('hidden', day3Topics.length === 0);
-      }
 
       renderOrientationSyllabus();
       renderOrientationMatrix();
@@ -7928,144 +7814,75 @@
 
     // Render 14 Topics as Single-Row Horizontal Strip Cards (Khun Nick's Golden Rule 3)
     function renderOrientationSyllabus() {
-      const d1Container = document.getElementById('orientDay1StripContainer');
-      const d2Container = document.getElementById('orientDay2StripContainer');
-      const d3Container = document.getElementById('orientDay3StripContainer');
-      const d3Section = document.getElementById('orientDay3Section');
+      const container = document.getElementById('orientTabSyllabus');
       const b = getActiveOrientBatch();
-      if (!b) return;
+      if (!b || !container) return;
 
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
-      const day1Topics = topics.filter(t => t.day === 1);
-      const day2Topics = topics.filter(t => t.day === 2);
-      const day3Topics = topics.filter(t => t.day >= 3);
 
-      if (d3Section) {
-        d3Section.classList.toggle('hidden', day3Topics.length === 0);
-      }
+      // Group topics dynamically by actual date (วันที่จัดอบรมจริง)
+      const dateGroups = new Map();
+      topics.forEach((t, idx) => {
+        const d = (t.date || b.dates || 'กำหนดตามตาราง').trim();
+        if (!dateGroups.has(d)) {
+          dateGroups.set(d, []);
+        }
+        dateGroups.get(d).push({ topic: t, index: idx });
+      });
 
-      if (d1Container) {
-        d1Container.innerHTML = day1Topics.map((t, idx) => {
-          const isCustomDate = t.date && t.date !== b.day1Date;
-          const dateBadge = t.date ? `
-            <span class="font-mono text-[11px] font-semibold ${isCustomDate ? 'text-amber-800 bg-amber-50 border border-amber-300 font-bold' : 'text-[#004b93] bg-sky-50 border border-sky-200'} px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
-              <span class="material-icons-round text-xs">event</span>
-              <span>${escapeHtml(t.date)}</span>
-            </span>
-          ` : '';
-
-          return `
-            <div class="orient-topic-strip">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-                <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
-                  ${String(idx + 1).padStart(2, '0')}
-                </span>
-                ${dateBadge}
-                <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
-                  ${t.time}
-                </span>
-                <span class="text-xs font-bold text-slate-900 truncate">
-                  ${escapeHtml(t.title)}
-                </span>
-                <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
-                  • ${escapeHtml(t.speaker)}
-                </span>
+      container.innerHTML = Array.from(dateGroups.entries()).map(([dateStr, items]) => {
+        return `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between border-b border-sky-200 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="material-icons-round text-base text-[#004b93]">event</span>
+                <h3 class="text-xs sm:text-sm font-bold text-[#004b93]">
+                  วันที่: ${escapeHtml(dateStr)} (${items.length} หัวข้อวิชา)
+                </h3>
               </div>
-              <div class="flex items-center space-x-2 shrink-0">
-                <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
-                  ${escapeHtml(t.venue)}
-                </span>
-                <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-[#004b93] hover:bg-sky-50 border border-transparent hover:border-sky-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
-                  <span class="material-icons-round text-xs">print</span>
-                  <span class="hidden sm:inline">พิมพ์ใบนี้</span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-[#004b93] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer">
+                  <span class="material-icons-round text-xs">edit_calendar</span>
+                  <span>แก้ไขวัน/เวลา</span>
                 </button>
               </div>
             </div>
-          `;
-        }).join('');
-      }
-
-      if (d2Container) {
-        d2Container.innerHTML = day2Topics.map((t, idx) => {
-          const isCustomDate = t.date && t.date !== b.day2Date;
-          const dateBadge = t.date ? `
-            <span class="font-mono text-[11px] font-semibold ${isCustomDate ? 'text-amber-800 bg-amber-50 border border-amber-300 font-bold' : 'text-emerald-800 bg-emerald-50 border border-emerald-200'} px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
-              <span class="material-icons-round text-xs">event</span>
-              <span>${escapeHtml(t.date)}</span>
-            </span>
-          ` : '';
-
-          return `
-            <div class="orient-topic-strip day2">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-                <span class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-emerald-200">
-                  ${String(day1Topics.length + idx + 1).padStart(2, '0')}
-                </span>
-                ${dateBadge}
-                <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
-                  ${t.time}
-                </span>
-                <span class="text-xs font-bold text-slate-900 truncate">
-                  ${escapeHtml(t.title)}
-                </span>
-                <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
-                  • ${escapeHtml(t.speaker)}
-                </span>
-              </div>
-              <div class="flex items-center space-x-2 shrink-0">
-                <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
-                  ${escapeHtml(t.venue)}
-                </span>
-                <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-emerald-800 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
-                  <span class="material-icons-round text-xs">print</span>
-                  <span class="hidden sm:inline">พิมพ์ใบนี้</span>
-                </button>
-              </div>
+            <div class="space-y-1.5 w-full">
+              ${items.map(({ topic: t, index }) => `
+                <div class="orient-topic-strip">
+                  <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+                    <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
+                      ${String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span class="font-mono text-[11px] font-semibold text-[#004b93] bg-sky-50 border border-sky-200 px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
+                      <span class="material-icons-round text-xs">event</span>
+                      <span>${escapeHtml(t.date || dateStr)}</span>
+                    </span>
+                    <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                      ${escapeHtml(t.time || '-')}
+                    </span>
+                    <span class="text-xs font-bold text-slate-900 truncate">
+                      ${escapeHtml(t.title)}
+                    </span>
+                    <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
+                      • ${escapeHtml(t.speaker)}
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2 shrink-0">
+                    <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
+                      ${escapeHtml(t.venue || 'ห้องประชุมใหญ่')}
+                    </span>
+                    <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-[#004b93] hover:bg-sky-50 border border-transparent hover:border-sky-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
+                      <span class="material-icons-round text-xs">print</span>
+                      <span class="hidden sm:inline">พิมพ์ใบนี้</span>
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
             </div>
-          `;
-        }).join('');
-      }
-
-      if (d3Container && day3Topics.length > 0) {
-        d3Container.innerHTML = day3Topics.map((t, idx) => {
-          const isCustomDate = t.date && t.date !== b.day3Date;
-          const dateBadge = t.date ? `
-            <span class="font-mono text-[11px] font-semibold ${isCustomDate ? 'text-amber-800 bg-amber-50 border border-amber-300 font-bold' : 'text-purple-800 bg-purple-50 border border-purple-200'} px-2 py-0.5 rounded shrink-0 flex items-center gap-1" title="วันที่จัดอบรมหัวข้อนี้">
-              <span class="material-icons-round text-xs">event</span>
-              <span>${escapeHtml(t.date)}</span>
-            </span>
-          ` : '';
-
-          return `
-            <div class="orient-topic-strip day3">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-                <span class="w-6 h-6 rounded-md bg-purple-50 text-purple-800 font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-purple-200">
-                  ${String(day1Topics.length + day2Topics.length + idx + 1).padStart(2, '0')}
-                </span>
-                ${dateBadge}
-                <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
-                  ${t.time}
-                </span>
-                <span class="text-xs font-bold text-slate-900 truncate">
-                  ${escapeHtml(t.title)}
-                </span>
-                <span class="text-[11px] text-slate-500 font-light truncate hidden md:inline">
-                  • ${escapeHtml(t.speaker)}
-                </span>
-              </div>
-              <div class="flex items-center space-x-2 shrink-0">
-                <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
-                  ${escapeHtml(t.venue)}
-                </span>
-                <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-purple-800 hover:bg-purple-50 border border-transparent hover:border-purple-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
-                  <span class="material-icons-round text-xs">print</span>
-                  <span class="hidden sm:inline">พิมพ์ใบนี้</span>
-                </button>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
+          </div>
+        `;
+      }).join('');
     }
 
     function renderOrientationMatrix(filterQuery = '') {
@@ -8315,9 +8132,7 @@
       const mVal = (document.getElementById('newOrientMonthInput') || {}).value || '';
       const titleVal = (document.getElementById('newOrientTitleInput') || {}).value || '';
       const datesVal = (document.getElementById('newOrientDatesInput') || {}).value || '';
-      const d1Val = (document.getElementById('newOrientDay1DateInput') || {}).value || '';
-      const d2Val = (document.getElementById('newOrientDay2DateInput') || {}).value || '';
-      const d3Val = (document.getElementById('newOrientDay3DateInput') || {}).value || '';
+      const initialDateVal = (document.getElementById('newOrientInitialDateInput') || {}).value || datesVal;
       const sheetVal = (document.getElementById('newOrientSheetInput') || {}).value || ORIENTATION_TEMPLATE_SHEET_URL;
 
       if (!titleVal || !datesVal) {
@@ -8327,9 +8142,9 @@
 
       const newId = 'c-orient-' + Date.now();
       
-      // Clone standard 14 topics and inject specific Day 1, Day 2 & Day 3 dates
+      // Clone standard 14 topics and set initial date directly for each topic
       const topicsClone = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-        t.date = t.day === 1 ? (d1Val || datesVal) : (t.day === 2 ? (d2Val || datesVal) : (d3Val || d2Val || datesVal));
+        t.date = initialDateVal || datesVal;
         return t;
       });
 
@@ -8339,9 +8154,6 @@
         title: titleVal,
         shortTitle: titleVal.length > 24 ? titleVal.slice(0, 24) + '...' : titleVal,
         dates: datesVal,
-        day1Date: d1Val || datesVal,
-        day2Date: d2Val || datesVal,
-        day3Date: d3Val || d2Val || datesVal,
         sheetUrl: sheetVal,
         status: 'upcoming',
         topics: topicsClone,
@@ -8372,14 +8184,10 @@
       const modal = document.getElementById('editBatchScheduleModal');
       const subtitle = document.getElementById('editScheduleBatchSubtitle');
       const container = document.getElementById('scheduleEditorTopicsContainer');
-      const qDay1 = document.getElementById('quickDay1DateInput');
-      const qDay2 = document.getElementById('quickDay2DateInput');
-      const qDay3 = document.getElementById('quickDay3DateInput');
+      const qBatchAll = document.getElementById('quickBatchAllDateInput');
 
       if (subtitle) subtitle.textContent = `รอบ: ${b.title} (${b.dates || '-'})`;
-      if (qDay1) qDay1.value = b.day1Date || '';
-      if (qDay2) qDay2.value = b.day2Date || '';
-      if (qDay3) qDay3.value = b.day3Date || '';
+      if (qBatchAll) qBatchAll.value = b.dates || '';
 
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
 
@@ -8388,33 +8196,31 @@
           <div class="py-2.5 space-y-1.5" data-topic-id="${t.id}">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <span class="font-bold text-xs ${t.day === 1 ? 'text-[#004b93]' : (t.day === 2 ? 'text-emerald-800' : 'text-purple-800')}">
+                <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
+                  ${String(idx + 1).padStart(2, '0')}
+                </span>
+                <span class="font-bold text-xs text-[#004b93]">
                   หัวข้อที่ ${idx + 1}: ${escapeHtml(t.title)}
                 </span>
-                <select id="schedDay_${t.id}" class="text-[11px] font-bold px-1.5 py-0.5 rounded border border-slate-300 bg-white">
-                  <option value="1" ${t.day === 1 ? 'selected' : ''}>Day 1</option>
-                  <option value="2" ${t.day === 2 ? 'selected' : ''}>Day 2</option>
-                  <option value="3" ${t.day === 3 ? 'selected' : ''}>Day 3</option>
-                </select>
               </div>
               <span class="text-[10.5px] font-mono text-slate-400">ID: ${t.id}</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
               <div>
-                <label class="block text-[10px] text-slate-500">วันที่จัดอบรม</label>
-                <input type="text" id="schedDate_${t.id}" value="${escapeHtml(t.date || (t.day === 1 ? b.day1Date : (t.day === 2 ? b.day2Date : b.day3Date)) || '')}" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs">
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วันที่จัดอบรม</label>
+                <input type="text" id="schedDate_${t.id}" value="${escapeHtml(t.date || b.dates || '')}" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
               </div>
               <div>
-                <label class="block text-[10px] text-slate-500">ช่วงเวลา</label>
-                <input type="text" id="schedTime_${t.id}" value="${escapeHtml(t.time || '')}" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono">
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">ช่วงเวลา</label>
+                <input type="text" id="schedTime_${t.id}" value="${escapeHtml(t.time || '')}" placeholder="เช่น 08.00 - 08.30 น." class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono focus:bg-white focus:border-[#004b93] outline-none">
               </div>
               <div>
-                <label class="block text-[10px] text-slate-500">วิทยากร</label>
-                <input type="text" id="schedSpeaker_${t.id}" value="${escapeHtml(t.speaker || '')}" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs">
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วิทยากร</label>
+                <input type="text" id="schedSpeaker_${t.id}" value="${escapeHtml(t.speaker || '')}" placeholder="ชื่อวิทยากร" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
               </div>
               <div>
-                <label class="block text-[10px] text-slate-500">สถานที่</label>
-                <input type="text" id="schedVenue_${t.id}" value="${escapeHtml(t.venue || '')}" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs">
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">สถานที่</label>
+                <input type="text" id="schedVenue_${t.id}" value="${escapeHtml(t.venue || '')}" placeholder="สถานที่อบรม" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
               </div>
             </div>
           </div>
@@ -8430,42 +8236,31 @@
       editingBatchScheduleId = null;
     }
 
-    function applyQuickDayDate(dayNum) {
+    function applyQuickDateToAll() {
+      const val = (document.getElementById('quickBatchAllDateInput') || {}).value.trim();
+      if (!val) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาระบุวันที่ที่ต้องการนำไปใช้กับทุกหัวข้อ');
+        return;
+      }
       const b = orientationBatches.find(x => x.id === editingBatchScheduleId);
       if (!b) return;
-
-      let dateVal = '';
-      if (dayNum === 1) dateVal = (document.getElementById('quickDay1DateInput') || {}).value;
-      else if (dayNum === 2) dateVal = (document.getElementById('quickDay2DateInput') || {}).value;
-      else if (dayNum === 3) dateVal = (document.getElementById('quickDay3DateInput') || {}).value;
-
-      if (!dateVal) return;
-
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
       topics.forEach(t => {
-        const daySelect = document.getElementById(`schedDay_${t.id}`);
-        const currentDay = daySelect ? parseInt(daySelect.value, 10) : t.day;
-        if (currentDay === dayNum) {
-          const inp = document.getElementById(`schedDate_${t.id}`);
-          if (inp) inp.value = dateVal;
-        }
+        const inp = document.getElementById(`schedDate_${t.id}`);
+        if (inp) inp.value = val;
       });
-
       if (typeof HrdModal !== 'undefined') {
-        HrdModal.success(`ปรับวันที่ของหัวข้อทั้งหมดใน Day ${dayNum} เรียบร้อยแล้วค่ะ`);
+        HrdModal.success(`กำหนดวันที่ "${val}" ให้กับทั้ง 14 หัวข้อวิชาเรียบร้อยแล้วค่ะ`);
       }
+    }
+
+    function applyQuickDayDate(dayNum) {
+      applyQuickDateToAll();
     }
 
     function saveEditedBatchSchedule() {
       const b = orientationBatches.find(x => x.id === editingBatchScheduleId);
       if (!b) return;
-
-      const qDay1 = (document.getElementById('quickDay1DateInput') || {}).value;
-      const qDay2 = (document.getElementById('quickDay2DateInput') || {}).value;
-      const qDay3 = (document.getElementById('quickDay3DateInput') || {}).value;
-      if (qDay1) b.day1Date = qDay1;
-      if (qDay2) b.day2Date = qDay2;
-      if (qDay3) b.day3Date = qDay3;
 
       if (!Array.isArray(b.topics)) {
         b.topics = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS));
@@ -8476,36 +8271,22 @@
         const tInp = document.getElementById(`schedTime_${t.id}`);
         const sInp = document.getElementById(`schedSpeaker_${t.id}`);
         const vInp = document.getElementById(`schedVenue_${t.id}`);
-        const daySelect = document.getElementById(`schedDay_${t.id}`);
 
-        if (daySelect) {
-          t.day = parseInt(daySelect.value, 10) || t.day;
-        }
         if (dInp) {
           const val = dInp.value.trim();
-          if (val) {
-            t.date = val;
-            // Auto assign Day 3 if date is distinct from Day 1 and Day 2 and not explicitly set
-            if (val !== b.day1Date && val !== b.day2Date && (!daySelect || daySelect.value === '2')) {
-              if (t.id === 'or-14') t.day = 3;
-            }
-          }
+          if (val) t.date = val;
         }
         if (tInp) t.time = tInp.value.trim();
         if (sInp) t.speaker = sInp.value.trim();
         if (vInp) t.venue = vInp.value.trim();
       });
 
-      // If dates span across 3 days (e.g. topic 14 is day 3), update batch dates summary
-      const uniqueDates = [...new Set(b.topics.map(t => t.date).filter(Boolean))];
-      if (uniqueDates.length > 2) {
-        if (b.id === 'c-2026-orientation-oct') {
-          b.dates = '1-3 ตุลาคม 2569';
-        } else if (b.id === 'c-2026-orientation-nov') {
-          b.dates = '5-7 พฤศจิกายน 2569';
-        } else {
-          b.dates = uniqueDates[0] + ' - ' + uniqueDates[uniqueDates.length - 1];
-        }
+      // Compute unique dates summary
+      const uniqueDates = [...new Set(b.topics.map(t => (t.date || '').trim()).filter(Boolean))];
+      if (uniqueDates.length === 1) {
+        b.dates = uniqueDates[0];
+      } else if (uniqueDates.length > 1) {
+        b.dates = uniqueDates.join(', ');
       }
 
       // Persist to coursesData and Supabase
@@ -8514,9 +8295,6 @@
         if (courseIdx !== -1) {
           coursesData[courseIdx].topics = b.topics;
           coursesData[courseIdx].date = b.dates;
-          coursesData[courseIdx].day1Date = b.day1Date;
-          coursesData[courseIdx].day2Date = b.day2Date;
-          coursesData[courseIdx].day3Date = b.day3Date;
         }
       }
 
