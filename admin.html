@@ -2813,9 +2813,9 @@
         </div>
 
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">วันที่เริ่มต้นสำหรับทั้ง 14 หัวข้อวิชา *</label>
-          <input type="text" id="newOrientInitialDateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
-          <span class="text-[11px] text-slate-400 mt-1 block">ระบบจะใช้วันที่นี้เป็นค่าเริ่มต้นสำหรับทุกหัวข้อ และสามารถปรับเปลี่ยนวันที่ของแต่ละหัวข้อวิชาได้อย่างอิสระค่ะ</span>
+          <label class="block font-semibold text-slate-700 mb-1">📅 วันที่เริ่มต้นสำหรับทั้ง 14 หัวข้อวิชา *</label>
+          <input type="date" id="newOrientInitialDateInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg outline-none focus:border-[#004b93] text-xs font-mono cursor-pointer">
+          <span class="text-[11px] text-slate-400 mt-1 block">เลือกวันที่จากปฏิทินเพื่อตั้งค่าเริ่มต้นให้กับทุกหัวข้อวิชา และสามารถปรับเปลี่ยนวันที่ของแต่ละวิชาได้อย่างอิสระค่ะ</span>
         </div>
       </div>
 
@@ -2854,7 +2854,7 @@
           <span class="font-bold text-slate-800">กำหนดวันที่ให้ทุกหัวข้อพร้อมกัน:</span>
         </div>
         <div class="flex items-center gap-2 flex-1 max-w-md">
-          <input type="text" id="quickBatchAllDateInput" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-white border border-sky-300 rounded-lg text-xs outline-none focus:border-[#004b93]">
+          <input type="date" id="quickBatchAllDateInput" class="w-full px-2.5 py-1.5 bg-white border border-sky-300 rounded-lg text-xs outline-none focus:border-[#004b93] font-mono cursor-pointer">
           <button type="button" onclick="applyQuickDateToAll()" class="px-3.5 py-1.5 bg-[#004b93] text-white hover:bg-[#002e6e] rounded-lg font-bold whitespace-nowrap text-xs cursor-pointer shadow-xs active:scale-95">
             ใช้วันนี้กับทุกวิชา
           </button>
@@ -8176,6 +8176,92 @@
     // --------------------------------------------------------------------------
     let editingBatchScheduleId = null;
 
+    const STANDARD_TIME_SLOTS = [
+      '07:00', '07:30', '08:00', '08:30', '09:00', '09:30',
+      '10:00', '10:30', '11:00', '11:20', '11:30', '12:00',
+      '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
+      '15:30', '16:00', '16:20', '16:40', '17:00', '17:30', '18:00'
+    ];
+
+    function parseThaiDateToIso(str) {
+      if (!str) return '';
+      str = String(str).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+
+      const thaiMonths = {
+        'มกราคม': 1, 'ม.ค.': 1, 'ม.ค': 1,
+        'กุมภาพันธ์': 2, 'ก.พ.': 2, 'ก.พ': 2,
+        'มีนาคม': 3, 'มี.ค.': 3, 'มี.ค': 3,
+        'เมษายน': 4, 'เม.ย.': 4, 'เม.ย': 4,
+        'พฤษภาคม': 5, 'พ.ค.': 5, 'พ.ค': 5,
+        'มิถุนายน': 6, 'มิ.ย.': 6, 'มิ.ย': 6,
+        'กรกฎาคม': 7, 'ก.ค.': 7, 'ก.ค': 7,
+        'สิงหาคม': 8, 'ส.ค.': 8, 'ส.ค': 8,
+        'กันยายน': 9, 'ก.ย.': 9, 'ก.ย': 9,
+        'ตุลาคม': 10, 'ต.ค.': 10, 'ต.ค': 10,
+        'พฤศจิกายน': 11, 'พ.ย.': 11, 'พ.ย': 11,
+        'ธันวาคม': 12, 'ธ.ค.': 12, 'ธ.ค': 12
+      };
+
+      const match = str.match(/(\d{1,2})(?:-\d{1,2})?\s*([^\d\s]+)\s*(\d{4})/);
+      if (match) {
+        const d = parseInt(match[1], 10);
+        const mStr = match[2].trim();
+        let y = parseInt(match[3], 10);
+        if (y > 2400) y -= 543;
+        const m = thaiMonths[mStr];
+        if (m && d && y) {
+          return y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        }
+      }
+      return '';
+    }
+
+    function formatIsoToThaiFull(isoStr) {
+      if (!isoStr) return '';
+      const match = String(isoStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!match) return isoStr;
+      const thaiMonthsFull = [
+        '', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+      ];
+      let y = parseInt(match[1], 10);
+      if (y < 2400) y += 543;
+      const m = parseInt(match[2], 10);
+      const d = parseInt(match[3], 10);
+      return d + ' ' + (thaiMonthsFull[m] || '') + ' ' + y;
+    }
+
+    function parseTimeRange(timeStr) {
+      if (!timeStr) return { start: '08:00', end: '09:00' };
+      const normalized = String(timeStr).replace(/\./g, ':');
+      const match = normalized.match(/(\d{1,2}:\d{2})\s*[-–—\sถึง]+\s*(\d{1,2}:\d{2})/);
+      if (match) {
+        let s = match[1];
+        let e = match[2];
+        if (s.length === 4) s = '0' + s;
+        if (e.length === 4) e = '0' + e;
+        return { start: s, end: e };
+      }
+      return { start: '08:00', end: '09:00' };
+    }
+
+    function buildTimeSelectOptions(selectedTime) {
+      const slots = [...STANDARD_TIME_SLOTS];
+      if (selectedTime && !slots.includes(selectedTime)) {
+        slots.push(selectedTime);
+        slots.sort();
+      }
+      return slots.map(t => '<option value="' + t + '"' + (t === selectedTime ? ' selected' : '') + '>' + t + ' น.</option>').join('');
+    }
+
+    function updateTopicDateDisplay(topicId, isoVal) {
+      const label = document.getElementById('schedDateText_' + topicId);
+      if (label) {
+        label.textContent = isoVal ? formatIsoToThaiFull(isoVal) : '-';
+      }
+    }
+
     function openEditBatchScheduleModal(batchId) {
       const b = batchId ? orientationBatches.find(x => x.id === batchId) : getActiveOrientBatch();
       if (!b) return;
@@ -8186,45 +8272,62 @@
       const container = document.getElementById('scheduleEditorTopicsContainer');
       const qBatchAll = document.getElementById('quickBatchAllDateInput');
 
-      if (subtitle) subtitle.textContent = `รอบ: ${b.title} (${b.dates || '-'})`;
-      if (qBatchAll) qBatchAll.value = b.dates || '';
-
+      if (subtitle) subtitle.textContent = 'รอบ: ' + b.title + ' (' + (b.dates || '-') + ')';
+      
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const firstTopicIso = topics[0] ? (topics[0].isoDate || parseThaiDateToIso(topics[0].date)) : '';
+      if (qBatchAll) qBatchAll.value = firstTopicIso || parseThaiDateToIso(b.dates) || '';
 
       if (container) {
-        container.innerHTML = topics.map((t, idx) => `
-          <div class="py-2.5 space-y-1.5" data-topic-id="${t.id}">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
-                  ${String(idx + 1).padStart(2, '0')}
-                </span>
-                <span class="font-bold text-xs text-[#004b93]">
-                  หัวข้อที่ ${idx + 1}: ${escapeHtml(t.title)}
-                </span>
+        container.innerHTML = topics.map((t, idx) => {
+          const isoDate = t.isoDate || parseThaiDateToIso(t.date || b.dates) || '';
+          const thaiDateStr = formatIsoToThaiFull(isoDate) || (t.date || '-');
+          const timeRange = parseTimeRange(t.time);
+
+          return `
+            <div class="py-2.5 space-y-1.5" data-topic-id="${t.id}">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
+                    ${String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <span class="font-bold text-xs text-[#004b93]">
+                    หัวข้อที่ ${idx + 1}: ${escapeHtml(t.title)}
+                  </span>
+                </div>
+                <span class="text-[10.5px] font-mono text-slate-400">ID: ${t.id}</span>
               </div>
-              <span class="text-[10.5px] font-mono text-slate-400">ID: ${t.id}</span>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+                <div>
+                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">📅 วันที่จัดอบรม (เลือกจากปฏิทิน)</label>
+                  <input type="date" id="schedDate_${t.id}" value="${isoDate}" onchange="updateTopicDateDisplay('${t.id}', this.value)" class="w-full px-2 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
+                  <span id="schedDateText_${t.id}" class="text-[10px] font-semibold text-[#004b93] mt-0.5 block truncate">${escapeHtml(thaiDateStr)}</span>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">⏰ ช่วงเวลา (เลือกเวลาเริ่ม - สิ้นสุด)</label>
+                  <div class="flex items-center gap-1">
+                    <select id="schedTimeStart_${t.id}" class="flex-1 px-1.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
+                      ${buildTimeSelectOptions(timeRange.start)}
+                    </select>
+                    <span class="text-slate-400 font-bold text-xs">-</span>
+                    <select id="schedTimeEnd_${t.id}" class="flex-1 px-1.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
+                      ${buildTimeSelectOptions(timeRange.end)}
+                    </select>
+                  </div>
+                  <span class="text-[10px] text-slate-400 mt-0.5 block font-mono">${escapeHtml(t.time || '')}</span>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วิทยากร</label>
+                  <input type="text" id="schedSpeaker_${t.id}" value="${escapeHtml(t.speaker || '')}" placeholder="ชื่อวิทยากร" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">สถานที่</label>
+                  <input type="text" id="schedVenue_${t.id}" value="${escapeHtml(t.venue || '')}" placeholder="สถานที่อบรม" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
+                </div>
+              </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-              <div>
-                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วันที่จัดอบรม</label>
-                <input type="text" id="schedDate_${t.id}" value="${escapeHtml(t.date || b.dates || '')}" placeholder="เช่น 5 พฤศจิกายน 2569" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
-              </div>
-              <div>
-                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">ช่วงเวลา</label>
-                <input type="text" id="schedTime_${t.id}" value="${escapeHtml(t.time || '')}" placeholder="เช่น 08.00 - 08.30 น." class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono focus:bg-white focus:border-[#004b93] outline-none">
-              </div>
-              <div>
-                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วิทยากร</label>
-                <input type="text" id="schedSpeaker_${t.id}" value="${escapeHtml(t.speaker || '')}" placeholder="ชื่อวิทยากร" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
-              </div>
-              <div>
-                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">สถานที่</label>
-                <input type="text" id="schedVenue_${t.id}" value="${escapeHtml(t.venue || '')}" placeholder="สถานที่อบรม" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
-              </div>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
 
       if (modal) modal.classList.remove('hidden');
@@ -8237,20 +8340,23 @@
     }
 
     function applyQuickDateToAll() {
-      const val = (document.getElementById('quickBatchAllDateInput') || {}).value.trim();
-      if (!val) {
-        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาระบุวันที่ที่ต้องการนำไปใช้กับทุกหัวข้อ');
+      const inp = document.getElementById('quickBatchAllDateInput');
+      const isoVal = inp ? inp.value.trim() : '';
+      if (!isoVal) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาเลือกวันที่จากปฏิทินที่ต้องการนำไปใช้กับทุกหัวข้อ');
         return;
       }
       const b = orientationBatches.find(x => x.id === editingBatchScheduleId);
       if (!b) return;
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const thaiVal = formatIsoToThaiFull(isoVal);
       topics.forEach(t => {
-        const inp = document.getElementById(`schedDate_${t.id}`);
-        if (inp) inp.value = val;
+        const dInp = document.getElementById('schedDate_' + t.id);
+        if (dInp) dInp.value = isoVal;
+        updateTopicDateDisplay(t.id, isoVal);
       });
       if (typeof HrdModal !== 'undefined') {
-        HrdModal.success(`กำหนดวันที่ "${val}" ให้กับทั้ง 14 หัวข้อวิชาเรียบร้อยแล้วค่ะ`);
+        HrdModal.success('กำหนดวันที่ "' + thaiVal + '" ให้กับทั้ง 14 หัวข้อวิชาเรียบร้อยแล้วค่ะ');
       }
     }
 
@@ -8267,16 +8373,19 @@
       }
 
       b.topics.forEach(t => {
-        const dInp = document.getElementById(`schedDate_${t.id}`);
-        const tInp = document.getElementById(`schedTime_${t.id}`);
-        const sInp = document.getElementById(`schedSpeaker_${t.id}`);
-        const vInp = document.getElementById(`schedVenue_${t.id}`);
+        const dInp = document.getElementById('schedDate_' + t.id);
+        const sTimeSel = document.getElementById('schedTimeStart_' + t.id);
+        const eTimeSel = document.getElementById('schedTimeEnd_' + t.id);
+        const sInp = document.getElementById('schedSpeaker_' + t.id);
+        const vInp = document.getElementById('schedVenue_' + t.id);
 
-        if (dInp) {
-          const val = dInp.value.trim();
-          if (val) t.date = val;
+        if (dInp && dInp.value) {
+          t.isoDate = dInp.value;
+          t.date = formatIsoToThaiFull(dInp.value);
         }
-        if (tInp) t.time = tInp.value.trim();
+        if (sTimeSel && eTimeSel) {
+          t.time = sTimeSel.value + ' - ' + eTimeSel.value + ' น.';
+        }
         if (sInp) t.speaker = sInp.value.trim();
         if (vInp) t.venue = vInp.value.trim();
       });
