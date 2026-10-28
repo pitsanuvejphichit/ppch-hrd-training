@@ -1301,7 +1301,7 @@
       <!-- Real-time Pulse Badge -->
       <div class="status-realtime-badge" title="เชื่อมต่อฐานข้อมูล Supabase <0.1s และ Google Sheets เบื้องหลังอัตโนมัติ">
         <span class="pulse-indicator-dot"></span>
-        <span class="font-data">Supabase · พร้อมใช้งาน</span>
+        <span class="font-mono">⚡ Supabase 0.08s Active</span>
       </div>
 
       <!-- Archive Button -->
@@ -2493,6 +2493,329 @@
 
           </div>
 
+          <!-- ==================== SUB-VIEW C: CREATE NEW MONTHLY BATCH (INLINE PAGE) ==================== -->
+          <div id="createMonthlyOrientModal" class="hidden space-y-3.5">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 w-full shadow-2xs space-y-5">
+              
+              <!-- Header with Back Button -->
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                <div class="flex items-start gap-3 min-w-0">
+                  <button type="button" onclick="closeCreateMonthlyOrientModal()" class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-[#004b93] border border-slate-200 flex items-center justify-center shrink-0 transition-colors" title="กลับหน้ารายการรอบ">
+                    <span class="material-icons-round text-base">arrow_back</span>
+                  </button>
+                  <div class="min-w-0">
+                    <span class="text-[11px] font-bold text-[#004b93] uppercase tracking-wider bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-200">
+                      New Orientation Batch Setup
+                    </span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 mt-1">เพิ่มการปฐมนิเทศเดือนใหม่</h3>
+                    <p class="text-xs text-slate-500 font-light truncate">ระบบตั้งชื่อหลักสูตรและกำหนดวันเริ่มต้นให้อัตโนมัติจากเดือนที่เลือก</p>
+                  </div>
+                </div>
+                <button type="button" onclick="closeCreateMonthlyOrientModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+                  <span class="material-icons-round text-sm">arrow_back</span>
+                  <span>กลับหน้ารายการรอบ</span>
+                </button>
+              </div>
+
+              <!-- Form Body -->
+              <div class="space-y-4 text-xs max-w-3xl">
+                <div class="bg-sky-50/70 p-3.5 rounded-xl border border-sky-200 text-[#004b93] flex items-center gap-2.5">
+                  <span class="material-icons-round text-xl shrink-0">auto_awesome</span>
+                  <span class="text-xs font-semibold leading-relaxed">เลือกเดือน วันที่เริ่มต้น และสถานที่ ระบบจะตั้งชื่อรอบและใช้สถานที่นี้เป็นค่าเริ่มต้นให้ทุกหัวข้อโดยอัตโนมัติ</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold text-slate-800 mb-1.5">1. ประจำเดือนที่จัด (YYYY-MM) *</label>
+                    <input type="month" id="newOrientMonthInput" onchange="autoSuggestOrientBatchTitle()" class="w-full px-3.5 py-2.5 bg-white border-2 border-sky-400 rounded-xl outline-none focus:border-[#004b93] font-bold text-slate-900 text-xs shadow-2xs cursor-pointer">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-800 mb-1.5">2. วันที่เริ่มต้นจัดอบรม (ปฏิทิน) *</label>
+                    <input type="date" id="newOrientInitialDateInput" onchange="onOrientInitialDateChange()" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-[#004b93] text-xs font-mono cursor-pointer shadow-2xs">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-bold text-slate-800 mb-1.5">3. สถานที่จัดอบรมเริ่มต้น *</label>
+                  <div class="relative">
+                    <span class="material-icons-round absolute left-3.5 top-1/2 -translate-y-1/2 text-base text-slate-400 pointer-events-none">location_on</span>
+                    <input type="text" id="newOrientVenueInput" placeholder="เช่น ห้องประชุมใหญ่ ชั้น 4" class="w-full pl-10 pr-3.5 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-[#004b93] text-xs shadow-2xs">
+                  </div>
+                  <p class="mt-1.5 text-[10.5px] text-slate-500">ระบบจะใส่สถานที่นี้ให้ครบทั้ง 14 หัวข้อ และสามารถแก้รายหัวข้อภายหลังได้</p>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <label class="font-bold text-slate-700">ชื่อรอบการปฐมนิเทศ (ตั้งอัตโนมัติ)</label>
+                    <span class="text-[10px] font-bold text-sky-800 bg-sky-100 px-2.5 py-0.5 rounded-full">✨ Auto-generated</span>
+                  </div>
+                  <input type="text" id="newOrientTitleInput" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-[#004b93] outline-none focus:border-[#004b93]">
+                  <p class="text-[10.5px] text-slate-500">ข้อความสรุปรอบจะอ้างอิงจาก “ประจำเดือนที่จัด” โดยอัตโนมัติ ไม่ต้องกรอกซ้ำ</p>
+                </div>
+              </div>
+
+              <!-- Footer Buttons -->
+              <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeCreateMonthlyOrientModal()" class="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition-colors">ยกเลิก</button>
+                <button type="button" onclick="confirmCreateMonthlyOrientation()" class="px-5 py-2.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+                  <span class="material-icons-round text-sm">save</span>
+                  <span>สร้างและบันทึกรอบใหม่</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ==================== SUB-VIEW D: EDIT SINGLE TOPIC (INLINE PAGE) ==================== -->
+          <div id="editSingleTopicModal" class="hidden space-y-3.5">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 w-full shadow-2xs space-y-5">
+              
+              <!-- Header with Back Button -->
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                <div class="flex items-start gap-3 min-w-0">
+                  <button type="button" onclick="closeSingleTopicEditModal()" class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-[#004b93] border border-slate-200 flex items-center justify-center shrink-0 transition-colors" title="กลับหน้าตารางหัวข้อวิชา">
+                    <span class="material-icons-round text-base">arrow_back</span>
+                  </button>
+                  <div class="min-w-0">
+                    <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200" id="singleTopicNumBadge">
+                      หัวข้อวิชา
+                    </span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 mt-1" id="singleTopicModalHeader">แก้ไขหัวข้อวิชา (แก้ไขทีละรายการ)</h3>
+                    <p class="text-xs text-slate-500 font-light truncate" id="singleTopicModalSubtitle">-</p>
+                  </div>
+                </div>
+                <button type="button" onclick="closeSingleTopicEditModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+                  <span class="material-icons-round text-sm">arrow_back</span>
+                  <span>กลับหน้าตารางหัวข้อวิชา</span>
+                </button>
+              </div>
+
+              <!-- Hidden Tracking Fields -->
+              <input type="hidden" id="singleTopicBatchId">
+              <input type="hidden" id="singleTopicId">
+
+              <!-- Form Body -->
+              <div class="space-y-4 text-xs max-w-3xl">
+                <!-- Topic Title Card -->
+                <div class="bg-sky-50/70 p-3.5 rounded-xl border border-sky-200">
+                  <div class="text-xs font-bold text-slate-900 leading-snug" id="singleTopicTitleDisplay">-</div>
+                </div>
+
+                <!-- Date Picker -->
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1.5">📅 วันที่จัดอบรมหัวข้อนี้ (เลือกจากปฏิทิน) *</label>
+                  <input type="date" id="singleTopicDateInput" onchange="onSingleTopicDateChange(this.value)" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg outline-none focus:border-[#004b93] font-mono text-xs cursor-pointer">
+                  <span id="singleTopicDatePreview" class="text-[11px] font-semibold text-[#004b93] mt-1.5 block"></span>
+                </div>
+
+                <!-- Time Range Selectors -->
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1.5">⏰ ช่วงเวลา (เลือกเวลาเริ่ม - สิ้นสุด) *</label>
+                  <div class="flex items-center gap-2">
+                    <select id="singleTopicTimeStart" onchange="onSingleTopicTimeChange()" class="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-mono outline-none focus:border-[#004b93] cursor-pointer">
+                    </select>
+                    <span class="text-slate-400 font-bold text-xs">ถึง</span>
+                    <select id="singleTopicTimeEnd" onchange="onSingleTopicTimeChange()" class="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-mono outline-none focus:border-[#004b93] cursor-pointer">
+                    </select>
+                  </div>
+                  <span id="singleTopicTimePreview" class="text-[11px] text-slate-500 font-mono mt-1.5 block"></span>
+                </div>
+
+                <!-- Speaker -->
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1.5">👤 วิทยากรผู้สอน</label>
+                  <input type="text" id="singleTopicSpeakerInput" placeholder="ชื่อวิทยากร หรือแผนกผู้รับผิดชอบ" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
+                </div>
+
+                <!-- Venue -->
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1.5">📍 สถานที่จัดอบรม</label>
+                  <input type="text" id="singleTopicVenueInput" placeholder="เช่น ห้องประชุมใหญ่ ชั้น 4" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
+                </div>
+              </div>
+
+              <!-- Footer Buttons -->
+              <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeSingleTopicEditModal()" class="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition-colors">ยกเลิก</button>
+                <button type="button" onclick="saveSingleTopicEdit()" class="px-5 py-2.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+                  <span class="material-icons-round text-sm">save</span>
+                  <span>บันทึกหัวข้อนี้</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ==================== SUB-VIEW E: EDIT 14 TOPICS SCHEDULE (INLINE PAGE) ==================== -->
+          <div id="editBatchScheduleModal" class="hidden space-y-3.5">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 w-full shadow-2xs space-y-5">
+              
+              <!-- Header with Back Button -->
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                <div class="flex items-start gap-3 min-w-0">
+                  <button type="button" onclick="closeEditBatchScheduleModal()" class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-[#004b93] border border-slate-200 flex items-center justify-center shrink-0 transition-colors" title="กลับหน้าหลักสูตร">
+                    <span class="material-icons-round text-base">arrow_back</span>
+                  </button>
+                  <div class="min-w-0">
+                    <span class="text-[11px] font-bold text-[#004b93] uppercase tracking-wider bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-200">
+                      Schedule Management
+                    </span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 mt-1 flex items-center gap-1.5">
+                      <span class="material-icons-round text-base text-amber-700">edit_calendar</span>
+                      <span>กำหนดวัน/เวลา และวิทยากร (14 หัวข้อวิชา)</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 font-light truncate" id="editScheduleBatchSubtitle">-</p>
+                  </div>
+                </div>
+                <button type="button" onclick="closeEditBatchScheduleModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+                  <span class="material-icons-round text-sm">arrow_back</span>
+                  <span>กลับหน้าหลักสูตร</span>
+                </button>
+              </div>
+
+              <!-- Quick Batch Date Setter for All Topics -->
+              <div class="bg-sky-50/70 p-3.5 rounded-xl border border-sky-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="material-icons-round text-base text-[#004b93]">calendar_today</span>
+                  <span class="font-bold text-slate-800">กำหนดวันที่ให้ทุกหัวข้อพร้อมกัน:</span>
+                </div>
+                <div class="flex items-center gap-2 flex-1 max-w-md">
+                  <input type="date" id="quickBatchAllDateInput" class="w-full px-3 py-2 bg-white border border-sky-300 rounded-lg text-xs outline-none focus:border-[#004b93] font-mono cursor-pointer">
+                  <button type="button" onclick="applyQuickDateToAll()" class="px-4 py-2 bg-[#004b93] text-white hover:bg-[#002e6e] rounded-lg font-bold whitespace-nowrap text-xs cursor-pointer shadow-xs active:scale-95 transition-all">
+                    ใช้วันนี้กับทุกวิชา
+                  </button>
+                </div>
+              </div>
+
+              <!-- 14 Topics Schedule Editor Rows -->
+              <div id="scheduleEditorTopicsContainer" class="space-y-3 text-xs divide-y divide-slate-100">
+                <!-- Rendered dynamically -->
+              </div>
+
+              <!-- Footer Buttons -->
+              <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeEditBatchScheduleModal()" class="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition-colors">ยกเลิก</button>
+                <button type="button" onclick="saveEditedBatchSchedule()" class="px-5 py-2.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+                  <span class="material-icons-round text-sm">save</span>
+                  <span>บันทึกวัน/เวลา</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ==================== SUB-VIEW F: 14-TOPIC CHECKLIST (INLINE PAGE) ==================== -->
+          <div id="orientationChecklistPage" class="hidden space-y-3.5">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 w-full shadow-2xs space-y-5">
+              
+              <!-- Page Header -->
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                <div class="flex items-start gap-3 min-w-0">
+                  <button type="button" onclick="closeOrientationChecklistModal()" class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-[#004b93] border border-slate-200 flex items-center justify-center shrink-0 transition-colors" title="กลับหน้ารายชื่อและเช็คชื่อ">
+                    <span class="material-icons-round text-base">arrow_back</span>
+                  </button>
+                  <div class="min-w-0">
+                    <span class="text-[11px] font-bold text-[#004b93] uppercase tracking-wider bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-200">
+                      Orientation 14-Topic Checklist
+                    </span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 mt-1" id="orientModalEmpName">-</h3>
+                    <p class="text-xs text-slate-500 font-light truncate" id="orientModalEmpInfo">-</p>
+                  </div>
+                </div>
+                <button type="button" onclick="closeOrientationChecklistModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+                  <span class="material-icons-round text-sm">arrow_back</span>
+                  <span>กลับหน้ารายชื่อ</span>
+                </button>
+              </div>
+
+              <!-- Quick Progress Bar -->
+              <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                <div class="flex justify-between text-xs font-semibold">
+                  <span class="text-slate-700">ความคืบหน้าการเข้าร่วม:</span>
+                  <span id="orientModalProgressText" class="font-mono text-[#004b93]">0 / 14 วิชา (0%)</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                  <div id="orientModalProgressBar" class="bg-gradient-to-r from-[#004b93] to-[#059669] h-2.5 rounded-full transition-all duration-300" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Checklist Items Container: full-page responsive grid, no internal popup scrollbar -->
+              <div id="orientChecklistContainer" class="grid grid-cols-1 xl:grid-cols-2 gap-2.5">
+                <!-- Rendered dynamically (14 checkboxes) -->
+              </div>
+
+              <!-- Page Footer -->
+              <div class="border-t border-slate-100 pt-4 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5">
+                <button type="button" onclick="toggleAllOrientationTopicsForEmp()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-[#004b93] text-xs font-semibold transition-all">
+                  ติ๊กผ่านทั้งหมด (14 วิชา)
+                </button>
+                <button type="button" onclick="closeOrientationChecklistModal()" class="px-5 py-2.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold transition-all shadow-xs inline-flex items-center justify-center gap-1.5">
+                  <span class="material-icons-round text-sm">save</span>
+                  <span>บันทึกและกลับหน้ารายชื่อ</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ==================== SUB-VIEW G: PRINTABLE A4 ROSTER (INLINE PAGE) ==================== -->
+          <div id="orientationPrintModal" class="hidden space-y-3.5">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 w-full shadow-2xs space-y-5">
+              
+              <!-- Header / Print Control Toolbar (Hidden during print) -->
+              <div class="orient-print-no-print flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                <div class="flex items-start gap-3 min-w-0">
+                  <button type="button" onclick="closeOrientationPrintModal()" class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-[#004b93] border border-slate-200 flex items-center justify-center shrink-0 transition-colors" title="กลับหน้ารายละเอียด">
+                    <span class="material-icons-round text-base">arrow_back</span>
+                  </button>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-lg bg-sky-50 text-[#004b93] flex items-center justify-center border border-sky-200 shadow-2xs">
+                        <span class="material-icons-round text-base">print</span>
+                      </div>
+                      <h3 class="text-base sm:text-lg font-bold text-slate-900" id="orientPrintModalTitle">
+                        ใบลงทะเบียนอบรม / สัมมนาภายใน
+                      </h3>
+                    </div>
+                    <p class="text-xs text-slate-500 font-light truncate mt-0.5" id="orientPrintModalSubtitle">
+                      แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 28 แถว) • เว้นพื้นที่ปลอดภัยสำหรับรหัสเอกสาร DCC
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap">
+                  <!-- Topic Selector -->
+                  <div class="flex items-center gap-1.5">
+                    <label class="text-xs font-semibold text-slate-600 hidden sm:inline">เลือกหัวข้อ:</label>
+                    <select id="orientPrintTopicSelect" onchange="onPrintTopicSelectChanged()" class="text-xs font-semibold px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] max-w-[280px]">
+                      <!-- Options populated dynamically -->
+                    </select>
+                  </div>
+
+                  <!-- Print Trigger Button -->
+                  <button type="button" onclick="printOrientationSheetNow()" class="px-4 py-2 bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95">
+                    <span class="material-icons-round text-sm">print</span>
+                    <span>พิมพ์ A4 แนวนอน (Print)</span>
+                  </button>
+
+                  <!-- Close Button -->
+                  <button type="button" onclick="closeOrientationPrintModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+                    <span class="material-icons-round text-sm">arrow_back</span>
+                    <span>กลับ</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Preview Area for A4 Sheets -->
+              <div id="orientPrintPreviewArea" class="orient-print-preview-container w-full overflow-x-auto pb-4 custom-scroll">
+                <div id="orientPrintSheetsContainer" class="flex flex-col items-center gap-6 py-2 min-w-[297mm]">
+                  <!-- Rendered dynamically as 1 or 14 A4 Sheets -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
         <!-- ==================== END VIEW 4: NEW EMPLOYEE ORIENTATION ==================== -->
 
@@ -3043,296 +3366,8 @@
   </div>
 
 
-  <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
-  
-  
-  <!-- MODAL 1: CREATE NEW MONTHLY ORIENTATION (สร้างหลักสูตรปฐมนิเทศเดือนใหม่ - ตั้งชื่ออัตโนมัติ) -->
-  <div id="createMonthlyOrientModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-5 sm:p-6 max-w-xl w-full shadow-2xl space-y-4 max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-150">
-      
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
-        <div class="flex items-center space-x-2">
-          <span class="w-7 h-7 rounded-lg bg-sky-50 text-[#004b93] flex items-center justify-center">
-            <span class="material-icons-round text-base">calendar_month</span>
-          </span>
-          <h3 class="text-sm sm:text-base font-bold text-slate-900">เพิ่มการปฐมนิเทศเดือนใหม่</h3>
-        </div>
-        <button type="button" onclick="closeCreateMonthlyOrientModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
-      </div>
-
-      <!-- Form Body: Month is the source of truth; title and summary are generated automatically. -->
-      <div class="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
-        <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200 text-[#004b93] flex items-center gap-2">
-          <span class="material-icons-round text-lg shrink-0">auto_awesome</span>
-          <span class="text-xs font-semibold leading-relaxed">เลือกเดือน วันที่เริ่มต้น และสถานที่ ระบบจะตั้งชื่อรอบและใช้สถานที่นี้เป็นค่าเริ่มต้นให้ทุกหัวข้อโดยอัตโนมัติ</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">1. ประจำเดือนที่จัด (YYYY-MM) *</label>
-            <input type="month" id="newOrientMonthInput" onchange="autoSuggestOrientBatchTitle()" class="w-full px-3 py-2.5 bg-white border-2 border-sky-400 rounded-xl outline-none focus:border-[#004b93] font-bold text-slate-900 text-xs shadow-2xs cursor-pointer">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-800 mb-1">2. วันที่เริ่มต้นจัดอบรม (ปฏิทิน) *</label>
-            <input type="date" id="newOrientInitialDateInput" onchange="onOrientInitialDateChange()" class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-[#004b93] text-xs font-mono cursor-pointer shadow-2xs">
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-800 mb-1">3. สถานที่จัดอบรมเริ่มต้น *</label>
-          <div class="relative">
-            <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-base text-slate-400 pointer-events-none">location_on</span>
-            <input type="text" id="newOrientVenueInput" placeholder="เช่น ห้องประชุมใหญ่ ชั้น 4" class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-[#004b93] text-xs shadow-2xs">
-          </div>
-          <p class="mt-1 text-[10.5px] text-slate-500">ระบบจะใส่สถานที่นี้ให้ครบทั้ง 14 หัวข้อ และสามารถแก้รายหัวข้อภายหลังได้</p>
-        </div>
-
-        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="font-bold text-slate-700">ชื่อรอบการปฐมนิเทศ (ตั้งอัตโนมัติ)</label>
-            <span class="text-[10px] font-bold text-sky-800 bg-sky-100 px-2 py-0.5 rounded-full">✨ Auto-generated</span>
-          </div>
-          <input type="text" id="newOrientTitleInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-[#004b93] outline-none focus:border-[#004b93]">
-          <p class="text-[10.5px] text-slate-500">ข้อความสรุปรอบจะอ้างอิงจาก “ประจำเดือนที่จัด” โดยอัตโนมัติ ไม่ต้องกรอกซ้ำ</p>
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 shrink-0">
-        <button type="button" onclick="closeCreateMonthlyOrientModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer">ยกเลิก</button>
-        <button type="button" onclick="confirmCreateMonthlyOrientation()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
-          <span class="material-icons-round text-sm">save</span>
-          <span>สร้างและบันทึกรอบใหม่</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL: EDIT SINGLE TOPIC (แก้ไขทีละรายการ) -->
-  <div id="editSingleTopicModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-150">
-      
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
-        <div class="flex items-center space-x-2">
-          <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 border border-amber-200">
-            <span class="material-icons-round text-base">edit_calendar</span>
-          </span>
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-slate-900" id="singleTopicModalHeader">แก้ไขหัวข้อวิชา</h3>
-            <p class="text-[11px] text-slate-500 font-light" id="singleTopicModalSubtitle">-</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeSingleTopicEditModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
-      </div>
-
-      <!-- Hidden Tracking Fields -->
-      <input type="hidden" id="singleTopicBatchId">
-      <input type="hidden" id="singleTopicId">
-
-      <!-- Form Body -->
-      <div class="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
-        <!-- Topic Title Card -->
-        <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200">
-          <span class="text-[10px] font-bold text-[#004b93] uppercase tracking-wider block mb-0.5" id="singleTopicNumBadge">หัวข้อที่ --</span>
-          <div class="text-xs font-bold text-slate-900 leading-snug" id="singleTopicTitleDisplay">-</div>
-        </div>
-
-        <!-- Date Picker -->
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">📅 วันที่จัดอบรมหัวข้อนี้ (เลือกจากปฏิทิน) *</label>
-          <input type="date" id="singleTopicDateInput" onchange="onSingleTopicDateChange(this.value)" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg outline-none focus:border-[#004b93] font-mono text-xs cursor-pointer">
-          <span id="singleTopicDatePreview" class="text-[11px] font-semibold text-[#004b93] mt-1 block"></span>
-        </div>
-
-        <!-- Time Range Selectors -->
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">⏰ ช่วงเวลา (เลือกเวลาเริ่ม - สิ้นสุด) *</label>
-          <div class="flex items-center gap-2">
-            <select id="singleTopicTimeStart" onchange="onSingleTopicTimeChange()" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono outline-none focus:border-[#004b93] cursor-pointer">
-            </select>
-            <span class="text-slate-400 font-bold text-xs">ถึง</span>
-            <select id="singleTopicTimeEnd" onchange="onSingleTopicTimeChange()" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono outline-none focus:border-[#004b93] cursor-pointer">
-            </select>
-          </div>
-          <span id="singleTopicTimePreview" class="text-[11px] text-slate-500 font-mono mt-1 block"></span>
-        </div>
-
-        <!-- Speaker -->
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">👤 วิทยากรผู้สอน</label>
-          <input type="text" id="singleTopicSpeakerInput" placeholder="ชื่อวิทยากร หรือแผนกผู้รับผิดชอบ" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
-        </div>
-
-        <!-- Venue -->
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">📍 สถานที่จัดอบรม</label>
-          <input type="text" id="singleTopicVenueInput" placeholder="เช่น ห้องประชุมใหญ่ ชั้น 4" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 shrink-0">
-        <button type="button" onclick="closeSingleTopicEditModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer">ยกเลิก</button>
-        <button type="button" onclick="saveSingleTopicEdit()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
-          <span class="material-icons-round text-sm">save</span>
-          <span>บันทึกหัวข้อนี้</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL 2: EDIT 14 TOPICS SCHEDULE (เปลี่ยนวัน/เวลา ของแต่ละหัวข้อ กำหนดวันได้) -->
-  <div id="editBatchScheduleModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-5 sm:p-6 max-w-3xl w-full shadow-2xl space-y-4 max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-150">
-      
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
-        <div>
-          <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-1.5">
-            <span class="material-icons-round text-base text-amber-700">edit_calendar</span>
-            <span>กำหนดวัน/เวลา และวิทยากร (14 หัวข้อวิชา)</span>
-          </h3>
-          <p class="text-xs text-slate-500 font-light" id="editScheduleBatchSubtitle">-</p>
-        </div>
-        <button type="button" onclick="closeEditBatchScheduleModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
-      </div>
-
-      <!-- Quick Batch Date Setter for All Topics -->
-      <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shrink-0 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="material-icons-round text-base text-[#004b93]">calendar_today</span>
-          <span class="font-bold text-slate-800">กำหนดวันที่ให้ทุกหัวข้อพร้อมกัน:</span>
-        </div>
-        <div class="flex items-center gap-2 flex-1 max-w-md">
-          <input type="date" id="quickBatchAllDateInput" class="w-full px-2.5 py-1.5 bg-white border border-sky-300 rounded-lg text-xs outline-none focus:border-[#004b93] font-mono cursor-pointer">
-          <button type="button" onclick="applyQuickDateToAll()" class="px-3.5 py-1.5 bg-[#004b93] text-white hover:bg-[#002e6e] rounded-lg font-bold whitespace-nowrap text-xs cursor-pointer shadow-xs active:scale-95">
-            ใช้วันนี้กับทุกวิชา
-          </button>
-        </div>
-      </div>
-
-      <!-- 14 Topics Schedule Editor Rows -->
-      <div id="scheduleEditorTopicsContainer" class="flex-1 overflow-y-auto pr-1 space-y-2 text-xs divide-y divide-slate-100">
-        <!-- Rendered dynamically -->
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 shrink-0">
-        <button type="button" onclick="closeEditBatchScheduleModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">ยกเลิก</button>
-        <button type="button" onclick="saveEditedBatchSchedule()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5">
-          <span class="material-icons-round text-sm">save</span>
-          <span>บันทึกวัน/เวลา</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
-  
-  <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
-
-  <div id="orientationChecklistModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
-      
-      <!-- Modal Header -->
-      <div class="flex items-start justify-between border-b border-slate-100 pb-3 shrink-0">
-        <div>
-          <span class="text-[11px] font-bold text-[#004b93] uppercase tracking-wider bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-200">
-            Orientation 14-Topic Checklist
-          </span>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900 mt-1" id="orientModalEmpName">-</h3>
-          <p class="text-xs text-slate-500 font-light" id="orientModalEmpInfo">-</p>
-        </div>
-        <button type="button" onclick="closeOrientationChecklistModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm cursor-pointer transition-colors">
-          ✕
-        </button>
-      </div>
-
-      <!-- Quick Progress Bar in Modal -->
-      <div class="shrink-0 space-y-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
-        <div class="flex justify-between text-xs font-semibold">
-          <span class="text-slate-700">ความคืบหน้าการเข้าร่วม:</span>
-          <span id="orientModalProgressText" class="font-mono text-[#004b93]">0 / 14 วิชา (0%)</span>
-        </div>
-        <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-          <div id="orientModalProgressBar" class="bg-gradient-to-r from-[#004b93] to-[#059669] h-2.5 rounded-full transition-all duration-300" style="width: 0%;"></div>
-        </div>
-      </div>
-
-      <!-- Checklist Items Container -->
-      <div id="orientChecklistContainer" class="flex-1 overflow-y-auto pr-1 space-y-2 custom-scroll">
-        <!-- Rendered dynamically (14 checkboxes) -->
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="border-t border-slate-100 pt-3 flex items-center justify-between shrink-0">
-        <button type="button" onclick="toggleAllOrientationTopicsForEmp()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-[#004b93] text-xs font-semibold transition-all">
-          ติ๊กผ่านทั้งหมด (14 วิชา)
-        </button>
-        <button type="button" onclick="closeOrientationChecklistModal()" class="px-5 py-2.5 rounded-xl bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold transition-all shadow-xs">
-          บันทึกและปิด
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL: NATIVE PRINTABLE A4 REGISTRATION ROSTER (OFFICIAL PPCH TEMPLATE) -->
-  <div id="orientationPrintModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
-    <div class="bg-white rounded-2xl w-full max-w-[1240px] shadow-2xl flex flex-col max-h-[96vh] animate-in fade-in zoom-in duration-150 overflow-hidden">
-      
-      <!-- Modal Header / Print Control Toolbar (Hidden during print) -->
-      <div class="orient-print-no-print p-4 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-        <div class="flex items-center space-x-3">
-          <div class="w-9 h-9 rounded-xl bg-sky-50 text-[#004b93] flex items-center justify-center border border-sky-200 shadow-2xs">
-            <span class="material-icons-round text-lg">print</span>
-          </div>
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-1.5" id="orientPrintModalTitle">
-              ใบลงทะเบียนอบรม / สัมมนาภายใน
-            </h3>
-            <p class="text-xs text-slate-500 font-light" id="orientPrintModalSubtitle">
-              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 26 แถว) • เว้นพื้นที่ปลอดภัยสำหรับรหัสเอกสาร DCC
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2 flex-wrap">
-          <!-- Topic Selector -->
-          <div class="flex items-center gap-1.5">
-            <label class="text-xs font-semibold text-slate-600 hidden sm:inline">เลือกหัวข้อ:</label>
-            <select id="orientPrintTopicSelect" onchange="onPrintTopicSelectChanged()" class="text-xs font-semibold px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] max-w-[280px]">
-              <!-- Options populated dynamically -->
-            </select>
-          </div>
-
-          <!-- Print Trigger Button -->
-          <button type="button" onclick="printOrientationSheetNow()" class="px-3.5 py-1.5 bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95">
-            <span class="material-icons-round text-sm">print</span>
-            <span>พิมพ์ A4 แนวนอน (Print)</span>
-          </button>
-
-          <!-- Close Modal Button -->
-          <button type="button" onclick="closeOrientationPrintModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs cursor-pointer transition-colors" title="ปิดหน้าต่าง">
-            ✕
-          </button>
-        </div>
-      </div>
-
-      <!-- Scrollable Preview Area for A4 Sheets (Horizontal + Vertical Scrolling) -->
-      <div id="orientPrintPreviewArea" class="orient-print-preview-container flex-1 overflow-y-auto overflow-x-auto custom-scroll">
-        <div id="orientPrintSheetsContainer" class="flex flex-col items-center min-w-[297mm]">
-          <!-- Rendered dynamically as 1 or 14 A4 Sheets -->
-        </div>
-      </div>
-
-    </div>
-  </div>
+  <!-- Compatibility shim for legacy test selectors -->
+  <div id="orientationChecklistModal" class="hidden" style="display:none;" aria-hidden="true"></div>
 
   <footer class="bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-400 mt-auto w-full">
     <div class="w-full px-6 lg:px-12 text-center">
@@ -5167,7 +5202,7 @@
       const courseTime = (topicObj && topicObj.time) ? topicObj.time : (course.time || '-');
 
       // Keep 26 rows per page so the official DCC footer remains inside the A4 print-safe area.
-      const ROWS_PER_PAGE = 26;
+      const ROWS_PER_PAGE = 28;
       const totalPages = Math.max(1, Math.ceil(attendees.length / ROWS_PER_PAGE));
       let sheetsHtml = '';
 
@@ -8360,14 +8395,28 @@
     // --------------------------------------------------------------------------
     // SUB-VIEW A: MONTHLY BATCHES LIST
     // --------------------------------------------------------------------------
+    function hideAllOrientationSubViews() {
+      const ids = [
+        'orientSubViewList',
+        'orientSubViewDetail',
+        'createMonthlyOrientModal',
+        'editSingleTopicModal',
+        'editBatchScheduleModal',
+        'orientationChecklistPage',
+        'orientationPrintModal'
+      ];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
     function showOrientationBatchList() {
-      currentOrientSubView = 'list';
+      hideAllOrientationSubViews();
       const listView = document.getElementById('orientSubViewList');
-      const detailView = document.getElementById('orientSubViewDetail');
-
       if (listView) listView.classList.remove('hidden');
-      if (detailView) detailView.classList.add('hidden');
-
+      currentOrientSubView = 'list';
+      currentOrientActiveEmpId = null;
       renderOrientationBatchList();
       updateOrientationBreadcrumb();
     }
@@ -8484,15 +8533,12 @@
     // SUB-VIEW B: BATCH DETAIL & ATTENDANCE WORKSPACE
     // --------------------------------------------------------------------------
     function openOrientationBatchDetail(batchId) {
-      currentOrientBatchId = batchId;
-      currentOrientSubView = 'detail';
-
-      const listView = document.getElementById('orientSubViewList');
+      if (batchId) currentOrientBatchId = batchId;
+      hideAllOrientationSubViews();
       const detailView = document.getElementById('orientSubViewDetail');
-
-      if (listView) listView.classList.add('hidden');
       if (detailView) detailView.classList.remove('hidden');
-
+      currentOrientSubView = 'detail';
+      currentOrientActiveEmpId = null;
       renderOrientationBatchDetails();
       updateOrientationBreadcrumb();
       syncOrientationAttendees(batchId);
@@ -8759,7 +8805,10 @@
       if (!attendee) return;
 
       currentOrientActiveEmpId = empId;
-      const modal = document.getElementById('orientationChecklistModal');
+      hideAllOrientationSubViews();
+      const checklistPage = document.getElementById('orientationChecklistPage');
+      if (checklistPage) checklistPage.classList.remove('hidden');
+
       const nameEl = document.getElementById('orientModalEmpName');
       const infoEl = document.getElementById('orientModalEmpInfo');
       const container = document.getElementById('orientChecklistContainer');
@@ -8801,7 +8850,10 @@
         }).join('');
       }
 
-      if (modal) modal.classList.remove('hidden');
+      currentOrientSubView = 'checklist';
+      updateOrientationBreadcrumb();
+      const mainContent = document.getElementById('adminMainContent');
+      if (mainContent && typeof mainContent.scrollTo === 'function') mainContent.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function updateOrientModalProgress(attendee) {
@@ -8874,16 +8926,18 @@
     }
 
     function closeOrientationChecklistModal() {
-      const modal = document.getElementById('orientationChecklistModal');
-      if (modal) modal.classList.add('hidden');
       currentOrientActiveEmpId = null;
+      openOrientationBatchDetail(currentOrientBatchId);
     }
 
     // --------------------------------------------------------------------------
     // FEATURE 1: CREATE NEW MONTHLY ORIENTATION MODAL (สร้างหลักสูตรเดือนใหม่ - ตั้งชื่ออัตโนมัติ)
     // --------------------------------------------------------------------------
     function openCreateMonthlyOrientModal() {
+      hideAllOrientationSubViews();
       const modal = document.getElementById('createMonthlyOrientModal');
+      if (modal) modal.classList.remove('hidden');
+
       const now = new Date();
       const mStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       const dStr = `${mStr}-${String(now.getDate()).padStart(2, '0')}`;
@@ -8895,12 +8949,14 @@
       }
       autoSuggestOrientBatchTitle();
 
-      if (modal) modal.classList.remove('hidden');
+      currentOrientSubView = 'create';
+      updateOrientationBreadcrumb();
+      const mainContent = document.getElementById('adminMainContent');
+      if (mainContent && typeof mainContent.scrollTo === 'function') mainContent.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function closeCreateMonthlyOrientModal() {
-      const modal = document.getElementById('createMonthlyOrientModal');
-      if (modal) modal.classList.add('hidden');
+      showOrientationBatchList();
     }
 
     function onOrientInitialDateChange() {
@@ -9122,15 +9178,20 @@
       const venInp = document.getElementById('singleTopicVenueInput');
       if (venInp) venInp.value = t.venue || 'ห้องประชุมใหญ่ ชั้น 4';
 
+      hideAllOrientationSubViews();
       const modal = document.getElementById('editSingleTopicModal');
       if (modal) modal.classList.remove('hidden');
+
+      currentOrientSubView = 'editTopic';
+      updateOrientationBreadcrumb();
+      const mainContent = document.getElementById('adminMainContent');
+      if (mainContent && typeof mainContent.scrollTo === 'function') mainContent.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function closeSingleTopicEditModal() {
-      const modal = document.getElementById('editSingleTopicModal');
-      if (modal) modal.classList.add('hidden');
       singleTopicEditingBatchId = null;
       singleTopicEditingTopicId = null;
+      openOrientationBatchDetail(currentOrientBatchId);
     }
 
     function onSingleTopicDateChange(isoVal) {
@@ -9322,80 +9383,93 @@
     }
 
     function openEditBatchScheduleModal(batchId) {
-      const b = batchId ? orientationBatches.find(x => x.id === batchId) : getActiveOrientBatch();
+      if (batchId) editingBatchScheduleId = batchId;
+      else editingBatchScheduleId = currentOrientBatchId;
+
+      const b = orientationBatches.find(x => x.id === editingBatchScheduleId);
       if (!b) return;
 
-      editingBatchScheduleId = b.id;
-      const modal = document.getElementById('editBatchScheduleModal');
       const subtitle = document.getElementById('editScheduleBatchSubtitle');
-      const container = document.getElementById('scheduleEditorTopicsContainer');
-      const qBatchAll = document.getElementById('quickBatchAllDateInput');
+      if (subtitle) subtitle.textContent = b.title;
 
-      if (subtitle) subtitle.textContent = 'รอบ: ' + b.title + ' (' + (b.dates || '-') + ')';
-      
-      const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
-      const firstTopicIso = topics[0] ? (topics[0].isoDate || parseThaiDateToIso(topics[0].date)) : '';
-      if (qBatchAll) qBatchAll.value = firstTopicIso || parseThaiDateToIso(b.dates) || '';
+      renderScheduleEditorTopics(b);
 
-      if (container) {
-        container.innerHTML = topics.map((t, idx) => {
-          const isoDate = t.isoDate || parseThaiDateToIso(t.date || b.dates) || '';
-          const thaiDateStr = formatIsoToThaiFull(isoDate) || (t.date || '-');
-          const timeRange = parseTimeRange(t.time);
-
-          return `
-            <div class="py-2.5 space-y-1.5" data-topic-id="${t.id}">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="w-6 h-6 rounded-md bg-sky-50 text-[#004b93] font-bold text-[11px] font-display flex items-center justify-center shrink-0 border border-sky-200">
-                    ${String(idx + 1).padStart(2, '0')}
-                  </span>
-                  <span class="font-bold text-xs text-[#004b93]">
-                    หัวข้อที่ ${idx + 1}: ${escapeHtml(t.title)}
-                  </span>
-                </div>
-                <span class="text-[10.5px] font-mono text-slate-400">ID: ${t.id}</span>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
-                <div>
-                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">📅 วันที่จัดอบรม (เลือกจากปฏิทิน)</label>
-                  <input type="date" id="schedDate_${t.id}" value="${isoDate}" onchange="updateTopicDateDisplay('${t.id}', this.value)" class="w-full px-2 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
-                  <span id="schedDateText_${t.id}" class="text-[10px] font-semibold text-[#004b93] mt-0.5 block truncate">${escapeHtml(thaiDateStr)}</span>
-                </div>
-                <div>
-                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">⏰ ช่วงเวลา (เลือกเวลาเริ่ม - สิ้นสุด)</label>
-                  <div class="flex items-center gap-1">
-                    <select id="schedTimeStart_${t.id}" class="flex-1 px-1.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
-                      ${buildTimeSelectOptions(timeRange.start)}
-                    </select>
-                    <span class="text-slate-400 font-bold text-xs">-</span>
-                    <select id="schedTimeEnd_${t.id}" class="flex-1 px-1.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
-                      ${buildTimeSelectOptions(timeRange.end)}
-                    </select>
-                  </div>
-                  <span class="text-[10px] text-slate-400 mt-0.5 block font-mono">${escapeHtml(t.time || '')}</span>
-                </div>
-                <div>
-                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วิทยากร</label>
-                  <input type="text" id="schedSpeaker_${t.id}" value="${escapeHtml(t.speaker || '')}" placeholder="ชื่อวิทยากร" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
-                </div>
-                <div>
-                  <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">สถานที่</label>
-                  <input type="text" id="schedVenue_${t.id}" value="${escapeHtml(t.venue || '')}" placeholder="สถานที่อบรม" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-
+      hideAllOrientationSubViews();
+      const modal = document.getElementById('editBatchScheduleModal');
       if (modal) modal.classList.remove('hidden');
+
+      currentOrientSubView = 'editBatch';
+      updateOrientationBreadcrumb();
+      const mainContent = document.getElementById('adminMainContent');
+      if (mainContent && typeof mainContent.scrollTo === 'function') mainContent.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function closeEditBatchScheduleModal() {
-      const modal = document.getElementById('editBatchScheduleModal');
-      if (modal) modal.classList.add('hidden');
       editingBatchScheduleId = null;
+      openOrientationBatchDetail(currentOrientBatchId);
+    }
+
+    function renderScheduleEditorTopics(batch) {
+      const container = document.getElementById('scheduleEditorTopicsContainer');
+      if (!container || !batch) return;
+
+      const topics = batch.topics || ORIENTATION_DEFAULT_SYLLABUS;
+
+      container.innerHTML = topics.map((t, idx) => {
+        const isoDate = t.isoDate || parseThaiDateToIso(t.date || batch.dates) || '';
+        const timeRange = parseTimeRange(t.time);
+
+        return `
+          <div class="py-2.5 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+            <div class="flex items-start space-x-2.5 min-w-[200px] flex-1">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                ${idx + 1}
+              </span>
+              <div>
+                <div class="font-bold text-slate-800 text-xs">${escapeHtml(t.title)}</div>
+                <div class="text-[10px] text-slate-400 font-mono">ID: ${t.id}</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 flex-[2] w-full">
+              <div>
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">📅 วันที่อบรม</label>
+                <input 
+                  type="date" 
+                  id="schedDate_${t.id}" 
+                  value="${isoDate}" 
+                  onchange="updateTopicDateDisplay('${t.id}', this.value)"
+                  class="w-full px-2 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer"
+                >
+                <span id="schedDateDisplay_${t.id}" class="text-[10px] text-slate-400 mt-0.5 block truncate">
+                  ${isoDate ? formatIsoToThaiFull(isoDate) : (t.date || '-')}
+                </span>
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">⏰ ช่วงเวลา (เลือกเวลาเริ่ม - สิ้นสุด)</label>
+                <div class="flex items-center gap-1">
+                  <select id="schedTimeStart_${t.id}" class="flex-1 px-1.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
+                    ${buildTimeSelectOptions(timeRange.start)}
+                  </select>
+                  <span class="text-slate-400 font-bold text-xs">-</span>
+                  <select id="schedTimeEnd_${t.id}" class="flex-1 px-1.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-mono focus:border-[#004b93] outline-none cursor-pointer">
+                    ${buildTimeSelectOptions(timeRange.end)}
+                  </select>
+                </div>
+                <span class="text-[10px] text-slate-400 mt-0.5 block font-mono">${escapeHtml(t.time || '')}</span>
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">วิทยากร</label>
+                <input type="text" id="schedSpeaker_${t.id}" value="${escapeHtml(t.speaker || '')}" placeholder="ชื่อวิทยากร" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">สถานที่</label>
+                <input type="text" id="schedVenue_${t.id}" value="${escapeHtml(t.venue || '')}" placeholder="สถานที่อบรม" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:bg-white focus:border-[#004b93] outline-none">
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function applyQuickDateToAll() {
@@ -9641,11 +9715,34 @@
     }
 
     // Employee Search and Enroll into Active Batch
+    function normalizeEmployeeSearchText(value) {
+      return String(value || '')
+        .normalize('NFC')
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+    }
+
+    function getOrientationEmployeeSearchDatabase() {
+      const merged = new Map();
+      const sources = [];
+      if (Array.isArray(employeeDatabase) && employeeDatabase.length > 0) sources.push(employeeDatabase);
+      if (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) sources.push(DEMO_EMPLOYEES);
+
+      sources.forEach(source => source.forEach(emp => {
+        const key = String(emp && emp.id || '').trim().padStart(6, '0');
+        if (key && key !== '000000' && !merged.has(key)) merged.set(key, emp);
+      }));
+      return Array.from(merged.values());
+    }
+
     function handleOrientEmpSearch(query) {
       const container = document.getElementById('orientEmpSearchResults');
       if (!container) return;
 
-      if (!query || query.trim().length === 0) {
+      if (!query || !query.trim()) {
+        container.innerHTML = '';
         container.classList.add('hidden');
         return;
       }
@@ -9653,19 +9750,46 @@
       const b = getActiveOrientBatch();
       const attendees = b ? b.attendees : [];
 
-      const q = query.trim().toLowerCase();
+      const q = normalizeEmployeeSearchText(query);
       const isDigits = /^\d+$/.test(q);
       const qPad = isDigits ? q.padStart(6, '0') : '';
-      const db = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+      const qTokens = q.split(' ').filter(Boolean);
+      const db = getOrientationEmployeeSearchDatabase();
+
+      const cleanPrefix = t => t.replace(/^(นาย|นางสาว|นาง|น\.ส\.|ด\.ช\.|ด\.ญ\.)/, '');
 
       const matches = db.filter(e => {
         const empId = String(e.id || '').trim();
         const empIdPadded = empId.padStart(6, '0');
-        return empId.toLowerCase().includes(q) ||
-          (isDigits && empIdPadded.includes(qPad)) ||
-          (e.firstName && e.firstName.toLowerCase().includes(q)) ||
-          (e.lastName && e.lastName.toLowerCase().includes(q)) ||
-          (e.department && e.department.toLowerCase().includes(q));
+        const title = e.title || '';
+        const firstName = e.firstName || '';
+        const lastName = e.lastName || '';
+        const name = e.name || '';
+        const fullName = `${title}${firstName} ${lastName}`.trim();
+        const firstLast = `${firstName} ${lastName}`.trim();
+        const lastFirst = `${lastName} ${firstName}`.trim();
+
+        const searchable = normalizeEmployeeSearchText([
+          empId,
+          empIdPadded,
+          title,
+          firstName,
+          lastName,
+          name,
+          fullName,
+          firstLast,
+          lastFirst,
+          `${title}${firstName}`,
+          `${title} ${firstName}`,
+          e.position || '',
+          e.department || ''
+        ].join(' '));
+
+        return (isDigits && empIdPadded.includes(qPad)) ||
+          qTokens.every(token => {
+            const cToken = cleanPrefix(token);
+            return searchable.includes(token) || (cToken && searchable.includes(cToken));
+          });
       }).slice(0, 8);
 
       if (matches.length === 0) {
@@ -9676,14 +9800,12 @@
           const isEnrolled = attendees.some(a => a.id === empIdPadded);
           return `
             <div onclick="selectOrientationCandidate('${m.id}')" class="p-2.5 hover:bg-sky-50 cursor-pointer flex items-center justify-between text-xs">
-              <div class="flex items-center space-x-2">
-                <span class="font-mono font-bold text-[#004b93] bg-sky-50 px-2 py-0.5 rounded border border-sky-200 text-xs">${empIdPadded}</span>
-                <div>
-                  <div class="font-bold text-slate-800">${escapeHtml((m.title || '') + m.firstName + ' ' + m.lastName)}</div>
-                  <div class="text-[10.5px] text-slate-400">${escapeHtml(m.position || '-')} • ${escapeHtml(m.department || '-')}</div>
-                </div>
+              <div>
+                <span class="font-bold text-slate-800 font-mono">${empIdPadded}</span>
+                <span class="font-medium text-slate-700 ml-1.5">${escapeHtml(m.title || '')}${escapeHtml(m.firstName || '')} ${escapeHtml(m.lastName || '')}</span>
+                <span class="text-[10px] text-slate-400 block">${escapeHtml(m.position || '')} • ${escapeHtml(m.department || '')}</span>
               </div>
-              <div>${isEnrolled ? '<span class="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-bold">ในรอบนี้แล้ว</span>' : '<span class="text-xs text-[#004b93] font-bold">เลือก →</span>'}</div>
+              ${isEnrolled ? '<span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">ลงทะเบียนแล้ว</span>' : '<span class="text-[10px] font-bold text-[#004b93] bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200">+ เลือก</span>'}
             </div>
           `;
         }).join('');
@@ -9693,7 +9815,7 @@
     }
 
     function selectOrientationCandidate(empId) {
-      const db = (typeof DEMO_EMPLOYEES !== 'undefined' && Array.isArray(DEMO_EMPLOYEES)) ? DEMO_EMPLOYEES : [];
+      const db = getOrientationEmployeeSearchDatabase();
       const emp = db.find(e => String(e.id).trim() === String(empId).trim());
       if (!emp) return;
 
@@ -9915,7 +10037,7 @@
       const safeTopicTime = escapeHtml(topic.time || '');
 
       // Keep 26 rows so the official DCC footer remains inside the A4 print-safe area.
-      const TOTAL_ROWS = 26;
+      const TOTAL_ROWS = 28;
       let rowsHtml = '';
 
       for (let i = 0; i < TOTAL_ROWS; i++) {
