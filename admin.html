@@ -1243,7 +1243,7 @@
     }
 
   </style>
-  <link rel="stylesheet" href="admin-redesign.css?v=20261028">
+  <link rel="stylesheet" href="admin-redesign.css?v=20261028d">
 </head>
 <body class="hrd-admin-redesign bg-[#f8fafc] text-slate-800 antialiased h-screen h-[100dvh] overflow-hidden flex flex-col selection:bg-[#0284c7] selection:text-white">
 
@@ -1301,7 +1301,7 @@
       <!-- Real-time Pulse Badge -->
       <div class="status-realtime-badge" title="เชื่อมต่อฐานข้อมูล Supabase <0.1s และ Google Sheets เบื้องหลังอัตโนมัติ">
         <span class="pulse-indicator-dot"></span>
-        <span class="font-mono">⚡ Supabase 0.08s Active</span>
+        <span class="font-data">Supabase · พร้อมใช้งาน</span>
       </div>
 
       <!-- Archive Button -->
@@ -1803,7 +1803,7 @@
 
         <!-- ==================== VIEW 3: CREATE / EDIT COURSE (NATIVE SPA DOM - NO IFRAMES) ==================== -->
         <div id="viewCreate" class="w-full px-3 sm:px-5 py-4 space-y-3.5 hidden">
-          <div class="w-full max-w-6xl mx-auto space-y-6">
+          <div class="create-workspace-shell w-full space-y-6">
 
             <!-- Title & Context Header Card -->
             <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-7 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -2455,7 +2455,7 @@
                       <span>แบบฟอร์มใบลงทะเบียนมาตรฐาน</span>
                       <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-50 text-[#004b93] border border-sky-200">FM-PPCH-HR-012</span>
                     </div>
-                    <div class="text-[11px] text-slate-500 font-light">ตาราง 28 แถว แนวนอน (A4 Landscape) พอดีเต็มหน้ากระดาษ พร้อมหัวข้อ วันที่ เวลา วิทยากร และช่องลายมือชื่อ อ้างอิงตามเอกสารควบคุมคุณภาพโรงพยาบาล</div>
+                    <div class="text-[11px] text-slate-500 font-light">ตาราง 26 แถว แนวนอน (A4 Landscape) พร้อมหัวข้อ วันที่ เวลา วิทยากร ช่องลายมือชื่อ และพื้นที่ปลอดภัยสำหรับรหัสเอกสารควบคุมคุณภาพโรงพยาบาล</div>
                   </div>
                 </div>
 
@@ -3061,11 +3061,11 @@
         <button type="button" onclick="closeCreateMonthlyOrientModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
       </div>
 
-      <!-- Form Body: Just Select Month & Start Date, Title is Auto-Set -->
+      <!-- Form Body: Month is the source of truth; title and summary are generated automatically. -->
       <div class="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
         <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200 text-[#004b93] flex items-center gap-2">
           <span class="material-icons-round text-lg shrink-0">auto_awesome</span>
-          <span class="text-xs font-semibold leading-relaxed">เลือกเดือนและวันที่จัดอบรม ระบบจะตั้งชื่อหลักสูตรและกำหนดวันให้อัตโนมัติโดยไม่ต้องพิมพ์เองค่ะ</span>
+          <span class="text-xs font-semibold leading-relaxed">เลือกเดือน วันที่เริ่มต้น และสถานที่ ระบบจะตั้งชื่อรอบและใช้สถานที่นี้เป็นค่าเริ่มต้นให้ทุกหัวข้อโดยอัตโนมัติ</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -3079,17 +3079,22 @@
           </div>
         </div>
 
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">3. สถานที่จัดอบรมเริ่มต้น *</label>
+          <div class="relative">
+            <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-base text-slate-400 pointer-events-none">location_on</span>
+            <input type="text" id="newOrientVenueInput" placeholder="เช่น ห้องประชุมใหญ่ ชั้น 4" class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-[#004b93] text-xs shadow-2xs">
+          </div>
+          <p class="mt-1 text-[10.5px] text-slate-500">ระบบจะใส่สถานที่นี้ให้ครบทั้ง 14 หัวข้อ และสามารถแก้รายหัวข้อภายหลังได้</p>
+        </div>
+
         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
           <div class="flex items-center justify-between">
             <label class="font-bold text-slate-700">ชื่อรอบการปฐมนิเทศ (ตั้งอัตโนมัติ)</label>
             <span class="text-[10px] font-bold text-sky-800 bg-sky-100 px-2 py-0.5 rounded-full">✨ Auto-generated</span>
           </div>
           <input type="text" id="newOrientTitleInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-[#004b93] outline-none focus:border-[#004b93]">
-
-          <div class="pt-1">
-            <label class="block font-semibold text-slate-600 mb-1">วันที่จัดอบรมรวม (ข้อความแสดงผล)</label>
-            <input type="text" id="newOrientDatesInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs outline-none focus:border-[#004b93]">
-          </div>
+          <p class="text-[10.5px] text-slate-500">ข้อความสรุปรอบจะอ้างอิงจาก “ประจำเดือนที่จัด” โดยอัตโนมัติ ไม่ต้องกรอกซ้ำ</p>
         </div>
       </div>
 
@@ -3292,7 +3297,7 @@
               ใบลงทะเบียนอบรม / สัมมนาภายใน
             </h3>
             <p class="text-xs text-slate-500 font-light" id="orientPrintModalSubtitle">
-              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 28 แถว พอดีเต็มหน้ากระดาษ) • พิมพ์พร้อมตารางรายชื่อและช่องเซ็นชื่อ
+              แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 26 แถว) • เว้นพื้นที่ปลอดภัยสำหรับรหัสเอกสาร DCC
             </p>
           </div>
         </div>
@@ -4504,21 +4509,23 @@
     }
 
     // ============================================================================
-    // FLOATING ACTION SPEED DIAL HANDLERS (PROJECT 12 REFERENCE - 1s Auto Close)
+    // FLOATING ACTION SPEED DIAL HANDLERS
+    // Hover menus auto-close, while click-opened menus stay pinned until the user
+    // closes them or clicks elsewhere. This keeps the tray usable on slower devices.
     // ============================================================================
     var floatingActionTimer = null;
 
     function handleFloatingEnter(wrapper) {
       if (floatingActionTimer) clearTimeout(floatingActionTimer);
       document.querySelectorAll('.floating-action-wrapper.open').forEach(w => {
-        if (w !== wrapper) w.classList.remove('open');
+        if (w !== wrapper) w.classList.remove('open', 'click-pinned');
       });
       wrapper.classList.add('open');
     }
 
     function handleFloatingLeave(wrapper) {
       if (floatingActionTimer) clearTimeout(floatingActionTimer);
-      // Auto-collapse back to single button in 1 second as per Golden Rule 3
+      if (wrapper.classList.contains('click-pinned')) return;
       floatingActionTimer = setTimeout(() => {
         wrapper.classList.remove('open');
       }, 1000);
@@ -4528,20 +4535,21 @@
       if (e) e.stopPropagation();
       const wrapper = btn.closest('.floating-action-wrapper');
       if (!wrapper) return;
-      const isOpen = wrapper.classList.contains('open');
-      document.querySelectorAll('.floating-action-wrapper.open').forEach(w => w.classList.remove('open'));
-      if (!isOpen) wrapper.classList.add('open');
+      if (floatingActionTimer) clearTimeout(floatingActionTimer);
+      const isPinned = wrapper.classList.contains('click-pinned');
+      document.querySelectorAll('.floating-action-wrapper.open').forEach(w => w.classList.remove('open', 'click-pinned'));
+      if (!isPinned) wrapper.classList.add('open', 'click-pinned');
     }
 
     function closeFloatingMenu(btn, e) {
       if (e) e.stopPropagation();
       const wrapper = btn.closest('.floating-action-wrapper');
-      if (wrapper) wrapper.classList.remove('open');
+      if (wrapper) wrapper.classList.remove('open', 'click-pinned');
     }
 
     document.addEventListener('click', function(e) {
       if (!e.target.closest('.floating-action-wrapper')) {
-        document.querySelectorAll('.floating-action-wrapper.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.floating-action-wrapper.open').forEach(w => w.classList.remove('open', 'click-pinned'));
       }
     });
 
@@ -5100,21 +5108,31 @@
         return;
       }
 
-      // Fetch attendees directly from Supabase Primary DB
+      // Print is local-first so the browser print dialog is never blocked by network/DNS failures.
       let attendees = [];
-      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
-        try {
-          attendees = await SupabaseService.getAttendeesByCourse(course.id);
-        } catch(e) {
-          console.warn('Supabase fetch error for printNormalCourseRoster:', e);
-        }
+      try {
+        const cached = localStorage.getItem('hrd_attendees_' + course.id);
+        if (cached) attendees = JSON.parse(cached) || [];
+      } catch (e) {
+        console.warn('Roster cache read notice:', e);
       }
-      if (!attendees || attendees.length === 0) {
-        if (currentRosterCourse && currentRosterCourse.id === course.id && Array.isArray(currentRosterAttendees) && currentRosterAttendees.length > 0) {
-          attendees = currentRosterAttendees;
-        } else if (Array.isArray(course.attendees) && course.attendees.length > 0) {
-          attendees = course.attendees;
-        }
+
+      if (currentRosterCourse && currentRosterCourse.id === course.id && Array.isArray(currentRosterAttendees) && currentRosterAttendees.length > 0) {
+        attendees = currentRosterAttendees;
+      } else if ((!attendees || attendees.length === 0) && Array.isArray(course.attendees) && course.attendees.length > 0) {
+        attendees = course.attendees;
+      }
+
+      // Refresh the cache for the next print in the background; do not await this request.
+      if (typeof SupabaseService !== 'undefined' && SupabaseService.isEnabled()) {
+        const cachedAttendeesForRefresh = Array.isArray(attendees) ? attendees.slice() : [];
+        SupabaseService.getAttendeesByCourse(course.id).then(sbList => {
+          if (!Array.isArray(sbList)) return;
+          const merged = typeof SupabaseService.mergeAttendees === 'function'
+            ? SupabaseService.mergeAttendees(sbList, cachedAttendeesForRefresh)
+            : sbList;
+          try { localStorage.setItem('hrd_attendees_' + course.id, JSON.stringify(merged)); } catch (e) {}
+        }).catch(e => console.warn('Background roster refresh notice:', e));
       }
 
       // Filter by batch if specified
@@ -5148,8 +5166,8 @@
       const courseDate = (topicObj && topicObj.date) ? formatDisplayDate(topicObj.date) : (course.date ? formatDisplayDate(course.date) : '-');
       const courseTime = (topicObj && topicObj.time) ? topicObj.time : (course.time || '-');
 
-      // Exact 28 rows per page to cleanly fill full A4 Landscape sheet down to footer (FM-PPCH-HR-012)
-      const ROWS_PER_PAGE = 28;
+      // Keep 26 rows per page so the official DCC footer remains inside the A4 print-safe area.
+      const ROWS_PER_PAGE = 26;
       const totalPages = Math.max(1, Math.ceil(attendees.length / ROWS_PER_PAGE));
       let sheetsHtml = '';
 
@@ -5264,7 +5282,7 @@
               </tr>
             </table>
 
-            <!-- 3. ATTENDEE TABLE (28 ROWS FULL A4 SHEET) -->
+            <!-- 3. ATTENDEE TABLE (26 ROWS + DCC FOOTER SAFE AREA) -->
             <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; table-layout: fixed;">
               <thead>
                 <tr style="height: 22px; text-align: center; font-weight: bold; border: 1px solid #000;">
@@ -8872,6 +8890,9 @@
       
       if (document.getElementById('newOrientMonthInput')) document.getElementById('newOrientMonthInput').value = mStr;
       if (document.getElementById('newOrientInitialDateInput')) document.getElementById('newOrientInitialDateInput').value = dStr;
+      if (document.getElementById('newOrientVenueInput')) {
+        document.getElementById('newOrientVenueInput').value = ORIENTATION_DEFAULT_SYLLABUS[0].venue || 'ห้องประชุมใหญ่ ชั้น 4';
+      }
       autoSuggestOrientBatchTitle();
 
       if (modal) modal.classList.remove('hidden');
@@ -8885,15 +8906,10 @@
     function onOrientInitialDateChange() {
       const initDateInp = document.getElementById('newOrientInitialDateInput');
       if (!initDateInp || !initDateInp.value) return;
-      const parts = initDateInp.value.split('-');
-      if (parts.length >= 2) {
-        const ym = parts[0] + '-' + parts[1];
-        const mInp = document.getElementById('newOrientMonthInput');
-        if (mInp && mInp.value !== ym) {
-          mInp.value = ym;
-        }
-      }
-      autoSuggestOrientBatchTitle();
+      const mVal = (document.getElementById('newOrientMonthInput') || {}).value || '';
+      const isSameMonth = !mVal || initDateInp.value.startsWith(`${mVal}-`);
+      initDateInp.setAttribute('aria-invalid', String(!isSameMonth));
+      initDateInp.title = isSameMonth ? '' : 'วันที่เริ่มต้นต้องอยู่ในประจำเดือนที่เลือก';
     }
 
     function autoSuggestOrientBatchTitle() {
@@ -8909,30 +8925,23 @@
       if (initDateInp && (!initDateInp.value || !initDateInp.value.startsWith(`${y}-${m}`))) {
         initDateInp.value = `${y}-${m}-01`;
       }
-
-      let dateSummary = `ประจำเดือน${mThai} ${yThai}`;
-      if (initDateInp && initDateInp.value) {
-        const dParts = initDateInp.value.split('-');
-        const dNum = parseInt(dParts[2], 10);
-        dateSummary = `วันที่ ${dNum}-${dNum + 1} ${mThai} ${yThai}`;
+      if (initDateInp) {
+        initDateInp.setAttribute('aria-invalid', 'false');
+        initDateInp.title = '';
       }
 
       const titleInput = document.getElementById('newOrientTitleInput');
-      const datesInput = document.getElementById('newOrientDatesInput');
 
       if (titleInput) {
         titleInput.value = `ปฐมนิเทศพนักงานใหม่ ประจำเดือน${mThai} ${yThai}`;
-      }
-      if (datesInput) {
-        datesInput.value = dateSummary;
       }
     }
 
     function confirmCreateMonthlyOrientation() {
       const mVal = (document.getElementById('newOrientMonthInput') || {}).value || '';
       const initialDateVal = (document.getElementById('newOrientInitialDateInput') || {}).value || '';
+      const defaultVenueVal = ((document.getElementById('newOrientVenueInput') || {}).value || '').trim();
       let titleVal = ((document.getElementById('newOrientTitleInput') || {}).value || '').trim();
-      let datesVal = ((document.getElementById('newOrientDatesInput') || {}).value || '').trim();
       const sheetVal = (document.getElementById('newOrientSheetInput') || {}).value || ORIENTATION_TEMPLATE_SHEET_URL;
 
       if (!mVal) {
@@ -8944,22 +8953,34 @@
       const yThai = parseInt(y, 10) + 543;
       const mIdx = parseInt(m, 10);
       const mThai = THAI_MONTH_FULL[mIdx] || '';
+      const datesVal = `ประจำเดือน${mThai} ${yThai}`;
+
+      if (!initialDateVal) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาเลือกวันที่เริ่มต้นจัดอบรม');
+        return;
+      }
+      if (!initialDateVal.startsWith(`${mVal}-`)) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('วันที่เริ่มต้นต้องอยู่ในประจำเดือนที่เลือก');
+        return;
+      }
+      if (!defaultVenueVal) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาระบุสถานที่จัดอบรมเริ่มต้น');
+        return;
+      }
 
       // Auto-fallback if empty
       if (!titleVal) {
         titleVal = `ปฐมนิเทศพนักงานใหม่ ประจำเดือน${mThai} ${yThai}`;
       }
-      if (!datesVal) {
-        datesVal = initialDateVal ? formatIsoToThaiFull(initialDateVal) : `ประจำเดือน${mThai} ${yThai}`;
-      }
 
       const newId = 'c-orient-' + Date.now();
       
       // Clone standard 14 topics and set initial date directly for each topic
-      const formattedInitDate = initialDateVal ? formatIsoToThaiFull(initialDateVal) : datesVal;
+      const formattedInitDate = formatIsoToThaiFull(initialDateVal);
       const topicsClone = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
         t.date = formattedInitDate;
         t.isoDate = initialDateVal;
+        t.venue = defaultVenueVal;
         return t;
       });
 
@@ -8969,6 +8990,7 @@
         title: titleVal,
         shortTitle: titleVal.length > 24 ? titleVal.slice(0, 24) + '...' : titleVal,
         dates: datesVal,
+        defaultVenue: defaultVenueVal,
         sheetUrl: sheetVal,
         status: 'upcoming',
         topics: topicsClone,
@@ -8996,6 +9018,8 @@
           speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
           date: datesVal,
           time: '08.00 - 17.00 น.',
+          location: defaultVenueVal,
+          venue: defaultVenueVal,
           planType: 'ในแผน',
           category: 'Mandatory Course',
           type: 'ในแผน • Mandatory Course',
@@ -9017,6 +9041,8 @@
           speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
           date: datesVal,
           time: '08.00 - 17.00 น.',
+          location: defaultVenueVal,
+          venue: defaultVenueVal,
           planType: 'ในแผน',
           category: 'Mandatory Course',
           type: 'ในแผน • Mandatory Course',
@@ -9888,8 +9914,8 @@
       const safeTopicDate = escapeHtml(topic.date || batch.dates || '');
       const safeTopicTime = escapeHtml(topic.time || '');
 
-      // 28 rows to cleanly fill the entire A4 Landscape sheet down to footer (FM-PPCH-HR-012)
-      const TOTAL_ROWS = 28;
+      // Keep 26 rows so the official DCC footer remains inside the A4 print-safe area.
+      const TOTAL_ROWS = 26;
       let rowsHtml = '';
 
       for (let i = 0; i < TOTAL_ROWS; i++) {
@@ -9999,7 +10025,7 @@
             </tr>
           </table>
 
-          <!-- 3. ATTENDEE TABLE (28 ROWS FULL A4 SHEET) -->
+          <!-- 3. ATTENDEE TABLE (26 ROWS + DCC FOOTER SAFE AREA) -->
           <table class="orient-sheet-attendee-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; table-layout: fixed;">
             <thead>
               <tr style="height: 22px; text-align: center; font-weight: bold; border: 1px solid #000;">

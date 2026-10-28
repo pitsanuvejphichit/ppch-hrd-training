@@ -1208,7 +1208,7 @@
       }
     }
 
-    async function decodeAndInitCourse() {
+    async function decodeAndInitCourse(cacheOnly = false) {
       const urlParams = new URLSearchParams(window.location.search);
       const cdata = urlParams.get('cdata');
       const requestedCourseId = urlParams.get('course') || urlParams.get('c');
@@ -1258,6 +1258,9 @@
       } catch(e) {
         console.warn('Initial cache lookup error:', e);
       }
+
+      // First paint must never wait for external services. Live sources refresh in the background.
+      if (cacheOnly) return currentCourse;
 
       // 1.8. High-Speed Supabase Lookup (Primary Database, 0.08s)
       if (typeof SupabaseService !== 'undefined') {
@@ -1337,6 +1340,8 @@
           }
         }
       }
+
+      return currentCourse;
     }
 
     function saveAndSetCourse(c) {
@@ -1411,6 +1416,24 @@
     }
 
     let appInitialized = false;
+    async function refreshLiveCourseDataInBackground() {
+      try {
+        await decodeAndInitCourse(false);
+        const hasLiveCourse = loadCourseData();
+        if (!hasLiveCourse) return;
+
+        // Rehydrate cached attendees immediately, then refresh remote sources without blocking the page.
+        initAttendees(true);
+        if (getCourseSheetId()) {
+          syncAttendeesFromSheet(false).catch(err => {
+            console.warn('[Background Sync] Attendee refresh notice:', err);
+          });
+        }
+      } catch (err) {
+        console.warn('[Background Sync] Course refresh notice:', err);
+      }
+    }
+
     async function initApp() {
       if (appInitialized) return;
       appInitialized = true;
@@ -1423,15 +1446,11 @@
 
       try {
         loadLiveEmployees();
-        await decodeAndInitCourse();
+        // Cache/static catalog is the critical path. It keeps first paint consistently fast offline.
+        await decodeAndInitCourse(true);
         const hasCourse = loadCourseData();
         if (hasCourse) {
-          initAttendees(true); // render cache behind loader, skip background sync
-
-          // Fetch live attendees from sheet before lifting loading curtain
-          if (getCourseSheetId()) {
-            await syncAttendeesFromSheet(false);
-          }
+          initAttendees(true);
         }
       } catch (err) {
         console.warn('Initialization error:', err);
@@ -1449,6 +1468,9 @@
             }, 150);
           }
         }, 120);
+
+        // Stale-while-revalidate: the user can work while Supabase/GAS refreshes quietly.
+        setTimeout(refreshLiveCourseDataInBackground, 0);
       }
     }
 

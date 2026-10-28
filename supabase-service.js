@@ -10,10 +10,65 @@
 var SupabaseService = (() => {
   const DEFAULT_SUPABASE_URL = 'https://swtptcqicdjomksufkpy.supabase.co';
   const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3dHB0Y3FpY2Rqb21rc3Vma3B5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MzcwNzgsImV4cCI6MjEwNzAxMzA3OH0.LORHI1hXO9MhKb5qs23ZMJaqM9mU6G90ZtRNQgn5nIw';
+  const READ_TIMEOUT_MS = 900;
+  const CIRCUIT_COOLDOWN_MS = 60000;
 
   let client = null;
+  let circuitOpenUntil = 0;
+  let circuitReason = '';
+  let circuitWarningShown = false;
+
+  function isCircuitOpen() {
+    return Date.now() < circuitOpenUntil;
+  }
+
+  function isNetworkFailure(error) {
+    const text = [
+      error && error.message,
+      error && error.details,
+      error && error.hint,
+      error && error.code,
+      error
+    ].filter(Boolean).join(' ');
+    return /failed to fetch|network|name_not_resolved|load failed|fetcherror|abort|timeout/i.test(text);
+  }
+
+  function tripCircuit(error, operation) {
+    circuitOpenUntil = Date.now() + CIRCUIT_COOLDOWN_MS;
+    circuitReason = (error && (error.message || error.details)) || String(error || 'network unavailable');
+    if (!circuitWarningShown) {
+      console.warn(`[SupabaseService] ${operation || 'request'} unavailable; using local/GAS fallback for 60 seconds.`, circuitReason);
+      circuitWarningShown = true;
+    }
+  }
+
+  function handleQueryError(error, operation) {
+    if (isNetworkFailure(error)) {
+      tripCircuit(error, operation);
+      return;
+    }
+    console.warn(`[SupabaseService] ${operation} error:`, error);
+  }
+
+  async function withReadTimeout(query, operation) {
+    let timer = null;
+    try {
+      return await Promise.race([
+        Promise.resolve(query),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error(`Supabase ${operation} timeout`)), READ_TIMEOUT_MS);
+        })
+      ]);
+    } catch (error) {
+      tripCircuit(error, operation);
+      throw error;
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
 
   function getClient() {
+    if (isCircuitOpen()) return null;
     if (client) return client;
     if (typeof window !== 'undefined' && window.supabase) {
       try {
@@ -29,7 +84,16 @@ var SupabaseService = (() => {
   }
 
   function isEnabled() {
-    return Boolean(typeof window !== 'undefined' && window.supabase);
+    return Boolean(typeof window !== 'undefined' && window.supabase && !isCircuitOpen());
+  }
+
+  function getConnectionState() {
+    return {
+      enabled: Boolean(typeof window !== 'undefined' && window.supabase),
+      available: !isCircuitOpen(),
+      retryAt: circuitOpenUntil || null,
+      reason: circuitReason
+    };
   }
 
   /**
@@ -119,14 +183,17 @@ var SupabaseService = (() => {
     if (!sb) return null;
 
     try {
-      const { data, error } = await sb
-        .from('registrations')
-        .select('*')
-        .eq('course_id', String(courseId))
-        .order('created_at', { ascending: true });
+      const { data, error } = await withReadTimeout(
+        sb
+          .from('registrations')
+          .select('*')
+          .eq('course_id', String(courseId))
+          .order('created_at', { ascending: true }),
+        'getAttendeesByCourse'
+      );
 
       if (error) {
-        console.warn('[SupabaseService] Fetch attendees error:', error);
+        handleQueryError(error, 'getAttendeesByCourse');
         return null;
       }
 
@@ -145,7 +212,7 @@ var SupabaseService = (() => {
         syncedToSheet: row.synced_to_sheet
       }));
     } catch(err) {
-      console.warn('[SupabaseService] Fetch failed:', err);
+      if (!isCircuitOpen()) console.warn('[SupabaseService] Fetch failed:', err);
       return null;
     }
   }
@@ -294,19 +361,22 @@ var SupabaseService = (() => {
     if (!sb) return null;
 
     try {
-      const { data, error } = await sb
-        .from('courses')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data, error } = await withReadTimeout(
+        sb
+          .from('courses')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        'getAllCourses'
+      );
 
       if (error) {
-        console.warn('[SupabaseService] Fetch courses error:', error);
+        handleQueryError(error, 'getAllCourses');
         return null;
       }
 
       return (data || []).map(formatCourseFromDb);
     } catch (err) {
-      console.warn('[SupabaseService] getAllCourses failed:', err);
+      if (!isCircuitOpen()) console.warn('[SupabaseService] getAllCourses failed:', err);
       return null;
     }
   }
@@ -319,20 +389,23 @@ var SupabaseService = (() => {
     if (!sb || !courseId) return null;
 
     try {
-      const { data, error } = await sb
-        .from('courses')
-        .select('*')
-        .eq('id', String(courseId).trim())
-        .single();
+      const { data, error } = await withReadTimeout(
+        sb
+          .from('courses')
+          .select('*')
+          .eq('id', String(courseId).trim())
+          .single(),
+        'getCourseById'
+      );
 
       if (error) {
-        console.warn('[SupabaseService] getCourseById error:', error);
+        handleQueryError(error, 'getCourseById');
         return null;
       }
 
       return formatCourseFromDb(data);
     } catch (err) {
-      console.warn('[SupabaseService] getCourseById failed:', err);
+      if (!isCircuitOpen()) console.warn('[SupabaseService] getCourseById failed:', err);
       return null;
     }
   }
@@ -578,6 +651,7 @@ var SupabaseService = (() => {
   return {
     getClient,
     isEnabled,
+    getConnectionState,
     getAllCourses,
     getCourseById,
     saveCourse,

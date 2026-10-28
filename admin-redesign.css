@@ -1,0 +1,678 @@
+/*
+ * HRD Admin 2026 — usability-first visual system
+ * Presentation-only overrides. Application logic and data contracts stay in admin.html.
+ */
+
+:root {
+  --ui-base: #f2f5f7;
+  --ui-elevated: #ffffff;
+  --ui-primary: #153b59;
+  --ui-secondary: #0b7d7f;
+  --ui-hairline: #d8e2e8;
+  --ui-ink: #172b3a;
+  --ui-body: #465c6b;
+  --ui-muted: #738693;
+  --ui-soft: #eaf1f4;
+  --ui-primary-soft: #eaf2f7;
+  --ui-secondary-soft: #e6f4f3;
+  --ui-danger: #b4232f;
+  --ui-warning: #a85b12;
+  --ui-success: #14775c;
+  --ui-radius-sm: 8px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 16px;
+  --ui-shadow-card: 0 1px 2px rgba(21, 59, 89, .04), 0 8px 24px rgba(21, 59, 89, .045);
+  --ui-shadow-float: 0 18px 44px rgba(21, 59, 89, .16);
+
+  --royal-dark: var(--ui-primary);
+  --royal-blue: var(--ui-primary);
+  --royal-hover: #0d2f4b;
+  --royal-light: var(--ui-secondary);
+  --royal-subtle: var(--ui-primary-soft);
+  --royal-glow: rgba(21, 59, 89, .13);
+  --canvas-bg: var(--ui-base);
+  --surface-white: var(--ui-elevated);
+  --border-main: var(--ui-hairline);
+  --border-subtle: #e8eef1;
+  --border-focus: var(--ui-secondary);
+  --border-blue-soft: #b9d1dd;
+  --text-main: var(--ui-ink);
+  --text-body: var(--ui-body);
+  --text-muted: var(--ui-muted);
+  --text-light: #93a2ac;
+}
+
+body.hrd-admin-redesign {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  background: var(--ui-base) !important;
+  color: var(--ui-ink);
+  font-size: 14px;
+}
+
+body.hrd-admin-redesign :focus-visible {
+  outline: 3px solid rgba(11, 125, 127, .24);
+  outline-offset: 2px;
+}
+
+body.hrd-admin-redesign button,
+body.hrd-admin-redesign input,
+body.hrd-admin-redesign select,
+body.hrd-admin-redesign textarea {
+  font-family: inherit;
+}
+
+/* Header: stable, quiet and task-oriented. */
+body.hrd-admin-redesign .app-topbar {
+  height: 64px;
+  padding: 0 22px;
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid var(--ui-hairline);
+  box-shadow: 0 1px 0 rgba(21, 59, 89, .02);
+  backdrop-filter: blur(16px);
+}
+
+body.hrd-admin-redesign .topbar-left { gap: 16px; min-width: 0; }
+body.hrd-admin-redesign .topbar-right { gap: 8px; flex-shrink: 0; }
+body.hrd-admin-redesign .brand-logo-img { height: 34px; }
+body.hrd-admin-redesign .brand-divider { height: 28px; background: var(--ui-hairline); }
+body.hrd-admin-redesign .brand-badge-pill {
+  color: var(--ui-primary);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+body.hrd-admin-redesign .topbar-breadcrumbs {
+  min-width: 0;
+  margin-left: 2px;
+  padding-left: 16px;
+  border-left: 1px solid var(--ui-hairline);
+  gap: 7px;
+}
+
+body.hrd-admin-redesign #breadcrumbContent > * { white-space: nowrap; }
+body.hrd-admin-redesign #breadcrumbContent .rounded-full {
+  border-radius: 7px !important;
+  background: var(--ui-primary-soft) !important;
+  border-color: #cadce5 !important;
+  color: var(--ui-primary) !important;
+}
+
+body.hrd-admin-redesign .status-realtime-badge {
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-success);
+  background: #f3faf7;
+  border-color: #c9e7dc;
+  font-size: 10.5px;
+}
+
+body.hrd-admin-redesign .pulse-indicator-dot {
+  background: var(--ui-success);
+  box-shadow: 0 0 0 3px rgba(20, 119, 92, .12);
+  animation: none;
+}
+
+body.hrd-admin-redesign .btn-topbar-primary,
+body.hrd-admin-redesign .btn-topbar-secondary {
+  min-height: 36px;
+  border-radius: var(--ui-radius-sm);
+  box-shadow: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  transform: none;
+}
+
+body.hrd-admin-redesign .btn-topbar-primary {
+  background: var(--ui-primary);
+  border: 1px solid var(--ui-primary);
+  padding: 7px 13px;
+}
+
+body.hrd-admin-redesign .btn-topbar-primary:hover {
+  background: #0d2f4b;
+  border-color: #0d2f4b;
+  box-shadow: none;
+  transform: none;
+}
+
+body.hrd-admin-redesign .btn-topbar-secondary {
+  background: #fff;
+  border-color: var(--ui-hairline);
+  color: var(--ui-body);
+}
+
+body.hrd-admin-redesign .btn-topbar-secondary:hover {
+  background: var(--ui-soft);
+  border-color: #c6d4dc;
+  color: var(--ui-primary);
+}
+
+/* Sidebar: labels remain visible. Navigation should never depend on hover discovery. */
+body.hrd-admin-redesign .app-sidebar,
+body.hrd-admin-redesign .app-sidebar:hover,
+body.hrd-admin-redesign .app-sidebar.is-expanded {
+  width: 232px;
+  top: 64px;
+  height: calc(100vh - 64px);
+  height: calc(100dvh - 64px);
+  padding: 17px 12px;
+  background: var(--ui-primary);
+  border-right: 0;
+  box-shadow: none;
+  transition: transform .22s ease;
+}
+
+body.hrd-admin-redesign .sidebar-section-title,
+body.hrd-admin-redesign .app-sidebar:hover .sidebar-section-title,
+body.hrd-admin-redesign .app-sidebar.is-expanded .sidebar-section-title,
+body.hrd-admin-redesign .app-sidebar.mobile-open .sidebar-section-title {
+  opacity: 1;
+  max-height: none;
+  padding: 7px 10px 10px;
+  color: #a9c0d0;
+  font-size: 9px;
+  letter-spacing: .14em;
+}
+
+body.hrd-admin-redesign .sidebar-nav { gap: 5px; }
+body.hrd-admin-redesign .nav-btn {
+  min-height: 42px;
+  padding: 9px 11px;
+  gap: 11px;
+  border-radius: 9px;
+  color: #d1dee7;
+  font-size: 12px;
+  font-weight: 500;
+  transform: none;
+}
+
+body.hrd-admin-redesign .nav-btn:hover {
+  background: rgba(255, 255, 255, .075);
+  color: #fff;
+  transform: none;
+}
+
+body.hrd-admin-redesign .nav-btn.active {
+  background: #fff !important;
+  color: var(--ui-primary) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 8px 18px rgba(5, 27, 44, .18);
+}
+
+body.hrd-admin-redesign .nav-btn .material-icons-round {
+  width: 24px;
+  color: #9eb7c8;
+  font-size: 19px;
+}
+
+body.hrd-admin-redesign .nav-btn.active .material-icons-round { color: var(--ui-secondary); }
+body.hrd-admin-redesign .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon),
+body.hrd-admin-redesign .app-sidebar:hover .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon),
+body.hrd-admin-redesign .app-sidebar.is-expanded .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon) {
+  opacity: 1;
+  max-width: 170px;
+  overflow: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* Workspace foundation. */
+body.hrd-admin-redesign #adminMainContent {
+  width: 100%;
+  min-width: 0;
+  background:
+    linear-gradient(rgba(216, 226, 232, .26) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216, 226, 232, .22) 1px, transparent 1px),
+    var(--ui-base);
+  background-size: 32px 32px;
+  scrollbar-color: #b5c5ce transparent;
+  overflow-x: hidden;
+}
+
+body.hrd-admin-redesign #adminMainContent > [id^="view"] {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+  padding: 22px 26px 36px !important;
+}
+
+body.hrd-admin-redesign footer {
+  border-top: 1px solid var(--ui-hairline) !important;
+  background: rgba(255,255,255,.82) !important;
+  padding: 12px 0 !important;
+  color: var(--ui-muted) !important;
+}
+
+/* Shared surfaces and typography. */
+body.hrd-admin-redesign #adminMainContent section.bg-white,
+body.hrd-admin-redesign #adminMainContent div.bg-white.rounded-xl,
+body.hrd-admin-redesign #adminMainContent div.bg-white.rounded-2xl,
+body.hrd-admin-redesign #adminMainContent div.bg-white.rounded-3xl {
+  border-color: var(--ui-hairline) !important;
+  border-radius: var(--ui-radius-lg) !important;
+  box-shadow: var(--ui-shadow-card) !important;
+}
+
+body.hrd-admin-redesign #adminMainContent h2,
+body.hrd-admin-redesign #adminMainContent h3,
+body.hrd-admin-redesign #adminMainContent h4 { color: var(--ui-ink); }
+
+body.hrd-admin-redesign #adminMainContent input:not([type="radio"]):not([type="checkbox"]),
+body.hrd-admin-redesign #adminMainContent select,
+body.hrd-admin-redesign #adminMainContent textarea {
+  min-height: 40px;
+  border-color: #cdd9df !important;
+  border-radius: var(--ui-radius-sm) !important;
+  background-color: #fbfcfd !important;
+  color: var(--ui-ink) !important;
+  box-shadow: inset 0 1px 1px rgba(21, 59, 89, .02) !important;
+}
+
+body.hrd-admin-redesign #adminMainContent input:not([type="radio"]):not([type="checkbox"]):focus,
+body.hrd-admin-redesign #adminMainContent select:focus,
+body.hrd-admin-redesign #adminMainContent textarea:focus {
+  background: #fff !important;
+  border-color: var(--ui-secondary) !important;
+  box-shadow: 0 0 0 3px rgba(11, 125, 127, .11) !important;
+}
+
+body.hrd-admin-redesign #newOrientInitialDateInput[aria-invalid="true"] {
+  border-color: var(--ui-danger) !important;
+  background: #fff8f8 !important;
+  box-shadow: 0 0 0 3px rgba(180, 35, 47, .09) !important;
+}
+
+body.hrd-admin-redesign input[type="radio"],
+body.hrd-admin-redesign input[type="checkbox"] { accent-color: var(--ui-secondary); }
+
+/* Dashboard KPIs: clear numbers, low decoration. */
+body.hrd-admin-redesign #viewCourses > section:first-child,
+body.hrd-admin-redesign #viewSettings > section:first-child {
+  gap: 12px !important;
+}
+
+body.hrd-admin-redesign #viewCourses > section:first-child > div,
+body.hrd-admin-redesign #viewSettings > section:first-child > div {
+  position: relative;
+  min-height: 104px;
+  padding: 18px !important;
+  border: 1px solid var(--ui-hairline) !important;
+  border-radius: var(--ui-radius-lg) !important;
+  background: #fff !important;
+  box-shadow: var(--ui-shadow-card) !important;
+  overflow: hidden;
+}
+
+body.hrd-admin-redesign #viewCourses > section:first-child > div::before,
+body.hrd-admin-redesign #viewSettings > section:first-child > div::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ui-secondary);
+}
+
+body.hrd-admin-redesign #viewCourses > section:first-child > div:nth-child(2)::before,
+body.hrd-admin-redesign #viewSettings > section:first-child > div:nth-child(2)::before { background: var(--ui-success); }
+body.hrd-admin-redesign #viewCourses > section:first-child > div:nth-child(3)::before,
+body.hrd-admin-redesign #viewSettings > section:first-child > div:nth-child(3)::before { background: #527c9a; }
+body.hrd-admin-redesign #viewCourses > section:first-child > div:nth-child(4)::before,
+body.hrd-admin-redesign #viewSettings > section:first-child > div:nth-child(4)::before { background: #7f8f9a; }
+
+body.hrd-admin-redesign #viewCourses > section:first-child .w-11,
+body.hrd-admin-redesign #viewSettings > section:first-child .w-11 {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 10px !important;
+  background: var(--ui-primary-soft) !important;
+  color: var(--ui-primary) !important;
+}
+
+/* Course filters: wrap instead of hiding controls in a horizontal scrollbar. */
+body.hrd-admin-redesign .filter-toolbar-single-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px 12px;
+  padding: 12px 14px;
+  overflow: visible;
+  border-color: var(--ui-hairline);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow-card);
+}
+
+body.hrd-admin-redesign .toolbar-search-wrapper {
+  min-width: 240px;
+  max-width: none;
+  flex: 1 1 280px;
+}
+
+body.hrd-admin-redesign .toolbar-search-input { min-height: 38px; background: #f7f9fa; }
+body.hrd-admin-redesign .toolbar-divider { display: none; }
+body.hrd-admin-redesign .toolbar-select { min-height: 36px; }
+body.hrd-admin-redesign .toolbar-category-chips {
+  flex: 1 1 330px;
+  min-width: 0;
+  padding: 3px;
+  border: 1px solid var(--ui-hairline);
+  border-radius: 10px;
+  background: var(--ui-base);
+}
+
+body.hrd-admin-redesign .toolbar-chip-btn { min-height: 30px; border-radius: 7px; }
+body.hrd-admin-redesign .toolbar-chip-btn.active {
+  color: var(--ui-primary);
+  background: #fff;
+  border-color: #c9d8df;
+  box-shadow: 0 2px 5px rgba(21,59,89,.06);
+}
+
+body.hrd-admin-redesign .toolbar-count-badge {
+  border-radius: 7px;
+  color: var(--ui-primary);
+  background: var(--ui-primary-soft);
+}
+
+body.hrd-admin-redesign .toolbar-select-group:has(#adminSortSelect) {
+  flex: 1 1 250px;
+}
+
+body.hrd-admin-redesign #adminSortSelect { width: 100%; }
+
+body.hrd-admin-redesign .toolbar-sync-btn { min-height: 36px; border-radius: 8px; color: var(--ui-primary); }
+
+/* Course list: scannable rows with stronger title and calmer metadata. */
+body.hrd-admin-redesign #courseListStack { gap: 10px; }
+body.hrd-admin-redesign .course-strip-card {
+  min-width: 0;
+  min-height: 118px;
+  padding: 15px 16px 15px 18px;
+  border: 1px solid var(--ui-hairline);
+  border-left: 4px solid var(--ui-secondary);
+  border-radius: var(--ui-radius-md);
+  box-shadow: 0 1px 2px rgba(21,59,89,.035);
+  gap: 16px;
+}
+
+body.hrd-admin-redesign .course-strip-card:hover {
+  border-color: #b9ccd6;
+  border-left-color: var(--ui-secondary);
+  box-shadow: 0 8px 22px rgba(21, 59, 89, .075);
+  transform: translateY(-1px);
+}
+
+body.hrd-admin-redesign .strip-info-col { gap: 8px; }
+body.hrd-admin-redesign .strip-badges-row { gap: 6px; }
+body.hrd-admin-redesign .strip-badges-row > button {
+  min-width: 0;
+  max-width: min(430px, 52vw);
+}
+body.hrd-admin-redesign .strip-badges-row > button > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.hrd-admin-redesign .strip-title {
+  color: var(--ui-ink);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.012em;
+}
+
+body.hrd-admin-redesign .strip-meta-row { gap: 18px; color: var(--ui-body); font-size: 11px; }
+body.hrd-admin-redesign .strip-meta-item .material-icons-round { color: var(--ui-secondary); }
+body.hrd-admin-redesign .strip-quota-col { width: 180px; }
+body.hrd-admin-redesign .btn-floating-trigger {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 9px;
+  border-color: #c8d6dd;
+  color: var(--ui-primary);
+  box-shadow: none;
+}
+
+body.hrd-admin-redesign .btn-floating-trigger:hover {
+  background: var(--ui-primary-soft);
+  border-color: #a9c2cf;
+  transform: none;
+  box-shadow: none;
+}
+
+body.hrd-admin-redesign .floating-badge-count { background: var(--ui-secondary); }
+body.hrd-admin-redesign .floating-action-tray {
+  border-radius: 12px;
+  border-color: var(--ui-hairline);
+  box-shadow: var(--ui-shadow-float);
+}
+
+body.hrd-admin-redesign .btn-tray-action { border-radius: 7px; background: #f5f8f9; }
+
+/* Forms and operational views fill the workspace; their internal grids preserve scanability. */
+body.hrd-admin-redesign #viewCreate,
+body.hrd-admin-redesign #viewTarget { max-width: none !important; }
+
+body.hrd-admin-redesign #viewCreate > .create-workspace-shell {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+body.hrd-admin-redesign #viewCreate form > section,
+body.hrd-admin-redesign #viewTarget > section {
+  border-radius: var(--ui-radius-lg) !important;
+  border-color: var(--ui-hairline) !important;
+  box-shadow: var(--ui-shadow-card) !important;
+}
+
+body.hrd-admin-redesign #viewCreate form > section {
+  padding: 24px 26px !important;
+}
+
+body.hrd-admin-redesign #viewCreate form > section > div:first-child,
+body.hrd-admin-redesign #viewTarget > section > div:first-child {
+  border-bottom-color: #e8eef1 !important;
+}
+
+body.hrd-admin-redesign #viewCreate form > section > div:first-child > div:first-child > div:first-child,
+body.hrd-admin-redesign #viewCreate form > section > div:first-child > div:first-child {
+  border-radius: 9px !important;
+}
+
+body.hrd-admin-redesign #viewCreate .bg-slate-50\/70,
+body.hrd-admin-redesign #viewTarget .bg-slate-50\/70 {
+  background: #f7f9fa !important;
+  border-color: var(--ui-hairline) !important;
+  border-radius: var(--ui-radius-md) !important;
+}
+
+body.hrd-admin-redesign #btnSaveCourse {
+  min-height: 44px;
+  background: var(--ui-primary) !important;
+  border: 1px solid var(--ui-primary);
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+body.hrd-admin-redesign #btnSaveCourse:hover { background: #0d2f4b !important; }
+
+/* Calendar uses the same system, retaining its information-dense layout. */
+body.hrd-admin-redesign .training-calendar-shell {
+  --calendar-ink: var(--ui-primary);
+  --calendar-primary: var(--ui-primary);
+  --calendar-accent: var(--ui-secondary);
+  --calendar-surface: #fff;
+  --calendar-border: var(--ui-hairline);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow-card);
+}
+
+body.hrd-admin-redesign .training-calendar-hero { background: #fff; }
+body.hrd-admin-redesign .training-calendar-title-icon {
+  background: var(--ui-primary);
+  border-radius: 10px;
+  box-shadow: none;
+}
+body.hrd-admin-redesign .calendar-toolbar-btn { border-radius: 8px; }
+body.hrd-admin-redesign .calendar-toolbar-btn.primary { background: var(--ui-primary); border-color: var(--ui-primary); }
+body.hrd-admin-redesign .training-calendar-kpis { background: #f6f9fa; }
+body.hrd-admin-redesign .calendar-kpi { border-radius: 10px; }
+body.hrd-admin-redesign .training-calendar-event { border-radius: 5px; }
+
+/* Orientation and employee management. */
+body.hrd-admin-redesign .orient-kpi-card {
+  min-height: 72px;
+  padding: 12px 14px;
+  border-color: var(--ui-hairline);
+  border-radius: var(--ui-radius-md);
+  box-shadow: var(--ui-shadow-card);
+}
+
+body.hrd-admin-redesign .orient-kpi-card:hover { border-color: #b9ccd6; box-shadow: var(--ui-shadow-card); }
+body.hrd-admin-redesign .orient-kpi-icon { border-radius: 9px; }
+
+body.hrd-admin-redesign #viewOrientation table,
+body.hrd-admin-redesign #viewSettings table { color: var(--ui-body); }
+
+body.hrd-admin-redesign #viewOrientation thead tr,
+body.hrd-admin-redesign #viewSettings thead tr {
+  background: #eef4f6 !important;
+  color: var(--ui-primary) !important;
+  border-color: #d2e0e6 !important;
+}
+
+body.hrd-admin-redesign #viewOrientation tbody tr:hover,
+body.hrd-admin-redesign #viewSettings tbody tr:hover { background: #f4f8f9; }
+
+/* Modal consistency. */
+body.hrd-admin-redesign [id$="Modal"].fixed > div,
+body.hrd-admin-redesign #hrdModalCard {
+  border-radius: var(--ui-radius-lg) !important;
+  border-color: var(--ui-hairline) !important;
+  box-shadow: var(--ui-shadow-float) !important;
+}
+
+/* The document preview shell uses the full work area while each A4 sheet keeps its real ratio. */
+@media screen and (min-width: 1281px) {
+  body.hrd-admin-redesign #orientationPrintModal {
+    padding: 16px 16px 16px 248px;
+  }
+
+  body.hrd-admin-redesign #orientationPrintModal > div {
+    width: 100%;
+    max-width: none !important;
+    max-height: calc(100dvh - 32px);
+  }
+}
+
+/* Responsive: preserve the task hierarchy instead of shrinking everything. */
+@media (max-width: 1280px) and (min-width: 993px) {
+  body.hrd-admin-redesign .app-sidebar,
+  body.hrd-admin-redesign .app-sidebar:hover,
+  body.hrd-admin-redesign .app-sidebar.is-expanded { width: 214px; }
+  body.hrd-admin-redesign #orientationPrintModal {
+    padding: 16px 16px 16px 230px;
+  }
+  body.hrd-admin-redesign #orientationPrintModal > div {
+    width: 100%;
+    max-width: none !important;
+    max-height: calc(100dvh - 32px);
+  }
+  body.hrd-admin-redesign .toolbar-category-chips {
+    flex: 1 1 100%;
+    order: 3;
+  }
+  body.hrd-admin-redesign .toolbar-select-group:has(#adminSortSelect),
+  body.hrd-admin-redesign .toolbar-count-badge,
+  body.hrd-admin-redesign .filter-toolbar-single-row > .floating-action-wrapper,
+  body.hrd-admin-redesign .toolbar-sync-btn { order: 4; }
+}
+
+@media (max-width: 992px) {
+  body.hrd-admin-redesign .app-topbar { height: 60px; padding: 0 14px; }
+  body.hrd-admin-redesign .app-sidebar,
+  body.hrd-admin-redesign .app-sidebar:hover,
+  body.hrd-admin-redesign .app-sidebar.is-expanded {
+    position: fixed;
+    width: 264px;
+    top: 60px;
+    height: calc(100vh - 60px);
+    height: calc(100dvh - 60px);
+    transform: translateX(-100%);
+    box-shadow: var(--ui-shadow-float);
+  }
+  body.hrd-admin-redesign .app-sidebar.mobile-open { transform: translateX(0); }
+  body.hrd-admin-redesign #adminMainContent > [id^="view"] { padding: 18px 16px 30px !important; }
+  body.hrd-admin-redesign .topbar-breadcrumbs { display: none; }
+  body.hrd-admin-redesign .filter-toolbar-single-row {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+  body.hrd-admin-redesign .toolbar-search-wrapper { flex: 1 1 100%; }
+  body.hrd-admin-redesign .toolbar-category-chips { max-width: 100%; overflow-x: auto; }
+  body.hrd-admin-redesign .course-strip-card { align-items: flex-start; }
+  body.hrd-admin-redesign .strip-quota-col { display: none; }
+}
+
+@media (max-width: 640px) {
+  body.hrd-admin-redesign .app-topbar { padding: 0 10px; }
+  body.hrd-admin-redesign .topbar-brand .brand-divider,
+  body.hrd-admin-redesign .brand-badge-pill,
+  body.hrd-admin-redesign .status-realtime-badge,
+  body.hrd-admin-redesign .btn-topbar-secondary:not(.md\:hidden) { display: none; }
+  body.hrd-admin-redesign .brand-logo-img { height: 30px; }
+  body.hrd-admin-redesign .btn-topbar-primary { padding: 7px 10px; }
+  body.hrd-admin-redesign .btn-topbar-primary span:last-child { display: none; }
+  body.hrd-admin-redesign #adminMainContent > [id^="view"] { padding: 14px 10px 26px !important; }
+  body.hrd-admin-redesign #viewCourses > section:first-child > div,
+  body.hrd-admin-redesign #viewSettings > section:first-child > div {
+    min-height: 88px;
+    padding: 14px !important;
+  }
+  body.hrd-admin-redesign .filter-toolbar-single-row { padding: 10px; gap: 8px; }
+  body.hrd-admin-redesign .toolbar-select-group { flex: 1 1 auto; }
+  body.hrd-admin-redesign .toolbar-select { min-width: 0; max-width: 150px; }
+  body.hrd-admin-redesign .toolbar-count-badge { display: none; }
+  body.hrd-admin-redesign .course-strip-card {
+    min-height: auto;
+    padding: 14px;
+    flex-direction: column;
+  }
+  body.hrd-admin-redesign .strip-title { white-space: normal; }
+  body.hrd-admin-redesign .strip-meta-row { gap: 8px 14px; }
+  body.hrd-admin-redesign .strip-actions-col { position: absolute; top: 12px; right: 12px; }
+  body.hrd-admin-redesign .strip-info-col { padding-right: 38px; }
+  body.hrd-admin-redesign #viewCreate form > section { padding: 18px 16px !important; }
+  body.hrd-admin-redesign #viewTarget #courseTitleHeading { overflow-wrap: anywhere; }
+  body.hrd-admin-redesign #viewTarget #targetCourseSelect { width: 100%; min-width: 0; max-width: 100%; }
+  body.hrd-admin-redesign #viewTarget #targetCourseSelect:where(select) { text-overflow: ellipsis; }
+  body.hrd-admin-redesign #viewTarget div:has(> #targetCourseSelect) {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.hrd-admin-redesign *,
+  body.hrd-admin-redesign *::before,
+  body.hrd-admin-redesign *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
