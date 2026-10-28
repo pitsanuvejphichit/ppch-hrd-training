@@ -521,12 +521,12 @@
       color: var(--text-main);
     }
 
-    /* ==================== LEAN LEFT SIDEBAR (COLLAPSIBLE MINI / EXPAND ON HOVER) ==================== */
+    /* ==================== PINNED LEFT SIDEBAR (KHUN NICK'S SIGNATURE 240px) ==================== */
     .app-sidebar {
-      width: 68px;
+      width: 240px;
       background: linear-gradient(180deg, #001f44 0%, #001733 100%);
       border-right: 1px solid rgba(0, 50, 110, 0.4);
-      padding: 12px 8px;
+      padding: 14px 10px;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -538,15 +538,7 @@
       overflow-x: hidden;
       z-index: 95;
       align-self: flex-start;
-      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
       user-select: none;
-    }
-    @media (min-width: 993px) {
-      .app-sidebar:hover,
-      .app-sidebar.is-expanded {
-        width: 240px;
-        box-shadow: 4px 0 20px rgba(0, 15, 45, 0.2);
-      }
     }
     .app-sidebar::-webkit-scrollbar { width: 4px; }
     .app-sidebar::-webkit-scrollbar-thumb {
@@ -557,22 +549,14 @@
     .sidebar-section-title {
       font-size: 10px;
       font-weight: 700;
-      color: #64748b;
+      color: #94a3b8;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      padding: 8px 8px 4px 8px;
+      padding: 8px 10px 4px 10px;
       white-space: nowrap;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 0.15s ease, max-height 0.2s ease, padding 0.2s ease;
-    }
-    .app-sidebar:hover .sidebar-section-title,
-    .app-sidebar.is-expanded .sidebar-section-title,
-    .app-sidebar.mobile-open .sidebar-section-title {
       opacity: 1;
       max-height: 30px;
-      padding: 8px 10px 4px 10px;
+      overflow: hidden;
     }
 
     .sidebar-nav {
@@ -626,34 +610,19 @@
     }
 
     .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon) {
-      opacity: 0;
-      max-width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      pointer-events: none;
-      transform: translateX(-4px);
-      transition: opacity 0.16s ease, max-width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s ease;
-    }
-    .app-sidebar:hover .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon),
-    .app-sidebar.is-expanded .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon),
-    .app-sidebar.mobile-open .nav-btn > span:not(.material-icons-round):not(.nav-count-badge):not(.nav-ext-icon) {
       opacity: 1;
       max-width: 170px;
+      overflow: hidden;
+      white-space: nowrap;
       pointer-events: auto;
-      transform: translateX(0);
+      transform: none;
     }
 
     .nav-ext-icon {
-      opacity: 0;
+      opacity: 1;
       margin-left: auto;
       font-size: 14px !important;
       color: #94a3b8 !important;
-      transition: opacity 0.15s ease;
-    }
-    .app-sidebar:hover .nav-ext-icon,
-    .app-sidebar.is-expanded .nav-ext-icon,
-    .app-sidebar.mobile-open .nav-ext-icon {
-      opacity: 1;
     }
 
     @media (max-width: 992px) {
@@ -1355,8 +1324,8 @@
     <!-- Mobile Backdrop Overlay -->
     <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 hidden md:hidden"></div>
 
-    <!-- ==================== 2. LEAN LEFT SIDEBAR (COLLAPSIBLE MINI / EXPAND ON HOVER) ==================== -->
-    <aside id="adminSidebar" class="app-sidebar" onmouseenter="this.classList.add('is-expanded')" onmouseleave="this.classList.remove('is-expanded')">
+    <!-- ==================== 2. PINNED LEFT SIDEBAR (KHUN NICK'S SIGNATURE 240px) ==================== -->
+    <aside id="adminSidebar" class="app-sidebar">
       
       <!-- Section 1: ระบบฝึกอบรม (Training Operations) -->
       <div class="sidebar-section-title">ระบบฝึกอบรม</div>
@@ -3077,7 +3046,7 @@
   <!-- MODAL: ORIENTATION 14 TOPICS CHECKLIST & SIGN-OFF -->
   
   
-  <!-- MODAL 1: CREATE NEW MONTHLY ORIENTATION (สร้างหลักสูตรปฐมนิเทศเดือนใหม่) -->
+  <!-- MODAL 1: CREATE NEW MONTHLY ORIENTATION (สร้างหลักสูตรปฐมนิเทศเดือนใหม่ - ตั้งชื่ออัตโนมัติ) -->
   <div id="createMonthlyOrientModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-5 sm:p-6 max-w-xl w-full shadow-2xl space-y-4 max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-150">
       
@@ -3092,37 +3061,119 @@
         <button type="button" onclick="closeCreateMonthlyOrientModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
       </div>
 
-      <!-- Form Body -->
+      <!-- Form Body: Just Select Month & Start Date, Title is Auto-Set -->
       <div class="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
+        <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200 text-[#004b93] flex items-center gap-2">
+          <span class="material-icons-round text-lg shrink-0">auto_awesome</span>
+          <span class="text-xs font-semibold leading-relaxed">เลือกเดือนและวันที่จัดอบรม ระบบจะตั้งชื่อหลักสูตรและกำหนดวันให้อัตโนมัติโดยไม่ต้องพิมพ์เองค่ะ</span>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">ประจำเดือน (YYYY-MM) *</label>
-            <input type="month" id="newOrientMonthInput" onchange="autoSuggestOrientBatchTitle()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+            <label class="block font-bold text-slate-800 mb-1">1. ประจำเดือนที่จัด (YYYY-MM) *</label>
+            <input type="month" id="newOrientMonthInput" onchange="autoSuggestOrientBatchTitle()" class="w-full px-3 py-2.5 bg-white border-2 border-sky-400 rounded-xl outline-none focus:border-[#004b93] font-bold text-slate-900 text-xs shadow-2xs cursor-pointer">
           </div>
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">วันที่จัดอบรมรวม *</label>
-            <input type="text" id="newOrientDatesInput" placeholder="เช่น 5-6 พฤศจิกายน 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
+            <label class="block font-bold text-slate-800 mb-1">2. วันที่เริ่มต้นจัดอบรม (ปฏิทิน) *</label>
+            <input type="date" id="newOrientInitialDateInput" onchange="onOrientInitialDateChange()" class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-[#004b93] text-xs font-mono cursor-pointer shadow-2xs">
           </div>
         </div>
 
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">ชื่อรอบการปฐมนิเทศ *</label>
-          <input type="text" id="newOrientTitleInput" placeholder="เช่น ปฐมนิเทศพนักงานใหม่ รอบ 5-6 พ.ย. 2569" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93]">
-        </div>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-slate-700">ชื่อรอบการปฐมนิเทศ (ตั้งอัตโนมัติ)</label>
+            <span class="text-[10px] font-bold text-sky-800 bg-sky-100 px-2 py-0.5 rounded-full">✨ Auto-generated</span>
+          </div>
+          <input type="text" id="newOrientTitleInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-[#004b93] outline-none focus:border-[#004b93]">
 
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">📅 วันที่เริ่มต้นสำหรับทั้ง 14 หัวข้อวิชา *</label>
-          <input type="date" id="newOrientInitialDateInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg outline-none focus:border-[#004b93] text-xs font-mono cursor-pointer">
-          <span class="text-[11px] text-slate-400 mt-1 block">เลือกวันที่จากปฏิทินเพื่อตั้งค่าเริ่มต้นให้กับทุกหัวข้อวิชา และสามารถปรับเปลี่ยนวันที่ของแต่ละวิชาได้อย่างอิสระค่ะ</span>
+          <div class="pt-1">
+            <label class="block font-semibold text-slate-600 mb-1">วันที่จัดอบรมรวม (ข้อความแสดงผล)</label>
+            <input type="text" id="newOrientDatesInput" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs outline-none focus:border-[#004b93]">
+          </div>
         </div>
       </div>
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 shrink-0">
-        <button type="button" onclick="closeCreateMonthlyOrientModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">ยกเลิก</button>
-        <button type="button" onclick="confirmCreateMonthlyOrientation()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5">
+        <button type="button" onclick="closeCreateMonthlyOrientModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer">ยกเลิก</button>
+        <button type="button" onclick="confirmCreateMonthlyOrientation()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
           <span class="material-icons-round text-sm">save</span>
           <span>สร้างและบันทึกรอบใหม่</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT SINGLE TOPIC (แก้ไขทีละรายการ) -->
+  <div id="editSingleTopicModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[92vh] flex flex-col animate-in fade-in zoom-in duration-150">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
+        <div class="flex items-center space-x-2">
+          <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 border border-amber-200">
+            <span class="material-icons-round text-base">edit_calendar</span>
+          </span>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900" id="singleTopicModalHeader">แก้ไขหัวข้อวิชา</h3>
+            <p class="text-[11px] text-slate-500 font-light" id="singleTopicModalSubtitle">-</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSingleTopicEditModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs cursor-pointer">✕</button>
+      </div>
+
+      <!-- Hidden Tracking Fields -->
+      <input type="hidden" id="singleTopicBatchId">
+      <input type="hidden" id="singleTopicId">
+
+      <!-- Form Body -->
+      <div class="space-y-3.5 text-xs overflow-y-auto pr-1 flex-1">
+        <!-- Topic Title Card -->
+        <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-200">
+          <span class="text-[10px] font-bold text-[#004b93] uppercase tracking-wider block mb-0.5" id="singleTopicNumBadge">หัวข้อที่ --</span>
+          <div class="text-xs font-bold text-slate-900 leading-snug" id="singleTopicTitleDisplay">-</div>
+        </div>
+
+        <!-- Date Picker -->
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">📅 วันที่จัดอบรมหัวข้อนี้ (เลือกจากปฏิทิน) *</label>
+          <input type="date" id="singleTopicDateInput" onchange="onSingleTopicDateChange(this.value)" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg outline-none focus:border-[#004b93] font-mono text-xs cursor-pointer">
+          <span id="singleTopicDatePreview" class="text-[11px] font-semibold text-[#004b93] mt-1 block"></span>
+        </div>
+
+        <!-- Time Range Selectors -->
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">⏰ ช่วงเวลา (เลือกเวลาเริ่ม - สิ้นสุด) *</label>
+          <div class="flex items-center gap-2">
+            <select id="singleTopicTimeStart" onchange="onSingleTopicTimeChange()" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono outline-none focus:border-[#004b93] cursor-pointer">
+            </select>
+            <span class="text-slate-400 font-bold text-xs">ถึง</span>
+            <select id="singleTopicTimeEnd" onchange="onSingleTopicTimeChange()" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono outline-none focus:border-[#004b93] cursor-pointer">
+            </select>
+          </div>
+          <span id="singleTopicTimePreview" class="text-[11px] text-slate-500 font-mono mt-1 block"></span>
+        </div>
+
+        <!-- Speaker -->
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">👤 วิทยากรผู้สอน</label>
+          <input type="text" id="singleTopicSpeakerInput" placeholder="ชื่อวิทยากร หรือแผนกผู้รับผิดชอบ" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
+        </div>
+
+        <!-- Venue -->
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">📍 สถานที่จัดอบรม</label>
+          <input type="text" id="singleTopicVenueInput" placeholder="เช่น ห้องประชุมใหญ่ ชั้น 4" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:bg-white focus:border-[#004b93] text-xs">
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 shrink-0">
+        <button type="button" onclick="closeSingleTopicEditModal()" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer">ยกเลิก</button>
+        <button type="button" onclick="saveSingleTopicEdit()" class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
+          <span class="material-icons-round text-sm">save</span>
+          <span>บันทึกหัวข้อนี้</span>
         </button>
       </div>
 
@@ -4084,6 +4135,24 @@
       return id === 'cpr-2026' || id === 'fire-safety-2026' || id === 'bls-2026' || id === 'c-2026-2zqr' || id.includes('2zqr') || title.includes('คู่มือการใช้งานระบบ');
     }
 
+    function getDeletedGeneralCourseIds() {
+      try {
+        const str = localStorage.getItem('hrd_deleted_general_course_ids') || '[]';
+        return new Set(JSON.parse(str));
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function recordDeletedGeneralCourseId(courseId) {
+      if (!courseId) return;
+      try {
+        const set = getDeletedGeneralCourseIds();
+        set.add(courseId);
+        localStorage.setItem('hrd_deleted_general_course_ids', JSON.stringify([...set]));
+      } catch (e) {}
+    }
+
     try {
       localStorage.removeItem('hrd_course_c-2026-2zqr');
       localStorage.removeItem('hrd_attendees_c-2026-2zqr');
@@ -4095,6 +4164,7 @@
       }
 
       let hasData = false;
+      const deletedIds = getDeletedGeneralCourseIds();
 
       // 1. Supabase Primary Source of Truth (Instant 0.08s speed with 1500ms race timeout)
       if (typeof SupabaseService !== 'undefined') {
@@ -4105,7 +4175,7 @@
           );
           const sbCourses = await Promise.race([fetchPromise, timeoutPromise]);
           if (Array.isArray(sbCourses) && sbCourses.length > 0) {
-            const valid = sbCourses.filter(function(c) { return !isDemoCourse(c); });
+            const valid = sbCourses.filter(function(c) { return !isDemoCourse(c) && !deletedIds.has(c.id); });
             if (valid.length > 0) {
               coursesData = sortCourses(valid, adminSortOrder);
               hasData = true;
@@ -4122,7 +4192,7 @@
           const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
           if (Array.isArray(resStatic) && resStatic.length > 0) {
             const valid = resStatic.filter(function(c) {
-              return !isDemoCourse(c);
+              return !isDemoCourse(c) && !deletedIds.has(c.id);
             });
             if (valid.length > 0) {
               coursesData = sortCourses(valid, adminSortOrder);
@@ -4141,7 +4211,7 @@
           if (cachedStr) {
             const parsed = JSON.parse(cachedStr);
             if (Array.isArray(parsed) && parsed.length > 0) {
-              const valid = parsed.filter(function(c) { return !isDemoCourse(c); });
+              const valid = parsed.filter(function(c) { return !isDemoCourse(c) && !deletedIds.has(c.id); });
               if (valid.length > 0) {
                 coursesData = sortCourses(valid, adminSortOrder);
                 hasData = true;
@@ -4665,6 +4735,12 @@
         { danger: true, confirmText: 'ยืนยันนำออก', cancelText: 'ยกเลิก' }
       );
       if (!ok) return;
+
+      // Persist deletion ID so it never resurrects on refresh
+      recordDeletedGeneralCourseId(id);
+      if (typeof recordDeletedOrientBatchId === 'function') {
+        recordDeletedOrientBatchId(id);
+      }
 
       coursesData = coursesData.filter(function(c) { return c.id !== id; });
       try { 
@@ -8073,26 +8149,30 @@
         }),
         attendees: [],
         deletedAttendeeIds: []
-      },
-      {
-        id: 'c-2026-orientation-dec',
-        month: '2026-12',
-        title: 'ปฐมนิเทศพนักงานใหม่ รอบ 3-5 ธ.ค. 2569',
-        shortTitle: 'รอบ 3-5 ธ.ค. 2569',
-        dates: '3-5 ธันวาคม 2569',
-        day1Date: '3 ธันวาคม 2569',
-        day2Date: '4 ธันวาคม 2569',
-        day3Date: '5 ธันวาคม 2569',
-        sheetUrl: ORIENTATION_TEMPLATE_SHEET_URL,
-        status: 'upcoming',
-        topics: JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-          t.date = t.day === 1 ? '3 ธันวาคม 2569' : (t.day === 2 ? '4 ธันวาคม 2569' : '5 ธันวาคม 2569');
-          return t;
-        }),
-        attendees: [],
-        deletedAttendeeIds: []
       }
     ];
+
+    function getDeletedOrientBatchIds() {
+      try {
+        const str = localStorage.getItem('hrd_deleted_orient_batch_ids') || '[]';
+        const arr = JSON.parse(str);
+        if (!arr.includes('c-2026-orientation-dec')) {
+          arr.push('c-2026-orientation-dec');
+        }
+        return new Set(arr);
+      } catch (e) {
+        return new Set(['c-2026-orientation-dec']);
+      }
+    }
+
+    function recordDeletedOrientBatchId(batchId) {
+      if (!batchId) return;
+      try {
+        const set = getDeletedOrientBatchIds();
+        set.add(batchId);
+        localStorage.setItem('hrd_deleted_orient_batch_ids', JSON.stringify([...set]));
+      } catch (e) {}
+    }
 
     let currentOrientSubView = 'list'; // 'list' | 'detail'
     let currentOrientBatchId = 'c-2026-orientation-oct';
@@ -8204,24 +8284,55 @@
 
     // Initialize View: Shows Monthly Batches List first per user request
     function initOrientationView() {
-      // Restore topic customizations from coursesData if available
-      const octBatch = orientationBatches.find(b => b.id === 'c-2026-orientation-oct');
-      if (octBatch) {
+      // 1. Filter out permanently deleted orientation batches
+      const delBatches = getDeletedOrientBatchIds();
+      orientationBatches = orientationBatches.filter(b => !delBatches.has(b.id));
+
+      // 2. Discover dynamically created orientation batches from coursesData
+      if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
+        coursesData.forEach(c => {
+          if (!c || delBatches.has(c.id)) return;
+          const isOrient = String(c.id).includes('orient') || 
+            (c.category === 'Mandatory Course') || 
+            (c.title && c.title.includes('ปฐมนิเทศ'));
+          if (isOrient && !orientationBatches.some(b => b.id === c.id)) {
+            orientationBatches.push({
+              id: c.id,
+              month: c.month || (c.id.match(/\d{4}-\d{2}/) ? c.id.match(/\d{4}-\d{2}/)[0] : ''),
+              title: c.title,
+              shortTitle: c.title.length > 24 ? c.title.slice(0, 24) + '...' : c.title,
+              dates: c.date || '',
+              sheetUrl: c.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
+              status: c.status || 'upcoming',
+              topics: Array.isArray(c.topics) && c.topics.length > 0 ? c.topics : JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)),
+              attendees: [],
+              deletedAttendeeIds: []
+            });
+          }
+        });
+      }
+
+      // 3. Restore topic customizations from coursesData if available
+      orientationBatches.forEach(b => {
         const courseMatch = (typeof coursesData !== 'undefined' && Array.isArray(coursesData))
-          ? coursesData.find(c => c && c.id === octBatch.id)
+          ? coursesData.find(c => c && c.id === b.id)
           : null;
         if (courseMatch) {
           if (Array.isArray(courseMatch.topics) && courseMatch.topics.length > 0) {
-            octBatch.topics = courseMatch.topics;
+            b.topics = courseMatch.topics;
           }
-          if (courseMatch.date) octBatch.dates = courseMatch.date;
-          if (courseMatch.day1Date) octBatch.day1Date = courseMatch.day1Date;
-          if (courseMatch.day2Date) octBatch.day2Date = courseMatch.day2Date;
-          if (courseMatch.sheetUrl) octBatch.sheetUrl = courseMatch.sheetUrl;
+          if (courseMatch.date) b.dates = courseMatch.date;
+          if (courseMatch.day1Date) b.day1Date = courseMatch.day1Date;
+          if (courseMatch.day2Date) b.day2Date = courseMatch.day2Date;
+          if (courseMatch.sheetUrl) b.sheetUrl = courseMatch.sheetUrl;
         }
+      });
 
-        // Trigger non-blocking background sync of live attendees from Google Sheet & Supabase
-        syncOrientationAttendees('c-2026-orientation-oct');
+      if (orientationBatches.length > 0) {
+        if (!orientationBatches.some(b => b.id === currentOrientBatchId)) {
+          currentOrientBatchId = orientationBatches[0].id;
+        }
+        syncOrientationAttendees(currentOrientBatchId);
       }
 
       // Default to Monthly Batches List first
@@ -8507,9 +8618,9 @@
                 </h3>
               </div>
               <div class="flex items-center gap-2">
-                <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-[#004b93] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer">
-                  <span class="material-icons-round text-xs">edit_calendar</span>
-                  <span>แก้ไขวัน/เวลา</span>
+                <button type="button" onclick="openEditBatchScheduleModal()" class="text-xs text-slate-500 hover:text-[#004b93] font-medium flex items-center gap-0.5 cursor-pointer" title="แก้ไขทั้ง 14 หัวข้อพร้อมกัน">
+                  <span class="material-icons-round text-xs">tune</span>
+                  <span>แก้ไขทั้งหมด (14 หัวข้อ)</span>
                 </button>
               </div>
             </div>
@@ -8538,6 +8649,10 @@
                     <span class="text-[10.5px] text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded">
                       ${escapeHtml(t.venue || 'ห้องประชุมใหญ่')}
                     </span>
+                    <button type="button" onclick="openSingleTopicEditModal('${escapeHtml(b.id)}', '${escapeHtml(t.id)}')" class="px-2.5 py-1 rounded text-[11px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 flex items-center gap-1 cursor-pointer transition-colors shadow-2xs active:scale-95" title="แก้ไขวัน/เวลา และวิทยากรของหัวข้อนี้">
+                      <span class="material-icons-round text-xs text-amber-700">edit</span>
+                      <span>แก้ไข</span>
+                    </button>
                     <button type="button" onclick="openOrientationPrintModal('${t.id}')" class="px-2 py-0.5 rounded text-[11px] font-semibold text-[#004b93] hover:bg-sky-50 border border-transparent hover:border-sky-200 flex items-center gap-0.5 cursor-pointer transition-colors" title="พิมพ์ใบลงทะเบียนเฉพาะหัวข้อนี้">
                       <span class="material-icons-round text-xs">print</span>
                       <span class="hidden sm:inline">พิมพ์ใบนี้</span>
@@ -8747,14 +8862,16 @@
     }
 
     // --------------------------------------------------------------------------
-    // FEATURE 1: CREATE NEW MONTHLY ORIENTATION MODAL (สร้างหลักสูตรเดือนใหม่)
+    // FEATURE 1: CREATE NEW MONTHLY ORIENTATION MODAL (สร้างหลักสูตรเดือนใหม่ - ตั้งชื่ออัตโนมัติ)
     // --------------------------------------------------------------------------
     function openCreateMonthlyOrientModal() {
       const modal = document.getElementById('createMonthlyOrientModal');
       const now = new Date();
       const mStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const dStr = `${mStr}-${String(now.getDate()).padStart(2, '0')}`;
       
       if (document.getElementById('newOrientMonthInput')) document.getElementById('newOrientMonthInput').value = mStr;
+      if (document.getElementById('newOrientInitialDateInput')) document.getElementById('newOrientInitialDateInput').value = dStr;
       autoSuggestOrientBatchTitle();
 
       if (modal) modal.classList.remove('hidden');
@@ -8765,6 +8882,20 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    function onOrientInitialDateChange() {
+      const initDateInp = document.getElementById('newOrientInitialDateInput');
+      if (!initDateInp || !initDateInp.value) return;
+      const parts = initDateInp.value.split('-');
+      if (parts.length >= 2) {
+        const ym = parts[0] + '-' + parts[1];
+        const mInp = document.getElementById('newOrientMonthInput');
+        if (mInp && mInp.value !== ym) {
+          mInp.value = ym;
+        }
+      }
+      autoSuggestOrientBatchTitle();
+    }
+
     function autoSuggestOrientBatchTitle() {
       const mVal = (document.getElementById('newOrientMonthInput') || {}).value || '';
       if (!mVal) return;
@@ -8773,44 +8904,62 @@
       const yThai = parseInt(y, 10) + 543;
       const mIdx = parseInt(m, 10);
       const mThai = THAI_MONTH_FULL[mIdx] || '';
-      const mShort = THAI_MONTH_SHORT[mIdx] || '';
+
+      const initDateInp = document.getElementById('newOrientInitialDateInput');
+      if (initDateInp && (!initDateInp.value || !initDateInp.value.startsWith(`${y}-${m}`))) {
+        initDateInp.value = `${y}-${m}-01`;
+      }
+
+      let dateSummary = `ประจำเดือน${mThai} ${yThai}`;
+      if (initDateInp && initDateInp.value) {
+        const dParts = initDateInp.value.split('-');
+        const dNum = parseInt(dParts[2], 10);
+        dateSummary = `วันที่ ${dNum}-${dNum + 1} ${mThai} ${yThai}`;
+      }
 
       const titleInput = document.getElementById('newOrientTitleInput');
       const datesInput = document.getElementById('newOrientDatesInput');
-      const d1Input = document.getElementById('newOrientDay1DateInput');
-      const d2Input = document.getElementById('newOrientDay2DateInput');
 
-      if (titleInput && (!titleInput.value || titleInput.value.includes('ปฐมนิเทศพนักงานใหม่ รอบ'))) {
-        titleInput.value = `ปฐมนิเทศพนักงานใหม่ รอบ ${mThai} ${yThai}`;
+      if (titleInput) {
+        titleInput.value = `ปฐมนิเทศพนักงานใหม่ ประจำเดือน${mThai} ${yThai}`;
       }
-      if (datesInput && !datesInput.value) {
-        datesInput.value = `1-2 ${mThai} ${yThai}`;
-      }
-      if (d1Input && !d1Input.value) {
-        d1Input.value = `1 ${mThai} ${yThai}`;
-      }
-      if (d2Input && !d2Input.value) {
-        d2Input.value = `2 ${mThai} ${yThai}`;
+      if (datesInput) {
+        datesInput.value = dateSummary;
       }
     }
 
     function confirmCreateMonthlyOrientation() {
       const mVal = (document.getElementById('newOrientMonthInput') || {}).value || '';
-      const titleVal = (document.getElementById('newOrientTitleInput') || {}).value || '';
-      const datesVal = (document.getElementById('newOrientDatesInput') || {}).value || '';
-      const initialDateVal = (document.getElementById('newOrientInitialDateInput') || {}).value || datesVal;
+      const initialDateVal = (document.getElementById('newOrientInitialDateInput') || {}).value || '';
+      let titleVal = ((document.getElementById('newOrientTitleInput') || {}).value || '').trim();
+      let datesVal = ((document.getElementById('newOrientDatesInput') || {}).value || '').trim();
       const sheetVal = (document.getElementById('newOrientSheetInput') || {}).value || ORIENTATION_TEMPLATE_SHEET_URL;
 
-      if (!titleVal || !datesVal) {
-        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาระบุชื่อรอบปฐมนิเทศและวันที่จัดอบรมให้ครบถ้วน');
+      if (!mVal) {
+        if (typeof HrdModal !== 'undefined') HrdModal.warning('กรุณาเลือกประจำเดือนที่จัดอบรม');
         return;
+      }
+
+      const [y, m] = mVal.split('-');
+      const yThai = parseInt(y, 10) + 543;
+      const mIdx = parseInt(m, 10);
+      const mThai = THAI_MONTH_FULL[mIdx] || '';
+
+      // Auto-fallback if empty
+      if (!titleVal) {
+        titleVal = `ปฐมนิเทศพนักงานใหม่ ประจำเดือน${mThai} ${yThai}`;
+      }
+      if (!datesVal) {
+        datesVal = initialDateVal ? formatIsoToThaiFull(initialDateVal) : `ประจำเดือน${mThai} ${yThai}`;
       }
 
       const newId = 'c-orient-' + Date.now();
       
       // Clone standard 14 topics and set initial date directly for each topic
+      const formattedInitDate = initialDateVal ? formatIsoToThaiFull(initialDateVal) : datesVal;
       const topicsClone = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)).map(t => {
-        t.date = initialDateVal || datesVal;
+        t.date = formattedInitDate;
+        t.isoDate = initialDateVal;
         return t;
       });
 
@@ -8823,10 +8972,66 @@
         sheetUrl: sheetVal,
         status: 'upcoming',
         topics: topicsClone,
-        attendees: []
+        attendees: [],
+        deletedAttendeeIds: []
       };
 
+      // Un-blacklist this id if previously recorded
+      try {
+        const oSet = getDeletedOrientBatchIds();
+        oSet.delete(newId);
+        localStorage.setItem('hrd_deleted_orient_batch_ids', JSON.stringify([...oSet]));
+        const cSet = getDeletedGeneralCourseIds();
+        cSet.delete(newId);
+        localStorage.setItem('hrd_deleted_general_course_ids', JSON.stringify([...cSet]));
+      } catch(e) {}
+
       orientationBatches.unshift(newBatch); // Add to top of list
+
+      // Also persist to coursesData and Supabase
+      if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
+        coursesData.unshift({
+          id: newId,
+          title: titleVal,
+          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+          date: datesVal,
+          time: '08.00 - 17.00 น.',
+          planType: 'ในแผน',
+          category: 'Mandatory Course',
+          type: 'ในแผน • Mandatory Course',
+          batches: [titleVal],
+          quota: { [titleVal]: 40 },
+          hasSubTopics: true,
+          topicMode: 'all',
+          topics: topicsClone,
+          sheetUrl: sheetVal,
+          status: 'upcoming'
+        });
+        updateCourseCountDisplay();
+      }
+
+      if (typeof SupabaseService !== 'undefined') {
+        const payload = {
+          id: newId,
+          title: titleVal,
+          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+          date: datesVal,
+          time: '08.00 - 17.00 น.',
+          planType: 'ในแผน',
+          category: 'Mandatory Course',
+          type: 'ในแผน • Mandatory Course',
+          batches: [titleVal],
+          quota: { [titleVal]: 40 },
+          hasSubTopics: true,
+          topicMode: 'all',
+          topics: topicsClone,
+          sheetId: extractGoogleSheetId(sheetVal) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
+          sheetUrl: sheetVal || ORIENTATION_TEMPLATE_SHEET_URL,
+          status: 'upcoming'
+        };
+        SupabaseService.saveCourse(payload).catch(e => console.warn('[Orientation Create Supabase Error]', e));
+      }
+
       closeCreateMonthlyOrientModal();
       
       // Open the new batch detail directly so HR can inspect and configure
@@ -8834,6 +9039,168 @@
 
       if (typeof HrdModal !== 'undefined') {
         HrdModal.success('สร้างรอบปฐมนิเทศใหม่เรียบร้อยแล้วค่ะ');
+      }
+    }
+
+    // --------------------------------------------------------------------------
+    // SINGLE TOPIC EDITING (แก้ไขทีละรายการ)
+    // --------------------------------------------------------------------------
+    let singleTopicEditingBatchId = null;
+    let singleTopicEditingTopicId = null;
+
+    function openSingleTopicEditModal(batchId, topicId) {
+      const b = batchId ? orientationBatches.find(x => x.id === batchId) : getActiveOrientBatch();
+      if (!b) return;
+
+      const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const tIdx = topics.findIndex(x => x.id === topicId);
+      if (tIdx === -1) return;
+      const t = topics[tIdx];
+
+      singleTopicEditingBatchId = b.id;
+      singleTopicEditingTopicId = t.id;
+
+      const hiddenBatch = document.getElementById('singleTopicBatchId');
+      const hiddenTopic = document.getElementById('singleTopicId');
+      if (hiddenBatch) hiddenBatch.value = b.id;
+      if (hiddenTopic) hiddenTopic.value = t.id;
+
+      const header = document.getElementById('singleTopicModalHeader');
+      const subtitle = document.getElementById('singleTopicModalSubtitle');
+      const numBadge = document.getElementById('singleTopicNumBadge');
+      const titleDisplay = document.getElementById('singleTopicTitleDisplay');
+
+      if (header) header.textContent = 'แก้ไขหัวข้อวิชา: ' + t.title;
+      if (subtitle) subtitle.textContent = 'รอบ: ' + b.title;
+      if (numBadge) numBadge.textContent = 'หัวข้อที่ ' + String(tIdx + 1).padStart(2, '0') + ' (ID: ' + t.id + ')';
+      if (titleDisplay) titleDisplay.textContent = t.title;
+
+      const isoDate = t.isoDate || parseThaiDateToIso(t.date || b.dates) || '';
+      const dInp = document.getElementById('singleTopicDateInput');
+      const dPrev = document.getElementById('singleTopicDatePreview');
+      if (dInp) dInp.value = isoDate;
+      if (dPrev) dPrev.textContent = isoDate ? ('📅 วัน' + formatIsoToThaiFull(isoDate)) : (t.date ? ('📅 ' + t.date) : '-');
+
+      const timeRange = parseTimeRange(t.time);
+      const sSel = document.getElementById('singleTopicTimeStart');
+      const eSel = document.getElementById('singleTopicTimeEnd');
+      const tPrev = document.getElementById('singleTopicTimePreview');
+
+      if (sSel) sSel.innerHTML = buildTimeSelectOptions(timeRange.start);
+      if (eSel) eSel.innerHTML = buildTimeSelectOptions(timeRange.end);
+      if (tPrev) tPrev.textContent = '⏰ ' + (t.time || (timeRange.start + ' - ' + timeRange.end + ' น.'));
+
+      const spkInp = document.getElementById('singleTopicSpeakerInput');
+      if (spkInp) spkInp.value = t.speaker || '';
+
+      const venInp = document.getElementById('singleTopicVenueInput');
+      if (venInp) venInp.value = t.venue || 'ห้องประชุมใหญ่ ชั้น 4';
+
+      const modal = document.getElementById('editSingleTopicModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSingleTopicEditModal() {
+      const modal = document.getElementById('editSingleTopicModal');
+      if (modal) modal.classList.add('hidden');
+      singleTopicEditingBatchId = null;
+      singleTopicEditingTopicId = null;
+    }
+
+    function onSingleTopicDateChange(isoVal) {
+      const dPrev = document.getElementById('singleTopicDatePreview');
+      if (dPrev) {
+        dPrev.textContent = isoVal ? ('📅 วัน' + formatIsoToThaiFull(isoVal)) : '-';
+      }
+    }
+
+    function onSingleTopicTimeChange() {
+      const sSel = document.getElementById('singleTopicTimeStart');
+      const eSel = document.getElementById('singleTopicTimeEnd');
+      const tPrev = document.getElementById('singleTopicTimePreview');
+      if (sSel && eSel && tPrev) {
+        tPrev.textContent = '⏰ ' + sSel.value + ' - ' + eSel.value + ' น.';
+      }
+    }
+
+    function saveSingleTopicEdit() {
+      const batchId = (document.getElementById('singleTopicBatchId') || {}).value || singleTopicEditingBatchId;
+      const topicId = (document.getElementById('singleTopicId') || {}).value || singleTopicEditingTopicId;
+
+      const b = orientationBatches.find(x => x.id === batchId);
+      if (!b) return;
+
+      if (!Array.isArray(b.topics)) {
+        b.topics = JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS));
+      }
+
+      const tIdx = b.topics.findIndex(x => x.id === topicId);
+      if (tIdx === -1) return;
+      const t = b.topics[tIdx];
+
+      const dVal = (document.getElementById('singleTopicDateInput') || {}).value;
+      if (dVal) {
+        t.isoDate = dVal;
+        t.date = formatIsoToThaiFull(dVal);
+      }
+
+      const sTime = (document.getElementById('singleTopicTimeStart') || {}).value;
+      const eTime = (document.getElementById('singleTopicTimeEnd') || {}).value;
+      if (sTime && eTime) {
+        t.time = sTime + ' - ' + eTime + ' น.';
+      }
+
+      const spk = (document.getElementById('singleTopicSpeakerInput') || {}).value;
+      if (spk !== undefined) t.speaker = spk.trim();
+
+      const ven = (document.getElementById('singleTopicVenueInput') || {}).value;
+      if (ven !== undefined) t.venue = ven.trim() || 'ห้องประชุมใหญ่ ชั้น 4';
+
+      // Recompute unique dates summary
+      const uniqueDates = [...new Set(b.topics.map(x => (x.date || '').trim()).filter(Boolean))];
+      if (uniqueDates.length === 1) {
+        b.dates = uniqueDates[0];
+      } else if (uniqueDates.length > 1) {
+        b.dates = uniqueDates.join(', ');
+      }
+
+      // Persist to coursesData and Supabase
+      if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
+        const courseIdx = coursesData.findIndex(c => c && c.id === b.id);
+        if (courseIdx !== -1) {
+          coursesData[courseIdx].topics = b.topics;
+          coursesData[courseIdx].date = b.dates;
+        }
+      }
+
+      if (typeof SupabaseService !== 'undefined') {
+        const payload = {
+          id: b.id,
+          title: b.title,
+          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+          date: b.dates,
+          time: '08.00 - 17.00 น.',
+          planType: 'ในแผน',
+          category: 'Mandatory Course',
+          type: 'ในแผน • Mandatory Course',
+          batches: [b.title],
+          quota: { [b.title]: 40 },
+          hasSubTopics: true,
+          topicMode: 'all',
+          topics: b.topics,
+          sheetId: b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
+          sheetUrl: b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
+          status: b.status || 'active'
+        };
+        SupabaseService.saveCourse(payload).catch(e => console.warn('[Orientation] Supabase saveCourse error:', e));
+      }
+
+      closeSingleTopicEditModal();
+      renderOrientationBatchDetails();
+      if (currentOrientSubView === 'list') renderOrientationBatchList();
+
+      if (typeof HrdModal !== 'undefined') {
+        HrdModal.success('บันทึกการแก้ไขหัวข้อที่ ' + (tIdx + 1) + ' เรียบร้อยแล้วค่ะ');
       }
     }
 
@@ -9218,9 +9585,27 @@
       const ok = await HrdModal.confirm(`ต้องการลบรอบ "${b.title}" หรือไม่? ข้อมูลผู้เข้าร่วมในรุ่นนี้จะถูกนำออก`, 'ยืนยันการลบรอบ', { danger: true });
       if (!ok) return;
 
+      // 1. Record persistent deletion so it NEVER resurrects on page refresh
+      recordDeletedOrientBatchId(batchId);
+      if (typeof recordDeletedGeneralCourseId === 'function') {
+        recordDeletedGeneralCourseId(batchId);
+      }
+
+      // 2. Remove from in-memory orientationBatches
       orientationBatches = orientationBatches.filter(x => x.id !== batchId);
       if (currentOrientBatchId === batchId && orientationBatches.length > 0) {
         currentOrientBatchId = orientationBatches[0].id;
+      }
+
+      // 3. Remove from coursesData
+      if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
+        coursesData = coursesData.filter(c => c && c.id !== batchId);
+        updateCourseCountDisplay();
+      }
+
+      // 4. Delete from Supabase Primary Database
+      if (typeof SupabaseService !== 'undefined') {
+        SupabaseService.deleteCourse(batchId).catch(err => console.warn('[Orientation Delete Supabase Error]', err));
       }
 
       showOrientationBatchList();
