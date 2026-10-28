@@ -1060,10 +1060,10 @@
       <!-- ข้อความประกอบการรอข้อมูล -->
       <div style="margin-top: 24px; text-align: center;">
         <div id="loaderTitle" style="font-size: 18px; font-weight: 800; color: #1e5387; margin-bottom: 6px; letter-spacing: 0.5px;">
-          Training System
+          ระบบจัดการอบรม HRD Admin
         </div>
         <div id="loaderSubtitle" style="font-size: 13px; font-weight: 600; color: #64748b;">
-          โรงพยาบาลพิษณุเวช พิจิตร
+          กำลังโหลดข้อมูลหลักสูตรและฐานข้อมูลกลาง...
         </div>
       </div>
     </div>
@@ -2990,10 +2990,12 @@
     let coursesData = [];
     let isSyncingGas = false;
 
-    // Failsafe: Hide loader after max 3.5 seconds unconditionally so user is never trapped
-    setTimeout(() => {
+    // Failsafe: Emergency safety timer (10s) to prevent user ever being trapped if an unexpected runtime failure occurs
+    let hideLoaderTimeout = null;
+    let loaderFailsafeTimer = setTimeout(() => {
+      console.warn('[Admin] Failsafe: Emergency loading safety timer reached (10s), revealing interface');
       hideLoader();
-    }, 3500);
+    }, 10000);
 
     let currentAdminCategoryFilter = 'all';
     let adminSearchQuery = '';
@@ -3337,15 +3339,30 @@
     }
 
     function hideLoader() {
+      if (loaderFailsafeTimer) {
+        clearTimeout(loaderFailsafeTimer);
+        loaderFailsafeTimer = null;
+      }
+      if (hideLoaderTimeout) {
+        clearTimeout(hideLoaderTimeout);
+        hideLoaderTimeout = null;
+      }
       const loader = document.getElementById('loading');
       if (loader) {
         loader.style.opacity = '0';
         loader.style.visibility = 'hidden';
-        setTimeout(() => { loader.style.display = 'none'; }, 350);
+        hideLoaderTimeout = setTimeout(() => {
+          loader.style.display = 'none';
+          hideLoaderTimeout = null;
+        }, 360);
       }
     }
 
     function showLoader(title, subtitle) {
+      if (hideLoaderTimeout) {
+        clearTimeout(hideLoaderTimeout);
+        hideLoaderTimeout = null;
+      }
       const loader = document.getElementById('loading');
       if (loader) {
         const t = document.getElementById('loaderTitle');
@@ -3376,6 +3393,7 @@
 
         loader.style.display = 'flex';
         loader.style.visibility = 'visible';
+        void loader.offsetWidth;
         loader.style.opacity = '1';
       }
     }
@@ -3383,6 +3401,9 @@
     // window.addEventListener('load', () => setTimeout(hideLoader, 300));
 
     document.addEventListener('DOMContentLoaded', async () => {
+      // Ensure full-page loader is active from the very first frame
+      showLoader('ระบบจัดการอบรม HRD Admin', 'กำลังโหลดข้อมูลหลักสูตรและฐานข้อมูลกลาง...');
+
       const urlParams = new URLSearchParams(window.location.search);
       const viewParam = urlParams.get('view');
       const courseParam = urlParams.get('course');
@@ -3392,7 +3413,13 @@
       const sortSelect = document.getElementById('adminSortSelect');
       if (sortSelect) sortSelect.value = adminSortOrder;
 
-      await loadAdminCourses();
+      try {
+        await loadAdminCourses();
+      } catch (err) {
+        console.error('[Admin] Initial load error:', err);
+      }
+
+      // Background load employee database
       loadEmployeeDatabase().catch(() => {});
 
       if (editParam) {
@@ -3401,9 +3428,16 @@
         switchAdminView('target', courseParam, false);
       } else if (viewParam === 'create') {
         switchAdminView('create', null, false);
+      } else if (viewParam === 'orientation') {
+        switchAdminView('orientation', null, false);
+      } else if (viewParam === 'settings') {
+        switchAdminView('settings', null, false);
       } else {
         switchAdminView('courses', null, false);
       }
+
+      // Everything is completely loaded and rendered in the DOM. Reveal UI now!
+      hideLoader();
 
       // Ensure address bar cleanly shows admin.html (One unified link for the entire portal)
       try {
@@ -3467,26 +3501,33 @@
     } catch(e) {}
 
     async function loadAdminCourses(forceRescan) {
+      if (forceRescan) {
+        showLoader('กำลังซิงค์ข้อมูลล่าสุด...', 'ดึงข้อมูลจากฐานข้อมูล Supabase');
+      }
+
       let hasData = false;
 
-      // 1. Supabase Primary Source of Truth (Instant 0.08s speed!)
+      // 1. Supabase Primary Source of Truth (Instant 0.08s speed with 1500ms race timeout)
       if (typeof SupabaseService !== 'undefined') {
         try {
-          const sbCourses = await SupabaseService.getAllCourses();
+          const fetchPromise = SupabaseService.getAllCourses();
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Supabase request timeout (1.5s)')), 1500)
+          );
+          const sbCourses = await Promise.race([fetchPromise, timeoutPromise]);
           if (Array.isArray(sbCourses) && sbCourses.length > 0) {
             const valid = sbCourses.filter(function(c) { return !isDemoCourse(c); });
-            coursesData = sortCourses(valid, adminSortOrder);
-            hasData = true;
-            updateCourseCountDisplay();
-            renderCourseList();
-            hideLoader();
+            if (valid.length > 0) {
+              coursesData = sortCourses(valid, adminSortOrder);
+              hasData = true;
+            }
           }
         } catch(sbErr) {
-          console.warn('[Admin] Supabase load notice:', sbErr);
+          console.warn('[Admin] Supabase load notice:', sbErr.message || sbErr);
         }
       }
 
-      // 2. Bundled fallback if Supabase offline
+      // 2. Bundled fallback if Supabase offline or timed out
       if (!hasData) {
         try {
           const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
@@ -3494,12 +3535,9 @@
             const valid = resStatic.filter(function(c) {
               return !isDemoCourse(c);
             });
-            coursesData = sortCourses(valid, adminSortOrder);
-            if (coursesData.length > 0) {
+            if (valid.length > 0) {
+              coursesData = sortCourses(valid, adminSortOrder);
               hasData = true;
-              updateCourseCountDisplay();
-              renderCourseList();
-              hideLoader();
             }
           }
         } catch(e) {
@@ -3507,15 +3545,35 @@
         }
       }
 
+      // 3. Fallback to cached courses if available
       if (!hasData) {
-        renderLoadingState();
-      } else {
-        hideLoader();
+        try {
+          const cachedStr = localStorage.getItem('hrd_all_courses');
+          if (cachedStr) {
+            const parsed = JSON.parse(cachedStr);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const valid = parsed.filter(function(c) { return !isDemoCourse(c); });
+              if (valid.length > 0) {
+                coursesData = sortCourses(valid, adminSortOrder);
+                hasData = true;
+              }
+            }
+          }
+        } catch(e) {}
       }
 
-      if (forceRescan && typeof HrdModal !== 'undefined') {
-        HrdModal.toast('ดึงข้อมูลหลักสูตรล่าสุดจากฐานข้อมูล Supabase สำเร็จแล้วค่ะ (พบ ' + coursesData.length + ' หลักสูตร)', 'success');
+      // Populate KPI Ribbon, Month Filters, and Course Cards
+      updateCourseCountDisplay();
+      renderCourseList();
+
+      if (forceRescan) {
+        hideLoader();
+        if (typeof HrdModal !== 'undefined') {
+          HrdModal.toast('ดึงข้อมูลหลักสูตรล่าสุดสำเร็จแล้วค่ะ (พบ ' + coursesData.length + ' หลักสูตร)', 'success');
+        }
       }
+
+      return hasData;
     }
 
     async function syncFromGas(forceRescan, alreadyShowingData) {
@@ -3574,7 +3632,6 @@
           '<div class="text-sm font-bold text-slate-700">ยังไม่มีหลักสูตรในระบบ</div>' +
           '<p class="text-xs text-slate-400 font-light">กดปุ่ม "+ สร้างหลักสูตรใหม่" ด้านบนเพื่อเริ่มต้นสร้างหลักสูตรได้เลยค่ะ</p>' +
         '</div>';
-        hideLoader();
         return;
       }
 
@@ -3623,7 +3680,6 @@
       }).join(';;');
 
       if (!forceRedraw && container.getAttribute('data-rendered-key') === renderedKey) {
-        hideLoader();
         return;
       }
       container.setAttribute('data-rendered-key', renderedKey);
@@ -3640,7 +3696,6 @@
           '</p>' +
           (isMonthFiltered ? '<button type="button" onclick="setAdminMonthFilter(\'all\')" class="mt-2 px-4 py-2 bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-2xs">แสดงหลักสูตรทุกเดือน</button>' : '') +
         '</div>';
-        hideLoader();
         return;
       }
 
@@ -3787,7 +3842,6 @@
       }).join('');
 
       container.innerHTML = monthHeaderHtml + '<div class="space-y-3 w-full">' + cardsHtml + '</div>';
-      hideLoader();
     }
 
     // ============================================================================
