@@ -4205,6 +4205,7 @@
 
       let hasData = false;
       const deletedIds = getDeletedGeneralCourseIds();
+      let loadedCourses = [];
 
       // 1. Supabase Primary Source of Truth (Instant 0.08s speed with 1500ms race timeout)
       if (typeof SupabaseService !== 'undefined') {
@@ -4217,7 +4218,7 @@
           if (Array.isArray(sbCourses) && sbCourses.length > 0) {
             const valid = sbCourses.filter(function(c) { return !isDemoCourse(c) && !deletedIds.has(c.id); });
             if (valid.length > 0) {
-              coursesData = sortCourses(valid, adminSortOrder);
+              loadedCourses = valid;
               hasData = true;
             }
           }
@@ -4226,7 +4227,52 @@
         }
       }
 
-      // 2. Bundled fallback if Supabase offline or timed out
+      // 2. Google Apps Script Backend (Tier-2 Backup / Cloud Sync)
+      if (!hasData) {
+        try {
+          const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+          if (gasUrl) {
+            const gasFetchPromise = fetch(gasUrl + '?action=getAllCourses').then(r => r.json());
+            const gasTimeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('GAS request timeout (2.0s)')), 2000)
+            );
+            const gasRes = await Promise.race([gasFetchPromise, gasTimeoutPromise]);
+            const rawList = Array.isArray(gasRes) ? gasRes : (gasRes && Array.isArray(gasRes.courses) ? gasRes.courses : []);
+            const valid = rawList.filter(function(c) { return !isDemoCourse(c) && !deletedIds.has(c.id); });
+            if (valid.length > 0) {
+              loadedCourses = valid;
+              hasData = true;
+            }
+          }
+        } catch(gasErr) {
+          console.warn('[Admin] GAS load notice:', gasErr.message || gasErr);
+        }
+      }
+
+      // 3. Fallback to cached courses if available
+      try {
+        const cachedStr = localStorage.getItem('hrd_all_courses');
+        if (cachedStr) {
+          const parsed = JSON.parse(cachedStr);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const valid = parsed.filter(function(c) { return !isDemoCourse(c) && !deletedIds.has(c.id); });
+            if (valid.length > 0) {
+              if (!hasData) {
+                loadedCourses = valid;
+                hasData = true;
+              } else {
+                valid.forEach(function(vc) {
+                  if (vc && vc.id && !loadedCourses.some(function(lc) { return lc && lc.id === vc.id; })) {
+                    loadedCourses.push(vc);
+                  }
+                });
+              }
+            }
+          }
+        }
+      } catch(e) {}
+
+      // 4. Bundled fallback if Supabase/GAS/Cache offline or timed out
       if (!hasData) {
         try {
           const resStatic = await fetch('courses.json?t=' + Date.now()).then(r => r.json());
@@ -4235,7 +4281,7 @@
               return !isDemoCourse(c) && !deletedIds.has(c.id);
             });
             if (valid.length > 0) {
-              coursesData = sortCourses(valid, adminSortOrder);
+              loadedCourses = valid;
               hasData = true;
             }
           }
@@ -4244,20 +4290,10 @@
         }
       }
 
-      // 3. Fallback to cached courses if available
-      if (!hasData) {
+      if (loadedCourses.length > 0) {
+        coursesData = sortCourses(loadedCourses, adminSortOrder);
         try {
-          const cachedStr = localStorage.getItem('hrd_all_courses');
-          if (cachedStr) {
-            const parsed = JSON.parse(cachedStr);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              const valid = parsed.filter(function(c) { return !isDemoCourse(c) && !deletedIds.has(c.id); });
-              if (valid.length > 0) {
-                coursesData = sortCourses(valid, adminSortOrder);
-                hasData = true;
-              }
-            }
-          }
+          localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
         } catch(e) {}
       }
 
@@ -8341,7 +8377,23 @@
       const delBatches = getDeletedOrientBatchIds();
       orientationBatches = orientationBatches.filter(b => !delBatches.has(b.id));
 
-      // 2. Discover dynamically created orientation batches from coursesData
+      // 2. Discover dynamically created orientation batches from local cache (0ms instant recovery)
+      try {
+        const storedBatchesStr = localStorage.getItem('hrd_orientation_batches');
+        if (storedBatchesStr) {
+          const storedBatches = JSON.parse(storedBatchesStr);
+          if (Array.isArray(storedBatches)) {
+            storedBatches.forEach(b => {
+              if (!b || !b.id || delBatches.has(b.id)) return;
+              if (!orientationBatches.some(ob => ob.id === b.id)) {
+                orientationBatches.push(b);
+              }
+            });
+          }
+        }
+      } catch(e) {}
+
+      // 3. Discover dynamically created orientation batches from coursesData (GAS/Supabase)
       if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
         coursesData.forEach(c => {
           if (!c || delBatches.has(c.id)) return;
@@ -8358,14 +8410,14 @@
               sheetUrl: c.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
               status: c.status || 'upcoming',
               topics: Array.isArray(c.topics) && c.topics.length > 0 ? c.topics : JSON.parse(JSON.stringify(ORIENTATION_DEFAULT_SYLLABUS)),
-              attendees: [],
+              attendees: Array.isArray(c.attendees) ? c.attendees : [],
               deletedAttendeeIds: []
             });
           }
         });
       }
 
-      // 3. Restore topic customizations from coursesData if available
+      // 4. Restore topic customizations from coursesData if available
       orientationBatches.forEach(b => {
         const courseMatch = (typeof coursesData !== 'undefined' && Array.isArray(coursesData))
           ? coursesData.find(c => c && c.id === b.id)
@@ -8380,6 +8432,11 @@
           if (courseMatch.sheetUrl) b.sheetUrl = courseMatch.sheetUrl;
         }
       });
+
+      // 5. Persist merged orientationBatches to cache so refresh is 100% resilient
+      try {
+        localStorage.setItem('hrd_orientation_batches', JSON.stringify(orientationBatches));
+      } catch(e) {}
 
       if (orientationBatches.length > 0) {
         if (!orientationBatches.some(b => b.id === currentOrientBatchId)) {
@@ -9065,53 +9122,58 @@
       } catch(e) {}
 
       orientationBatches.unshift(newBatch); // Add to top of list
+      try {
+        localStorage.setItem('hrd_orientation_batches', JSON.stringify(orientationBatches));
+      } catch(e) {}
 
-      // Also persist to coursesData and Supabase
+      const coursePayload = {
+        id: newId,
+        month: mVal,
+        title: titleVal,
+        speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+        date: datesVal,
+        time: '08.00 - 17.00 น.',
+        location: defaultVenueVal,
+        venue: defaultVenueVal,
+        planType: 'ในแผน',
+        category: 'Mandatory Course',
+        type: 'ในแผน • Mandatory Course',
+        batches: [titleVal],
+        quota: { [titleVal]: 40 },
+        hasSubTopics: true,
+        topicMode: 'all',
+        topics: topicsClone,
+        sheetId: extractGoogleSheetId(sheetVal) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
+        sheetUrl: sheetVal || ORIENTATION_TEMPLATE_SHEET_URL,
+        status: 'upcoming'
+      };
+
+      // Also persist to coursesData, local cache, and backend stores
       if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
-        coursesData.unshift({
-          id: newId,
-          title: titleVal,
-          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
-          date: datesVal,
-          time: '08.00 - 17.00 น.',
-          location: defaultVenueVal,
-          venue: defaultVenueVal,
-          planType: 'ในแผน',
-          category: 'Mandatory Course',
-          type: 'ในแผน • Mandatory Course',
-          batches: [titleVal],
-          quota: { [titleVal]: 40 },
-          hasSubTopics: true,
-          topicMode: 'all',
-          topics: topicsClone,
-          sheetUrl: sheetVal,
-          status: 'upcoming'
-        });
+        coursesData.unshift(coursePayload);
+        try {
+          localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        } catch(e) {}
         updateCourseCountDisplay();
       }
 
+      // Tier-1: Supabase Primary Database
       if (typeof SupabaseService !== 'undefined') {
-        const payload = {
-          id: newId,
-          title: titleVal,
-          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
-          date: datesVal,
-          time: '08.00 - 17.00 น.',
-          location: defaultVenueVal,
-          venue: defaultVenueVal,
-          planType: 'ในแผน',
-          category: 'Mandatory Course',
-          type: 'ในแผน • Mandatory Course',
-          batches: [titleVal],
-          quota: { [titleVal]: 40 },
-          hasSubTopics: true,
-          topicMode: 'all',
-          topics: topicsClone,
-          sheetId: extractGoogleSheetId(sheetVal) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
-          sheetUrl: sheetVal || ORIENTATION_TEMPLATE_SHEET_URL,
-          status: 'upcoming'
-        };
-        SupabaseService.saveCourse(payload).catch(e => console.warn('[Orientation Create Supabase Error]', e));
+        SupabaseService.saveCourse(coursePayload).catch(e => console.warn('[Orientation Create Supabase Error]', e));
+      }
+
+      // Tier-2: Google Apps Script Master Sheet Backup Sync
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'saveCourse',
+            skipTabSync: true,
+            course: coursePayload
+          })
+        }).catch(e => console.warn('[Orientation Create GAS Sync Error]', e));
       }
 
       closeCreateMonthlyOrientModal();
@@ -9251,35 +9313,54 @@
         b.dates = uniqueDates.join(', ');
       }
 
-      // Persist to coursesData and Supabase
+      // Persist to local cache
+      try {
+        localStorage.setItem('hrd_orientation_batches', JSON.stringify(orientationBatches));
+      } catch(e) {}
+
+      // Persist to coursesData, local cache, and Supabase
       if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
         const courseIdx = coursesData.findIndex(c => c && c.id === b.id);
         if (courseIdx !== -1) {
           coursesData[courseIdx].topics = b.topics;
           coursesData[courseIdx].date = b.dates;
         }
+        try {
+          localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        } catch(e) {}
       }
 
+      const payload = {
+        id: b.id,
+        title: b.title,
+        speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+        date: b.dates,
+        time: '08.00 - 17.00 น.',
+        planType: 'ในแผน',
+        category: 'Mandatory Course',
+        type: 'ในแผน • Mandatory Course',
+        batches: [b.title],
+        quota: { [b.title]: 40 },
+        hasSubTopics: true,
+        topicMode: 'all',
+        topics: b.topics,
+        sheetId: b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
+        sheetUrl: b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
+        status: b.status || 'active'
+      };
+
       if (typeof SupabaseService !== 'undefined') {
-        const payload = {
-          id: b.id,
-          title: b.title,
-          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
-          date: b.dates,
-          time: '08.00 - 17.00 น.',
-          planType: 'ในแผน',
-          category: 'Mandatory Course',
-          type: 'ในแผน • Mandatory Course',
-          batches: [b.title],
-          quota: { [b.title]: 40 },
-          hasSubTopics: true,
-          topicMode: 'all',
-          topics: b.topics,
-          sheetId: b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
-          sheetUrl: b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
-          status: b.status || 'active'
-        };
         SupabaseService.saveCourse(payload).catch(e => console.warn('[Orientation] Supabase saveCourse error:', e));
+      }
+
+      // Background Sync to GAS Master Sheet
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'saveCourse', skipTabSync: true, course: payload })
+        }).catch(e => console.warn('[Orientation] Single Topic GAS Error:', e));
       }
 
       closeSingleTopicEditModal();
@@ -9531,35 +9612,54 @@
         b.dates = uniqueDates.join(', ');
       }
 
-      // Persist to coursesData and Supabase
+      // Persist to local cache
+      try {
+        localStorage.setItem('hrd_orientation_batches', JSON.stringify(orientationBatches));
+      } catch(e) {}
+
+      // Persist to coursesData, local cache, and Supabase
       if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
         const courseIdx = coursesData.findIndex(c => c && c.id === b.id);
         if (courseIdx !== -1) {
           coursesData[courseIdx].topics = b.topics;
           coursesData[courseIdx].date = b.dates;
         }
+        try {
+          localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        } catch(e) {}
       }
 
+      const payload = {
+        id: b.id,
+        title: b.title,
+        speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
+        date: b.dates,
+        time: '08.00 - 17.00 น.',
+        planType: 'ในแผน',
+        category: 'Mandatory Course',
+        type: 'ในแผน • Mandatory Course',
+        batches: [b.title],
+        quota: { [b.title]: 40 },
+        hasSubTopics: true,
+        topicMode: 'all',
+        topics: b.topics,
+        sheetId: b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
+        sheetUrl: b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
+        status: b.status || 'active'
+      };
+
       if (typeof SupabaseService !== 'undefined') {
-        const payload = {
-          id: b.id,
-          title: b.title,
-          speaker: 'ฝ่ายทรัพยากรบุคคล (HR) และคณะวิทยากร',
-          date: b.dates,
-          time: '08.00 - 17.00 น.',
-          planType: 'ในแผน',
-          category: 'Mandatory Course',
-          type: 'ในแผน • Mandatory Course',
-          batches: [b.title],
-          quota: { [b.title]: 40 },
-          hasSubTopics: true,
-          topicMode: 'all',
-          topics: b.topics,
-          sheetId: b.sheetId || extractGoogleSheetId(b.sheetUrl) || '1M-yx1Ga3e1MamaqRgH97xyO2EkmnqoELEowrQ2k2RYg',
-          sheetUrl: b.sheetUrl || ORIENTATION_TEMPLATE_SHEET_URL,
-          status: b.status || 'active'
-        };
         SupabaseService.saveCourse(payload).catch(e => console.warn('[Orientation] Supabase saveCourse error:', e));
+      }
+
+      // Background Sync to GAS Master Sheet
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'saveCourse', skipTabSync: true, course: payload })
+        }).catch(e => console.warn('[Orientation] Single Topic GAS Error:', e));
       }
 
       closeEditBatchScheduleModal();
@@ -9691,21 +9791,37 @@
         recordDeletedGeneralCourseId(batchId);
       }
 
-      // 2. Remove from in-memory orientationBatches
+      // 2. Remove from in-memory orientationBatches & cache
       orientationBatches = orientationBatches.filter(x => x.id !== batchId);
+      try {
+        localStorage.setItem('hrd_orientation_batches', JSON.stringify(orientationBatches));
+      } catch(e) {}
       if (currentOrientBatchId === batchId && orientationBatches.length > 0) {
         currentOrientBatchId = orientationBatches[0].id;
       }
 
-      // 3. Remove from coursesData
+      // 3. Remove from coursesData & cache
       if (typeof coursesData !== 'undefined' && Array.isArray(coursesData)) {
         coursesData = coursesData.filter(c => c && c.id !== batchId);
+        try {
+          localStorage.setItem('hrd_all_courses', JSON.stringify(coursesData));
+        } catch(e) {}
         updateCourseCountDisplay();
       }
 
       // 4. Delete from Supabase Primary Database
       if (typeof SupabaseService !== 'undefined') {
         SupabaseService.deleteCourse(batchId).catch(err => console.warn('[Orientation Delete Supabase Error]', err));
+      }
+
+      // 5. Delete from GAS Master Sheet
+      const gasUrl = localStorage.getItem('hrd_gas_url') || DEFAULT_GAS_URL;
+      if (gasUrl) {
+        fetch(gasUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'deleteCourse', id: batchId })
+        }).catch(err => console.warn('[Orientation Delete GAS Error]', err));
       }
 
       showOrientationBatchList();

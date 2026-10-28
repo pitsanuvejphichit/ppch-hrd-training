@@ -8,8 +8,8 @@
  */
 
 var SupabaseService = (() => {
-  const DEFAULT_SUPABASE_URL = 'https://swtptcqicdjomksufkpy.supabase.co';
-  const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3dHB0Y3FpY2Rqb21rc3Vma3B5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MzcwNzgsImV4cCI6MjEwNzAxMzA3OH0.LORHI1hXO9MhKb5qs23ZMJaqM9mU6G90ZtRNQgn5nIw';
+  const DEFAULT_SUPABASE_URL = 'https://jauxlzjmhtnncrwrloyr.supabase.co';
+  const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphdXhsemptaHRubmNyd3Jsb3lyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NDUxMDksImV4cCI6MjEwNzAyMTEwOX0.IFKN8_nv0U_UKNgeP4A-gcZ3u_EjDQhhvcyyW9P-Yw0';
   const READ_TIMEOUT_MS = 900;
   const CIRCUIT_COOLDOWN_MS = 60000;
 
