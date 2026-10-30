@@ -275,7 +275,7 @@
       min-height: 210mm;
       max-height: 210mm;
       margin: 0 auto 24px auto;
-      padding: 4.8mm 5.5mm;
+      padding: 4mm 5.5mm 3.5mm 5.5mm;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       box-sizing: border-box;
       color: #000000;
@@ -359,7 +359,7 @@
       .orient-a4-sheet {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 4.8mm 5.5mm !important;
+        padding: 4mm 5.5mm 3.5mm 5.5mm !important;
         width: 297mm !important;
         height: 210mm !important;
         min-width: 297mm !important;
@@ -1839,17 +1839,21 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Course ID -->
+                  <!-- Course ID (Auto-generated, no manual entry required) -->
                   <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
-                      รหัสหลักสูตร (Course ID) <span class="text-rose-500">*</span>
-                    </label>
+                    <div class="flex items-center justify-between mb-1.5">
+                      <label class="block text-xs font-bold text-slate-700">
+                        รหัสหลักสูตร (Course ID) <span class="text-xs font-normal text-slate-400 font-sans">(ระบบสร้างให้อัตโนมัติ)</span>
+                      </label>
+                      <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">Auto-Generated</span>
+                    </div>
                     <div class="flex items-center space-x-2">
                       <input 
                         type="text" 
                         id="fCourseId" 
                         placeholder="เช่น c-2026-x7k9" 
-                        class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-bold text-[#0369a1] focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all"
+                        readonly
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-mono font-bold text-[#0369a1] outline-none shadow-xs transition-all cursor-default select-all"
                         required
                       >
                       <button 
@@ -1862,23 +1866,45 @@
                         <svg class="w-4 h-4 text-[#0369a1] group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
-                        <span>สุ่มรหัส</span>
+                        <span>สุ่มใหม่</span>
                       </button>
                     </div>
                   </div>
 
-                  <!-- Speaker -->
+                  <!-- Course Credits (Auto-calculated from time or manual entry) -->
                   <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">
-                      วิทยากร / ผู้สอน (Speaker) <span class="text-rose-500">*</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      id="fCourseSpeaker" 
-                      placeholder="เช่น นพ.สมชาย หรือ ฝ่ายทรัพยากรบุคคล (HR)" 
-                      class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all"
-                      required
-                    >
+                    <div class="flex items-center justify-between mb-1.5">
+                      <label class="block text-xs font-bold text-slate-700">
+                        จำนวนเครดิต / ชั่วโมงอบรม (Credits)
+                      </label>
+                      <label class="flex items-center space-x-1.5 text-[11px] text-[#004b93] font-semibold cursor-pointer select-none">
+                        <input type="checkbox" id="fAutoCalcCredits" onchange="toggleAutoCalcCredits(this.checked)" checked class="w-3.5 h-3.5 text-[#004b93] rounded cursor-pointer">
+                        <span>คำนวณอัตโนมัติจากเวลา</span>
+                      </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <div class="relative flex-1">
+                        <input 
+                          type="number" 
+                          step="0.5" 
+                          min="0" 
+                          id="fCreditHours" 
+                          placeholder="เช่น 3 หรือ 1.5" 
+                          oninput="onManualCreditInput()" 
+                          class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono font-bold text-slate-800 focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all bg-white"
+                        >
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-slate-400 pointer-events-none">เครดิต</span>
+                      </div>
+                      <button 
+                        type="button" 
+                        onclick="recalcCourseCreditsFromBatches()" 
+                        title="คำนวณจากเวลารุ่นการอบรม"
+                        class="shrink-0 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-2xs"
+                      >
+                        <span class="material-icons-round text-sm text-[#004b93]">schedule</span>
+                        <span>คำนวณจากเวลา</span>
+                      </button>
+                    </div>
                   </div>
 
                   <!-- Course Title -->
@@ -1893,6 +1919,38 @@
                       class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all font-medium"
                       required
                     >
+                  </div>
+
+                  <!-- Speakers (Can add up to 4 speakers) -->
+                  <div class="md:col-span-2">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <label class="block text-xs font-bold text-slate-700">
+                        วิทยากร / ผู้สอน (Speakers) <span class="text-rose-500">*</span>
+                        <span class="text-[11px] font-normal text-slate-500 ml-1">(สามารถเพิ่มได้มากสุด 4 คน)</span>
+                      </label>
+                      <button 
+                        type="button" 
+                        id="btnAddSpeaker" 
+                        onclick="addSpeakerInputRow()" 
+                        class="px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-[#0369a1] border border-sky-200 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-2xs active:scale-95"
+                      >
+                        <span class="material-icons-round text-xs">add</span>
+                        <span>+ เพิ่มวิทยากร</span>
+                      </button>
+                    </div>
+
+                    <div id="speakerInputsContainer" class="space-y-2">
+                      <div class="flex items-center space-x-2 speaker-row" data-speaker-idx="1">
+                        <span class="w-6 h-6 rounded-md bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">1</span>
+                        <input 
+                          type="text" 
+                          id="fCourseSpeaker" 
+                          placeholder="ชื่อวิทยากรท่านที่ 1 (เช่น นพ.สมชาย หรือ ฝ่ายทรัพยากรบุคคล (HR))" 
+                          class="course-speaker-input w-full px-4 py-2 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all"
+                          required
+                        >
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -2778,7 +2836,7 @@
                       </h3>
                     </div>
                     <p class="text-xs text-slate-500 font-light truncate mt-0.5" id="orientPrintModalSubtitle">
-                      แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 28 แถว) • เว้นพื้นที่ปลอดภัยสำหรับรหัสเอกสาร DCC
+                      แบบฟอร์มทางการ รพ.พิษณุเวช พิจิตร (A4 แนวนอน 26 แถว) • เว้นพื้นที่ปลอดภัยสำหรับรหัสเอกสาร DCC
                     </p>
                   </div>
                 </div>
@@ -4496,6 +4554,11 @@
 
         const actionBtnsCount = (c.hasSubTopics && Array.isArray(c.topics) && c.topics.length > 0) ? 8 : 7;
 
+        const credVal = c.creditHours || calculateCreditsFromTimeRange(c.time);
+        const credBadge = (credVal && credVal !== '-') 
+          ? '<span class="text-[11px] font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full inline-flex items-center gap-1"><span class="material-icons-round text-xs">schedule</span><span>' + credVal + ' เครดิต</span></span>' 
+          : '';
+
         // SINGLE-ROW HORIZONTAL STRIP CARD (PROJECT 12 REFERENCE)
         return '<div class="course-strip-card" data-course-id="' + c.id + '">' +
           
@@ -4508,6 +4571,7 @@
               '<span class="text-[11px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">' +
                 c.id +
               '</span>' +
+              credBadge +
               topicsBadge +
               '<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">' +
                 '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>' +
@@ -4938,6 +5002,27 @@
         .replace(/'/g, '&#039;');
     }
 
+    function calculateCreditsFromTimeRange(timeStr) {
+      if (!timeStr) return '-';
+      const clean = timeStr.toString().replace(/น\.$/i, '').trim();
+      const parts = clean.split('-');
+      if (parts.length !== 2) return '-';
+
+      const parseMinutes = (t) => {
+        const m = t.trim().match(/(\d{1,2})[:.](\d{2})/);
+        if (!m) return null;
+        return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+      };
+
+      const startMin = parseMinutes(parts[0]);
+      const endMin = parseMinutes(parts[1]);
+      if (startMin === null || endMin === null || endMin <= startMin) return '-';
+
+      const diffMinutes = endMin - startMin;
+      const hours = diffMinutes / 60;
+      return Number.isInteger(hours) ? String(hours) : String(parseFloat(hours.toFixed(2)));
+    }
+
     function toggleSidebar() {
       const sb = document.getElementById('adminSidebar');
       const bd = document.getElementById('sidebarBackdrop');
@@ -5237,8 +5322,21 @@
       const courseDate = (topicObj && topicObj.date) ? formatDisplayDate(topicObj.date) : (course.date ? formatDisplayDate(course.date) : '-');
       const courseTime = (topicObj && topicObj.time) ? topicObj.time : (course.time || '-');
 
+      const rawSpeakersList = (topicObj && topicObj.speaker)
+        ? [topicObj.speaker]
+        : (Array.isArray(course.speakers) && course.speakers.length > 0
+            ? course.speakers
+            : (courseSpeaker ? courseSpeaker.split(',').map(s => s.trim()).filter(Boolean) : []));
+
+      let speakerSlotsHtml = '';
+      for (let sIdx = 0; sIdx < 4; sIdx++) {
+        const spk = rawSpeakersList[sIdx] || '';
+        const isLast = sIdx === 3;
+        speakerSlotsHtml += '<div style="height: 20px; line-height: 20px; ' + (isLast ? '' : 'border-bottom: 1px solid #000;') + ' padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (escapeHtml(spk) || '&nbsp;') + '</div>';
+      }
+
       // Keep 26 rows per page so the official DCC footer remains inside the A4 print-safe area.
-      const ROWS_PER_PAGE = 28;
+      const ROWS_PER_PAGE = 26;
       const totalPages = Math.max(1, Math.ceil(attendees.length / ROWS_PER_PAGE));
       let sheetsHtml = '';
 
@@ -5308,10 +5406,7 @@
               <tr style="height: 80px;">
                 <td style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold; background: #ffffff; vertical-align: middle;">วิทยากร (Speakers)</td>
                 <td style="border: 1px solid #000; padding: 0; vertical-align: top;">
-                  <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(courseSpeaker)}</div>
-                  <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
-                  <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
-                  <div style="height: 20px; line-height: 20px; padding: 0 6px;">&nbsp;</div>
+                  ${speakerSlotsHtml}
                 </td>
                 <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
                   <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">ประเภทหลักสูตร</div>
@@ -5348,7 +5443,7 @@
                 </td>
                 <td colspan="2" style="border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: center;">
                   <div style="font-weight: bold; font-size: 9.5px; margin-bottom: 6px;">จำนวนเครดิต</div>
-                  <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">${course.creditHours || '-'}</div>
+                  <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">${course.creditHours || calculateCreditsFromTimeRange(courseTime) || '-'}</div>
                 </td>
               </tr>
             </table>
@@ -5442,7 +5537,7 @@
               max-width: 297mm;
               min-height: 210mm;
               max-height: 210mm;
-              padding: 4.8mm 5.5mm;
+              padding: 4mm 5.5mm 3.5mm 5.5mm;
               margin: 0;
               box-sizing: border-box;
               background: #ffffff;
@@ -6451,8 +6546,9 @@
         if (saveBtnText) saveBtnText.textContent = 'บันทึกหลักสูตร (Save Course)';
 
         if (inputId) {
-          inputId.readOnly = false;
+          inputId.readOnly = true;
           inputId.classList.remove('bg-slate-100', 'cursor-not-allowed', 'text-slate-600');
+          inputId.classList.add('bg-slate-50', 'text-[#0369a1]', 'cursor-default');
         }
         if (btnRegen) btnRegen.classList.remove('hidden');
 
@@ -6602,6 +6698,178 @@
       return '';
     }
 
+    // ==========================================
+    // Course Speakers Controller (Max 4 Speakers)
+    // ==========================================
+    function addSpeakerInputRow(initialValue = '') {
+      const container = document.getElementById('speakerInputsContainer');
+      if (!container) return;
+      const currentRows = container.querySelectorAll('.speaker-row');
+      if (currentRows.length >= 4) {
+        if (typeof HrdModal !== 'undefined') {
+          HrdModal.warning('สามารถระบุวิทยากรได้สูงสุด 4 ท่านค่ะ', 'จำกัดจำนวนวิทยากร');
+        }
+        return;
+      }
+      const nextIdx = currentRows.length + 1;
+      const div = document.createElement('div');
+      div.className = 'flex items-center space-x-2 speaker-row';
+      div.setAttribute('data-speaker-idx', nextIdx);
+      div.innerHTML = 
+        '<span class="w-6 h-6 rounded-md bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">' + nextIdx + '</span>' +
+        '<input type="text" placeholder="ชื่อวิทยากรท่านที่ ' + nextIdx + '" value="' + escapeHtml(initialValue) + '" class="course-speaker-input w-full px-4 py-2 rounded-xl border border-slate-300 text-xs focus:border-[#0284c7] focus:ring-4 focus:ring-[#0284c7]/15 outline-none shadow-xs transition-all">' +
+        '<button type="button" onclick="removeSpeakerInputRow(this)" class="text-slate-400 hover:text-rose-500 text-sm cursor-pointer p-1.5 shrink-0" title="ลบวิทยากรท่านนี้">✖</button>';
+      container.appendChild(div);
+      updateSpeakerButtonVisibility();
+    }
+
+    function removeSpeakerInputRow(btn) {
+      if (btn) {
+        const row = btn.closest('.speaker-row');
+        if (row) row.remove();
+      }
+      renumberSpeakerRows();
+      updateSpeakerButtonVisibility();
+    }
+
+    function renumberSpeakerRows() {
+      const container = document.getElementById('speakerInputsContainer');
+      if (!container) return;
+      const rows = container.querySelectorAll('.speaker-row');
+      rows.forEach((row, idx) => {
+        const num = idx + 1;
+        row.setAttribute('data-speaker-idx', num);
+        const badge = row.querySelector('span');
+        if (badge) badge.textContent = num;
+        const input = row.querySelector('.course-speaker-input');
+        if (input && num > 1) {
+          input.placeholder = 'ชื่อวิทยากรท่านที่ ' + num;
+        }
+      });
+    }
+
+    function updateSpeakerButtonVisibility() {
+      const container = document.getElementById('speakerInputsContainer');
+      const btn = document.getElementById('btnAddSpeaker');
+      if (!container || !btn) return;
+      const count = container.querySelectorAll('.speaker-row').length;
+      if (count >= 4) {
+        btn.classList.add('hidden');
+      } else {
+        btn.classList.remove('hidden');
+      }
+    }
+
+    function getCourseSpeakersList() {
+      const container = document.getElementById('speakerInputsContainer');
+      if (!container) {
+        const single = document.getElementById('fCourseSpeaker');
+        return single && single.value.trim() ? [single.value.trim()] : [];
+      }
+      const inputs = container.querySelectorAll('.course-speaker-input');
+      const list = [];
+      inputs.forEach(inp => {
+        const val = inp.value.trim();
+        if (val) list.push(val);
+      });
+      return list;
+    }
+
+    // ==========================================
+    // Course Credits Controller (Auto / Manual)
+    // ==========================================
+    function recalcCourseCreditsFromBatches() {
+      const autoCheckbox = document.getElementById('fAutoCalcCredits');
+      const creditInput = document.getElementById('fCreditHours');
+      if (!creditInput) return;
+
+      const batchRows = document.querySelectorAll('.batch-row');
+      let calculated = '-';
+      if (batchRows.length > 0) {
+        const firstRow = batchRows[0];
+        const s = firstRow.querySelector('.batch-time-start');
+        const e = firstRow.querySelector('.batch-time-end');
+        if (s && e && s.value && e.value) {
+          calculated = calculateCreditsFromTimeRange(s.value + ' - ' + e.value);
+        }
+      }
+
+      const hasSubTopics = document.getElementById('fEnableTopics') && document.getElementById('fEnableTopics').checked;
+      if (hasSubTopics) {
+        const topicTimes = document.querySelectorAll('.topic-row .topic-time');
+        let totalTopicMinutes = 0;
+        let foundTopicTime = false;
+        topicTimes.forEach(tInp => {
+          const val = tInp.value.trim();
+          if (val) {
+            const clean = val.replace(/น\.$/i, '').trim();
+            const parts = clean.split('-');
+            if (parts.length === 2) {
+              const parseMin = t => {
+                const m = t.trim().match(/(\d{1,2})[:.](\d{2})/);
+                return m ? parseInt(m[1], 10) * 60 + parseInt(m[2], 10) : null;
+              };
+              const sMin = parseMin(parts[0]);
+              const eMin = parseMin(parts[1]);
+              if (sMin !== null && eMin !== null && eMin > sMin) {
+                totalTopicMinutes += (eMin - sMin);
+                foundTopicTime = true;
+              }
+            }
+          }
+        });
+        if (foundTopicTime && totalTopicMinutes > 0) {
+          const hours = totalTopicMinutes / 60;
+          calculated = Number.isInteger(hours) ? String(hours) : String(parseFloat(hours.toFixed(2)));
+        }
+      }
+
+      if (calculated !== '-') {
+        creditInput.value = calculated;
+      }
+    }
+
+    function onManualCreditInput() {
+      const autoCheckbox = document.getElementById('fAutoCalcCredits');
+      if (autoCheckbox) {
+        autoCheckbox.checked = false;
+      }
+    }
+
+    function toggleAutoCalcCredits(isChecked) {
+      if (isChecked) {
+        recalcCourseCreditsFromBatches();
+      }
+    }
+
+    function onBatchTimeChange() {
+      const autoCheckbox = document.getElementById('fAutoCalcCredits');
+      if (autoCheckbox && autoCheckbox.checked) {
+        recalcCourseCreditsFromBatches();
+      }
+    }
+
+    function getCourseCreditsValue() {
+      const creditInput = document.getElementById('fCreditHours');
+      if (creditInput && creditInput.value.trim()) {
+        const num = parseFloat(creditInput.value.trim());
+        return isNaN(num) ? creditInput.value.trim() : num;
+      }
+      const batchRows = document.querySelectorAll('.batch-row');
+      if (batchRows.length > 0) {
+        const s = batchRows[0].querySelector('.batch-time-start');
+        const e = batchRows[0].querySelector('.batch-time-end');
+        if (s && e && s.value && e.value) {
+          const c = calculateCreditsFromTimeRange(s.value + ' - ' + e.value);
+          if (c !== '-') {
+            const num = parseFloat(c);
+            return isNaN(num) ? c : num;
+          }
+        }
+      }
+      return '';
+    }
+
     function formatTimeInput(input) {
       var v = input.value.replace(/[^0-9]/g, '');
       if (v.length > 2) {
@@ -6638,9 +6906,9 @@
         '<div class="lg:col-span-3">' +
           '<label class="block text-[11px] font-bold text-slate-600 mb-1">เวลา <span class="text-rose-500">*</span></label>' +
           '<div class="flex items-center space-x-1">' +
-            '<input type="text" maxlength="5" placeholder="09:00" oninput="formatTimeInput(this)" class="batch-time-start w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (start || '09:00') + '" required>' +
+            '<input type="text" maxlength="5" placeholder="09:00" oninput="formatTimeInput(this); onBatchTimeChange();" class="batch-time-start w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (start || '09:00') + '" required>' +
             '<span class="text-xs text-slate-400">-</span>' +
-            '<input type="text" maxlength="5" placeholder="12:00" oninput="formatTimeInput(this)" class="batch-time-end w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (end || '12:00') + '" required>' +
+            '<input type="text" maxlength="5" placeholder="12:00" oninput="formatTimeInput(this); onBatchTimeChange();" class="batch-time-end w-16 px-2 py-2 text-xs rounded-xl border border-slate-200 outline-none bg-white text-center font-mono font-bold" value="' + (end || '12:00') + '" required>' +
             '<span class="text-xs text-slate-500">น.</span>' +
           '</div>' +
         '</div>' +
@@ -6653,6 +6921,7 @@
           '</div>' +
         '</div>';
       container.appendChild(div);
+      onBatchTimeChange();
     }
 
     function removeBatchRow(btn) {
@@ -6662,6 +6931,7 @@
         return;
       }
       if (btn) btn.closest('.batch-row').remove();
+      onBatchTimeChange();
     }
 
     function toggleTopicsSection(forceShow, autoAddIfEmpty = true) {
@@ -6813,9 +7083,23 @@
 
     function resetCreateCourseForm() {
       const titleInput = document.getElementById('fCourseTitle');
-      const speakerInput = document.getElementById('fCourseSpeaker');
       if (titleInput) titleInput.value = '';
+
+      // Reset Speakers: keep only row 1 and clear value
+      const speakerContainer = document.getElementById('speakerInputsContainer');
+      if (speakerContainer) {
+        const extraRows = speakerContainer.querySelectorAll('.speaker-row:not([data-speaker-idx="1"])');
+        extraRows.forEach(r => r.remove());
+      }
+      const speakerInput = document.getElementById('fCourseSpeaker');
       if (speakerInput) speakerInput.value = '';
+      updateSpeakerButtonVisibility();
+
+      // Reset Credits
+      const autoCheckbox = document.getElementById('fAutoCalcCredits');
+      if (autoCheckbox) autoCheckbox.checked = true;
+      const creditInput = document.getElementById('fCreditHours');
+      if (creditInput) creditInput.value = '';
 
       const planRad = document.querySelector('input[name="planType"][value="ในแผน"]');
       if (planRad) planRad.checked = true;
@@ -6830,6 +7114,8 @@
         const defaultDate = today.toISOString().split('T')[0];
         addBatchRowWithData('รุ่นที่ 1', defaultDate, '09:00', '12:00', 40);
       }
+
+      recalcCourseCreditsFromBatches();
 
       const enableTopicsEl = document.getElementById('fEnableTopics');
       if (enableTopicsEl) {
@@ -6851,9 +7137,33 @@
       editingCourse = c;
 
       const titleInput = document.getElementById('fCourseTitle');
-      const speakerInput = document.getElementById('fCourseSpeaker');
       if (titleInput) titleInput.value = c.title || '';
-      if (speakerInput) speakerInput.value = c.speaker || '';
+
+      // Populate Speakers (up to 4)
+      const speakerContainer = document.getElementById('speakerInputsContainer');
+      if (speakerContainer) {
+        const extraRows = speakerContainer.querySelectorAll('.speaker-row:not([data-speaker-idx="1"])');
+        extraRows.forEach(r => r.remove());
+      }
+      const speakers = Array.isArray(c.speakers) && c.speakers.length > 0
+        ? c.speakers
+        : (c.speaker ? c.speaker.split(',').map(s => s.trim()).filter(Boolean) : []);
+      const firstSpeakerInput = document.getElementById('fCourseSpeaker');
+      if (firstSpeakerInput) firstSpeakerInput.value = speakers[0] || '';
+      for (let i = 1; i < Math.min(speakers.length, 4); i++) {
+        addSpeakerInputRow(speakers[i]);
+      }
+      updateSpeakerButtonVisibility();
+
+      // Populate Credits
+      const creditInput = document.getElementById('fCreditHours');
+      const autoCheckbox = document.getElementById('fAutoCalcCredits');
+      if (c.creditHours !== undefined && c.creditHours !== null && c.creditHours !== '') {
+        if (creditInput) creditInput.value = c.creditHours;
+        if (autoCheckbox) autoCheckbox.checked = false;
+      } else {
+        if (autoCheckbox) autoCheckbox.checked = true;
+      }
 
       const pVal = c.planType || (c.type && c.type.includes('นอกแผน') ? 'นอกแผน' : 'ในแผน');
       const planRad = document.querySelector(`input[name="planType"][value="${pVal}"]`);
@@ -6922,6 +7232,10 @@
         }
       }
 
+      if (autoCheckbox && autoCheckbox.checked) {
+        recalcCourseCreditsFromBatches();
+      }
+
       // Topics
       const enableTopicsEl = document.getElementById('fEnableTopics');
       const topicRowsCont = document.getElementById('topicRowsContainer');
@@ -6978,9 +7292,16 @@
       document.getElementById('fCourseId').value = courseId;
 
       const title = document.getElementById('fCourseTitle').value.trim();
-      const speaker = document.getElementById('fCourseSpeaker').value.trim();
 
-      if (!title || !speaker) {
+      const speakersList = getCourseSpeakersList();
+      const speakerFirstInput = document.getElementById('fCourseSpeaker');
+      const firstVal = speakerFirstInput ? speakerFirstInput.value.trim() : '';
+      if (firstVal && !speakersList.includes(firstVal)) {
+        speakersList.unshift(firstVal);
+      }
+      const speakerCombined = speakersList.join(', ');
+
+      if (!title || (!speakerCombined && !firstVal)) {
         HrdModal.warning('กรุณากรอกชื่อหลักสูตรและวิทยากรให้ครบถ้วนนะคะ', 'ข้อมูลไม่ครบถ้วน');
         return;
       }
@@ -7084,10 +7405,14 @@
             totalCount: 0
           };
 
+      const creditHours = getCourseCreditsValue();
+
       const coursePayload = {
         id: courseId,
         title: title,
-        speaker: speaker,
+        speaker: speakerCombined || firstVal || 'HR Team',
+        speakers: speakersList.length > 0 ? speakersList : [speakerCombined || firstVal || 'HR Team'],
+        creditHours: creditHours,
         date: summaryDate,
         time: summaryTime,
         planType: planType,
@@ -8759,6 +9084,9 @@
                     <span class="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">
                       ${escapeHtml(t.time || '-')}
                     </span>
+                    <span class="font-mono text-[10.5px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded shrink-0" title="จำนวนเครดิตคำนวณจากเวลา">
+                      ${calculateCreditsFromTimeRange(t.time)} เครดิต
+                    </span>
                     <span class="text-xs font-bold text-slate-900 truncate">
                       ${escapeHtml(t.title)}
                     </span>
@@ -9232,7 +9560,9 @@
 
       if (sSel) sSel.innerHTML = buildTimeSelectOptions(timeRange.start);
       if (eSel) eSel.innerHTML = buildTimeSelectOptions(timeRange.end);
-      if (tPrev) tPrev.textContent = '⏰ ' + (t.time || (timeRange.start + ' - ' + timeRange.end + ' น.'));
+      const initialTopicTimeStr = t.time || (timeRange.start + ' - ' + timeRange.end + ' น.');
+      const initialCred = calculateCreditsFromTimeRange(initialTopicTimeStr);
+      if (tPrev) tPrev.textContent = '⏰ ' + initialTopicTimeStr + (initialCred !== '-' ? (' • ' + initialCred + ' เครดิต') : '');
 
       const spkInp = document.getElementById('singleTopicSpeakerInput');
       if (spkInp) spkInp.value = t.speaker || '';
@@ -9268,7 +9598,9 @@
       const eSel = document.getElementById('singleTopicTimeEnd');
       const tPrev = document.getElementById('singleTopicTimePreview');
       if (sSel && eSel && tPrev) {
-        tPrev.textContent = '⏰ ' + sSel.value + ' - ' + eSel.value + ' น.';
+        const timeRangeStr = sSel.value + ' - ' + eSel.value + ' น.';
+        const cred = calculateCreditsFromTimeRange(timeRangeStr);
+        tPrev.textContent = '⏰ ' + timeRangeStr + (cred !== '-' ? (' • ' + cred + ' เครดิต') : '');
       }
     }
 
@@ -10152,8 +10484,18 @@
       const safeTopicDate = escapeHtml(topic.date || batch.dates || '');
       const safeTopicTime = escapeHtml(topic.time || '');
 
+      const orientSpeakers = (topic.speaker || 'ฝ่ายทรัพยากรบุคคล (HR)').split(/[,/]/).map(s => s.trim()).filter(Boolean);
+      let orientSpeakerSlotsHtml = '';
+      for (let sIdx = 0; sIdx < 4; sIdx++) {
+        const spk = orientSpeakers[sIdx] || '';
+        const isLast = sIdx === 3;
+        orientSpeakerSlotsHtml += '<div style="height: 20px; line-height: 20px; ' + (isLast ? '' : 'border-bottom: 1px solid #000;') + ' padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (escapeHtml(spk) || '&nbsp;') + '</div>';
+      }
+
+      const calculatedCredits = calculateCreditsFromTimeRange(topic.time || safeTopicTime);
+
       // Keep 26 rows so the official DCC footer remains inside the A4 print-safe area.
-      const TOTAL_ROWS = 28;
+      const TOTAL_ROWS = 26;
       let rowsHtml = '';
 
       for (let i = 0; i < TOTAL_ROWS; i++) {
@@ -10218,10 +10560,7 @@
             <tr style="height: 80px;">
               <td style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold; background: #ffffff; vertical-align: middle;">วิทยากร (Speakers)</td>
               <td style="border: 1px solid #000; padding: 0; vertical-align: top;">
-                <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeTopicSpeaker}</div>
-                <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
-                <div style="height: 20px; line-height: 20px; border-bottom: 1px solid #000; padding: 0 6px;">&nbsp;</div>
-                <div style="height: 20px; line-height: 20px; padding: 0 6px;">&nbsp;</div>
+                ${orientSpeakerSlotsHtml}
               </td>
               <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
                 <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">ประเภทหลักสูตร</div>
@@ -10258,7 +10597,7 @@
               </td>
               <td colspan="2" style="border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: center;">
                 <div style="font-weight: bold; font-size: 9.5px; margin-bottom: 6px;">จำนวนเครดิต</div>
-                <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">-</div>
+                <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">${calculatedCredits}</div>
               </td>
             </tr>
           </table>
@@ -10399,7 +10738,7 @@
               max-width: 297mm;
               min-height: 210mm;
               max-height: 210mm;
-              padding: 4.8mm 5.5mm;
+              padding: 4mm 5.5mm 3.5mm 5.5mm;
               margin: 0;
               box-sizing: border-box;
               background: #ffffff;
