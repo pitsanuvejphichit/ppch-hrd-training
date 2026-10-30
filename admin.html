@@ -5332,8 +5332,18 @@
       for (let sIdx = 0; sIdx < 4; sIdx++) {
         const spk = rawSpeakersList[sIdx] || '';
         const isLast = sIdx === 3;
-        speakerSlotsHtml += '<div style="height: 20px; line-height: 20px; ' + (isLast ? '' : 'border-bottom: 1px solid #000;') + ' padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (escapeHtml(spk) || '&nbsp;') + '</div>';
+        speakerSlotsHtml += '<div style="height: 20px; line-height: 20px; ' + (isLast ? '' : 'border-bottom: 1px solid #d1d5db;') + ' padding: 0 8px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000;">' + (escapeHtml(spk) || '&nbsp;') + '</div>';
       }
+
+      const checkedBoxHtml = '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; min-width: 13px; min-height: 13px; background: #555555; color: #ffffff; border: 1px solid #333333; border-radius: 2px; font-size: 10px; font-weight: bold; line-height: 1;">✓</span>';
+      const uncheckedBoxHtml = '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; min-width: 13px; min-height: 13px; background: #ffffff; border: 1.5px solid #666666; border-radius: 2px; font-size: 10px; line-height: 1;">&nbsp;</span>';
+
+      const isInPlan = !course.planType || course.planType === 'ในแผน' || (course.type && course.type.includes('ในแผน'));
+      const isOutOfPlan = !isInPlan;
+      const isMandatory = (course.category === 'Mandatory Course') || (!course.category && (!course.type || course.type.includes('Mandatory')));
+      const isManagerial = course.category === 'Managerial Course' || (course.type && course.type.includes('Managerial'));
+      const isFunctional = course.category === 'Functional Course' || (course.type && course.type.includes('Functional'));
+      const isQuality = course.category === 'Quality Course' || (course.type && course.type.includes('Quality'));
 
       // Keep 26 rows per page so the official DCC footer remains inside the A4 print-safe area.
       const ROWS_PER_PAGE = 26;
@@ -5381,7 +5391,7 @@
         sheetsHtml += `
           <div class="orient-a4-sheet">
             <!-- 1. HEADER WITH LOGO AND BILINGUAL TITLE -->
-            <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: -1px; table-layout: fixed;">
+            <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: 8px; table-layout: fixed;">
               <tr style="height: 48px;">
                 <td style="width: 18.18%; padding: 4px 8px; border-right: 1px solid #000; vertical-align: middle; text-align: center;">
                   <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 38px; max-width: 130px; object-fit: contain; display: inline-block;">
@@ -5394,10 +5404,10 @@
             </table>
 
             <!-- 2. METADATA GRID -->
-            <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9.5px; margin-bottom: -1px; table-layout: fixed;">
+            <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9.5px; margin-bottom: 6px; table-layout: fixed;">
               <tr style="height: 24px;">
                 <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">หลักสูตร / เรื่อง (Topic)</td>
-                <td style="width: 27.27%; border: 1px solid #000; padding: 2px 6px; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(courseTitle)}</td>
+                <td style="width: 27.27%; border: 1px solid #000; padding: 2px 8px; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(courseTitle)}</td>
                 <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">วันที่อบรม / สัมมนา (Date) :</td>
                 <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-size: 9.5px;">${escapeHtml(courseDate)}</td>
                 <td style="width: 9.09%; border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold; background: #ffffff;">เวลา / Time :</td>
@@ -5408,40 +5418,40 @@
                 <td style="border: 1px solid #000; padding: 0; vertical-align: top;">
                   ${speakerSlotsHtml}
                 </td>
-                <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
-                  <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">ประเภทหลักสูตร</div>
-                  <div style="display: flex; flex-direction: column; gap: 5px; padding-left: 10px;">
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
-                      <span>ในแผน</span>
+                <td style="border: 1px solid #000; padding: 5px 8px; vertical-align: top;">
+                  <div style="font-weight: bold; margin-bottom: 6px; text-align: center; font-size: 9.5px;">ประเภทหลักสูตร</div>
+                  <div style="display: flex; flex-direction: column; gap: 6px; padding-left: 10px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${isInPlan ? checkedBoxHtml : uncheckedBoxHtml}
+                      <span style="font-size: 9.5px; font-weight: 500;">ในแผน</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                      <span>นอกแผน</span>
-                    </div>
-                  </div>
-                </td>
-                <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
-                  <div style="display: flex; flex-direction: column; gap: 3.5px; padding-left: 6px; font-size: 9px;">
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
-                      <span>Mandatory Course</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                      <span>Managerial Course</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                      <span>Functional Course</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                      <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                      <span>Quality Course</span>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${isOutOfPlan ? checkedBoxHtml : uncheckedBoxHtml}
+                      <span style="font-size: 9.5px; font-weight: 500;">นอกแผน</span>
                     </div>
                   </div>
                 </td>
-                <td colspan="2" style="border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: center;">
+                <td style="border: 1px solid #000; padding: 5px 8px; vertical-align: top;">
+                  <div style="display: flex; flex-direction: column; gap: 4px; padding-left: 6px; font-size: 9px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${isMandatory ? checkedBoxHtml : uncheckedBoxHtml}
+                      <span style="font-weight: 500;">Mandatory Course</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${isManagerial ? checkedBoxHtml : uncheckedBoxHtml}
+                      <span style="font-weight: 500;">Managerial Course</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${isFunctional ? checkedBoxHtml : uncheckedBoxHtml}
+                      <span style="font-weight: 500;">Functional Course</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      ${isQuality ? checkedBoxHtml : uncheckedBoxHtml}
+                      <span style="font-weight: 500;">Quality Course</span>
+                    </div>
+                  </div>
+                </td>
+                <td colspan="2" style="border: 1px solid #000; padding: 5px 6px; vertical-align: top; text-align: center;">
                   <div style="font-weight: bold; font-size: 9.5px; margin-bottom: 6px;">จำนวนเครดิต</div>
                   <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">${course.creditHours || calculateCreditsFromTimeRange(courseTime) || '-'}</div>
                 </td>
@@ -10489,10 +10499,13 @@
       for (let sIdx = 0; sIdx < 4; sIdx++) {
         const spk = orientSpeakers[sIdx] || '';
         const isLast = sIdx === 3;
-        orientSpeakerSlotsHtml += '<div style="height: 20px; line-height: 20px; ' + (isLast ? '' : 'border-bottom: 1px solid #000;') + ' padding: 0 6px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + (escapeHtml(spk) || '&nbsp;') + '</div>';
+        orientSpeakerSlotsHtml += '<div style="height: 20px; line-height: 20px; ' + (isLast ? '' : 'border-bottom: 1px solid #d1d5db;') + ' padding: 0 8px; font-size: 9.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000;">' + (escapeHtml(spk) || '&nbsp;') + '</div>';
       }
 
       const calculatedCredits = calculateCreditsFromTimeRange(topic.time || safeTopicTime);
+
+      const checkedBoxHtml = '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; min-width: 13px; min-height: 13px; background: #555555; color: #ffffff; border: 1px solid #333333; border-radius: 2px; font-size: 10px; font-weight: bold; line-height: 1;">✓</span>';
+      const uncheckedBoxHtml = '<span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; min-width: 13px; min-height: 13px; background: #ffffff; border: 1.5px solid #666666; border-radius: 2px; font-size: 10px; line-height: 1;">&nbsp;</span>';
 
       // Keep 26 rows so the official DCC footer remains inside the A4 print-safe area.
       const TOTAL_ROWS = 26;
@@ -10535,7 +10548,7 @@
       return `
         <div class="orient-a4-sheet" data-topic-id="${topic.id}">
           <!-- 1. HEADER WITH LOGO AND BILINGUAL TITLE -->
-          <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: -1px; table-layout: fixed;">
+          <table class="orient-sheet-header-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: 8px; table-layout: fixed;">
             <tr style="height: 48px;">
               <td style="width: 18.18%; padding: 4px 8px; border-right: 1px solid #000; vertical-align: middle; text-align: center;">
                 <img src="logo.png" alt="พิษณุเวช พิจิตร" style="max-height: 38px; max-width: 130px; object-fit: contain; display: inline-block;">
@@ -10548,10 +10561,10 @@
           </table>
 
           <!-- 2. TOPIC METADATA GRID (EXACT HOSPITAL MATRIX) -->
-          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9.5px; margin-bottom: -1px; table-layout: fixed;">
+          <table class="orient-sheet-meta-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 9.5px; margin-bottom: 6px; table-layout: fixed;">
             <tr style="height: 24px;">
               <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">หลักสูตร / เรื่อง (Topic)</td>
-              <td style="width: 27.27%; border: 1px solid #000; padding: 2px 6px; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeTopicTitle}</td>
+              <td style="width: 27.27%; border: 1px solid #000; padding: 2px 8px; font-weight: bold; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeTopicTitle}</td>
               <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-weight: bold; background: #ffffff;">วันที่อบรม / สัมมนา (Date) :</td>
               <td style="width: 18.18%; border: 1px solid #000; padding: 2px 4px; text-align: center; font-size: 9.5px;">${safeTopicDate}</td>
               <td style="width: 9.09%; border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold; background: #ffffff;">เวลา / Time :</td>
@@ -10562,40 +10575,40 @@
               <td style="border: 1px solid #000; padding: 0; vertical-align: top;">
                 ${orientSpeakerSlotsHtml}
               </td>
-              <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
-                <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">ประเภทหลักสูตร</div>
-                <div style="display: flex; flex-direction: column; gap: 5px; padding-left: 10px;">
-                  <div style="display: flex; align-items: center; gap: 5px;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
-                    <span>ในแผน</span>
+              <td style="border: 1px solid #000; padding: 5px 8px; vertical-align: top;">
+                <div style="font-weight: bold; margin-bottom: 6px; text-align: center; font-size: 9.5px;">ประเภทหลักสูตร</div>
+                <div style="display: flex; flex-direction: column; gap: 6px; padding-left: 10px;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${checkedBoxHtml}
+                    <span style="font-size: 9.5px; font-weight: 500;">ในแผน</span>
                   </div>
-                  <div style="display: flex; align-items: center; gap: 5px;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                    <span>นอกแผน</span>
-                  </div>
-                </div>
-              </td>
-              <td style="border: 1px solid #000; padding: 4px 6px; vertical-align: top;">
-                <div style="display: flex; flex-direction: column; gap: 3.5px; padding-left: 6px; font-size: 9px;">
-                  <div style="display: flex; align-items: center; gap: 5px;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px; font-weight: bold; line-height: 1;">✓</span>
-                    <span>Mandatory Course</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: 5px;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                    <span>Managerial Course</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: 5px;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                    <span>Functional Course</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: 5px;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border: 1px solid #000; font-size: 9px;">&nbsp;</span>
-                    <span>Quality Course</span>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${uncheckedBoxHtml}
+                    <span style="font-size: 9.5px; font-weight: 500;">นอกแผน</span>
                   </div>
                 </div>
               </td>
-              <td colspan="2" style="border: 1px solid #000; padding: 4px 6px; vertical-align: top; text-align: center;">
+              <td style="border: 1px solid #000; padding: 5px 8px; vertical-align: top;">
+                <div style="display: flex; flex-direction: column; gap: 4px; padding-left: 6px; font-size: 9px;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${checkedBoxHtml}
+                    <span style="font-weight: 500;">Mandatory Course</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${uncheckedBoxHtml}
+                    <span style="font-weight: 500;">Managerial Course</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${uncheckedBoxHtml}
+                    <span style="font-weight: 500;">Functional Course</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${uncheckedBoxHtml}
+                    <span style="font-weight: 500;">Quality Course</span>
+                  </div>
+                </div>
+              </td>
+              <td colspan="2" style="border: 1px solid #000; padding: 5px 6px; vertical-align: top; text-align: center;">
                 <div style="font-weight: bold; font-size: 9.5px; margin-bottom: 6px;">จำนวนเครดิต</div>
                 <div style="margin-top: 6px; font-weight: bold; font-size: 11px;">${calculatedCredits}</div>
               </td>
