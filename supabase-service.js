@@ -206,7 +206,9 @@ var SupabaseService = (() => {
         position: row.position,
         department: row.department,
         batch: row.batch,
-        selectedTopics: row.selected_topics || [],
+        selectedTopics: Array.isArray(row.selected_topics) ? row.selected_topics : (
+          (typeof row.selected_topics === 'string') ? (function() { try { const p = JSON.parse(row.selected_topics); return Array.isArray(p) ? p : []; } catch(e) { return []; } })() : []
+        ),
         timestamp: row.registered_at ? (new Date(row.registered_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' น.') : '',
         transactionId: row.id,
         syncedToSheet: row.synced_to_sheet

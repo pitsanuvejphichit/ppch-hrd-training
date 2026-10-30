@@ -2256,44 +2256,16 @@
                 </div>
               </div>
 
-              <!-- Right: Print Roster A4, Web Roster Tab, Backup Master Log, Edit Schedule, & Export Speed Dial -->
+              <!-- Right: Edit Schedule & Export Speed Dial -->
               <div class="flex items-center space-x-2 shrink-0">
-                <!-- Native A4 Official Registration Print Button (Matching Hospital Form Template) -->
-                <button 
-                  type="button" 
-                  onclick="openOrientationPrintModal('all')" 
-                  class="px-3.5 py-1.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
-                  title="พิมพ์ใบลงทะเบียนเข้าอบรม A4 ทั้ง 14 หัวข้อ (ตามแบบฟอร์มมาตรฐาน FM-PPCH-HR-012)"
-                >
-                  <span class="material-icons-round text-sm">print</span>
-                  <span>พิมพ์ใบรายชื่อ A4 (14 หัวข้อ)</span>
-                </button>
-
-                <!-- Web Roster Tab Button (FM-PPCH-HR-012 on Web) -->
-                <button 
-                  type="button" 
-                  onclick="switchOrientationTab('roster')" 
-                  class="px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-[#004b93] border border-sky-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 cursor-pointer"
-                  title="ดูแบบฟอร์มใบลงทะเบียน 14 หัวข้อบนหน้าเว็บตามแบบต้นฉบับโรงพยาบาล"
-                >
-                  <span class="material-icons-round text-sm text-[#004b93]">description</span>
-                  <span>ดูใบลงทะเบียน A4 (14 หัวข้อ)</span>
-                </button>
-
-
                 <button 
                   type="button" 
                   onclick="openEditBatchScheduleModal()" 
-                  class="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-bold text-xs flex items-center gap-1 cursor-pointer transition-all shadow-2xs active:scale-95" 
+                  class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs active:scale-95" 
                   title="เปลี่ยนวัน/เวลา และวิทยากรของ 14 หัวข้อในรอบนี้"
                 >
                   <span class="material-icons-round text-sm text-amber-700">edit_calendar</span>
                   <span>เปลี่ยนวัน/เวลา 14 หัวข้อ</span>
-                </button>
-
-                <button type="button" onclick="printOrientationChecklist()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-all flex items-center gap-1 cursor-pointer shadow-2xs active:scale-95" title="พิมพ์ใบบันทึกผลและใบเซ็นชื่อ A4">
-                  <span class="material-icons-round text-sm text-slate-600">print</span>
-                  <span class="hidden md:inline">พิมพ์ A4</span>
                 </button>
 
                 <!-- Speed Dial for Export (Golden Rule 3) -->
@@ -2534,11 +2506,11 @@
                   <button 
                     type="button" 
                     onclick="printOrientationTabSheets()" 
-                    class="px-3.5 py-1.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
-                    title="พิมพ์แบบฟอร์ม A4 แนวนอน ออกทางเครื่องพิมพ์ หรือบันทึกเป็น PDF"
+                    class="px-4 py-2 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs active:scale-95 cursor-pointer"
+                    title="พิมพ์แบบฟอร์มใบลงทะเบียน A4 ทั้ง 14 หัวข้อ (ตามแบบฟอร์มมาตรฐาน FM-PPCH-HR-012)"
                   >
                     <span class="material-icons-round text-sm">print</span>
-                    <span>พิมพ์ A4 แนวนอน</span>
+                    <span>พิมพ์ใบลงทะเบียน A4 (14 หัวข้อ)</span>
                   </button>
 
                 </div>
@@ -2807,10 +2779,10 @@
 
               <!-- Page Footer -->
               <div class="border-t border-slate-100 pt-4 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5">
-                <button type="button" onclick="toggleAllOrientationTopicsForEmp()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-[#004b93] text-xs font-semibold transition-all">
+                <button type="button" onclick="toggleAllDraftOrientationTopics()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-[#004b93] text-xs font-semibold transition-all cursor-pointer">
                   ติ๊กผ่านทั้งหมด (14 วิชา)
                 </button>
-                <button type="button" onclick="closeOrientationChecklistModal()" class="px-5 py-2.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold transition-all shadow-xs inline-flex items-center justify-center gap-1.5">
+                <button type="button" onclick="saveOrientationChecklist()" class="px-5 py-2.5 rounded-lg bg-[#004b93] hover:bg-[#002e6e] text-white text-xs font-bold transition-all shadow-xs inline-flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
                   <span class="material-icons-round text-sm">save</span>
                   <span>บันทึกและกลับหน้ารายชื่อ</span>
                 </button>
@@ -8699,12 +8671,21 @@
             const uniqueMap = new Map();
             sbList.forEach(a => {
               const empId = String(a.id || a.empId).padStart(6, '0');
+              let completed = [];
+              if (Array.isArray(a.selectedTopics)) {
+                completed = a.selectedTopics;
+              } else if (typeof a.selectedTopics === 'string') {
+                try {
+                  const parsed = JSON.parse(a.selectedTopics);
+                  if (Array.isArray(parsed)) completed = parsed;
+                } catch(e) {}
+              }
               const item = {
                 id: empId,
                 name: (a.title || '') + (a.name || (a.firstName + ' ' + a.lastName)).trim(),
                 position: a.position || '-',
                 department: a.department || '-',
-                completedTopics: Array.isArray(a.selectedTopics) ? a.selectedTopics : [],
+                completedTopics: completed,
                 enrolledAt: a.timestamp || b.dates || '1-2 ตุลาคม 2569'
               };
               if (!uniqueMap.has(empId)) {
@@ -8717,6 +8698,16 @@
                 }
               }
             });
+
+            // Preserve local progress if local attendee had more completed topics than remote fetch
+            if (Array.isArray(b.attendees)) {
+              b.attendees.forEach(localA => {
+                const target = uniqueMap.get(localA.id);
+                if (target && (localA.completedTopics && localA.completedTopics.length > target.completedTopics.length)) {
+                  target.completedTopics = [...localA.completedTopics];
+                }
+              });
+            }
             fetchedAttendees = Array.from(uniqueMap.values());
             sourceFound = true;
           }
@@ -9221,6 +9212,11 @@
       renderOrientationMatrix(val);
     }
 
+    let orientChecklistDraft = {
+      empId: null,
+      completedTopics: []
+    };
+
     function openOrientationChecklistModal(empId) {
       const b = getActiveOrientBatch();
       if (!b) return;
@@ -9228,24 +9224,46 @@
       if (!attendee) return;
 
       currentOrientActiveEmpId = empId;
+      // Initialize draft copy so changes do NOT mutate attendee until user clicks "บันทึก"
+      orientChecklistDraft.empId = empId;
+      orientChecklistDraft.completedTopics = Array.isArray(attendee.completedTopics) ? [...attendee.completedTopics] : [];
+
       hideAllOrientationSubViews();
       const checklistPage = document.getElementById('orientationChecklistPage');
       if (checklistPage) checklistPage.classList.remove('hidden');
 
       const nameEl = document.getElementById('orientModalEmpName');
       const infoEl = document.getElementById('orientModalEmpInfo');
-      const container = document.getElementById('orientChecklistContainer');
 
       if (nameEl) nameEl.textContent = attendee.name + ' (' + attendee.id + ')';
       if (infoEl) infoEl.textContent = attendee.position + ' • ' + attendee.department + ' • ' + (b.shortTitle || b.title);
 
-      updateOrientModalProgress(attendee);
+      renderOrientDraftChecklistUI();
 
+      currentOrientSubView = 'checklist';
+      updateOrientationBreadcrumb();
+      const mainContent = document.getElementById('adminMainContent');
+      if (mainContent && typeof mainContent.scrollTo === 'function') mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderOrientDraftChecklistUI() {
+      const b = getActiveOrientBatch();
+      if (!b) return;
+      const container = document.getElementById('orientChecklistContainer');
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
+      const draftList = orientChecklistDraft.completedTopics || [];
+
+      // Update progress bar strictly based on DRAFT only
+      const count = draftList.length;
+      const percent = Math.round((count / 14) * 100);
+      const pText = document.getElementById('orientModalProgressText');
+      const pBar = document.getElementById('orientModalProgressBar');
+      if (pText) pText.textContent = `${count} / 14 วิชา (${percent}%)`;
+      if (pBar) pBar.style.width = percent + '%';
 
       if (container) {
         container.innerHTML = topics.map((t, idx) => {
-          const isDone = attendee.completedTopics && attendee.completedTopics.includes(t.id);
+          const isDone = draftList.includes(t.id);
           return `
             <label class="p-2.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${isDone ? 'bg-emerald-50/70 border-emerald-300' : 'bg-white border-slate-200 hover:bg-slate-50'}">
               <div class="flex items-start space-x-2.5">
@@ -9253,7 +9271,7 @@
                   type="checkbox" 
                   value="${t.id}" 
                   ${isDone ? 'checked' : ''} 
-                  onchange="toggleTopicAttendance('${attendee.id}', '${t.id}', this.checked)"
+                  onchange="toggleDraftTopicAttendance('${t.id}', this.checked)"
                   class="w-4 h-4 text-[#004b93] rounded mt-0.5 cursor-pointer"
                 >
                 <div class="space-y-0.5">
@@ -9272,83 +9290,93 @@
           `;
         }).join('');
       }
-
-      currentOrientSubView = 'checklist';
-      updateOrientationBreadcrumb();
-      const mainContent = document.getElementById('adminMainContent');
-      if (mainContent && typeof mainContent.scrollTo === 'function') mainContent.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function updateOrientModalProgress(attendee) {
-      const count = attendee.completedTopics ? attendee.completedTopics.length : 0;
-      const percent = Math.round((count / 14) * 100);
-
-      const pText = document.getElementById('orientModalProgressText');
-      const pBar = document.getElementById('orientModalProgressBar');
-
-      if (pText) pText.textContent = `${count} / 14 วิชา (${percent}%)`;
-      if (pBar) pBar.style.width = percent + '%';
-    }
-
-    function toggleTopicAttendance(empId, topicId, isChecked) {
-      const b = getActiveOrientBatch();
-      if (!b) return;
-      const attendee = b.attendees.find(a => a.id === empId);
-      if (!attendee) return;
-
-      if (!Array.isArray(attendee.completedTopics)) attendee.completedTopics = [];
-
+    function toggleDraftTopicAttendance(topicId, isChecked) {
+      if (!orientChecklistDraft.completedTopics) orientChecklistDraft.completedTopics = [];
       if (isChecked) {
-        if (!attendee.completedTopics.includes(topicId)) attendee.completedTopics.push(topicId);
-      } else {
-        attendee.completedTopics = attendee.completedTopics.filter(id => id !== topicId);
-      }
-
-      updateOrientModalProgress(attendee);
-      renderOrientationBatchDetails();
-
-      // Persist completedTopics to Supabase (Real-time Checklist Sync)
-      if (typeof SupabaseService !== 'undefined') {
-        const sb = SupabaseService.getClient();
-        if (sb) {
-          sb.from('registrations')
-            .update({ selected_topics: attendee.completedTopics })
-            .eq('course_id', b.id)
-            .eq('emp_id', empId)
-            .then(res => console.log('[Orientation] Updated completedTopics in Supabase:', res))
-            .catch(err => console.warn('[Orientation] Supabase checklist update error:', err));
+        if (!orientChecklistDraft.completedTopics.includes(topicId)) {
+          orientChecklistDraft.completedTopics.push(topicId);
         }
+      } else {
+        orientChecklistDraft.completedTopics = orientChecklistDraft.completedTopics.filter(id => id !== topicId);
       }
+      renderOrientDraftChecklistUI();
     }
 
-    function toggleAllOrientationTopicsForEmp() {
-      if (!currentOrientActiveEmpId) return;
+    // Compatible alias for tests or external handlers
+    function toggleTopicAttendance(empId, topicId, isChecked) {
+      toggleDraftTopicAttendance(topicId, isChecked);
+    }
+
+    function toggleAllDraftOrientationTopics() {
       const b = getActiveOrientBatch();
       if (!b) return;
-      const attendee = b.attendees.find(a => a.id === currentOrientActiveEmpId);
-      if (!attendee) return;
-
       const topics = b.topics || ORIENTATION_DEFAULT_SYLLABUS;
-      const allIds = topics.map(t => t.id);
-      attendee.completedTopics = allIds;
-      openOrientationChecklistModal(currentOrientActiveEmpId);
-      renderOrientationBatchDetails();
-
-      // Persist completedTopics to Supabase (Real-time Checklist Sync)
-      if (typeof SupabaseService !== 'undefined') {
-        const sb = SupabaseService.getClient();
-        if (sb) {
-          sb.from('registrations')
-            .update({ selected_topics: allIds })
-            .eq('course_id', b.id)
-            .eq('emp_id', currentOrientActiveEmpId)
-            .then(res => console.log('[Orientation] Updated all completedTopics in Supabase:', res))
-            .catch(err => console.warn('[Orientation] Supabase checklist update error:', err));
-        }
-      }
+      orientChecklistDraft.completedTopics = topics.map(t => t.id);
+      renderOrientDraftChecklistUI();
     }
 
+    // Compatible alias
+    function toggleAllOrientationTopicsForEmp() {
+      toggleAllDraftOrientationTopics();
+    }
+
+    // Cancel / Return: DISCARD unsaved draft and preserve previous saved state
     function closeOrientationChecklistModal() {
+      orientChecklistDraft.empId = null;
+      orientChecklistDraft.completedTopics = [];
+      currentOrientActiveEmpId = null;
+      openOrientationBatchDetail(currentOrientBatchId);
+    }
+
+    // Explicit Save: commit draft, update cache, persist to Supabase, update UI
+    async function saveOrientationChecklist() {
+      const b = getActiveOrientBatch();
+      if (!b || !currentOrientActiveEmpId) {
+        closeOrientationChecklistModal();
+        return;
+      }
+      const attendee = b.attendees.find(a => a.id === currentOrientActiveEmpId);
+      if (!attendee) {
+        closeOrientationChecklistModal();
+        return;
+      }
+
+      // 1. Commit draft to in-memory attendee
+      attendee.completedTopics = [...(orientChecklistDraft.completedTopics || [])];
+
+      // 2. Persist to localStorage (0ms instant recovery upon refresh)
+      try {
+        localStorage.setItem('hrd_orientation_batches', JSON.stringify(orientationBatches));
+      } catch(e) {}
+
+      // 3. Persist to Supabase Primary Database
+      if (typeof SupabaseService !== 'undefined') {
+        try {
+          const sb = SupabaseService.getClient();
+          if (sb) {
+            const empIdPadded = String(currentOrientActiveEmpId).padStart(6, '0');
+            const empIdRaw = String(currentOrientActiveEmpId).replace(/^0+/, '');
+            await sb.from('registrations')
+              .update({ selected_topics: attendee.completedTopics })
+              .eq('course_id', b.id)
+              .in('emp_id', [empIdPadded, empIdRaw]);
+            console.log('[Orientation] Saved completedTopics to Supabase for', empIdPadded, attendee.completedTopics);
+          }
+        } catch(err) {
+          console.warn('[Orientation] Supabase checklist save warning:', err);
+        }
+      }
+
+      // 4. Success Toast
+      if (typeof HrdModal !== 'undefined') {
+        HrdModal.success(`บันทึกผลการเข้าอบรมของคุณ ${attendee.name} เรียบร้อยแล้วค่ะ (${attendee.completedTopics.length}/14 วิชา)`);
+      }
+
+      // 5. Close draft and return to batch workspace
+      orientChecklistDraft.empId = null;
+      orientChecklistDraft.completedTopics = [];
       currentOrientActiveEmpId = null;
       openOrientationBatchDetail(currentOrientBatchId);
     }
